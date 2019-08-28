@@ -12,6 +12,7 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/data"
     },
+    "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
         "yiisoft/arrays": "^3.0@dev"
