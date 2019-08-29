@@ -3,5 +3,5 @@ namespace Yiisoft\Data\Reader;
 
 interface FilterableDataInterface
 {
-    public function withFilter(array $filter);
+    public function withFilter(Filter $filter);
 }

@@ -7,7 +7,8 @@ use Yiisoft\Arrays\ArrayHelper;
 class ArrayDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
     private $data;
-    private $sorting;
+    private $sort;
+    private $filter;
 
     private $limit = self::DEFAULT_LIMIT;
     private $offset = 0;
@@ -17,10 +18,10 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
         $this->data = $data;
     }
 
-    public function withSorting(?Sort $sorting): self
+    public function withSort(?Sort $sort): self
     {
         $new = clone $this;
-        $new->sorting = $sorting;
+        $new->sort = $sort;
         return $new;
     }
 
@@ -40,9 +41,21 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
         return $items;
     }
 
-    public function withFilter(array $filter): self
+    protected function filterItems(array $items, Filter $filter): array
     {
-        // TODO: Implement setFilter() method.
+        $criteria = $filter->getCriteria();
+        if ($criteria !== []) {
+            // TODO: implement
+        }
+
+        return $items;
+    }
+
+    public function withFilter(?Filter $filter): self
+    {
+        $new = clone $this;
+        $new->filter = $filter;
+        return $new;
     }
 
     public function withLimit(int $limit): self
@@ -55,8 +68,13 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
     public function read(): iterable
     {
         $data = $this->data;
-        if ($this->sorting !== null) {
-            $data = $this->sortItems($this->data, $this->sorting);
+
+        if ($this->filter !== null) {
+            $data = $this->filterItems($this->data, $this->filter);
+        }
+
+        if ($this->sort !== null) {
+            $data = $this->sortItems($this->data, $this->sort);
         }
         return array_slice($data, $this->offset, $this->limit);
     }

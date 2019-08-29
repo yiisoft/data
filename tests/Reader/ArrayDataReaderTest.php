@@ -87,11 +87,11 @@ class ArrayDataReaderTest extends TestCase
         $this->assertSame(array_slice($this->getDataSet(), 2, 3), $data);
     }
 
-    public function testsWithSortingIsImmutable(): void
+    public function testsWithSortIsImmutable(): void
     {
         $reader = new ArrayDataReader([]);
 
-        $this->assertNotSame($reader, $reader->withSorting(null));
+        $this->assertNotSame($reader, $reader->withSort(null));
     }
 
     public function testSorting(): void
@@ -104,7 +104,7 @@ class ArrayDataReaderTest extends TestCase
         $sorting = $sorting->withOrder(['name' => 'asc']);
 
         $reader = (new ArrayDataReader($this->getDataSet()))
-            ->withSorting($sorting);
+            ->withSort($sorting);
 
         $data = $reader->read();
 
@@ -116,5 +116,17 @@ class ArrayDataReaderTest extends TestCase
         $reader = new ArrayDataReader($this->getDataSet());
         $this->assertSame(5, $reader->count());
         $this->assertCount(5, $reader);
+    }
+
+    public function testsWithFilterIsImmutable(): void
+    {
+        $reader = new ArrayDataReader([]);
+
+        $this->assertNotSame($reader, $reader->withFilter(null));
+    }
+
+    public function testFiltering(): void
+    {
+        // TODO: implement
     }
 }

@@ -7,5 +7,5 @@ interface SortableDataInterface
      * @param Sort|null $sorting
      * @return $this
      */
-    public function withSorting(?Sort $sorting);
+    public function withSort(?Sort $sorting);
 }
