@@ -1,17 +1,18 @@
 <?php
 
-namespace Yiisoft\Data\Paginatior;
+namespace Yiisoft\Data\Paginator;
 
+use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 
 /**
  * OffsetPaginator
  */
-class OffsetPaginator
+final class OffsetPaginator
 {
     /**
-     * @var DataReaderInterface|OffsetableDataInterface
+     * @var OffsetableDataInterface|DataReaderInterface
      */
     private $dataReader;
 
@@ -24,6 +25,10 @@ class OffsetPaginator
             throw new \InvalidArgumentException('Data reader should implement OffsetableDataInterface in order to be used with offset paginator');
         }
 
+        if (!$dataReader instanceof CountableDataInterface) {
+            throw new \InvalidArgumentException('Data reader should implement CountableDataInterface in order to be used with offset paginator');
+        }
+
         $this->dataReader = $dataReader;
     }
 
@@ -32,19 +37,41 @@ class OffsetPaginator
         return $this->currentPage;
     }
 
-    public function setCurrentPage(int $page): void
+    public function withCurrentPage(int $page): self
     {
-        $this->currentPage = $page;
+        if ($page < 1) {
+            throw new \InvalidArgumentException('Current page should be at least 1');
+        }
+
+        $new = clone $this;
+        $new->currentPage = $page;
+        return $new;
     }
 
-    public function setPageSize(int $size): void
+    public function withPageSize(int $size): self
     {
-        $this->pageSize = $size;
+        if ($size < 1) {
+            throw new \InvalidArgumentException('Page size should be at least 1');
+        }
+
+        $new = clone $this;
+        $new->pageSize = $size;
+        return $new;
     }
 
-    public function isLastPage(): bool
+    public function isOnFirstPage(): bool
     {
+        return $this->currentPage === 1;
+    }
 
+    public function isOnLastPage(): bool
+    {
+        return $this->currentPage === $this->getTotalPages();
+    }
+
+    public function getTotalPages(): int
+    {
+        return (int) ceil($this->dataReader->count() / $this->pageSize);
     }
 
     private function getOffset(): int
@@ -54,7 +81,7 @@ class OffsetPaginator
 
     public function read(): iterable
     {
-        $reader = $this->dataReader->withLimit($this->pageSize)->withOffest($this->getOffset());
+        $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
         yield from $reader->read();
     }
 }

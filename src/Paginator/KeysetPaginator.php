@@ -1,5 +1,5 @@
 <?php
-namespace Yiisoft\Data\Paginatior;
+namespace Yiisoft\Data\Paginator;
 
 use Yiisoft\Data\Reader\DataReaderInterface;
 

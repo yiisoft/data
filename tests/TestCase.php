@@ -29,4 +29,9 @@ abstract class TestCase extends PhpUnitTestCase
 
         return $result;
     }
+
+    protected function iterableToArray(iterable $iterable): array
+    {
+        return $iterable instanceof \Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
+    }
 }
