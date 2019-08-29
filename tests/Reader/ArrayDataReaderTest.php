@@ -110,4 +110,11 @@ class ArrayDataReaderTest extends TestCase
 
         $this->assertSame($this->getDataSetSortedByName(), $data);
     }
+
+    public function testCounting(): void
+    {
+        $reader = new ArrayDataReader($this->getDataSet());
+        $this->assertSame(5, $reader->count());
+        $this->assertCount(5, $reader);
+    }
 }
