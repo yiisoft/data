@@ -4,7 +4,7 @@ namespace Yiisoft\Data\Reader;
 
 use Yiisoft\Arrays\ArrayHelper;
 
-class ArrayDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface
+class ArrayDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
     private $data;
     private $sorting;
@@ -66,5 +66,10 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
         $new = clone $this;
         $new->offset = $offset;
         return $new;
+    }
+
+    public function count(): int
+    {
+        return count($this->data);
     }
 }
