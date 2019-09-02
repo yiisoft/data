@@ -8,4 +8,6 @@ interface SortableDataInterface
      * @return $this
      */
     public function withSort(?Sort $sorting);
+
+    public function getSort(): Sort;
 }

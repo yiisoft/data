@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\ArrayDataReader;
 use Yiisoft\Data\Reader\Sort;
 
-class ArrayDataReaderTest extends TestCase
+final class ArrayDataReaderTest extends TestCase
 {
     private function getDataSet(): array
     {

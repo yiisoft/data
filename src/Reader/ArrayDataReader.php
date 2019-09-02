@@ -25,6 +25,11 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
         return $new;
     }
 
+    public function getSort(): Sort
+    {
+        return $this->sort;
+    }
+
     /**
      * Sorts the data models according to the given sort definition.
      * @param array $items the models to be sorted

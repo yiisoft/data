@@ -5,7 +5,7 @@ namespace Yiisoft\Data\Tests\Reader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
 
-class SortTest extends TestCase
+final class SortTest extends TestCase
 {
     public function testInvalidConfigWithoutFieldName(): void
     {

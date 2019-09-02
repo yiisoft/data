@@ -7,7 +7,7 @@ use Yiisoft\Data\Reader\ArrayDataReader;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Tests\TestCase;
 
-class OffsetPaginatorTest extends TestCase
+final class OffsetPaginatorTest extends TestCase
 {
     private function getDataSet(): array
     {
