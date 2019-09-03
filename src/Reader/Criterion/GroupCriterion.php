@@ -13,14 +13,9 @@ abstract class GroupCriterion implements CriteronInterface
      */
     private $criteria = [];
 
-    public function __construct(...$criteria)
+    public function __construct(CriteronInterface...$criteria)
     {
-        foreach ($criteria as $criterion) {
-            if (!$criterion instanceof CriteronInterface) {
-                throw new \InvalidArgumentException('All criteria should be instance of CriteronInterface');
-            }
-            $this->criteria[] = $criterion;
-        }
+        $this->criteria = $criteria;
     }
 
     public function toArray(): array
