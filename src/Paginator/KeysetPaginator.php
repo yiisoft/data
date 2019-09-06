@@ -39,7 +39,7 @@ class KeysetPaginator
 
     public function read(): iterable
     {
-        $dataReader = $this->dataReader->limit($this->pageSize);
+        $dataReader = $this->dataReader->withLimit($this->pageSize);
 
         if (isset($this->lastField, $this->lastValue)) {
             /** @var Sort $sort */
@@ -55,13 +55,13 @@ class KeysetPaginator
 
             // TODO: what to do if we're not aware of sorting?
 
-            $dataReader = $dataReader->filter(new Filter($criteria->toArray()));
+            $dataReader = $dataReader->withFilter(new Filter($criteria->toArray()));
         }
 
         yield from $dataReader->read();
     }
 
-    public function last(string $field, $value): self
+    public function withLast(string $field, $value): self
     {
         $new = clone $this;
         $new->lastField = $field;
@@ -69,7 +69,7 @@ class KeysetPaginator
         return $new;
     }
 
-    public function pageSize(int $pageSize): self
+    public function withPageSize(int $pageSize): self
     {
         $new = clone $this;
         $new->pageSize = $pageSize;

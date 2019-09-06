@@ -18,7 +18,7 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
         $this->data = $data;
     }
 
-    public function sort(?Sort $sort): self
+    public function withSort(?Sort $sort): self
     {
         $new = clone $this;
         $new->sort = $sort;
@@ -56,14 +56,14 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
         return $items;
     }
 
-    public function filter(?Filter $filter): self
+    public function withFilter(?Filter $filter): self
     {
         $new = clone $this;
         $new->filter = $filter;
         return $new;
     }
 
-    public function limit(int $limit): self
+    public function withLimit(int $limit): self
     {
         $new = clone $this;
         $new->limit = $limit;
@@ -84,7 +84,7 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
         return array_slice($data, $this->offset, $this->limit);
     }
 
-    public function offset(int $offset): self
+    public function withOffset(int $offset): self
     {
         $new = clone $this;
         $new->offset = $offset;

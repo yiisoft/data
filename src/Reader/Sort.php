@@ -80,7 +80,7 @@ final class Sort
      * @param string $orderString
      * @return Sort
      */
-    public function orderString(string $orderString): self
+    public function withOrderString(string $orderString): self
     {
         $order = [];
         $parts = preg_split('/\s*,\s*/', trim($orderString), -1, PREG_SPLIT_NO_EMPTY);
@@ -91,14 +91,14 @@ final class Sort
                 $order[$part] = 'asc';
             }
         }
-        return $this->order($order);
+        return $this->withOrder($order);
     }
 
     /**
      * @param array $order field names to order by as keys, direction as values
      * @return Sort
      */
-    public function order(array $order): self
+    public function withOrder(array $order): self
     {
         $new = clone $this;
         $new->currentOrder = $order;

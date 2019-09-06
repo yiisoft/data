@@ -64,12 +64,12 @@ final class ArrayDataReaderTest extends TestCase
     {
         $reader = new ArrayDataReader([]);
 
-        $this->assertNotSame($reader, $reader->limit(1));
+        $this->assertNotSame($reader, $reader->withLimit(1));
     }
 
     public function testLimitIsApplied(): void
     {
-        $reader = (new ArrayDataReader($this->getDataSet()))->limit(5);
+        $reader = (new ArrayDataReader($this->getDataSet()))->withLimit(5);
 
         $data = $reader->read();
 
@@ -79,7 +79,7 @@ final class ArrayDataReaderTest extends TestCase
 
     public function testOffsetIsApplied(): void
     {
-        $reader = (new ArrayDataReader($this->getDataSet()))->offset(2);
+        $reader = (new ArrayDataReader($this->getDataSet()))->withOffset(2);
 
         $data = $reader->read();
 
@@ -91,7 +91,7 @@ final class ArrayDataReaderTest extends TestCase
     {
         $reader = new ArrayDataReader([]);
 
-        $this->assertNotSame($reader, $reader->sort(null));
+        $this->assertNotSame($reader, $reader->withSort(null));
     }
 
     public function testSorting(): void
@@ -101,10 +101,10 @@ final class ArrayDataReaderTest extends TestCase
             'name'
         ]);
 
-        $sorting = $sorting->order(['name' => 'asc']);
+        $sorting = $sorting->withOrder(['name' => 'asc']);
 
         $reader = (new ArrayDataReader($this->getDataSet()))
-            ->sort($sorting);
+            ->withSort($sorting);
 
         $data = $reader->read();
 
@@ -122,7 +122,7 @@ final class ArrayDataReaderTest extends TestCase
     {
         $reader = new ArrayDataReader([]);
 
-        $this->assertNotSame($reader, $reader->filter(null));
+        $this->assertNotSame($reader, $reader->withFilter(null));
     }
 
     public function testFiltering(): void

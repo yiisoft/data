@@ -9,6 +9,6 @@ interface DataReaderInterface
      * @param int $limit
      * @return $this
      */
-    public function limit(int $limit);
+    public function withLimit(int $limit);
     public function read(): iterable;
 }

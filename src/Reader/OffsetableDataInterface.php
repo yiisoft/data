@@ -7,5 +7,5 @@ interface OffsetableDataInterface
      * @param int $offset
      * @return $this
      */
-    public function offset(int $offset);
+    public function withOffset(int $offset);
 }

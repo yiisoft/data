@@ -37,7 +37,7 @@ final class OffsetPaginator
         return $this->currentPage;
     }
 
-    public function currentPage(int $page): self
+    public function withCurrentPage(int $page): self
     {
         if ($page < 1) {
             throw new \InvalidArgumentException('Current page should be at least 1');
@@ -48,7 +48,7 @@ final class OffsetPaginator
         return $new;
     }
 
-    public function pageSize(int $size): self
+    public function withPageSize(int $size): self
     {
         if ($size < 1) {
             throw new \InvalidArgumentException('Page size should be at least 1');
@@ -81,7 +81,7 @@ final class OffsetPaginator
 
     public function read(): iterable
     {
-        $reader = $this->dataReader->limit($this->pageSize)->offset($this->getOffset());
+        $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
         yield from $reader->read();
     }
 }
