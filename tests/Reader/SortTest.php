@@ -72,19 +72,19 @@ final class SortTest extends TestCase
     public function testWithOrderStringIsImmutable(): void
     {
         $sort = new Sort([]);
-        $this->assertNotSame($sort, $sort->withOrderString('a'));
+        $this->assertNotSame($sort, $sort->orderString('a'));
     }
 
     public function testWithOrderIsImmutable(): void
     {
         $sort = new Sort([]);
-        $this->assertNotSame($sort, $sort->withOrder([]));
+        $this->assertNotSame($sort, $sort->order([]));
     }
 
     public function testWithOrderString(): void
     {
         $sort = (new Sort([]))
-            ->withOrderString(' -a, b');
+            ->orderString(' -a, b');
 
         $this->assertSame([
             'a' => 'desc',
@@ -95,7 +95,7 @@ final class SortTest extends TestCase
     public function testGetOrderAsString(): void
     {
         $sort = (new Sort([]))
-            ->withOrder([
+            ->order([
                 'a' => 'desc',
                 'b' => 'asc',
             ]);
@@ -106,7 +106,7 @@ final class SortTest extends TestCase
     public function testGetCriteriaWithEmptyConfig(): void
     {
         $sort = (new Sort([]))
-            ->withOrder([
+            ->order([
                 'a' => 'desc',
                 'b' => 'asc',
             ]);
@@ -124,7 +124,7 @@ final class SortTest extends TestCase
                 'label' => 'B',
             ]
         ]))
-            ->withOrder([
+            ->order([
                 'a' => 'desc',
                 'b' => 'asc',
             ]);

@@ -39,7 +39,7 @@ final class OffsetPaginatorTest extends TestCase
     {
         $nonOffsetableDataReader = new class implements DataReaderInterface
         {
-            public function withLimit(int $limit)
+            public function limit(int $limit)
             {
                 // do nothing
             }
@@ -61,7 +61,7 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = new OffsetPaginator($dataReader);
 
         $this->expectException(\InvalidArgumentException::class);
-        $paginator->withCurrentPage(0);
+        $paginator->currentPage(0);
     }
 
     public function testPageSizeCannotBeLessThanOne(): void
@@ -70,7 +70,7 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = new OffsetPaginator($dataReader);
 
         $this->expectException(\InvalidArgumentException::class);
-        $paginator->withPageSize(0);
+        $paginator->pageSize(0);
     }
 
     public function testReadFirstPage(): void
@@ -78,8 +78,8 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new ArrayDataReader($this->getDataSet());
 
         $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withCurrentPage(1);
+            ->pageSize(2)
+            ->currentPage(1);
 
         $expected = [
             [
@@ -100,8 +100,8 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new ArrayDataReader($this->getDataSet());
 
         $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withCurrentPage(2);
+            ->pageSize(2)
+            ->currentPage(2);
 
         $expected = [
             [
@@ -122,8 +122,8 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new ArrayDataReader($this->getDataSet());
 
         $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withCurrentPage(3);
+            ->pageSize(2)
+            ->currentPage(3);
 
         $expected = [
             [
@@ -139,7 +139,7 @@ final class OffsetPaginatorTest extends TestCase
     {
         $dataReader = new ArrayDataReader($this->getDataSet());
         $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2);
+            ->pageSize(2);
 
         $this->assertSame(3, $paginator->getTotalPages());
     }
@@ -148,8 +148,8 @@ final class OffsetPaginatorTest extends TestCase
     {
         $dataReader = new ArrayDataReader($this->getDataSet());
         $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withCurrentPage(1);
+            ->pageSize(2)
+            ->currentPage(1);
 
         $this->assertTrue($paginator->isOnFirstPage());
     }
@@ -158,8 +158,8 @@ final class OffsetPaginatorTest extends TestCase
     {
         $dataReader = new ArrayDataReader($this->getDataSet());
         $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withCurrentPage(2);
+            ->pageSize(2)
+            ->currentPage(2);
 
         $this->assertFalse($paginator->isOnFirstPage());
     }
@@ -168,8 +168,8 @@ final class OffsetPaginatorTest extends TestCase
     {
         $dataReader = new ArrayDataReader($this->getDataSet());
         $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withCurrentPage(1);
+            ->pageSize(2)
+            ->currentPage(1);
 
         $this->assertFalse($paginator->isOnLastPage());
     }
@@ -178,8 +178,8 @@ final class OffsetPaginatorTest extends TestCase
     {
         $dataReader = new ArrayDataReader($this->getDataSet());
         $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withCurrentPage(3);
+            ->pageSize(2)
+            ->currentPage(3);
 
         $this->assertTrue($paginator->isOnLastPage());
     }
