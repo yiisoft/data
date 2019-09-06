@@ -1,17 +1,14 @@
 <?php
+declare(strict_types=1);
 
-
-namespace Reader\Criterion;
-
-
-use Yiisoft\Data\Reader\Criterion\CriteronInterface;
+namespace Yiisoft\Data\Reader\Criterion;
 
 abstract class GroupCriterion implements CriteronInterface
 {
     /**
      * @var CriteronInterface[]
      */
-    private $criteria = [];
+    private $criteria;
 
     public function __construct(CriteronInterface...$criteria)
     {
@@ -24,9 +21,7 @@ abstract class GroupCriterion implements CriteronInterface
         foreach ($this->criteria as $criterion) {
             $criteriaArray[] = $criterion->toArray();
         }
-        return [
-            $this->getOperator() => $criteriaArray,
-        ];
+        return [$this->getOperator(), $criteriaArray];
     }
 
     abstract protected function getOperator(): string;

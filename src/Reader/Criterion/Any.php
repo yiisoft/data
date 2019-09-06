@@ -1,15 +1,12 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Criterion;
-
-
-use Reader\Criterion\GroupCriterion;
 
 final class Any extends GroupCriterion
 {
     protected function getOperator(): string
     {
-        return 'or';
+        return 'any';
     }
 }

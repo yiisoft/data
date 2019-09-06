@@ -1,10 +1,7 @@
 <?php
+declare(strict_types=1);
 
-
-namespace Reader\Criterion;
-
-
-use Yiisoft\Data\Reader\Criterion\CriteronInterface;
+namespace Yiisoft\Data\Reader\Criterion;
 
 final class Like implements CriteronInterface
 {
