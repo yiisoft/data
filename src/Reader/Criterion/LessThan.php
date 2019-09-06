@@ -6,7 +6,6 @@ final class LessThan implements CriteronInterface
 {
     private $field;
     private $value;
-    private $orEqual = false;
 
     public function __construct(string $field, $value)
     {
@@ -18,15 +17,8 @@ final class LessThan implements CriteronInterface
         $this->value = $value;
     }
 
-    public function orEqual(): self
-    {
-        $new = clone $this;
-        $new->orEqual = true;
-        return $new;
-    }
-
     public function toArray(): array
     {
-        return [$this->orEqual ? 'lte' : 'lt', $this->field, $this->value];
+        return ['lt', $this->field, $this->value];
     }
 }

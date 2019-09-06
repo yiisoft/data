@@ -3,7 +3,7 @@
 namespace Yiisoft\Data\Reader\Criterion;
 
 
-final class GreaterThan implements CriteronInterface
+final class GreaterThanOrEqual implements CriteronInterface
 {
     private $field;
     private $value;
@@ -20,6 +20,6 @@ final class GreaterThan implements CriteronInterface
 
     public function toArray(): array
     {
-        return ['gt', $this->field, $this->value];
+        return ['gte', $this->field, $this->value];
     }
 }
