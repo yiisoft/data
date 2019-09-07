@@ -4,16 +4,16 @@ namespace Yiisoft\Data\Tests\Reader;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\ArrayDataReader;
-use Yiisoft\Data\Reader\Criterion\All;
-use Yiisoft\Data\Reader\Criterion\Any;
-use Yiisoft\Data\Reader\Criterion\Equals;
-use Yiisoft\Data\Reader\Criterion\GreaterThan;
-use Yiisoft\Data\Reader\Criterion\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Criterion\In;
-use Yiisoft\Data\Reader\Criterion\LessThan;
-use Yiisoft\Data\Reader\Criterion\LessThanOrEqual;
-use Yiisoft\Data\Reader\Criterion\Like;
-use Yiisoft\Data\Reader\Criterion\Not;
+use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Filter\In;
+use Yiisoft\Data\Reader\Filter\LessThan;
+use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
+use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\Sort;
 
 final class ArrayDataReaderTest extends TestCase

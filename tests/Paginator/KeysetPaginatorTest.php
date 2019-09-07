@@ -5,7 +5,7 @@ namespace Yiisoft\Data\Tests\Paginator;
 
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\ArrayDataReader;
-use Yiisoft\Data\Reader\Criterion\CriteronInterface;
+use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -73,7 +73,7 @@ final class KeysetPaginatorTest extends Testcase
                 return [];
             }
 
-            public function withFilter(CriteronInterface $criteron)
+            public function withFilter(FilterInterface $filter)
             {
                 // do nothing
             }

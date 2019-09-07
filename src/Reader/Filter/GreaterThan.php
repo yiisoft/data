@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Criterion;
+namespace Yiisoft\Data\Reader\Filter;
 
-final class GreaterThan implements CriteronInterface
+final class GreaterThan implements FilterInterface
 {
     private $field;
     private $value;

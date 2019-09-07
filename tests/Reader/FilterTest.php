@@ -2,22 +2,22 @@
 
 namespace Yiisoft\Data\Tests\Reader;
 
-use Yiisoft\Data\Reader\Criterion\All;
-use Yiisoft\Data\Reader\Criterion\Any;
-use Yiisoft\Data\Reader\Criterion\CriteronInterface;
-use Yiisoft\Data\Reader\Criterion\Equals;
-use Yiisoft\Data\Reader\Criterion\GreaterThan;
-use Yiisoft\Data\Reader\Criterion\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Criterion\In;
-use Yiisoft\Data\Reader\Criterion\LessThan;
-use Yiisoft\Data\Reader\Criterion\LessThanOrEqual;
-use Yiisoft\Data\Reader\Criterion\Like;
-use Yiisoft\Data\Reader\Criterion\Not;
+use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Filter\In;
+use Yiisoft\Data\Reader\Filter\LessThan;
+use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
+use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Tests\TestCase;
 
-final class CriteriaTest extends TestCase
+final class FilterTest extends TestCase
 {
-    public function criteriaDataProvider(): array
+    public function filterDataProvider(): array
     {
         return [
             'Equals' => [
@@ -98,10 +98,10 @@ final class CriteriaTest extends TestCase
     }
 
     /**
-     * @dataProvider criteriaDataProvider
+     * @dataProvider filterDataProvider
      */
-    public function testCriteria(CriteronInterface $criteron, array $criterionArray): void
+    public function testFilter(FilterInterface $filter, array $filterArray): void
     {
-        $this->assertSame($criterionArray, $criteron->toArray());
+        $this->assertSame($filterArray, $filter->toArray());
     }
 }

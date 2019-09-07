@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Criterion;
+namespace Yiisoft\Data\Reader\Filter;
 
-final class LessThan implements CriteronInterface
+final class GreaterThanOrEqual implements FilterInterface
 {
     private $field;
     private $value;
@@ -25,6 +25,6 @@ final class LessThan implements CriteronInterface
 
     public static function getOperator(): string
     {
-        return 'lt';
+        return 'gte';
     }
 }

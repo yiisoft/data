@@ -1,21 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Criterion;
+namespace Yiisoft\Data\Reader\Filter;
 
-final class LessThanOrEqual implements CriteronInterface
+
+class Equals implements FilterInterface
 {
     private $field;
     private $value;
 
     public function __construct(string $field, $value)
     {
-        if (!is_scalar($value)) {
-            throw new \InvalidArgumentException('Value should be scalar');
-        }
+        $this->validateValue($value);
 
         $this->field = $field;
         $this->value = $value;
+    }
+
+    private function validateValue($value): void
+    {
+        if (!is_scalar($value)) {
+            throw new \InvalidArgumentException('Value should be scalar');
+        }
     }
 
     public function toArray(): array
@@ -25,6 +31,6 @@ final class LessThanOrEqual implements CriteronInterface
 
     public static function getOperator(): string
     {
-        return 'lte';
+        return 'eq';
     }
 }

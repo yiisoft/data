@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
-use Yiisoft\Data\Reader\Criterion\GreaterThan;
-use Yiisoft\Data\Reader\Criterion\LessThan;
+use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -63,12 +63,12 @@ class KeysetPaginator
             }
 
             if ($sorting === 'asc') {
-                $criteria = new GreaterThan($field, $this->lastValue);
+                $filter = new GreaterThan($field, $this->lastValue);
             } elseif ($sorting === 'desc') {
-                $criteria = new LessThan($field, $this->lastValue);
+                $filter = new LessThan($field, $this->lastValue);
             }
 
-            $dataReader = $dataReader->withFilter($criteria);
+            $dataReader = $dataReader->withFilter($filter);
         }
 
         yield from $dataReader->read();

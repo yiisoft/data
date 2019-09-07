@@ -4,17 +4,17 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader;
 
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Criterion\All;
-use Yiisoft\Data\Reader\Criterion\Any;
-use Yiisoft\Data\Reader\Criterion\CriteronInterface;
-use Yiisoft\Data\Reader\Criterion\Equals;
-use Yiisoft\Data\Reader\Criterion\GreaterThan;
-use Yiisoft\Data\Reader\Criterion\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Criterion\LessThan;
-use Yiisoft\Data\Reader\Criterion\LessThanOrEqual;
-use Yiisoft\Data\Reader\Criterion\In;
-use Yiisoft\Data\Reader\Criterion\Like;
-use Yiisoft\Data\Reader\Criterion\Not;
+use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Filter\LessThan;
+use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
+use Yiisoft\Data\Reader\Filter\In;
+use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\Not;
 
 final class ArrayDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
@@ -22,9 +22,9 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
     private $sort;
 
     /**
-     * @var CriteronInterface
+     * @var FilterInterface
      */
-    private $filterCriteria;
+    private $filter;
 
     private $limit = self::DEFAULT_LIMIT;
     private $offset = 0;
@@ -65,32 +65,33 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
     private function filterItems(array $items): array
     {
         $filteredItems = [];
+        $filterArray = $this->filter->toArray();
         foreach ($items as $item) {
-            if ($this->matchFilter($item, $this->filterCriteria->toArray())) {
+            if ($this->matchFilter($item, $filterArray)) {
                 $filteredItems[] = $item;
             }
         }
         return $filteredItems;
     }
 
-    private function matchFilter(array $item, array $criterion): bool
+    private function matchFilter(array $item, array $filter): bool
     {
-        $operation = array_shift($criterion);
-        $arguments = $criterion;
+        $operation = array_shift($filter);
+        $arguments = $filter;
 
         switch ($operation) {
             case Not::getOperator():
                 return !$this->matchFilter($item, $arguments[0]);
             case Any::getOperator():
-                foreach ($arguments[0] as $subCriterion) {
-                    if ($this->matchFilter($item, $subCriterion)) {
+                foreach ($arguments[0] as $subFilter) {
+                    if ($this->matchFilter($item, $subFilter)) {
                         return true;
                     }
                 }
                 return false;
             case All::getOperator():
-                foreach ($arguments[0] as $subCriterion) {
-                    if (!$this->matchFilter($item, $subCriterion)) {
+                foreach ($arguments[0] as $subFilter) {
+                    if (!$this->matchFilter($item, $subFilter)) {
                         return false;
                     }
                 }
@@ -121,10 +122,10 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
         }
     }
 
-    public function withFilter(?CriteronInterface $criteria): self
+    public function withFilter(?FilterInterface $filter): self
     {
         $new = clone $this;
-        $new->filterCriteria = $criteria;
+        $new->filter = $filter;
         return $new;
     }
 
@@ -139,7 +140,7 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
     {
         $data = $this->data;
 
-        if ($this->filterCriteria !== null) {
+        if ($this->filter !== null) {
             $data = $this->filterItems($data);
         }
 
