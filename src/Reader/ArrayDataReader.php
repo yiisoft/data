@@ -81,14 +81,14 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
             case Not::getOperator():
                 return !$this->matchFilter($item, $arguments[0]);
             case Any::getOperator():
-                foreach ($arguments as $subCriterion) {
+                foreach ($arguments[0] as $subCriterion) {
                     if ($this->matchFilter($item, $subCriterion)) {
                         return true;
                     }
                 }
                 return false;
             case All::getOperator():
-                foreach ($arguments as $subCriterion) {
+                foreach ($arguments[0] as $subCriterion) {
                     if (!$this->matchFilter($item, $subCriterion)) {
                         return false;
                     }
@@ -113,8 +113,8 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
                 [$field, $values] = $arguments;
                 return in_array($item[$field], $values, false);
             case Like::getOperator():
-                [$field, $values] = $arguments;
-                return stripos($item[$field], $values) !== false;
+                [$field, $value] = $arguments;
+                return stripos($item[$field], $value) !== false;
             default:
                 throw new \RuntimeException("Operation \"$operation\" is not supported");
         }

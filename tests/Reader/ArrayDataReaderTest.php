@@ -4,7 +4,16 @@ namespace Yiisoft\Data\Tests\Reader;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\ArrayDataReader;
+use Yiisoft\Data\Reader\Criterion\All;
+use Yiisoft\Data\Reader\Criterion\Any;
 use Yiisoft\Data\Reader\Criterion\Equals;
+use Yiisoft\Data\Reader\Criterion\GreaterThan;
+use Yiisoft\Data\Reader\Criterion\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Criterion\In;
+use Yiisoft\Data\Reader\Criterion\LessThan;
+use Yiisoft\Data\Reader\Criterion\LessThanOrEqual;
+use Yiisoft\Data\Reader\Criterion\Like;
+use Yiisoft\Data\Reader\Criterion\Not;
 use Yiisoft\Data\Reader\Sort;
 
 final class ArrayDataReaderTest extends TestCase
@@ -136,6 +145,186 @@ final class ArrayDataReaderTest extends TestCase
             [
                 'id' => 3,
                 'name' => 'Agent K',
+            ],
+        ], $reader->read());
+    }
+
+    public function testGreaterThanFiltering(): void
+    {
+        $filter = new GreaterThan('id', 3);
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 5,
+                'name' => 'Agent J',
+            ],
+            [
+                'id' => 6,
+                'name' => '007',
+            ],
+        ], $reader->read());
+    }
+
+    public function testGreaterThanOrEqualFiltering(): void
+    {
+        $filter = new GreaterThanOrEqual('id', 3);
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Agent J',
+            ],
+            [
+                'id' => 6,
+                'name' => '007',
+            ],
+        ], $reader->read());
+    }
+
+    public function testLessThanFiltering(): void
+    {
+        $filter = new LessThan('id', 3);
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+        ], $reader->read());
+    }
+
+    public function testLessThanOrEqualFiltering(): void
+    {
+        $filter = new LessThanOrEqual('id', 3);
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+        ], $reader->read());
+    }
+
+    public function testInFiltering(): void
+    {
+        $filter = new In('id', [1, 2]);
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+        ], $reader->read());
+    }
+
+    public function testLikeFiltering(): void
+    {
+        $filter = new Like('name', 'agent');
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Agent J',
+            ],
+        ], $reader->read());
+    }
+
+    public function testNotFiltering(): void
+    {
+        $filter = new Not(new Equals('id', 1));
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Agent J',
+            ],
+            [
+                'id' => 6,
+                'name' => '007',
+            ],
+        ], $reader->read());
+    }
+
+    public function testAnyFiltering(): void
+    {
+        $filter = new Any(
+            new Equals('id', 1),
+            new Equals('id', 2)
+        );
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+        ], $reader->read());
+    }
+
+    public function testAllFiltering(): void
+    {
+        $filter = new All(
+            new GreaterThan('id', 3),
+            new Like('name', 'agent')
+        );
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 5,
+                'name' => 'Agent J',
             ],
         ], $reader->read());
     }
