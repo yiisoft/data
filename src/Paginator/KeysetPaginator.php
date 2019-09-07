@@ -51,9 +51,9 @@ class KeysetPaginator
                 $criteria = new GreaterThan($this->lastField, $this->lastValue);
             } elseif ($sorting === SORT_DESC) {
                 $criteria = new LessThan($this->lastField, $this->lastValue);
+            } else {
+                throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
             }
-
-            // TODO: what to do if we're not aware of sorting?
 
             $dataReader = $dataReader->withFilter(new Filter($criteria->toArray()));
         }
