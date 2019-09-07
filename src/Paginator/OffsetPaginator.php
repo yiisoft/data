@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
@@ -12,7 +13,7 @@ use Yiisoft\Data\Reader\OffsetableDataInterface;
 final class OffsetPaginator
 {
     /**
-     * @var OffsetableDataInterface|DataReaderInterface
+     * @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface
      */
     private $dataReader;
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader;
 
@@ -45,7 +46,7 @@ final class FilterTest extends TestCase
                 ['lte', 'test', 42],
             ],
             'Like' => [
-                new Like('test', 42),
+                new Like('test', '42'),
                 ['like', 'test', '42'],
             ],
             'Not' => [

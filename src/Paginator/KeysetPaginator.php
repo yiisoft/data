@@ -7,7 +7,6 @@ use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
 /**
@@ -22,7 +21,7 @@ use Yiisoft\Data\Reader\SortableDataInterface;
 class KeysetPaginator
 {
     /**
-     * @var FilterableDataInterface|DataReaderInterface
+     * @var FilterableDataInterface|DataReaderInterface|SortableDataInterface
      */
     private $dataReader;
     private $pageSize;
