@@ -20,6 +20,11 @@ final class LessThanOrEqual implements CriteronInterface
 
     public function toArray(): array
     {
-        return ['lte', $this->field, $this->value];
+        return [self::getOperator(), $this->field, $this->value];
+    }
+
+    public static function getOperator(): string
+    {
+        return 'lte';
     }
 }

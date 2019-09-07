@@ -21,8 +21,6 @@ abstract class GroupCriterion implements CriteronInterface
         foreach ($this->criteria as $criterion) {
             $criteriaArray[] = $criterion->toArray();
         }
-        return [$this->getOperator(), $criteriaArray];
+        return [static::getOperator(), $criteriaArray];
     }
-
-    abstract protected function getOperator(): string;
 }

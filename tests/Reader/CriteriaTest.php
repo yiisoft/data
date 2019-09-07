@@ -4,10 +4,11 @@ namespace Yiisoft\Data\Tests\Reader;
 
 use Yiisoft\Data\Reader\Criterion\All;
 use Yiisoft\Data\Reader\Criterion\Any;
-use Yiisoft\Data\Reader\Criterion\Compare;
 use Yiisoft\Data\Reader\Criterion\CriteronInterface;
+use Yiisoft\Data\Reader\Criterion\Equals;
 use Yiisoft\Data\Reader\Criterion\GreaterThan;
 use Yiisoft\Data\Reader\Criterion\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Criterion\In;
 use Yiisoft\Data\Reader\Criterion\LessThan;
 use Yiisoft\Data\Reader\Criterion\LessThanOrEqual;
 use Yiisoft\Data\Reader\Criterion\Like;
@@ -19,9 +20,13 @@ class CriteriaTest extends TestCase
     public function criteriaDataProvider(): array
     {
         return [
-            'Compare' => [
-                new Compare('test', 42),
+            'Equals' => [
+                new Equals('test', 42),
                 ['eq', 'test', 42],
+            ],
+            'In' => [
+                new In('test', [1, 2, 3]),
+                ['in', 'test', [1, 2, 3]],
             ],
             'GreaterThan' => [
                 new GreaterThan('test', 42),
@@ -44,13 +49,13 @@ class CriteriaTest extends TestCase
                 ['like', 'test', '42'],
             ],
             'Not' => [
-                new Not(new Compare('test', 42)),
+                new Not(new Equals('test', 42)),
                 ['not', ['eq', 'test', 42]],
             ],
             'Any' => [
                 new Any(
-                    new Compare('test', 1),
-                    new Compare('test', 2)
+                    new Equals('test', 1),
+                    new Equals('test', 2)
                 ),
                 ['any', [
                     ['eq', 'test', 1],
@@ -69,10 +74,10 @@ class CriteriaTest extends TestCase
             ],
             'NestedGroup' => [
                 new All(
-                    new Compare('test', 42),
+                    new Equals('test', 42),
                     new Any(
-                        new Compare('test', 1),
-                        new Compare('test', 2)
+                        new Equals('test', 1),
+                        new Equals('test', 2)
                     )
                 ),
                 [

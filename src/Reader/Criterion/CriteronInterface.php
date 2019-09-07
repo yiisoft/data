@@ -5,5 +5,6 @@ namespace Yiisoft\Data\Reader\Criterion;
 
 interface CriteronInterface
 {
+    public static function getOperator(): string;
     public function toArray(): array;
 }

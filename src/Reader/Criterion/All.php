@@ -5,7 +5,7 @@ namespace Yiisoft\Data\Reader\Criterion;
 
 final class All extends GroupCriterion
 {
-    protected function getOperator(): string
+    public static function getOperator(): string
     {
         return 'all';
     }

@@ -14,6 +14,11 @@ final class Not implements CriteronInterface
 
     public function toArray(): array
     {
-        return ['not', $this->criterion->toArray()];
+        return [self::getOperator(), $this->criterion->toArray()];
+    }
+
+    public static function getOperator(): string
+    {
+        return 'not';
     }
 }

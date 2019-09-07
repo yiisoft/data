@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Criterion;
 
-final class Compare implements CriteronInterface
+
+final class In implements CriteronInterface
 {
     private $field;
     private $value;
 
-    public function __construct(string $field, $value)
+    public function __construct(string $field, array $value)
     {
         $this->validateValue($value);
 
@@ -18,10 +19,6 @@ final class Compare implements CriteronInterface
 
     private function validateValue($value): void
     {
-        if ($value === null || is_scalar($value)) {
-            return;
-        }
-
         if (is_array($value)) {
             foreach ($value as $arrayValue) {
                 if (!is_scalar($arrayValue)) {
@@ -33,6 +30,11 @@ final class Compare implements CriteronInterface
 
     public function toArray(): array
     {
-        return [is_array($this->value) ? 'in' : 'eq', $this->field, $this->value];
+        return [self::getOperator(), $this->field, $this->value];
+    }
+
+    public static function getOperator(): string
+    {
+        return 'in';
     }
 }

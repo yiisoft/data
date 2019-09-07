@@ -20,6 +20,11 @@ final class GreaterThanOrEqual implements CriteronInterface
 
     public function toArray(): array
     {
-        return ['gte', $this->field, $this->value];
+        return [self::getOperator(), $this->field, $this->value];
+    }
+
+    public static function getOperator(): string
+    {
+        return 'gte';
     }
 }

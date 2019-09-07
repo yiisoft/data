@@ -17,6 +17,11 @@ final class Like implements CriteronInterface
 
     public function toArray(): array
     {
-        return ['like', $this->field, $this->value];
+        return [self::getOperator(), $this->field, $this->value];
+    }
+
+    public static function getOperator(): string
+    {
+        return 'like';
     }
 }
