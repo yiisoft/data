@@ -3,12 +3,27 @@
 namespace Yiisoft\Data\Reader;
 
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Reader\Criterion\All;
+use Yiisoft\Data\Reader\Criterion\Any;
+use Yiisoft\Data\Reader\Criterion\CriteronInterface;
+use Yiisoft\Data\Reader\Criterion\Equals;
+use Yiisoft\Data\Reader\Criterion\GreaterThan;
+use Yiisoft\Data\Reader\Criterion\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Criterion\LessThan;
+use Yiisoft\Data\Reader\Criterion\LessThanOrEqual;
+use Yiisoft\Data\Reader\Criterion\In;
+use Yiisoft\Data\Reader\Criterion\Like;
+use Yiisoft\Data\Reader\Criterion\Not;
 
-class ArrayDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
+final class ArrayDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
     private $data;
     private $sort;
-    private $filter;
+
+    /**
+     * @var CriteronInterface
+     */
+    private $filterCriteria;
 
     private $limit = self::DEFAULT_LIMIT;
     private $offset = 0;
@@ -36,7 +51,7 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
      * @param Sort $sort the sort definition
      * @return array the sorted data models
      */
-    protected function sortItems(array $items, Sort $sort): array
+    private function sortItems(array $items, Sort $sort): array
     {
         $criteria = $sort->getCriteria();
         if ($criteria !== []) {
@@ -46,20 +61,69 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
         return $items;
     }
 
-    protected function filterItems(array $items, Filter $filter): array
+    private function filterItems(array $items): array
     {
-        $criteria = $filter->getCriteria();
-        if ($criteria !== []) {
-            // TODO: implement
+        $filteredItems = [];
+        foreach ($items as $item) {
+            if ($this->matchFilter($item, $this->filterCriteria->toArray())) {
+                $filteredItems[] = $item;
+            }
         }
-
-        return $items;
+        return $filteredItems;
     }
 
-    public function withFilter(?Filter $filter): self
+    private function matchFilter(array $item, array $criterion): bool
+    {
+        $operation = array_shift($criterion);
+        $arguments = $criterion;
+
+        switch ($operation) {
+            case Not::getOperator():
+                return !$this->matchFilter($item, $arguments[0]);
+            case Any::getOperator():
+                foreach ($arguments as $subCriterion) {
+                    if ($this->matchFilter($item, $subCriterion)) {
+                        return true;
+                    }
+                }
+                return false;
+            case All::getOperator():
+                foreach ($arguments as $subCriterion) {
+                    if (!$this->matchFilter($item, $subCriterion)) {
+                        return false;
+                    }
+                }
+                return true;
+            case Equals::getOperator():
+                [$field, $value] = $arguments;
+                return $item[$field] == $value;
+            case GreaterThan::getOperator():
+                [$field, $value] = $arguments;
+                return $item[$field] > $value;
+            case GreaterThanOrEqual::getOperator():
+                [$field, $value] = $arguments;
+                return $item[$field] >= $value;
+            case LessThan::getOperator():
+                [$field, $value] = $arguments;
+                return $item[$field] < $value;
+            case LessThanOrEqual::getOperator():
+                [$field, $value] = $arguments;
+                return $item[$field] <= $value;
+            case In::getOperator():
+                [$field, $values] = $arguments;
+                return in_array($item[$field], $values, false);
+            case Like::getOperator():
+                [$field, $values] = $arguments;
+                return stripos($item[$field], $values) !== false;
+            default:
+                throw new \RuntimeException("Operation \"$operation\" is not supported");
+        }
+    }
+
+    public function withFilter(?CriteronInterface $criteria): self
     {
         $new = clone $this;
-        $new->filter = $filter;
+        $new->filterCriteria = $criteria;
         return $new;
     }
 
@@ -74,12 +138,12 @@ class ArrayDataReader implements DataReaderInterface, SortableDataInterface, Fil
     {
         $data = $this->data;
 
-        if ($this->filter !== null) {
-            $data = $this->filterItems($this->data, $this->filter);
+        if ($this->filterCriteria !== null) {
+            $data = $this->filterItems($data);
         }
 
         if ($this->sort !== null) {
-            $data = $this->sortItems($this->data, $this->sort);
+            $data = $this->sortItems($data, $this->sort);
         }
         return array_slice($data, $this->offset, $this->limit);
     }

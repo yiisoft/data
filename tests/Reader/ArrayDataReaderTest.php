@@ -4,6 +4,7 @@ namespace Yiisoft\Data\Tests\Reader;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\ArrayDataReader;
+use Yiisoft\Data\Reader\Criterion\Equals;
 use Yiisoft\Data\Reader\Sort;
 
 final class ArrayDataReaderTest extends TestCase
@@ -125,8 +126,17 @@ final class ArrayDataReaderTest extends TestCase
         $this->assertNotSame($reader, $reader->withFilter(null));
     }
 
-    public function testFiltering(): void
+    public function testEqualsFiltering(): void
     {
-        // TODO: implement
+        $filter = new Equals('id', 3);
+        $reader = (new ArrayDataReader($this->getDataSet()))
+            ->withFilter($filter);
+
+        $this->assertSame([
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+        ], $reader->read());
     }
 }

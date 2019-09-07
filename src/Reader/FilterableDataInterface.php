@@ -1,7 +1,9 @@
 <?php
 namespace Yiisoft\Data\Reader;
 
+use Yiisoft\Data\Reader\Criterion\CriteronInterface;
+
 interface FilterableDataInterface
 {
-    public function withFilter(Filter $filter);
+    public function withFilter(CriteronInterface $criteron);
 }

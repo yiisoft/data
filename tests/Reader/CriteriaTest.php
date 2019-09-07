@@ -15,7 +15,7 @@ use Yiisoft\Data\Reader\Criterion\Like;
 use Yiisoft\Data\Reader\Criterion\Not;
 use Yiisoft\Data\Tests\TestCase;
 
-class CriteriaTest extends TestCase
+final class CriteriaTest extends TestCase
 {
     public function criteriaDataProvider(): array
     {
