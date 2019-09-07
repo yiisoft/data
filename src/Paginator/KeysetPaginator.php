@@ -1,12 +1,14 @@
 <?php
+declare(strict_types=1);
+
 namespace Yiisoft\Data\Paginator;
 
 use Yiisoft\Data\Reader\Criterion\GreaterThan;
 use Yiisoft\Data\Reader\Criterion\LessThan;
 use Yiisoft\Data\Reader\DataReaderInterface;
-use Yiisoft\Data\Reader\Filter;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\SortableDataInterface;
 
 /**
  * Keyset paginator
@@ -25,13 +27,20 @@ class KeysetPaginator
     private $dataReader;
     private $pageSize;
 
-    private $lastField;
     private $lastValue;
 
     public function __construct(DataReaderInterface $dataReader)
     {
         if (!$dataReader instanceof FilterableDataInterface) {
             throw new \InvalidArgumentException('Data reader should implement FilterableDataInterface in order to be used with keyset paginator');
+        }
+
+        if (!$dataReader instanceof SortableDataInterface) {
+            throw new \InvalidArgumentException('Data reader should implement SortableDataInterface in order to be used with keyset paginator');
+        }
+
+        if ($dataReader->getSort() === null) {
+            throw new \RuntimeException('Data sorting should be configured in order to work with keyset pagination');
         }
 
         $this->dataReader = $dataReader;
@@ -41,36 +50,43 @@ class KeysetPaginator
     {
         $dataReader = $this->dataReader->withLimit($this->pageSize);
 
-        if (isset($this->lastField, $this->lastValue)) {
-            /** @var Sort $sort */
-            $sort = $this->dataReader->getSort();
-            $order = $sort->getOrder();
+        if (isset($this->lastValue)) {
+            $order = $this->dataReader->getSort()->getOrder();
 
-            $sorting = $order[$this->lastField] ?? null;
-            if ($sorting === SORT_ASC) {
-                $criteria = new GreaterThan($this->lastField, $this->lastValue);
-            } elseif ($sorting === SORT_DESC) {
-                $criteria = new LessThan($this->lastField, $this->lastValue);
-            } else {
+            if ($order === []) {
                 throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
             }
 
-            $dataReader = $dataReader->withFilter(new Filter($criteria->toArray()));
+            // first order field is the field we are paging by
+            foreach ($order as $field => $sorting) {
+                break;
+            }
+
+            if ($sorting === 'asc') {
+                $criteria = new GreaterThan($field, $this->lastValue);
+            } elseif ($sorting === 'desc') {
+                $criteria = new LessThan($field, $this->lastValue);
+            }
+
+            $dataReader = $dataReader->withFilter($criteria);
         }
 
         yield from $dataReader->read();
     }
 
-    public function withLast(string $field, $value): self
+    public function withLast($value): self
     {
         $new = clone $this;
-        $new->lastField = $field;
         $new->lastValue = $value;
         return $new;
     }
 
     public function withPageSize(int $pageSize): self
     {
+        if ($pageSize < 1) {
+            throw new \InvalidArgumentException('Page size should be at least 1');
+        }
+
         $new = clone $this;
         $new->pageSize = $pageSize;
         return $new;

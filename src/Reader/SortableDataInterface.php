@@ -9,5 +9,5 @@ interface SortableDataInterface
      */
     public function withSort(?Sort $sorting);
 
-    public function getSort(): Sort;
+    public function getSort(): ?Sort;
 }

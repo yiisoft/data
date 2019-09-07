@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
@@ -40,7 +41,7 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
         return $new;
     }
 
-    public function getSort(): Sort
+    public function getSort(): ?Sort
     {
         return $this->sort;
     }
