@@ -16,7 +16,7 @@ use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 
-final class ArrayDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
+final class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
     private $data;
     private $sort;
@@ -29,7 +29,7 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
     private $limit = self::DEFAULT_LIMIT;
     private $offset = 0;
 
-    public function __construct(array $data)
+    public function __construct(iterable $data)
     {
         $this->data = $data;
     }
@@ -47,31 +47,20 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
     }
 
     /**
-     * Sorts the data models according to the given sort definition.
-     * @param array $items the models to be sorted
+     * Sorts data items according to the given sort definition.
+     * @param iterable $items the items to be sorted
      * @param Sort $sort the sort definition
-     * @return array the sorted data models
+     * @return array the sorted items
      */
-    private function sortItems(array $items, Sort $sort): array
+    private function sortItems(iterable $items, Sort $sort): iterable
     {
         $criteria = $sort->getCriteria();
         if ($criteria !== []) {
+            $items = $this->iterableToArray($items);
             ArrayHelper::multisort($items, array_keys($criteria), array_values($criteria));
         }
 
         return $items;
-    }
-
-    private function filterItems(array $items): array
-    {
-        $filteredItems = [];
-        $filterArray = $this->filter->toArray();
-        foreach ($items as $item) {
-            if ($this->matchFilter($item, $filterArray)) {
-                $filteredItems[] = $item;
-            }
-        }
-        return $filteredItems;
     }
 
     private function matchFilter(array $item, array $filter): bool
@@ -138,16 +127,37 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
 
     public function read(): iterable
     {
-        $data = $this->data;
-
+        $filter = null;
         if ($this->filter !== null) {
-            $data = $this->filterItems($data);
+            $filter = $this->filter->toArray();
+        }
+
+        $data = [];
+        $skipped = 0;
+
+        foreach ($this->data as $item) {
+            // do not return more than limit items
+            if (count($data) === $this->limit) {
+                break;
+            }
+
+            // skip offset items
+            if ($skipped < $this->offset) {
+                $skipped++;
+                continue;
+            }
+
+            // filter items
+            if ($filter === null || $this->matchFilter($item, $filter)) {
+                $data[] = $item;
+            }
         }
 
         if ($this->sort !== null) {
             $data = $this->sortItems($data, $this->sort);
         }
-        return array_slice($data, $this->offset, $this->limit);
+
+        return $data;
     }
 
     public function withOffset(int $offset): self
@@ -160,5 +170,10 @@ final class ArrayDataReader implements DataReaderInterface, SortableDataInterfac
     public function count(): int
     {
         return count($this->data);
+    }
+
+    private function iterableToArray(iterable $iterable): array
+    {
+        return $iterable instanceof \Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 }

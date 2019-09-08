@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Paginator;
 
 use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Reader\ArrayDataReader;
+use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
@@ -87,7 +87,7 @@ final class KeysetPaginatorTest extends Testcase
     public function testPageSizeCannotBeLessThanOne(): void
     {
         $sort = new Sort(['id', 'name']);
-        $dataReader = (new ArrayDataReader($this->getDataSet()))
+        $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
         $paginator = new KeysetPaginator($dataReader);
 
@@ -97,7 +97,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testThrowsExceptionWhenReaderHasNoSort(): void
     {
-        $dataReader = new ArrayDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader($this->getDataSet());
 
         $this->expectException(\RuntimeException::class);
 
@@ -108,7 +108,7 @@ final class KeysetPaginatorTest extends Testcase
     {
         $sort = new Sort(['id', 'name']);
 
-        $dataReader = (new ArrayDataReader($this->getDataSet()))
+        $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
 
         $paginator = (new KeysetPaginator($dataReader))
@@ -124,7 +124,7 @@ final class KeysetPaginatorTest extends Testcase
     {
         $sort = (new Sort(['id', 'name']))->withOrderString('id');
 
-        $dataReader = (new ArrayDataReader($this->getDataSet()))
+        $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
 
 
@@ -149,7 +149,7 @@ final class KeysetPaginatorTest extends Testcase
     {
         $sort = (new Sort(['id', 'name']))->withOrderString('id');
 
-        $dataReader = (new ArrayDataReader($this->getDataSet()))
+        $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
 
         $paginator = (new KeysetPaginator($dataReader))

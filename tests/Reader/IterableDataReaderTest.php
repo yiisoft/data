@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Reader\ArrayDataReader;
+use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Equals;
@@ -17,7 +17,7 @@ use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\Sort;
 
-final class ArrayDataReaderTest extends TestCase
+final class IterableDataReaderTest extends TestCase
 {
     private function getDataSet(): array
     {
@@ -73,14 +73,15 @@ final class ArrayDataReaderTest extends TestCase
 
     public function testWithLimitIsImmutable(): void
     {
-        $reader = new ArrayDataReader([]);
+        $reader = new IterableDataReader([]);
 
         $this->assertNotSame($reader, $reader->withLimit(1));
     }
 
     public function testLimitIsApplied(): void
     {
-        $reader = (new ArrayDataReader($this->getDataSet()))->withLimit(5);
+        $reader = (new IterableDataReader($this->getDataSet()))
+            ->withLimit(5);
 
         $data = $reader->read();
 
@@ -90,7 +91,8 @@ final class ArrayDataReaderTest extends TestCase
 
     public function testOffsetIsApplied(): void
     {
-        $reader = (new ArrayDataReader($this->getDataSet()))->withOffset(2);
+        $reader = (new IterableDataReader($this->getDataSet()))
+            ->withOffset(2);
 
         $data = $reader->read();
 
@@ -100,7 +102,7 @@ final class ArrayDataReaderTest extends TestCase
 
     public function testsWithSortIsImmutable(): void
     {
-        $reader = new ArrayDataReader([]);
+        $reader = new IterableDataReader([]);
 
         $this->assertNotSame($reader, $reader->withSort(null));
     }
@@ -114,7 +116,7 @@ final class ArrayDataReaderTest extends TestCase
 
         $sorting = $sorting->withOrder(['name' => 'asc']);
 
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sorting);
 
         $data = $reader->read();
@@ -124,14 +126,14 @@ final class ArrayDataReaderTest extends TestCase
 
     public function testCounting(): void
     {
-        $reader = new ArrayDataReader($this->getDataSet());
+        $reader = new IterableDataReader($this->getDataSet());
         $this->assertSame(5, $reader->count());
         $this->assertCount(5, $reader);
     }
 
     public function testsWithFilterIsImmutable(): void
     {
-        $reader = new ArrayDataReader([]);
+        $reader = new IterableDataReader([]);
 
         $this->assertNotSame($reader, $reader->withFilter(null));
     }
@@ -139,7 +141,7 @@ final class ArrayDataReaderTest extends TestCase
     public function testEqualsFiltering(): void
     {
         $filter = new Equals('id', 3);
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -153,7 +155,7 @@ final class ArrayDataReaderTest extends TestCase
     public function testGreaterThanFiltering(): void
     {
         $filter = new GreaterThan('id', 3);
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -171,7 +173,7 @@ final class ArrayDataReaderTest extends TestCase
     public function testGreaterThanOrEqualFiltering(): void
     {
         $filter = new GreaterThanOrEqual('id', 3);
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -193,7 +195,7 @@ final class ArrayDataReaderTest extends TestCase
     public function testLessThanFiltering(): void
     {
         $filter = new LessThan('id', 3);
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -211,7 +213,7 @@ final class ArrayDataReaderTest extends TestCase
     public function testLessThanOrEqualFiltering(): void
     {
         $filter = new LessThanOrEqual('id', 3);
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -233,7 +235,7 @@ final class ArrayDataReaderTest extends TestCase
     public function testInFiltering(): void
     {
         $filter = new In('id', [1, 2]);
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -251,7 +253,7 @@ final class ArrayDataReaderTest extends TestCase
     public function testLikeFiltering(): void
     {
         $filter = new Like('name', 'agent');
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -269,7 +271,7 @@ final class ArrayDataReaderTest extends TestCase
     public function testNotFiltering(): void
     {
         $filter = new Not(new Equals('id', 1));
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -298,7 +300,7 @@ final class ArrayDataReaderTest extends TestCase
             new Equals('id', 1),
             new Equals('id', 2)
         );
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
@@ -319,7 +321,7 @@ final class ArrayDataReaderTest extends TestCase
             new GreaterThan('id', 3),
             new Like('name', 'agent')
         );
-        $reader = (new ArrayDataReader($this->getDataSet()))
+        $reader = (new IterableDataReader($this->getDataSet()))
             ->withFilter($filter);
 
         $this->assertSame([
