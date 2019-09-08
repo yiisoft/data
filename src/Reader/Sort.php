@@ -44,7 +44,7 @@ final class Sort
 
     public function __construct(array $config)
     {
-        $noralizedConfig = [];
+        $normalizedConfig = [];
         foreach ($config as $fieldName => $fieldConfig) {
             if (
                 !(is_int($fieldName) && is_string($fieldConfig))
@@ -59,18 +59,18 @@ final class Sort
             }
 
             if (!isset($fieldConfig['asc'], $fieldConfig['desc'])) {
-                $noralizedConfig[$fieldName] = array_merge([
+                $normalizedConfig[$fieldName] = array_merge([
                     'asc' => [$fieldName => SORT_ASC],
                     'desc' => [$fieldName => SORT_DESC],
                     'default' => 'asc',
                     'label' => $fieldName,
                 ], $fieldConfig);
             } else {
-                $noralizedConfig[$fieldName] = $fieldConfig;
+                $normalizedConfig[$fieldName] = $fieldConfig;
             }
         }
 
-        $this->config = $noralizedConfig;
+        $this->config = $normalizedConfig;
     }
 
     /**
