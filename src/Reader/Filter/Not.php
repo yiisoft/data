@@ -5,16 +5,16 @@ namespace Yiisoft\Data\Reader\Filter;
 
 final class Not implements FilterInterface
 {
-    private $criterion;
+    private $filter;
 
-    public function __construct(FilterInterface $criterion)
+    public function __construct(FilterInterface $filter)
     {
-        $this->criterion = $criterion;
+        $this->filter = $filter;
     }
 
     public function toArray(): array
     {
-        return [self::getOperator(), $this->criterion->toArray()];
+        return [self::getOperator(), $this->filter->toArray()];
     }
 
     public static function getOperator(): string

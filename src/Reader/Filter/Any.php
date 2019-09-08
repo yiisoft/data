@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
 
-final class Any extends GroupCriterion
+final class Any extends GroupFilter
 {
     public static function getOperator(): string
     {
