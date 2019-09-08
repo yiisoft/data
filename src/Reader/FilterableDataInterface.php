@@ -7,5 +7,5 @@ use Yiisoft\Data\Reader\Filter\FilterInterface;
 
 interface FilterableDataInterface
 {
-    public function withFilter(FilterInterface $criterion);
+    public function withFilter(FilterInterface $filter);
 }
