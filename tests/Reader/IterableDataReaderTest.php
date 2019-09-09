@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\In;
@@ -15,6 +15,7 @@ use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
+use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 
 final class IterableDataReaderTest extends TestCase
@@ -388,5 +389,47 @@ final class IterableDataReaderTest extends TestCase
         ]);
         $sorting = $sorting->withOrder(['name' => 'asc']);
         $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());
+    }
+
+    public function testCustomFilter(): void
+    {
+        $digitalFilter = new class /*Digital*/ ('name') implements FilterInterface
+        {
+            private $field;
+
+            public function __construct(string $field)
+            {
+                $this->field = $field;
+            }
+
+            public function toArray(): array
+            {
+                return [self::getOperator(), $this->field];
+            }
+
+            public static function getOperator(): string
+            {
+                return 'digital';
+            }
+        };
+        $reader = new class ($this->getDataSet()) extends IterableDataReader
+        {
+            protected function matchFilter(array $item, array $filter): bool
+            {
+                [$operation, $field] = $filter;
+
+                if ($operation === 'digital' /*Digital::getOperator()*/) {
+                    return ctype_digit($item[$field]);
+                }
+
+                return parent::matchFilter($item, $filter);
+            }
+        };
+
+        $reader = $reader->withFilter($digitalFilter);
+
+        $filtered = $reader->read();
+        $this->assertCount(1, $filtered);
+        $this->assertSame('007', $filtered[0]['name']);
     }
 }

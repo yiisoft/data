@@ -16,9 +16,9 @@ use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 
-final class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
+class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
-    private $data;
+    protected $data;
     private $sort;
 
     /**
@@ -63,7 +63,7 @@ final class IterableDataReader implements DataReaderInterface, SortableDataInter
         return $items;
     }
 
-    private function matchFilter(array $item, array $filter): bool
+    protected function matchFilter(array $item, array $filter): bool
     {
         $operation = array_shift($filter);
         $arguments = $filter;
