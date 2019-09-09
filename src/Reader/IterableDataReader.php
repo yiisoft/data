@@ -128,32 +128,28 @@ final class IterableDataReader implements DataReaderInterface, SortableDataInter
     public function read(): iterable
     {
         $preData = $this->data;
-        if(is_object($preData)) {
-            $preData = iterator_to_array($preData);
-        }
-        if (sizeof($preData) === 0) {
-            return [];
-        }
-        $notHasFilter = $this->filter === null;
+        $hasFilter = $this->filter !== null;
 
         if ($this->sort !== null) {
             $preData = $this->sortItems($preData, $this->sort);
         }
-        if ($notHasFilter) {
+        if (!$hasFilter && !is_object($preData)) {
             return array_slice($preData, $this->offset, $this->limit);
         }
-        $filter = $this->filter->toArray();
+        $filter = $hasFilter ? $this->filter->toArray() : null;
 
         $data = [];
-        $haxNext = reset($preData) !== false;
-        for ($offset = 0, $limit = 0; $limit < $this->limit && $haxNext; $haxNext = next($preData) !== false) {
-            if ($offset < $this->offset) {
+        $offset = 0;
+        $limit = 0;
+        foreach ($preData as $item) {
+            if ($offset++ < $this->offset) {
                 continue;
             }
-            $item = current($preData);
-            if ($this->matchFilter($item, $filter)) {
-                $limit++;
+            if ($filter === null || $this->matchFilter($item, $filter)) {
                 $data[] = $item;
+                if (++$limit >= $this->limit) {
+                    break;
+                }
             }
         }
         return $data;
