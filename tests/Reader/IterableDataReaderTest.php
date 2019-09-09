@@ -362,4 +362,31 @@ final class IterableDataReaderTest extends TestCase
         $totalAgents = count($reader);
         $this->assertSame(2, $totalAgents, 'Wrong count of filtered elements');
     }
+
+    public function testIteratorIteratorAsDataSet(): void
+    {
+        $reader = new IterableDataReader(new \ArrayIterator($this->getDataSet()));
+        $sorting = new Sort([
+            'id',
+            'name'
+        ]);
+        $sorting = $sorting->withOrder(['name' => 'asc']);
+        $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());
+    }
+
+    private function getDataSetAsGenerator(): \Generator
+    {
+        yield from $this->getDataSet();
+    }
+
+    public function testGeneratorAsDataSet(): void
+    {
+        $reader = new IterableDataReader($this->getDataSetAsGenerator());
+        $sorting = new Sort([
+            'id',
+            'name'
+        ]);
+        $sorting = $sorting->withOrder(['name' => 'asc']);
+        $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());
+    }
 }
