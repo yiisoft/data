@@ -331,4 +331,35 @@ final class IterableDataReaderTest extends TestCase
             ],
         ], $reader->read());
     }
+
+    public function testLimitedSort(): void
+    {
+        $readerMin = (new IterableDataReader($this->getDataSet()))
+            ->withSort(
+                (new Sort(['id']))->withOrder(['id' => 'asc'])
+            )
+            ->withLimit(1);
+        $min = $readerMin->read()[0]['id'];
+        $this->assertSame(1, $min, 'Wrong min value found');
+
+        $readerMax = (new IterableDataReader($this->getDataSet()))
+            ->withSort(
+                (new Sort(['id']))->withOrder(['id' => 'desc'])
+            )
+            ->withLimit(1);
+        $max = $readerMax->read()[0]['id'];
+        $this->assertSame(6, $max, 'Wrong max value found');
+    }
+
+    public function testFilteredCount(): void
+    {
+        $reader = new IterableDataReader($this->getDataSet());
+        $total = count($reader);
+
+        $this->assertSame(5, $total, 'Wrong count of elements');
+
+        $reader = $reader->withFilter(new Like('name', 'agent'));
+        $totalAgents = count($reader);
+        $this->assertSame(2, $totalAgents, 'Wrong count of filtered elements');
+    }
 }

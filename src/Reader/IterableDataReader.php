@@ -135,7 +135,11 @@ final class IterableDataReader implements DataReaderInterface, SortableDataInter
         $data = [];
         $skipped = 0;
 
-        foreach ($this->data as $item) {
+        $sortedData = $this->sort === null
+            ? $this->data
+            : $this->sortItems($this->data, $this->sort);
+
+        foreach ($sortedData as $item) {
             // do not return more than limit items
             if (count($data) === $this->limit) {
                 break;
@@ -153,10 +157,6 @@ final class IterableDataReader implements DataReaderInterface, SortableDataInter
             }
         }
 
-        if ($this->sort !== null) {
-            $data = $this->sortItems($data, $this->sort);
-        }
-
         return $data;
     }
 
@@ -169,7 +169,7 @@ final class IterableDataReader implements DataReaderInterface, SortableDataInter
 
     public function count(): int
     {
-        return count($this->data);
+        return count($this->read());
     }
 
     private function iterableToArray(iterable $iterable): array
