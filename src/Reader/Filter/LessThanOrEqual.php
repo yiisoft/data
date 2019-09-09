@@ -7,6 +7,6 @@ final class LessThanOrEqual extends CompareFilter
 {
     public static function getOperator(): string
     {
-        return 'lte';
+        return '<=';
     }
 }

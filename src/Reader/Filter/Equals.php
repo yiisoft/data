@@ -8,6 +8,6 @@ class Equals extends CompareFilter
 {
     public static function getOperator(): string
     {
-        return 'eq';
+        return '=';
     }
 }

@@ -7,6 +7,6 @@ final class Any extends GroupFilter
 {
     public static function getOperator(): string
     {
-        return 'any';
+        return 'or';
     }
 }

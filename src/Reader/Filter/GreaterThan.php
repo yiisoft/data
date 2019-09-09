@@ -7,6 +7,6 @@ final class GreaterThan extends CompareFilter
 {
     public static function getOperator(): string
     {
-        return 'gt';
+        return '>';
     }
 }

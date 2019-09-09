@@ -7,6 +7,6 @@ final class All extends GroupFilter
 {
     public static function getOperator(): string
     {
-        return 'all';
+        return 'and';
     }
 }

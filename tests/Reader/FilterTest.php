@@ -23,7 +23,7 @@ final class FilterTest extends TestCase
         return [
             'Equals' => [
                 new Equals('test', 42),
-                ['eq', 'test', 42],
+                ['=', 'test', 42],
             ],
             'In' => [
                 new In('test', [1, 2, 3]),
@@ -31,19 +31,19 @@ final class FilterTest extends TestCase
             ],
             'GreaterThan' => [
                 new GreaterThan('test', 42),
-                ['gt', 'test', 42],
+                ['>', 'test', 42],
             ],
             'GreaterThanOrEqual' => [
                 new GreaterThanOrEqual('test', 42),
-                ['gte', 'test', 42],
+                ['>=', 'test', 42],
             ],
             'LessThan' => [
                 new LessThan('test', 42),
-                ['lt', 'test', 42],
+                ['<', 'test', 42],
             ],
             'LessThanOrEqual' => [
                 new LessThanOrEqual('test', 42),
-                ['lte', 'test', 42],
+                ['<=', 'test', 42],
             ],
             'Like' => [
                 new Like('test', '42'),
@@ -51,16 +51,16 @@ final class FilterTest extends TestCase
             ],
             'Not' => [
                 new Not(new Equals('test', 42)),
-                ['not', ['eq', 'test', 42]],
+                ['not', ['=', 'test', 42]],
             ],
             'Any' => [
                 new Any(
                     new Equals('test', 1),
                     new Equals('test', 2)
                 ),
-                ['any', [
-                    ['eq', 'test', 1],
-                    ['eq', 'test', 2],
+                ['or', [
+                    ['=', 'test', 1],
+                    ['=', 'test', 2],
                 ]]
             ],
             'All' => [
@@ -68,9 +68,9 @@ final class FilterTest extends TestCase
                     new LessThan('test', 3),
                     new GreaterThan('test', 2)
                 ),
-                ['all', [
-                    ['lt', 'test', 3],
-                    ['gt', 'test', 2],
+                ['and', [
+                    ['<', 'test', 3],
+                    ['>', 'test', 2],
                 ]]
             ],
             'NestedGroup' => [
@@ -82,14 +82,14 @@ final class FilterTest extends TestCase
                     )
                 ),
                 [
-                    'all',
+                    'and',
                     [
-                        ['eq', 'test', 42],
+                        ['=', 'test', 42],
                         [
-                            'any',
+                            'or',
                             [
-                                ['eq', 'test', 1],
-                                ['eq', 'test', 2],
+                                ['=', 'test', 1],
+                                ['=', 'test', 2],
                             ]
                         ]
                     ]
