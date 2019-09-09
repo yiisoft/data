@@ -71,6 +71,16 @@ final class IterableDataReaderTest extends TestCase
         ];
     }
 
+    public function testIteratorInput() {
+        $reader = new IterableDataReader(new \ArrayIterator($this->getDataSet()));
+        $sorting = new Sort([
+            'id',
+            'name'
+        ]);
+        $sorting = $sorting->withOrder(['name' => 'asc']);
+        $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());
+    }
+
     public function testWithLimitIsImmutable(): void
     {
         $reader = new IterableDataReader([]);
@@ -120,8 +130,12 @@ final class IterableDataReaderTest extends TestCase
             ->withSort($sorting);
 
         $data = $reader->read();
-
         $this->assertSame($this->getDataSetSortedByName(), $data);
+
+        $limit = mt_rand(1, 4);
+        $offset = mt_rand(0, intval(sizeof($this->getDataSet()) / $limit));
+        $data = $reader->withOffset($offset)->withLimit($limit)->read();
+        $this->assertSame(array_slice($this->getDataSetSortedByName(), $offset, $limit), $data);
     }
 
     public function testCounting(): void
