@@ -27,6 +27,7 @@ class KeysetPaginator
     private $pageSize;
 
     private $lastValue;
+    private $currentLastValue;
 
     public function __construct(DataReaderInterface $dataReader)
     {
@@ -47,6 +48,7 @@ class KeysetPaginator
 
     public function read(): iterable
     {
+        $this->currentLastValue = null;
         $dataReader = $this->dataReader->withLimit($this->pageSize);
 
         $order = $this->dataReader->getSort()->getOrder();
@@ -71,7 +73,7 @@ class KeysetPaginator
         }
 
         foreach($dataReader->read() as $item) {
-            $this->lastValue = $item[$field];
+            $this->currentLastValue = $item[$field];
             yield $item;
         }
     }
@@ -84,7 +86,7 @@ class KeysetPaginator
     }
 
     public function getLastValue() {
-        return $this->lastValue;
+        return $this->currentLastValue;
     }
 
     public function withPageSize(int $pageSize): self
