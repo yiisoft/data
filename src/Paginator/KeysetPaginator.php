@@ -49,18 +49,18 @@ class KeysetPaginator
     {
         $dataReader = $this->dataReader->withLimit($this->pageSize);
 
+        $order = $this->dataReader->getSort()->getOrder();
+
+        if ($order === []) {
+            throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
+        }
+
+        // first order field is the field we are paging by
+        foreach ($order as $field => $sorting) {
+            break;
+        }
+
         if (isset($this->lastValue)) {
-            $order = $this->dataReader->getSort()->getOrder();
-
-            if ($order === []) {
-                throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
-            }
-
-            // first order field is the field we are paging by
-            foreach ($order as $field => $sorting) {
-                break;
-            }
-
             if ($sorting === 'asc') {
                 $filter = new GreaterThan($field, $this->lastValue);
             } elseif ($sorting === 'desc') {
@@ -70,7 +70,10 @@ class KeysetPaginator
             $dataReader = $dataReader->withFilter($filter);
         }
 
-        yield from $dataReader->read();
+        foreach($dataReader->read() as $item) {
+            $this->lastValue = $item[$field];
+            yield $item;
+        }
     }
 
     public function withLast($value): self
@@ -78,6 +81,10 @@ class KeysetPaginator
         $new = clone $this;
         $new->lastValue = $value;
         return $new;
+    }
+
+    public function getLastValue() {
+        return $this->lastValue;
     }
 
     public function withPageSize(int $pageSize): self

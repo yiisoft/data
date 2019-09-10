@@ -143,6 +143,8 @@ final class KeysetPaginatorTest extends Testcase
         ];
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $last = end($expected);
+        $this->assertSame($last['id'], $paginator->getLastValue());
     }
 
     public function testReadSecondPage(): void
@@ -168,5 +170,7 @@ final class KeysetPaginatorTest extends Testcase
         ];
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $last = end($expected);
+        $this->assertSame($last['id'], $paginator->getLastValue());
     }
 }
