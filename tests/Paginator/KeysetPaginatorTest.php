@@ -200,7 +200,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($last['id'], $paginator->getLastValue());
     }
 
-    public function testReadSecondPageWithOtherOrderThanLastValueField(): void
+    public function testReadSecondPageOrderedByName(): void
     {
         $sort = (new Sort(['id', 'name']))->withOrderString('name');
 
@@ -223,5 +223,7 @@ final class KeysetPaginatorTest extends Testcase
         ];
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $last = end($expected);
+        $this->assertSame($last['name'], $paginator->getLastValue());
     }
 }
