@@ -39,6 +39,32 @@ final class KeysetPaginatorTest extends Testcase
         ];
     }
 
+    private function getDataSetSortedByName(): array
+    {
+        return [
+            [
+                'id' => 6,
+                'name' => '007',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Agent J',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+        ];
+    }
+
     public function testDataReaderWithoutFilterableInterface(): void
     {
         $nonFilterableDataReader = new class implements DataReaderInterface
@@ -164,6 +190,31 @@ final class KeysetPaginatorTest extends Testcase
             [
                 'id' => 5,
                 'name' => 'Agent J',
+            ],
+        ];
+
+        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+    }
+
+    public function testReadSecondPageWithOtherOrderThanLastValueField(): void
+    {
+        $sort = (new Sort(['id', 'name']))->withOrderString('name');
+
+        $dataReader = (new IterableDataReader($this->getDataSet()))
+            ->withSort($sort);
+
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withLast( 'Agent J');
+
+        $expected = [
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
             ],
         ];
 
