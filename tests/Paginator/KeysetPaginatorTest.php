@@ -173,4 +173,31 @@ final class KeysetPaginatorTest extends Testcase
         $last = end($expected);
         $this->assertSame($last['id'], $paginator->getLastValue());
     }
+
+    public function testReadSecondPageOrderedByName(): void
+    {
+        $sort = (new Sort(['id', 'name']))->withOrderString('name');
+
+        $dataReader = (new IterableDataReader($this->getDataSet()))
+            ->withSort($sort);
+
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withLast( 'Agent J');
+
+        $expected = [
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
+            ],
+        ];
+
+        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $last = end($expected);
+        $this->assertSame($last['name'], $paginator->getLastValue());
+    }
 }
