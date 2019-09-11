@@ -39,32 +39,6 @@ final class KeysetPaginatorTest extends Testcase
         ];
     }
 
-    private function getDataSetSortedByName(): array
-    {
-        return [
-            [
-                'id' => 6,
-                'name' => '007',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Agent J',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
-        ];
-    }
-
     public function testDataReaderWithoutFilterableInterface(): void
     {
         $nonFilterableDataReader = new class implements DataReaderInterface
