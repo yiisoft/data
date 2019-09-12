@@ -27,7 +27,9 @@ class KeysetPaginator
     private $pageSize;
 
     private $lastValue;
+    private $firstValue;
     private $currentLastValue;
+    private $currentFirstValue;
 
     public function __construct(DataReaderInterface $dataReader)
     {
@@ -49,7 +51,10 @@ class KeysetPaginator
     public function read(): iterable
     {
         $this->currentLastValue = null;
-        $dataReader = $this->dataReader->withLimit($this->pageSize);
+        $this->currentFirstValue = null;
+        $isBackwardPagination = $this->pageSize < 0;
+        $pageSize = abs($this->pageSize);
+        $dataReader = $this->dataReader->withLimit($pageSize);
 
         $order = $this->dataReader->getSort()->getOrder();
 
@@ -62,20 +67,42 @@ class KeysetPaginator
             break;
         }
 
-        if (isset($this->lastValue)) {
+        if($isBackwardPagination) {
+            // reverse sorting
+            foreach ($order as &$sorting) {
+                $sorting = $sorting === 'asc' ? 'desc' : 'asc';
+            }
+            $dataReader = $dataReader->withSort($dataReader->getSort()->withOrder($order));
+        }
+
+        if ((isset($this->lastValue) && !$isBackwardPagination) || (isset($this->firstValue) && $isBackwardPagination)) {
+            $value = $isBackwardPagination ? $this->firstValue : $this->lastValue;
             if ($sorting === 'asc') {
-                $filter = new GreaterThan($field, $this->lastValue);
+                $filter = new GreaterThan($field, $value);
             } elseif ($sorting === 'desc') {
-                $filter = new LessThan($field, $this->lastValue);
+                $filter = new LessThan($field, $value);
             }
 
             $dataReader = $dataReader->withFilter($filter);
+        } elseif(!isset($this->firstValue) && $isBackwardPagination) {
+            throw new \RuntimeException('First value is required to the backward pagination');
         }
 
+        $data = [];
         foreach($dataReader->read() as $item) {
             $this->currentLastValue = $item[$field];
-            yield $item;
+            if($this->currentFirstValue === null) {
+                $this->currentFirstValue = $item[$field];
+            }
+            $data[] = $item;
         }
+
+        if($isBackwardPagination) {
+            list($this->currentFirstValue, $this->currentLastValue) = [$this->currentLastValue, $this->currentFirstValue];
+            return array_reverse($data);
+        }
+
+        return $data;
     }
 
     public function withLast($value): self
@@ -85,14 +112,35 @@ class KeysetPaginator
         return $new;
     }
 
-    public function getLastValue() {
+    public function withFirst($value): self
+    {
+        $new = clone $this;
+        $new->firstValue = $value;
+        return $new;
+    }
+
+    public function getLast() {
         return $this->currentLastValue;
     }
 
+    public function getFirst() {
+        return $this->currentFirstValue;
+    }
+
+    /**
+     * New instance with specified page size
+     *
+     * If the page size is greater than zero, then forward paging.
+     * If the page size is less than zero, then backward paging.
+     * Zero page size is not allowed!
+     *
+     * @param int $pageSize
+     * @return self
+     */
     public function withPageSize(int $pageSize): self
     {
-        if ($pageSize < 1) {
-            throw new \InvalidArgumentException('Page size should be at least 1');
+        if ($pageSize == 0) {
+            throw new \InvalidArgumentException('Page size cannot be zero.');
         }
 
         $new = clone $this;

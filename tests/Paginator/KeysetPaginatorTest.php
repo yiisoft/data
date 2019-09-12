@@ -144,7 +144,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
         $last = end($expected);
-        $this->assertSame($last['id'], $paginator->getLastValue());
+        $this->assertSame($last['id'], $paginator->getLast());
     }
 
     public function testReadSecondPage(): void
@@ -171,7 +171,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
         $last = end($expected);
-        $this->assertSame($last['id'], $paginator->getLastValue());
+        $this->assertSame($last['id'], $paginator->getLast());
     }
 
     public function testReadSecondPageOrderedByName(): void
@@ -198,6 +198,82 @@ final class KeysetPaginatorTest extends Testcase
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
         $last = end($expected);
-        $this->assertSame($last['name'], $paginator->getLastValue());
+        $this->assertSame($last['name'], $paginator->getLast());
+    }
+
+    public function testBackwardPagination() {
+        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+
+        $dataReader = (new IterableDataReader($this->getDataSet()))
+            ->withSort($sort);
+
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(-2)
+            ->withFirst(5);
+
+        $expected = [
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+        ];
+        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $first = reset($expected);
+        $last = end($expected);
+        $this->assertSame($last['id'], $paginator->getLast(), 'Last value fail!');
+        $this->assertSame($first['id'], $paginator->getFirst(), 'First value fail!');
+    }
+
+    public function testForwardAndBackwardPagination() {
+        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+
+        $dataReader = (new IterableDataReader($this->getDataSet()))
+            ->withSort($sort);
+
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withLast(2);
+
+        $expected = [
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Agent J',
+            ],
+        ];
+        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $first = reset($expected);
+        $last = end($expected);
+        $this->assertSame($last['id'], $paginator->getLast(), 'Last value fail!');
+        $this->assertSame($first['id'], $paginator->getFirst(), 'First value fail!');
+
+        $expected = [
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+        ];
+
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(-2)
+            ->withLast($paginator->getLast())
+            ->withFirst($paginator->getFirst());
+
+        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $first = reset($expected);
+        $last = end($expected);
+        $this->assertSame($last['id'], $paginator->getLast(), 'Last value fail!');
+        $this->assertSame($first['id'], $paginator->getFirst(), 'First value fail!');
     }
 }
