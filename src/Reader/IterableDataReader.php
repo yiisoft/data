@@ -15,6 +15,8 @@ use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
+use Yiisoft\Data\Reader\Filter\Processor\FilterProcessor;
+use Yiisoft\Data\Reader\Filter\Processor\PhpVariableFilterProcessor;
 
 class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
@@ -25,6 +27,10 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
      * @var FilterInterface
      */
     private $filter;
+    /**
+     * @var FilterProcessor
+     */
+    private $filterProcessor;
 
     private $limit = self::DEFAULT_LIMIT;
     private $offset = 0;
@@ -65,50 +71,9 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
 
     protected function matchFilter(array $item, array $filter): bool
     {
-        $operation = array_shift($filter);
-        $arguments = $filter;
-
-        switch ($operation) {
-            case Not::getOperator():
-                return !$this->matchFilter($item, $arguments[0]);
-            case Any::getOperator():
-                foreach ($arguments[0] as $subFilter) {
-                    if ($this->matchFilter($item, $subFilter)) {
-                        return true;
-                    }
-                }
-                return false;
-            case All::getOperator():
-                foreach ($arguments[0] as $subFilter) {
-                    if (!$this->matchFilter($item, $subFilter)) {
-                        return false;
-                    }
-                }
-                return true;
-            case Equals::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] == $value;
-            case GreaterThan::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] > $value;
-            case GreaterThanOrEqual::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] >= $value;
-            case LessThan::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] < $value;
-            case LessThanOrEqual::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] <= $value;
-            case In::getOperator():
-                [$field, $values] = $arguments;
-                return in_array($item[$field], $values, false);
-            case Like::getOperator():
-                [$field, $value] = $arguments;
-                return stripos($item[$field], $value) !== false;
-            default:
-                throw new \RuntimeException("Operation \"$operation\" is not supported");
-        }
+        $filterProcessor = $this->getFilterProcessor();
+        /* @var $filterProcessor PhpVariableFilterProcessor */
+        return $filterProcessor->execute($item, $filter);
     }
 
     public function withFilter(?FilterInterface $filter): self
@@ -175,5 +140,13 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
     private function iterableToArray(iterable $iterable): array
     {
         return $iterable instanceof \Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
+    }
+
+    public function getFilterProcessor(): FilterProcessor
+    {
+        if(!isset($this->filterProcessor)) {
+            $this->filterProcessor = new PhpVariableFilterProcessor();
+        }
+        return $this->filterProcessor;
     }
 }
