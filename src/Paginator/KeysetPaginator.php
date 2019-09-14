@@ -85,7 +85,7 @@ class KeysetPaginator
 
             $dataReader = $dataReader->withFilter($filter);
         } elseif(!isset($this->firstValue) && $isBackwardPagination) {
-            throw new \RuntimeException('First value is required to the backward pagination');
+            throw new \RuntimeException('First value is required for getting previous page');
         }
 
         $data = [];
