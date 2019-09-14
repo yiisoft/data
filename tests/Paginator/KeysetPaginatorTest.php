@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Paginator;
 
 use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Reader\Filter\Processor\FilterProcessor;
+use Yiisoft\Data\Reader\Filter\Unit\FilterUnitInterface;
 use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
@@ -79,7 +79,7 @@ final class KeysetPaginatorTest extends Testcase
                 // do nothing
             }
 
-            public function getFilterProcessor(): FilterProcessor
+            public function withFilterUnits(FilterUnitInterface ...$filterUnits)
             {
                 // do nothing
             }

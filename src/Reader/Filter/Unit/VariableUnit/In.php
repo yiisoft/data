@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Filter\Processor\PhpVariable;
+namespace Yiisoft\Data\Reader\Filter\Unit\VariableUnit;
 
-class In extends Processor
+use Yiisoft\Data\Reader\Filter\Unit\FilterUnitInterface;
+
+class In implements VariableUnitInterface, FilterUnitInterface
 {
 
     public function getOperator(): string
@@ -11,7 +13,7 @@ class In extends Processor
         return \YiiSoft\Data\Reader\Filter\In::getOperator();
     }
 
-    public function match(array $item, array $arguments): bool
+    public function match(array $item, array $arguments, array $filterUnits): bool
     {
         [$field, $values] = $arguments;
         return in_array($item[$field], $values, false);

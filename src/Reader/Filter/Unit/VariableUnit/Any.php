@@ -1,24 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Filter\Processor\PhpVariable;
+namespace Yiisoft\Data\Reader\Filter\Unit\VariableUnit;
 
 
-class All extends GroupFilter
+class Any extends GroupUnitInterface
 {
 
     protected function checkResults(array $results): bool
     {
-        return true;
+        return false;
     }
 
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\All::getOperator();
+        return \Yiisoft\Data\Reader\Filter\Any::getOperator();
     }
 
     protected function checkResult($result): ?bool
     {
-        return !$result ? false : null;
+        return $result ? true : null;
     }
 }

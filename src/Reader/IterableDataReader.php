@@ -3,20 +3,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
+use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\All;
-use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\Equals;
-use Yiisoft\Data\Reader\Filter\GreaterThan;
-use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Filter\LessThan;
-use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
-use Yiisoft\Data\Reader\Filter\In;
-use Yiisoft\Data\Reader\Filter\Like;
-use Yiisoft\Data\Reader\Filter\Not;
-use Yiisoft\Data\Reader\Filter\Processor\FilterProcessor;
-use Yiisoft\Data\Reader\Filter\Processor\PhpVariableFilterProcessor;
+use Yiisoft\Data\Reader\Filter\Unit\FilterUnitInterface;
+use Yiisoft\Data\Reader\Filter\Unit\VariableUnit\VariableUnitInterface;
 
 class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
@@ -27,17 +18,26 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
      * @var FilterInterface
      */
     private $filter;
-    /**
-     * @var FilterProcessor
-     */
-    private $filterProcessor;
 
     private $limit = self::DEFAULT_LIMIT;
     private $offset = 0;
+    private $filterUnits = [];
 
     public function __construct(iterable $data)
     {
         $this->data = $data;
+        $this->filterUnits = $this->withFilterUnits(
+            new Filter\Unit\VariableUnit\All(),
+            new Filter\Unit\VariableUnit\Any(),
+            new Filter\Unit\VariableUnit\Equals(),
+            new Filter\Unit\VariableUnit\GreaterThan(),
+            new Filter\Unit\VariableUnit\GreaterThanOrEqual(),
+            new Filter\Unit\VariableUnit\In(),
+            new Filter\Unit\VariableUnit\LessThan(),
+            new Filter\Unit\VariableUnit\LessThanOrEqual(),
+            new Filter\Unit\VariableUnit\Like(),
+            new Filter\Unit\VariableUnit\Not()
+        )->filterUnits;
     }
 
     public function withSort(?Sort $sort): self
@@ -71,9 +71,15 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
 
     protected function matchFilter(array $item, array $filter): bool
     {
-        $filterProcessor = $this->getFilterProcessor();
-        /* @var $filterProcessor PhpVariableFilterProcessor */
-        return $filterProcessor->match($item, $filter);
+        $operation = array_shift($filter);
+        $arguments = $filter;
+
+        $unit = $this->filterUnits[$operation] ?? null;
+        if($unit === null) {
+            throw new \RuntimeException(sprintf('Operation "%s" is not supported', $operation));
+        }
+        /* @var $unit \Yiisoft\Data\Reader\Filter\Unit\VariableUnit\VariableUnitInterface */
+        return $unit->match($item, $arguments, $this->filterUnits);
     }
 
     public function withFilter(?FilterInterface $filter): self
@@ -139,14 +145,19 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
 
     private function iterableToArray(iterable $iterable): array
     {
-        return $iterable instanceof \Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
+        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 
-    public function getFilterProcessor(): FilterProcessor
+    public function withFilterUnits(FilterUnitInterface... $filterUnits): self
     {
-        if(!isset($this->filterProcessor)) {
-            $this->filterProcessor = new PhpVariableFilterProcessor();
+        $new = clone $this;
+        $units = [];
+        foreach($filterUnits as $key => $filterUnit) {
+            if($filterUnit instanceof VariableUnitInterface) {
+                $units[$filterUnit->getOperator()] = $filterUnit;
+            }
         }
-        return $this->filterProcessor;
+        $new->filterUnits = array_merge($this->filterUnits, $units);
+        return $new;
     }
 }
