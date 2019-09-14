@@ -15,13 +15,13 @@ abstract class GroupFilter extends Processor
     /**
      * PHP variable specific execute
      */
-    function execute(array $item, array $arguments): bool
+    function match(array $item, array $arguments): bool
     {
         $filterProcessor = $this->getFilterProcessor();
         /* @var $filterProcessor PhpVariableFilterProcessor */
         $results = [];
         foreach ($arguments[0] as $subFilter) {
-            $result = $filterProcessor->execute($item, $subFilter);
+            $result = $filterProcessor->match($item, $subFilter);
             if(is_bool($this->checkResult($result))) {
                 return $result;
             }

@@ -11,7 +11,7 @@ class LessThan extends Processor
         return \YiiSoft\Data\Reader\Filter\LessThan::getOperator();
     }
 
-    public function execute(array $item, array $arguments): bool
+    public function match(array $item, array $arguments): bool
     {
         [$field, $value] = $arguments;
         return $item[$field] < $value;

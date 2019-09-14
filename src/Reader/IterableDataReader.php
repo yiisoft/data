@@ -73,7 +73,7 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
     {
         $filterProcessor = $this->getFilterProcessor();
         /* @var $filterProcessor PhpVariableFilterProcessor */
-        return $filterProcessor->execute($item, $filter);
+        return $filterProcessor->match($item, $filter);
     }
 
     public function withFilter(?FilterInterface $filter): self

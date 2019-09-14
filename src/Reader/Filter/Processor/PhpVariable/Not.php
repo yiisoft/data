@@ -13,11 +13,11 @@ class Not extends Processor
         return \YiiSoft\Data\Reader\Filter\Not::getOperator();
     }
 
-    public function execute(array $item, array $arguments): bool
+    public function match(array $item, array $arguments): bool
     {
         $filterProcessor = $this->getFilterProcessor();
         /* @var $filterProcessor PhpVariableFilterProcessor */
-        return !$filterProcessor->execute($item, $arguments[0]);
+        return !$filterProcessor->match($item, $arguments[0]);
     }
 
 }

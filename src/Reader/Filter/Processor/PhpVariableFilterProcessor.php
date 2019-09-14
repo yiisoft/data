@@ -35,12 +35,12 @@ class PhpVariableFilterProcessor extends FilterProcessor
         );
     }
 
-    public function execute(array $item, array $filter) {
+    public function match(array $item, array $filter) {
         $operation = array_shift($filter);
         $arguments = $filter;
 
         $processor = $this->getProcessor(self::PROCESSOR_GROUP, $operation);
         /* @var $processor \Yiisoft\Data\Reader\Filter\Processor\PhpVariable\Processor */
-        return $processor->execute($item, $arguments);
+        return $processor->match($item, $arguments);
     }
 }

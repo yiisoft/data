@@ -17,7 +17,7 @@ abstract class Processor implements \Yiisoft\Data\Reader\Filter\Processor\Proces
     /**
      * PHP variable specific execute
      */
-    abstract function execute(array $item, array $arguments): bool;
+    abstract function match(array $item, array $arguments): bool;
 
     public function getGroup(): string
     {
