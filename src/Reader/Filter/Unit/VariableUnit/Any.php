@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter\Unit\VariableUnit;
 
 
-class Any extends GroupUnitInterface
+class Any extends GroupUnit
 {
 
     protected function checkResults(array $results): bool

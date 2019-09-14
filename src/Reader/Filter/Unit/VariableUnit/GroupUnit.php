@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader\Filter\Unit\VariableUnit;
 
 use Yiisoft\Data\Reader\Filter\Unit\FilterUnitInterface;
 
-abstract class GroupUnitInterface implements VariableUnitInterface, FilterUnitInterface
+abstract class GroupUnit implements VariableUnitInterface, FilterUnitInterface
 {
     abstract protected function checkResults(array $result): bool;
 
