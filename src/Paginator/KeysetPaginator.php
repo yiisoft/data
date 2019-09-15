@@ -83,8 +83,6 @@ class KeysetPaginator
             }
 
             $dataReader = $dataReader->withFilter($filter);
-        } elseif(!isset($this->firstValue) && $isBackwardPagination) {
-            throw new \RuntimeException('First value is required for getting previous page');
         }
 
         $data = [];
@@ -97,7 +95,7 @@ class KeysetPaginator
         }
 
         if($isBackwardPagination) {
-            list($this->currentFirstValue, $this->currentLastValue) = [$this->currentLastValue, $this->currentFirstValue];
+            [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
             return array_reverse($data);
         }
 
