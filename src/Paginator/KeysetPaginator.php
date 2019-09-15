@@ -52,9 +52,8 @@ class KeysetPaginator
     {
         $this->currentLastValue = null;
         $this->currentFirstValue = null;
-        $isBackwardPagination = $this->pageSize < 0;
-        $pageSize = abs($this->pageSize);
-        $dataReader = $this->dataReader->withLimit($pageSize);
+        $isBackwardPagination = $this->firstValue != null && $this->lastValue == null;
+        $dataReader = $this->dataReader->withLimit($this->pageSize);
 
         $order = $this->dataReader->getSort()->getOrder();
 
@@ -127,20 +126,10 @@ class KeysetPaginator
         return $this->currentFirstValue;
     }
 
-    /**
-     * New instance with specified page size
-     *
-     * If the page size is greater than zero, then forward paging.
-     * If the page size is less than zero, then backward paging.
-     * Zero page size is not allowed!
-     *
-     * @param int $pageSize
-     * @return self
-     */
     public function withPageSize(int $pageSize): self
     {
-        if ($pageSize == 0) {
-            throw new \InvalidArgumentException('Page size cannot be zero.');
+        if ($pageSize < 1) {
+            throw new \InvalidArgumentException('Page size should be at least 1');
         }
 
         $new = clone $this;

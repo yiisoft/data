@@ -208,7 +208,7 @@ final class KeysetPaginatorTest extends Testcase
             ->withSort($sort);
 
         $paginator = (new KeysetPaginator($dataReader))
-            ->withPageSize(-2)
+            ->withPageSize(2)
             ->withFirst(5);
 
         $expected = [
@@ -266,8 +266,7 @@ final class KeysetPaginatorTest extends Testcase
         ];
 
         $paginator = (new KeysetPaginator($dataReader))
-            ->withPageSize(-2)
-            ->withLast($paginator->getLast())
+            ->withPageSize(2)
             ->withFirst($paginator->getFirst());
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
