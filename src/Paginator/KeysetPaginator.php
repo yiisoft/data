@@ -52,7 +52,7 @@ class KeysetPaginator
     {
         $this->currentLastValue = null;
         $this->currentFirstValue = null;
-        $isBackwardPagination = $this->firstValue != null && $this->lastValue == null;
+        $goingToPreviousPage = $this->firstValue !== null && $this->lastValue === null;
         $dataReader = $this->dataReader->withLimit($this->pageSize);
 
         $order = $this->dataReader->getSort()->getOrder();
@@ -66,7 +66,7 @@ class KeysetPaginator
             break;
         }
 
-        if($isBackwardPagination) {
+        if($goingToPreviousPage) {
             // reverse sorting
             foreach ($order as &$sorting) {
                 $sorting = $sorting === 'asc' ? 'desc' : 'asc';
@@ -74,8 +74,8 @@ class KeysetPaginator
             $dataReader = $dataReader->withSort($dataReader->getSort()->withOrder($order));
         }
 
-        if ((isset($this->lastValue) && !$isBackwardPagination) || (isset($this->firstValue) && $isBackwardPagination)) {
-            $value = $isBackwardPagination ? $this->firstValue : $this->lastValue;
+        if ((isset($this->lastValue) && !$goingToPreviousPage) || (isset($this->firstValue) && $goingToPreviousPage)) {
+            $value = $goingToPreviousPage ? $this->firstValue : $this->lastValue;
             if ($sorting === 'asc') {
                 $filter = new GreaterThan($field, $value);
             } elseif ($sorting === 'desc') {
@@ -94,7 +94,7 @@ class KeysetPaginator
             $data[] = $item;
         }
 
-        if($isBackwardPagination) {
+        if($goingToPreviousPage) {
             [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
             return array_reverse($data);
         }
