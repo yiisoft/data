@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Filter\Unit\VariableUnit;
+namespace Yiisoft\Data\Reader\Filter\Processor\Iterable;
 
 
-use Yiisoft\Data\Reader\Filter\Unit\FilterUnitInterface;
+use Yiisoft\Data\Reader\Filter\Processor\FilterProcessorInterface;
 
-abstract class GroupUnit implements VariableUnitInterface, FilterUnitInterface
+abstract class GroupProcessor implements IterableProcessorInterface, FilterProcessorInterface
 {
     abstract protected function checkResults(array $result): bool;
 
@@ -15,18 +15,18 @@ abstract class GroupUnit implements VariableUnitInterface, FilterUnitInterface
     /**
      * PHP variable specific execute
      */
-    function match(array $item, array $arguments, array $filterUnits): bool
+    public function match(array $item, array $arguments, array $filterProcessors): bool
     {
         $results = [];
         foreach ($arguments[0] as $subFilter) {
             $operation = array_shift($subFilter);
 
-            $unit = $filterUnits[$operation] ?? null;
-            if($unit === null) {
+            $processor = $filterProcessors[$operation] ?? null;
+            if ($processor === null) {
                 throw new \RuntimeException(sprintf('Operation "%s" is not supported', $operation));
             }
-            /* @var $unit \Yiisoft\Data\Reader\Filter\Unit\VariableUnit\VariableUnitInterface */
-            $result = $unit->match($item, $subFilter, $filterUnits);
+            /* @var $processor IterableProcessorInterface */
+            $result = $processor->match($item, $subFilter, $filterProcessors);
             if(is_bool($this->checkResult($result))) {
                 return $result;
             }

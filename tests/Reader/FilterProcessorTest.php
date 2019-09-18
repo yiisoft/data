@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader;
 
 use Yiisoft\Data\Tests\TestCase;
-use Yiisoft\Data\Reader\Filter\Unit\VariableUnit\Equals;
+use Yiisoft\Data\Reader\Filter\Processor\Iterable\Equals;
 use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 
@@ -37,17 +37,17 @@ class FilterProcessorTest extends TestCase
         ];
     }
 
-    public function testCustomEquals()
+    public function testCustomEquals(): void
     {
         $sort = (new Sort(['id', 'name']))->withOrderString('id');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort)
-            ->withFilterUnits(new class extends Equals {
+            ->withFilterProcessors(new class extends Equals {
                 public function match(array $item, array $arguments, array $filterUnits): bool
                 {
-                    [$field, $value] = $arguments;
-                    if ($item[$field] == 2) {
+                    [$field, ] = $arguments;
+                    if ($item[$field] === 2) {
                         return true;
                     }
                     return parent::match($item, $arguments, $filterUnits);

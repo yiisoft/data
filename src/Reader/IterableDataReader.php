@@ -6,8 +6,8 @@ namespace Yiisoft\Data\Reader;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\Unit\FilterUnitInterface;
-use Yiisoft\Data\Reader\Filter\Unit\VariableUnit\VariableUnitInterface;
+use Yiisoft\Data\Reader\Filter\Processor\FilterProcessorInterface;
+use Yiisoft\Data\Reader\Filter\Processor\Iterable\IterableProcessorInterface;
 
 class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
@@ -21,23 +21,27 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
 
     private $limit = self::DEFAULT_LIMIT;
     private $offset = 0;
-    private $filterUnits = [];
+
+    /**
+     * @var array
+     */
+    private $filterProcessors = [];
 
     public function __construct(iterable $data)
     {
         $this->data = $data;
-        $this->filterUnits = $this->withFilterUnits(
-            new Filter\Unit\VariableUnit\All(),
-            new Filter\Unit\VariableUnit\Any(),
-            new Filter\Unit\VariableUnit\Equals(),
-            new Filter\Unit\VariableUnit\GreaterThan(),
-            new Filter\Unit\VariableUnit\GreaterThanOrEqual(),
-            new Filter\Unit\VariableUnit\In(),
-            new Filter\Unit\VariableUnit\LessThan(),
-            new Filter\Unit\VariableUnit\LessThanOrEqual(),
-            new Filter\Unit\VariableUnit\Like(),
-            new Filter\Unit\VariableUnit\Not()
-        )->filterUnits;
+        $this->filterProcessors = $this->withFilterProcessors(
+            new Filter\Processor\Iterable\All(),
+            new Filter\Processor\Iterable\Any(),
+            new Filter\Processor\Iterable\Equals(),
+            new Filter\Processor\Iterable\GreaterThan(),
+            new Filter\Processor\Iterable\GreaterThanOrEqual(),
+            new Filter\Processor\Iterable\In(),
+            new Filter\Processor\Iterable\LessThan(),
+            new Filter\Processor\Iterable\LessThanOrEqual(),
+            new Filter\Processor\Iterable\Like(),
+            new Filter\Processor\Iterable\Not()
+        )->filterProcessors;
     }
 
     public function withSort(?Sort $sort): self
@@ -74,12 +78,12 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         $operation = array_shift($filter);
         $arguments = $filter;
 
-        $unit = $this->filterUnits[$operation] ?? null;
-        if($unit === null) {
+        $processor = $this->filterProcessors[$operation] ?? null;
+        if ($processor === null) {
             throw new \RuntimeException(sprintf('Operation "%s" is not supported', $operation));
         }
-        /* @var $unit \Yiisoft\Data\Reader\Filter\Unit\VariableUnit\VariableUnitInterface */
-        return $unit->match($item, $arguments, $this->filterUnits);
+        /* @var $processor IterableProcessorInterface */
+        return $processor->match($item, $arguments, $this->filterProcessors);
     }
 
     public function withFilter(?FilterInterface $filter): self
@@ -148,16 +152,16 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 
-    public function withFilterUnits(FilterUnitInterface... $filterUnits): self
+    public function withFilterProcessors(FilterProcessorInterface... $filterProcessors): self
     {
         $new = clone $this;
-        $units = [];
-        foreach($filterUnits as $key => $filterUnit) {
-            if($filterUnit instanceof VariableUnitInterface) {
-                $units[$filterUnit->getOperator()] = $filterUnit;
+        $processors = [];
+        foreach ($filterProcessors as $filterProcessor) {
+            if ($filterProcessor instanceof IterableProcessorInterface) {
+                $processors[$filterProcessor->getOperator()] = $filterProcessor;
             }
         }
-        $new->filterUnits = array_merge($this->filterUnits, $units);
+        $new->filterProcessors = array_merge($this->filterProcessors, $processors);
         return $new;
     }
 }
