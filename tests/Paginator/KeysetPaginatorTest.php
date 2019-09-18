@@ -201,7 +201,8 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($last['name'], $paginator->getLast());
     }
 
-    public function testBackwardPagination() {
+    public function testBackwardPagination(): void
+    {
         $sort = (new Sort(['id', 'name']))->withOrderString('id');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
@@ -228,7 +229,8 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($first['id'], $paginator->getFirst(), 'First value fail!');
     }
 
-    public function testForwardAndBackwardPagination() {
+    public function testForwardAndBackwardPagination(): void
+    {
         $sort = (new Sort(['id', 'name']))->withOrderString('id');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
