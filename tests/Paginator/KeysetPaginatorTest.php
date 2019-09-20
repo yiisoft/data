@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Paginator;
 
 use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Reader\Filter\Processor\FilterProcessorInterface;
-use Yiisoft\Data\Reader\IterableDataReader;
+use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;

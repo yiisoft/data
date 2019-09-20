@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader;
 
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\Processor\FilterProcessorInterface;
+use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 
 interface FilterableDataInterface
 {

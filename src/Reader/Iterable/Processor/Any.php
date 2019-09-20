@@ -1,24 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Filter\Processor\Iterable;
+namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 
-class All extends GroupProcessor
+class Any extends GroupProcessor
 {
 
     protected function checkResults(array $results): bool
     {
-        return true;
+        return false;
     }
 
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\All::getOperator();
+        return \Yiisoft\Data\Reader\Filter\Any::getOperator();
     }
 
     protected function checkResult($result): ?bool
     {
-        return !$result ? false : null;
+        return $result ? true : null;
     }
 }

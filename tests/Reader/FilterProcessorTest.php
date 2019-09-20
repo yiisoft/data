@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader;
 
 use Yiisoft\Data\Tests\TestCase;
-use Yiisoft\Data\Reader\Filter\Processor\Iterable\Equals;
-use Yiisoft\Data\Reader\IterableDataReader;
+use Yiisoft\Data\Reader\Iterable\Processor\Equals;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 
 class FilterProcessorTest extends TestCase

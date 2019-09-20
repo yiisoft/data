@@ -1,13 +1,29 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader;
+namespace Yiisoft\Data\Reader\Iterable;
 
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Reader\CountableDataInterface;
+use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\Processor\FilterProcessorInterface;
-use Yiisoft\Data\Reader\Filter\Processor\Iterable\IterableProcessorInterface;
+use Yiisoft\Data\Reader\Iterable\Processor\All;
+use Yiisoft\Data\Reader\Iterable\Processor\Any;
+use Yiisoft\Data\Reader\Iterable\Processor\Equals;
+use Yiisoft\Data\Reader\Iterable\Processor\GreaterThan;
+use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Processor\In;
+use Yiisoft\Data\Reader\Iterable\Processor\LessThan;
+use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Processor\Like;
+use Yiisoft\Data\Reader\Iterable\Processor\Not;
+use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
+use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
+use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\OffsetableDataInterface;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\SortableDataInterface;
 
 class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
@@ -31,16 +47,16 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
     {
         $this->data = $data;
         $this->filterProcessors = $this->withFilterProcessors(
-            new Filter\Processor\Iterable\All(),
-            new Filter\Processor\Iterable\Any(),
-            new Filter\Processor\Iterable\Equals(),
-            new Filter\Processor\Iterable\GreaterThan(),
-            new Filter\Processor\Iterable\GreaterThanOrEqual(),
-            new Filter\Processor\Iterable\In(),
-            new Filter\Processor\Iterable\LessThan(),
-            new Filter\Processor\Iterable\LessThanOrEqual(),
-            new Filter\Processor\Iterable\Like(),
-            new Filter\Processor\Iterable\Not()
+            new All(),
+            new Any(),
+            new Equals(),
+            new GreaterThan(),
+            new GreaterThanOrEqual(),
+            new In(),
+            new LessThan(),
+            new LessThanOrEqual(),
+            new Like(),
+            new Not()
         )->filterProcessors;
     }
 
