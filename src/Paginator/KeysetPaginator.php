@@ -26,7 +26,10 @@ class KeysetPaginator
     private $dataReader;
     private $pageSize;
 
+    private $firstValue;
     private $lastValue;
+
+    private $currentFirstValue;
     private $currentLastValue;
 
     public function __construct(DataReaderInterface $dataReader)
@@ -49,33 +52,71 @@ class KeysetPaginator
     public function read(): iterable
     {
         $this->currentLastValue = null;
+        $this->currentFirstValue = null;
+
         $dataReader = $this->dataReader->withLimit($this->pageSize);
 
-        $order = $this->dataReader->getSort()->getOrder();
+        $sort = $this->dataReader->getSort();
+        $order = $sort->getOrder();
 
         if ($order === []) {
             throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
         }
 
+        $goingToPreviousPage = $this->firstValue !== null && $this->lastValue === null;
+        $goingToNextPage = $this->firstValue === null && $this->lastValue !== null;
+
+        if ($goingToPreviousPage) {
+            // reverse sorting
+            foreach ($order as &$sorting) {
+                $sorting = $sorting === 'asc' ? 'desc' : 'asc';
+            }
+            unset($sorting);
+            $dataReader = $dataReader->withSort($sort->withOrder($order));
+        }
+
         // first order field is the field we are paging by
+        $field = null;
+        $sorting = null;
         foreach ($order as $field => $sorting) {
             break;
         }
 
-        if (isset($this->lastValue)) {
+        if ($goingToPreviousPage || $goingToNextPage) {
+            $value = $goingToPreviousPage ? $this->firstValue : $this->lastValue;
+
+            $filter = null;
             if ($sorting === 'asc') {
-                $filter = new GreaterThan($field, $this->lastValue);
+                $filter = new GreaterThan($field, $value);
             } elseif ($sorting === 'desc') {
-                $filter = new LessThan($field, $this->lastValue);
+                $filter = new LessThan($field, $value);
             }
 
             $dataReader = $dataReader->withFilter($filter);
         }
 
-        foreach($dataReader->read() as $item) {
+        $data = [];
+        foreach ($dataReader->read() as $item) {
             $this->currentLastValue = $item[$field];
-            yield $item;
+            if ($this->currentFirstValue === null) {
+                $this->currentFirstValue = $item[$field];
+            }
+            $data[] = $item;
         }
+
+        if ($goingToPreviousPage) {
+            [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
+            return array_reverse($data);
+        }
+
+        return $data;
+    }
+
+    public function withFirst($value): self
+    {
+        $new = clone $this;
+        $new->firstValue = $value;
+        return $new;
     }
 
     public function withLast($value): self
@@ -85,7 +126,11 @@ class KeysetPaginator
         return $new;
     }
 
-    public function getLastValue() {
+    public function getFirst() {
+        return $this->currentFirstValue;
+    }
+
+    public function getLast() {
         return $this->currentLastValue;
     }
 
