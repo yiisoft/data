@@ -36,7 +36,7 @@ class KeysetPaginator implements PaginatorInterface
     private $currentLastValue;
 
     /**
-     * @var iterable Reader cache against repeated scans.
+     * @var iterable|null Reader cache against repeated scans.
      *
      * See more {@see clearReadCache()}.
      */
