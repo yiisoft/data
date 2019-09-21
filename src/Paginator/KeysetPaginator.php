@@ -68,7 +68,7 @@ class KeysetPaginator implements PaginatorInterface
      */
     public function read(): iterable
     {
-        if($this->readCache) {
+        if ($this->readCache) {
             return $this->readCache;
         }
         $this->currentLastValue = null;
@@ -136,6 +136,7 @@ class KeysetPaginator implements PaginatorInterface
     {
         $new = clone $this;
         $new->firstValue = $value;
+        $new->lastValue = null;
         $new->clearReadCache();
         return $new;
     }
@@ -143,6 +144,7 @@ class KeysetPaginator implements PaginatorInterface
     public function withNextPageToken($value): PaginatorInterface
     {
         $new = clone $this;
+        $new->firstValue = null;
         $new->lastValue = $value;
         $new->clearReadCache();
         return $new;
@@ -159,7 +161,7 @@ class KeysetPaginator implements PaginatorInterface
     public function getPreviousPageToken(): ?string
     {
         $this->currentPageSize();
-        return (string) ($this->currentFirstValue ?? $this->firstValue);
+        return (string)($this->currentFirstValue ?? $this->firstValue);
     }
 
     /**
@@ -173,7 +175,7 @@ class KeysetPaginator implements PaginatorInterface
     public function getNextPageToken(): ?string
     {
         $this->currentPageSize();
-        return (string) ($this->currentLastValue ?? $this->lastValue);
+        return (string)($this->currentLastValue ?? $this->lastValue);
     }
 
     public function withPageSize(int $pageSize): PaginatorInterface
@@ -195,9 +197,15 @@ class KeysetPaginator implements PaginatorInterface
 
     public function isOnFirstPage(): bool
     {
-        if($this->firstValue === null) {
+        if ($this->currentPageSize() < $this->pageSize && $this->firstValue !== null) {
+            // The page size is smaller than the specified size and goes to the previous page.
             return true;
         }
+        if ($this->lastValue === null && $this->firstValue === null) {
+            // Initial state, no values.
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -210,10 +218,10 @@ class KeysetPaginator implements PaginatorInterface
     private function currentPageSize(): int
     {
         $result = $this->readCache;
-        if($result === null) {
+        if ($result === null) {
             $result = $this->read();
         }
-        if($result instanceof \Traversable && !($result instanceof \Countable)) {
+        if ($result instanceof \Traversable && !($result instanceof \Countable)) {
             $result = iterator_to_array($result);
         }
         return count($result);
@@ -226,7 +234,8 @@ class KeysetPaginator implements PaginatorInterface
      * for these properties to work properly after changing the parameters, it is need to clear the cache.
      * Therefore, it is important that you call this method if you change the default parameters.
      */
-    protected function clearReadCache(): void {
+    protected function clearReadCache(): void
+    {
         $this->readCache = null;
     }
 }

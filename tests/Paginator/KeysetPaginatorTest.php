@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Paginator;
 
 use Yiisoft\Data\Paginator\KeysetPaginator;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
@@ -113,7 +114,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
-            ->withNextPageToken(3);
+            ->withNextPageToken("3");
 
         $this->expectException(\RuntimeException::class);
 
@@ -145,6 +146,8 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken());
+        $this->assertSame(true, $paginator->isOnFirstPage());
+        $this->assertSame(false, $paginator->isOnLastPage());
     }
 
     public function testReadSecondPage(): void
@@ -156,7 +159,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
-            ->withNextPageToken(2);
+            ->withNextPageToken("2");
 
         $expected = [
             [
@@ -172,6 +175,8 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken());
+        $this->assertSame(false, $paginator->isOnFirstPage());
+        $this->assertSame(false, $paginator->isOnLastPage());
     }
 
     public function testReadSecondPageOrderedByName(): void
@@ -199,6 +204,8 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
         $last = end($expected);
         $this->assertSame((string)$last['name'], $paginator->getNextPageToken());
+        $this->assertSame(false, $paginator->isOnFirstPage());
+        $this->assertSame(false, $paginator->isOnLastPage());
     }
 
     public function testBackwardPagination(): void
@@ -210,7 +217,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
-            ->withPreviousPageToken(5);
+            ->withPreviousPageToken("5");
 
         $expected = [
             [
@@ -227,6 +234,8 @@ final class KeysetPaginatorTest extends Testcase
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken(), 'Last value fail!');
         $this->assertSame((string)$first['id'], $paginator->getPreviousPageToken(), 'First value fail!');
+        $this->assertSame(false, $paginator->isOnFirstPage());
+        $this->assertSame(false, $paginator->isOnLastPage());
     }
 
     public function testForwardAndBackwardPagination(): void
@@ -238,7 +247,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
-            ->withNextPageToken(2);
+            ->withNextPageToken("2");
 
         $expected = [
             [
@@ -255,6 +264,8 @@ final class KeysetPaginatorTest extends Testcase
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken(), 'Last value fail!');
         $this->assertSame((string)$first['id'], $paginator->getPreviousPageToken(), 'First value fail!');
+        $this->assertSame(false, $paginator->isOnFirstPage());
+        $this->assertSame(false, $paginator->isOnLastPage());
 
         $expected = [
             [
@@ -276,5 +287,79 @@ final class KeysetPaginatorTest extends Testcase
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken(), 'Last value fail!');
         $this->assertSame((string)$first['id'], $paginator->getPreviousPageToken(), 'First value fail!');
+        $this->assertSame(false, $paginator->isOnFirstPage());
+        $this->assertSame(false, $paginator->isOnLastPage());
+    }
+
+    public function testIsOnFirstPage(): void
+    {
+        $sort = (new Sort(['id']))->withOrderString('id');
+        $dataReader = (new IterableDataReader($this->getDataSet()))
+            ->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2);
+        $this->assertSame(true, $paginator->isOnFirstPage());
+
+        foreach (range(1, 10) as $void) {
+            $paginator = $paginator->withNextPageToken($paginator->getNextPageToken());
+            $this->assertSame(false, $paginator->isOnFirstPage());
+        }
+
+        $paginator = $paginator->withPreviousPageToken("1");
+        $this->assertSame(true, $paginator->isOnFirstPage());
+        $paginator = $paginator->withPreviousPageToken("2");
+        $this->assertSame(true, $paginator->isOnFirstPage());
+        $paginator = $paginator->withPreviousPageToken("3");
+        $this->assertSame(false, $paginator->isOnFirstPage());
+    }
+
+    public function testIsOnLastPage(): void
+    {
+        $sort = (new Sort(['id']))->withOrderString('id');
+        $dataReader = (new IterableDataReader($this->getDataSet()))
+            ->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2);
+
+        $this->assertSame(false, $paginator->isOnLastPage());
+        $paginator = $paginator->withNextPageToken("6");
+        $this->assertSame(true, $paginator->isOnLastPage());
+        $paginator = $paginator->withNextPageToken("5");
+        $this->assertSame(true, $paginator->isOnLastPage());
+        $paginator = $paginator->withNextPageToken("4");
+        $this->assertSame(false, $paginator->isOnLastPage());
+    }
+
+    public function testCurrentPageSize(): void
+    {
+        $sort = (new Sort(['id']))->withOrderString('id');
+        $dataReader = (new IterableDataReader($this->getDataSet()))
+            ->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2);
+        $this->assertSame(2, $this->getPageSize($paginator));
+        $paginator = $paginator->withPreviousPageToken("1");
+        $this->assertSame(0, $this->getPageSize($paginator));
+        $paginator = $paginator->withPreviousPageToken("2");
+        $this->assertSame(1, $this->getPageSize($paginator));
+        $paginator = $paginator->withPreviousPageToken("3");
+        $this->assertSame(2, $this->getPageSize($paginator));
+
+        $paginator = $paginator->withNextPageToken("6");
+        $this->assertSame(0, $this->getPageSize($paginator));
+        $paginator = $paginator->withNextPageToken("5");
+        $this->assertSame(1, $this->getPageSize($paginator));
+        $paginator = $paginator->withNextPageToken("4");
+        $this->assertSame(2, $this->getPageSize($paginator));
+    }
+
+    protected function getPageSize(PaginatorInterface $paginator)
+    {
+        return count($this->iterableToArray($paginator->read()));
+    }
+
+    protected function iterableToArray(iterable $iterable): array
+    {
+        return $iterable instanceof \Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 }
