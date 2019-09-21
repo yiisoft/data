@@ -10,7 +10,7 @@ use Yiisoft\Data\Reader\OffsetableDataInterface;
 /**
  * OffsetPaginator
  */
-final class OffsetPaginator
+final class OffsetPaginator implements PaginatorInterface
 {
     /**
      * @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface
@@ -18,7 +18,7 @@ final class OffsetPaginator
     private $dataReader;
 
     private $currentPage = 1;
-    private $pageSize = 10;
+    private $pageSize = self::DEFAULT_PAGE_SIZE;
 
     public function __construct(DataReaderInterface $dataReader)
     {
@@ -49,7 +49,7 @@ final class OffsetPaginator
         return $new;
     }
 
-    public function withPageSize(int $size): self
+    public function withPageSize(int $size): PaginatorInterface
     {
         if ($size < 1) {
             throw new \InvalidArgumentException('Page size should be at least 1');
@@ -84,5 +84,25 @@ final class OffsetPaginator
     {
         $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
         yield from $reader->read();
+    }
+
+    public function getNextPageToken(): ?string
+    {
+        return $this->isOnLastPage() ? null : (string) ($this->currentPage + 1);
+    }
+
+    public function getPreviousPageToken(): ?string
+    {
+        return $this->isOnFirstPage() ? null : (string) ($this->currentPage - 1);
+    }
+
+    public function withNextPageToken(?string $token): PaginatorInterface
+    {
+        return $this->withCurrentPage(intval($token));
+    }
+
+    public function withPreviousPageToken(?string $token): PaginatorInterface
+    {
+        return $this->withCurrentPage(intval($token));
     }
 }

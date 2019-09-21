@@ -18,19 +18,29 @@ use Yiisoft\Data\Reader\SortableDataInterface;
  *
  * @link https://use-the-index-luke.com/no-offset
  */
-class KeysetPaginator
+class KeysetPaginator implements PaginatorInterface
 {
     /**
      * @var FilterableDataInterface|DataReaderInterface|SortableDataInterface
      */
     private $dataReader;
-    private $pageSize;
+    /**
+     * @var int
+     */
+    private $pageSize = self::DEFAULT_PAGE_SIZE;
 
     private $firstValue;
     private $lastValue;
 
     private $currentFirstValue;
     private $currentLastValue;
+
+    /**
+     * @var iterable Reader cache against repeated scans.
+     *
+     * See more [[clearReadCache]].
+     */
+    private $readCache;
 
     public function __construct(DataReaderInterface $dataReader)
     {
@@ -49,8 +59,18 @@ class KeysetPaginator
         $this->dataReader = $dataReader;
     }
 
+    /**
+     * Reads items of the page
+     *
+     * This method uses the read cache to prevent duplicate reads from the data source. See more [[clearReadCache]]
+     *
+     * @return iterable
+     */
     public function read(): iterable
     {
+        if($this->readCache) {
+            return $this->readCache;
+        }
         $this->currentLastValue = null;
         $this->currentFirstValue = null;
 
@@ -106,35 +126,57 @@ class KeysetPaginator
 
         if ($goingToPreviousPage) {
             [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
-            return array_reverse($data);
+            $data = array_reverse($data);
         }
 
-        return $data;
+        return $this->readCache = $data;
     }
 
-    public function withFirst($value): self
+    public function withPreviousPageToken($value): PaginatorInterface
     {
         $new = clone $this;
         $new->firstValue = $value;
+        $new->clearReadCache();
         return $new;
     }
 
-    public function withLast($value): self
+    public function withNextPageToken($value): PaginatorInterface
     {
         $new = clone $this;
         $new->lastValue = $value;
+        $new->clearReadCache();
         return $new;
     }
 
-    public function getFirst() {
-        return $this->currentFirstValue;
+    /**
+     * Token for the previous page.
+     *
+     * The token of the previous page may be available even if the return value of [[isOnFirstPage]] is true.
+     * This method allows to continue paging when a new record is created.
+     *
+     * @return string|null
+     */
+    public function getPreviousPageToken(): ?string
+    {
+        $this->currentPageSize();
+        return (string) ($this->currentFirstValue ?? $this->firstValue);
     }
 
-    public function getLast() {
-        return $this->currentLastValue;
+    /**
+     * Token for the next page.
+     *
+     * The token of the next page may be available even if the return value of [[isOnLastPage]] is true.
+     * This method allows to continue paging when a new record is created.
+     *
+     * @return string|null
+     */
+    public function getNextPageToken(): ?string
+    {
+        $this->currentPageSize();
+        return (string) ($this->currentLastValue ?? $this->lastValue);
     }
 
-    public function withPageSize(int $pageSize): self
+    public function withPageSize(int $pageSize): PaginatorInterface
     {
         if ($pageSize < 1) {
             throw new \InvalidArgumentException('Page size should be at least 1');
@@ -142,6 +184,49 @@ class KeysetPaginator
 
         $new = clone $this;
         $new->pageSize = $pageSize;
+        $new->clearReadCache();
         return $new;
+    }
+
+    public function isOnLastPage(): bool
+    {
+        return !$this->isOnFirstPage() && $this->currentPageSize() !== $this->pageSize;
+    }
+
+    public function isOnFirstPage(): bool
+    {
+        if($this->firstValue === null) {
+            return true;
+        }
+    }
+
+    /**
+     * Specifies the size of the current page
+     *
+     * This method uses an internal read cache to prevent repeated scans and loads the read cache.
+     *
+     * @return int size of current page
+     */
+    private function currentPageSize(): int
+    {
+        $result = $this->readCache;
+        if($result === null) {
+            $result = $this->read();
+        }
+        if($result instanceof \Traversable && !($result instanceof \Countable)) {
+            $result = iterator_to_array($result);
+        }
+        return count($result);
+    }
+
+    /**
+     * Clears the read cache
+     *
+     * Properties of this object using the read cache are to prevent duplicate reads. However,
+     * for these properties to work properly after changing the parameters, it is need to clear the cache.
+     * Therefore, it is important that you call this method if you change the default parameters.
+     */
+    protected function clearReadCache(): void {
+        $this->readCache = null;
     }
 }
