@@ -38,7 +38,7 @@ class KeysetPaginator implements PaginatorInterface
     /**
      * @var iterable Reader cache against repeated scans.
      *
-     * See more [[clearReadCache]].
+     * See more {@see clearReadCache()}.
      */
     private $readCache;
 
