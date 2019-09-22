@@ -197,12 +197,12 @@ class KeysetPaginator implements PaginatorInterface
 
     public function isOnFirstPage(): bool
     {
-        if ($this->getCurrentPageSize() < $this->pageSize && $this->firstValue !== null) {
-            // The page size is smaller than the specified size and goes to the previous page.
-            return true;
-        }
         if ($this->lastValue === null && $this->firstValue === null) {
             // Initial state, no values.
+            return true;
+        }
+        if ($this->firstValue !== null && $this->getCurrentPageSize() < $this->pageSize) {
+            // The page size is smaller than the specified size and goes to the previous page.
             return true;
         }
         return false;
