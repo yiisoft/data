@@ -13,8 +13,17 @@ interface PaginatorInterface
     public function isOnFirstPage(): bool;
     public function getNextPageToken(): ?string;
     public function getPreviousPageToken(): ?string;
-    public function withNextPageToken(?string $token): self;
-    public function withPreviousPageToken(?string $token): self;
-    public function withPageSize(int $limit): self;
+    /**
+     * @return static
+     */
+    public function withNextPageToken(?string $token);
+    /**
+     * @return static
+     */
+    public function withPreviousPageToken(?string $token);
+    /**
+     * @return static
+     */
+    public function withPageSize(int $limit);
     public function getCurrentPageSize(): int;
 }

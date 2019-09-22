@@ -51,7 +51,7 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->currentPage;
     }
 
-    public function withCurrentPage(int $page): self
+    public function withCurrentPage(int $page)
     {
         if ($page < 1) {
             throw new \InvalidArgumentException('Current page should be at least 1');
@@ -118,12 +118,12 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->isOnFirstPage() ? null : (string) ($this->currentPage - 1);
     }
 
-    public function withNextPageToken(?string $token): PaginatorInterface
+    public function withNextPageToken(?string $token)
     {
         return $this->withCurrentPage(intval($token));
     }
 
-    public function withPreviousPageToken(?string $token): PaginatorInterface
+    public function withPreviousPageToken(?string $token)
     {
         return $this->withCurrentPage(intval($token));
     }
