@@ -108,7 +108,7 @@ class KeysetPaginator implements PaginatorInterface
             $filter = null;
             if ($sorting === 'asc') {
                 $filter = new GreaterThan($field, $value);
-            } elseif ($sorting === 'desc') {
+            } else {
                 $filter = new LessThan($field, $value);
             }
 
@@ -252,6 +252,7 @@ class KeysetPaginator implements PaginatorInterface
         if ($data instanceof \Traversable && !($data instanceof \Countable)) {
             $data = iterator_to_array($data);
         }
+        foreach($data as $void);    // Always read all the data.
         $this->readCache = $data;
     }
 }

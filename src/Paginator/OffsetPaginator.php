@@ -63,7 +63,7 @@ final class OffsetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function withPageSize(int $size): PaginatorInterface
+    public function withPageSize(int $size)
     {
         if ($size < 1) {
             throw new \InvalidArgumentException('Page size should be at least 1');
@@ -159,6 +159,7 @@ final class OffsetPaginator implements PaginatorInterface
         if ($data instanceof \Traversable && !($data instanceof \Countable)) {
             $data = iterator_to_array($data);
         }
+        foreach($data as $void);    // Always read all the data.
         $this->readCache = $data;
     }
 }
