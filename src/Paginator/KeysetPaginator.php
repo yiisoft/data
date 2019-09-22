@@ -153,7 +153,6 @@ class KeysetPaginator implements PaginatorInterface
     /**
      * Token for the previous page.
      *
-     * The token of the previous page may be available even if the return value of {@see isOnFirstPage()} is true.
      * This method allows to continue paging when a new record is created.
      *
      * @return string|null
@@ -167,7 +166,6 @@ class KeysetPaginator implements PaginatorInterface
     /**
      * Token for the next page.
      *
-     * The token of the next page may be available even if the return value of {@see isOnLastPage()} is true.
      * This method allows to continue paging when a new record is created.
      *
      * @return string|null
@@ -192,7 +190,7 @@ class KeysetPaginator implements PaginatorInterface
 
     public function isOnLastPage(): bool
     {
-        return !$this->isOnFirstPage() && $this->getCurrentPageSize() !== $this->pageSize;
+        throw new \RuntimeException('The last page cannot be determined.');
     }
 
     public function isOnFirstPage(): bool
@@ -201,11 +199,7 @@ class KeysetPaginator implements PaginatorInterface
             // Initial state, no values.
             return true;
         }
-        if ($this->getCurrentPageSize() < $this->pageSize) {
-            // The page size is smaller than the specified size and goes to the previous page.
-            return true;
-        }
-        return false;
+        throw new \RuntimeException('The first page cannot be determined.');
     }
 
     public function getCurrentPageSize(): int
