@@ -20,6 +20,19 @@ final class OffsetPaginator implements PaginatorInterface
     private $currentPage = 1;
     private $pageSize = self::DEFAULT_PAGE_SIZE;
 
+    /**
+     * @var iterable|null Reader cache against repeated scans.
+     *
+     * See more {@see resetCache()} and {@see initCache()}.
+     */
+    private $readCache;
+    /**
+     * @var int|null Total count cache against repeated scans.
+     *
+     * See more {@see resetCache()} and {@see initCache()}.
+     */
+    private $totalCountCache;
+
     public function __construct(DataReaderInterface $dataReader)
     {
         if (!$dataReader instanceof OffsetableDataInterface) {
@@ -45,6 +58,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $new = clone $this;
+        $new->resetCache();
         $new->currentPage = $page;
         return $new;
     }
@@ -56,6 +70,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $new = clone $this;
+        $new->resetCache();
         $new->pageSize = $size;
         return $new;
     }
@@ -72,7 +87,11 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function getTotalPages(): int
     {
-        return (int) ceil($this->dataReader->count() / $this->pageSize);
+        $totalCount = $this->totalCountCache;
+        if($totalCount === null) {
+            $totalCount = $this->dataReader->count();
+        }
+        return (int) ceil($totalCount / $this->pageSize);
     }
 
     private function getOffset(): int
@@ -82,6 +101,9 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function read(): iterable
     {
+        if($this->readCache !== null) {
+            return $this->readCache;
+        }
         $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
         yield from $reader->read();
     }
@@ -104,5 +126,39 @@ final class OffsetPaginator implements PaginatorInterface
     public function withPreviousPageToken(?string $token): PaginatorInterface
     {
         return $this->withCurrentPage(intval($token));
+    }
+
+    public function getCurrentPageSize(): int
+    {
+        $this->initCache();
+        return count($this->readCache);
+    }
+
+    /**
+     * Reset the read cache
+     *
+     * Properties of this object using the read cache are to prevent duplicate reads. However,
+     * for these properties to work properly after changing the parameters, it is need to clear the cache.
+     * Therefore, it is important that you call this method if you change the default parameters.
+     */
+    protected function resetCache(): void
+    {
+        $this->readCache = null;
+        $this->totalCountCache = null;
+    }
+
+    /**
+     * Initializes the reading cache
+     */
+    protected function initCache(): void
+    {
+        if($this->readCache !== null) {
+            return;
+        }
+        $data = $this->read();
+        if ($data instanceof \Traversable && !($data instanceof \Countable)) {
+            $data = iterator_to_array($data);
+        }
+        $this->readCache = $data;
     }
 }

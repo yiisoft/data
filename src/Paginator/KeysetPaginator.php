@@ -38,7 +38,7 @@ class KeysetPaginator implements PaginatorInterface
     /**
      * @var iterable|null Reader cache against repeated scans.
      *
-     * See more {@see clearReadCache()}.
+     * See more {@see resetReadCache()} and {@see initReadCache()}.
      */
     private $readCache;
 
@@ -62,7 +62,7 @@ class KeysetPaginator implements PaginatorInterface
     /**
      * Reads items of the page
      *
-     * This method uses the read cache to prevent duplicate reads from the data source. See more [[clearReadCache]]
+     * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetReadCache()}
      *
      * @return iterable
      */
@@ -137,7 +137,7 @@ class KeysetPaginator implements PaginatorInterface
         $new = clone $this;
         $new->firstValue = $value;
         $new->lastValue = null;
-        $new->clearReadCache();
+        $new->resetReadCache();
         return $new;
     }
 
@@ -146,35 +146,35 @@ class KeysetPaginator implements PaginatorInterface
         $new = clone $this;
         $new->firstValue = null;
         $new->lastValue = $value;
-        $new->clearReadCache();
+        $new->resetReadCache();
         return $new;
     }
 
     /**
      * Token for the previous page.
      *
-     * The token of the previous page may be available even if the return value of [[isOnFirstPage]] is true.
+     * The token of the previous page may be available even if the return value of {@see isOnFirstPage()} is true.
      * This method allows to continue paging when a new record is created.
      *
      * @return string|null
      */
     public function getPreviousPageToken(): ?string
     {
-        $this->currentPageSize();
+        $this->initReadCache();
         return (string)($this->currentFirstValue ?? $this->firstValue);
     }
 
     /**
      * Token for the next page.
      *
-     * The token of the next page may be available even if the return value of [[isOnLastPage]] is true.
+     * The token of the next page may be available even if the return value of {@see isOnLastPage()} is true.
      * This method allows to continue paging when a new record is created.
      *
      * @return string|null
      */
     public function getNextPageToken(): ?string
     {
-        $this->currentPageSize();
+        $this->initReadCache();
         return (string)($this->currentLastValue ?? $this->lastValue);
     }
 
@@ -186,18 +186,18 @@ class KeysetPaginator implements PaginatorInterface
 
         $new = clone $this;
         $new->pageSize = $pageSize;
-        $new->clearReadCache();
+        $new->resetReadCache();
         return $new;
     }
 
     public function isOnLastPage(): bool
     {
-        return !$this->isOnFirstPage() && $this->currentPageSize() !== $this->pageSize;
+        return !$this->isOnFirstPage() && $this->getCurrentPageSize() !== $this->pageSize;
     }
 
     public function isOnFirstPage(): bool
     {
-        if ($this->currentPageSize() < $this->pageSize && $this->firstValue !== null) {
+        if ($this->getCurrentPageSize() < $this->pageSize && $this->firstValue !== null) {
             // The page size is smaller than the specified size and goes to the previous page.
             return true;
         }
@@ -208,34 +208,36 @@ class KeysetPaginator implements PaginatorInterface
         return false;
     }
 
-    /**
-     * Specifies the size of the current page
-     *
-     * This method uses an internal read cache to prevent repeated scans and loads the read cache.
-     *
-     * @return int size of current page
-     */
-    private function currentPageSize(): int
+    public function getCurrentPageSize(): int
     {
-        $result = $this->readCache;
-        if ($result === null) {
-            $result = $this->read();
-        }
-        if ($result instanceof \Traversable && !($result instanceof \Countable)) {
-            $result = iterator_to_array($result);
-        }
-        return count($result);
+        $this->initReadCache();
+        return count($this->readCache);
     }
 
     /**
-     * Clears the read cache
+     * Reset the read cache
      *
      * Properties of this object using the read cache are to prevent duplicate reads. However,
      * for these properties to work properly after changing the parameters, it is need to clear the cache.
      * Therefore, it is important that you call this method if you change the default parameters.
      */
-    protected function clearReadCache(): void
+    protected function resetReadCache(): void
     {
         $this->readCache = null;
+    }
+
+    /**
+     * Initializes the reading cache
+     */
+    protected function initReadCache(): void
+    {
+        if($this->readCache !== null) {
+            return;
+        }
+        $data = $this->read();
+        if ($data instanceof \Traversable && !($data instanceof \Countable)) {
+            $data = iterator_to_array($data);
+        }
+        $this->readCache = $data;
     }
 }

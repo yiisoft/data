@@ -16,4 +16,5 @@ interface PaginatorInterface
     public function withNextPageToken(?string $token): self;
     public function withPreviousPageToken(?string $token): self;
     public function withPageSize(int $limit): self;
+    public function getCurrentPageSize(): int;
 }
