@@ -301,7 +301,7 @@ final class KeysetPaginatorTest extends Testcase
         try {
             $paginator->isOnLastPage();
             $this->assertTrue(false);
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertTrue(true);
         }
         $paginator = $paginator->withNextPageToken("6");
@@ -319,29 +319,66 @@ final class KeysetPaginatorTest extends Testcase
             ->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2);
-        $this->assertSame(2, $this->getPageSize($paginator));
+        $this->assertSame(2, $paginator->getCurrentPageSize());
         $paginator = $paginator->withPreviousPageToken("1");
-        $this->assertSame(0, $this->getPageSize($paginator));
+        $this->assertSame(0, $paginator->getCurrentPageSize());
         $paginator = $paginator->withPreviousPageToken("2");
-        $this->assertSame(1, $this->getPageSize($paginator));
+        $this->assertSame(1, $paginator->getCurrentPageSize());
         $paginator = $paginator->withPreviousPageToken("3");
-        $this->assertSame(2, $this->getPageSize($paginator));
+        $this->assertSame(2, $paginator->getCurrentPageSize());
 
         $paginator = $paginator->withNextPageToken("6");
-        $this->assertSame(0, $this->getPageSize($paginator));
+        $this->assertSame(0, $paginator->getCurrentPageSize());
         $paginator = $paginator->withNextPageToken("5");
-        $this->assertSame(1, $this->getPageSize($paginator));
+        $this->assertSame(1, $paginator->getCurrentPageSize());
         $paginator = $paginator->withNextPageToken("4");
-        $this->assertSame(2, $this->getPageSize($paginator));
+        $this->assertSame(2, $paginator->getCurrentPageSize());
     }
 
-    protected function getPageSize(PaginatorInterface $paginator)
+    public function testReadCache()
     {
-        return count($this->iterableToArray($paginator->read()));
+        $sort = (new Sort(['id']))->withOrderString('id');
+        $dataSet = new class($this->getDataSet()) extends \ArrayIterator
+        {
+            private $rewindCounter = 0;
+
+            public function rewind()
+            {
+                $this->rewindCounter++;
+                parent::rewind();
+            }
+
+            public function getRewindCounter(): int
+            {
+                return $this->rewindCounter;
+            }
+        };
+        $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2);
+        // not use datase test
+        $this->assertSame(0, $dataSet->getRewindCounter());
+        // first use dataset test
+        $paginator->getCurrentPageSize();
+        $this->assertSame(1, $dataSet->getRewindCounter());
+        // repeated use dataset test
+        $paginator->getCurrentPageSize();
+        $this->assertSame(1, $dataSet->getRewindCounter());
+        $paginator->isOnFirstPage();
+        $this->assertSame(1, $dataSet->getRewindCounter());
+        $paginator->isOnLastPage();
+        $this->assertSame(1, $dataSet->getRewindCounter());
+        foreach($paginator->read() as $void);
+        $this->assertSame(1, $dataSet->getRewindCounter());
+        // clear cache test
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(3);
+        $this->assertSame(1, $dataSet->getRewindCounter());
+        // recreate cache
+        $paginator->getCurrentPageSize();
+        $this->assertSame(2, $dataSet->getRewindCounter());
+        $paginator->getCurrentPageSize();
+        $this->assertSame(2, $dataSet->getRewindCounter());
     }
 
-    protected function iterableToArray(iterable $iterable): array
-    {
-        return $iterable instanceof \Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
-    }
 }
