@@ -88,6 +88,71 @@ Filter could be composed with:
 - `Like`
 - `Not`
 
+#### Implementing your own filter
+
+In order to have your own filter you need to defined below:
+- If you define your own filter you need to implement at least `FilterInterface`, which includes 
+  - `getOperator()` method that returns string represents a filter operation, and
+  - `toArray` method that returns array represents the parameters for filtering.
+- If you want to create a filter executor for a specific data reader type, then you need to implement at least 
+`FilterProcessorInterface`. It has a single `getOperator()` method that returns string represented a filter operation.
+In addition, each data reader specifies an extended interface required for processing or building the operation.
+*For example, `IterableDataFilter` defines `IterableProcessorInterface`, which contains an additional `match()` 
+method to execute a filter on PHP variables.*
+
+You can add your own filter processors to the data reader using the `withFilterProcessors ()` method. You can add any filter
+processor to Reader, because if reader can't use it, they are dropped.
+
+```php
+// own filter for filtering
+class OwnNotTwoFilter implenents FilterInterface
+{
+    private $field;
+    public function __construct($field)
+    {
+        $this->field = $field;
+    }
+    public static function getOperator(): string
+    {
+        return 'my!2';
+    }
+    public function toArray(): array
+    {
+        return [static::getOperator(), $this->field];
+    }
+}
+// own iterable filter processor for matching
+class OwnIterableNotTwoFilterProcessor implements 
+{
+    public function getOperator(): string
+    {
+        return OwnNotTwoFilter::getOperator();
+    }
+
+    public function match(array $item, array $arguments, array $filterProcessors): bool
+    {
+        [$field] = $arguments;
+        return $item[$field] != 2;
+    }
+}
+
+// and using it on data reader
+$filter = new All(
+    new LessThan('id', 8),
+    new OwnNotTwoFilter('id'),
+);
+
+$reader = (new MyDataReader(...))
+    ->withFilter($filter)
+    ->withFilterProcessors(
+        new OwnIterableNotTwoFilterProcessor()
+        new OwnSqlNotTwoFilterProcessor()    // for SQL
+        // and for any supported readers...
+    );
+
+$data = $reader->read();
+```
+
 ### Sorting
 
 In order to sort data in a data provider implementing `SortableDataInterface` you need to supply sort object to
