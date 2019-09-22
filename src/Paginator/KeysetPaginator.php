@@ -150,30 +150,32 @@ class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
-    /**
-     * Token for the previous page.
-     *
-     * This method allows to continue paging when a new record is created.
-     *
-     * @return string|null
-     */
     public function getPreviousPageToken(): ?string
     {
         $this->initReadCache();
-        return (string)($this->currentFirstValue ?? $this->firstValue);
+        $currentPageSize = $this->getCurrentPageSize();
+        if($this->lastValue !== null && $currentPageSize === 0) {
+            throw new \RuntimeException('Previous page token cannot be determined.');
+        } elseif($this->lastValue !== null && $currentPageSize < $this->pageSize) {
+            return (string) $this->currentFirstValue;
+        } elseif ($this->currentFirstValue === null || $currentPageSize !== $this->pageSize) {
+            return null;
+        }
+        return (string)$this->currentFirstValue;
     }
 
-    /**
-     * Token for the next page.
-     *
-     * This method allows to continue paging when a new record is created.
-     *
-     * @return string|null
-     */
     public function getNextPageToken(): ?string
     {
         $this->initReadCache();
-        return (string)($this->currentLastValue ?? $this->lastValue);
+        $currentPageSize = $this->getCurrentPageSize();
+        if ($this->firstValue !== null && $currentPageSize === 0) {
+            throw new \RuntimeException('Next page token cannot be determined.');
+        } elseif ($this->firstValue !== null && $currentPageSize < $this->pageSize) {
+            return (string)$this->currentLastValue;
+        } elseif ($this->currentLastValue === null || $currentPageSize !== $this->pageSize) {
+            return null;
+        }
+        return (string)$this->currentLastValue;
     }
 
     public function withPageSize(int $pageSize)
@@ -252,7 +254,7 @@ class KeysetPaginator implements PaginatorInterface
         if ($data instanceof \Traversable && !($data instanceof \Countable)) {
             $data = iterator_to_array($data);
         }
-        foreach($data as $void);    // Always read all the data.
+        foreach ($data as $void) ;    // Always read all the data.
         $this->readCache = $data;
     }
 }
