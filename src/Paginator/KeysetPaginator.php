@@ -190,13 +190,33 @@ class KeysetPaginator implements PaginatorInterface
 
     public function isOnLastPage(): bool
     {
-        throw new \RuntimeException('The last page cannot be determined.');
+        if ($this->firstValue !== null) {
+            throw new \RuntimeException('The last page cannot be determined.');
+        }
+        $currentPageSize = $this->getCurrentPageSize();
+        if ($this->lastValue !== null) {
+            // going forward
+            return $currentPageSize !== $this->pageSize;
+        } elseif ($this->firstValue === null && $this->lastValue === null && $currentPageSize !== $this->pageSize) {
+            // first page and the number of pages is 1.
+            return true;
+        }
+        return false;
     }
 
     public function isOnFirstPage(): bool
     {
         if ($this->lastValue === null && $this->firstValue === null) {
             // Initial state, no values.
+            return true;
+        }
+        $currentPageSize = $this->getCurrentPageSize();
+
+        if ($this->firstValue === null && $this->lastValue === null && $currentPageSize !== $this->pageSize) {
+            // first page and the number of pages is 1.
+            return true;
+        } elseif ($this->firstValue !== null && $currentPageSize !== $this->pageSize) {
+            // going backward
             return true;
         }
         throw new \RuntimeException('The first page cannot be determined.');
@@ -225,7 +245,7 @@ class KeysetPaginator implements PaginatorInterface
      */
     protected function initReadCache(): void
     {
-        if($this->readCache !== null) {
+        if ($this->readCache !== null) {
             return;
         }
         $data = $this->read();

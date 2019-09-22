@@ -288,10 +288,6 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2);
         $this->assertSame(true, $paginator->isOnFirstPage());
-
-        $this->expectException(\RuntimeException::class);
-        $paginator = $paginator->withPreviousPageToken("1");
-        $paginator->isOnFirstPage();
     }
 
     public function testIsOnLastPage(): void
@@ -301,8 +297,19 @@ final class KeysetPaginatorTest extends Testcase
             ->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2);
-        $this->expectException(\RuntimeException::class);
-        $paginator->isOnLastPage();
+
+        try {
+            $paginator->isOnLastPage();
+            $this->assertTrue(false);
+        } catch(\RuntimeException $e) {
+            $this->assertTrue(true);
+        }
+        $paginator = $paginator->withNextPageToken("6");
+        $this->assertSame(true, $paginator->isOnLastPage());
+        $paginator = $paginator->withNextPageToken("5");
+        $this->assertSame(true, $paginator->isOnLastPage());
+        $paginator = $paginator->withNextPageToken("4");
+        $this->assertSame(false, $paginator->isOnLastPage());
     }
 
     public function testCurrentPageSize(): void
