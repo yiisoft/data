@@ -277,7 +277,7 @@ final class KeysetPaginatorTest extends Testcase
         $first = reset($expected);
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken(), 'Last value fail!');
-        $this->assertSame((string)$first['id'], $paginator->getPreviousPageToken(), 'First value fail!');
+        $this->assertNull($paginator->getPreviousPageToken(), 'First value fail!');
     }
 
     public function testIsOnFirstPage(): void
@@ -298,17 +298,15 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2);
 
-        try {
-            $paginator->isOnLastPage();
-            $this->assertTrue(false);
-        } catch (\RuntimeException $e) {
-            $this->assertTrue(true);
-        }
         $paginator = $paginator->withNextPageToken("6");
         $this->assertSame(true, $paginator->isOnLastPage());
         $paginator = $paginator->withNextPageToken("5");
         $this->assertSame(true, $paginator->isOnLastPage());
         $paginator = $paginator->withNextPageToken("4");
+        $this->assertSame(true, $paginator->isOnLastPage());
+        $paginator = $paginator->withNextPageToken("3");
+        $this->assertSame(true, $paginator->isOnLastPage());
+        $paginator = $paginator->withNextPageToken("2");
         $this->assertSame(false, $paginator->isOnLastPage());
     }
 
@@ -403,7 +401,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = $paginator->withPreviousPageToken("3");
         $this->assertNotNull($paginator->getNextPageToken());
         $this->assertSame("2", $paginator->getNextPageToken());
-        $this->assertNotNull($paginator->getPreviousPageToken());
+        $this->assertNull($paginator->getPreviousPageToken());
 
         $paginator = $paginator->withNextPageToken("6");
         try {
@@ -418,9 +416,9 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame("6", $paginator->getPreviousPageToken());
         $this->assertNull($paginator->getNextPageToken());
         $paginator = $paginator->withNextPageToken("4");
+        $this->assertNull($paginator->getNextPageToken());
         $this->assertNotNull($paginator->getPreviousPageToken());
         $this->assertSame("5", $paginator->getPreviousPageToken());
-        $this->assertNotNull($paginator->getNextPageToken());
     }
 
 }

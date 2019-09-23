@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Paginator;
 
 use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\DataReaderInterface;
+use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
@@ -36,9 +38,18 @@ class KeysetPaginator implements PaginatorInterface
     private $currentLastValue;
 
     /**
+     * @var bool Next page has item indicator.
+     */
+    private $hasNextPageItem = false;
+    /**
+     * @var bool Previous page has item indicator.
+     */
+    private $hasPreviousPageItem = false;
+
+    /**
      * @var array|null Reader cache against repeated scans.
      *
-     * See more {@see resetReadCache()} and {@see initReadCache()}.
+     * See more {@see __clone()} and {@see initializeInternal()}.
      */
     private $readCache;
 
@@ -62,7 +73,7 @@ class KeysetPaginator implements PaginatorInterface
     /**
      * Reads items of the page
      *
-     * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetReadCache()}
+     * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetInternal()}
      *
      * @return iterable
      */
@@ -74,7 +85,7 @@ class KeysetPaginator implements PaginatorInterface
         $this->currentLastValue = null;
         $this->currentFirstValue = null;
 
-        $dataReader = $this->dataReader->withLimit($this->pageSize);
+        $dataReader = $this->dataReader->withLimit($this->pageSize + 2);
 
         $sort = $this->dataReader->getSort();
         $order = $sort->getOrder();
@@ -102,14 +113,15 @@ class KeysetPaginator implements PaginatorInterface
             break;
         }
 
+        $valueForFilter = null;
         if ($goingToPreviousPage || $goingToNextPage) {
-            $value = $goingToPreviousPage ? $this->firstValue : $this->lastValue;
+            $valueForFilter = $goingToPreviousPage ? $this->firstValue : $this->lastValue;
 
             $filter = null;
             if ($sorting === 'asc') {
-                $filter = new GreaterThan($field, $value);
+                $filter = new GreaterThanOrEqual($field, $valueForFilter);
             } else {
-                $filter = new LessThan($field, $value);
+                $filter = new LessThanOrEqual($field, $valueForFilter);
             }
 
             $dataReader = $dataReader->withFilter($filter);
@@ -117,48 +129,49 @@ class KeysetPaginator implements PaginatorInterface
 
         $data = [];
         foreach ($dataReader->read() as $item) {
-            $this->currentLastValue = $item[$field];
             if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = $item[$field];
+                if ((string)$item[$field] === $valueForFilter) {
+                    $this->hasPreviousPageItem = true;
+                } else {
+                    $this->currentFirstValue = $item[$field];
+                }
             }
-            $data[] = $item;
+            if (count($data) === $this->pageSize) {
+                $this->hasNextPageItem = true;
+            } elseif ($this->currentFirstValue !== null && count($data) < $this->pageSize) {
+                $this->currentLastValue = $item[$field];
+                $data[] = $item;
+            }
         }
 
         if ($goingToPreviousPage) {
             [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
+            [$this->hasPreviousPageItem, $this->hasNextPageItem] = [$this->hasNextPageItem, $this->hasPreviousPageItem];
             $data = array_reverse($data);
         }
 
         return $this->readCache = $data;
     }
 
-    public function withPreviousPageToken(string $value)
+    public function withPreviousPageToken(?string $value)
     {
         $new = clone $this;
         $new->firstValue = $value;
         $new->lastValue = null;
-        $new->resetReadCache();
         return $new;
     }
 
-    public function withNextPageToken(string $value)
+    public function withNextPageToken(?string $value)
     {
         $new = clone $this;
         $new->firstValue = null;
         $new->lastValue = $value;
-        $new->resetReadCache();
         return $new;
     }
 
     public function getPreviousPageToken(): ?string
     {
-        $this->initReadCache();
-        $currentPageSize = $this->getCurrentPageSize();
-        if($this->lastValue !== null && $currentPageSize === 0) {
-            throw new \RuntimeException('Previous page token cannot be determined.');
-        } elseif($this->lastValue !== null && $currentPageSize < $this->pageSize) {
-            return (string) $this->currentFirstValue;
-        } elseif ($this->currentFirstValue === null || $currentPageSize !== $this->pageSize) {
+        if($this->isOnFirstPage()) {
             return null;
         }
         return (string)$this->currentFirstValue;
@@ -166,13 +179,7 @@ class KeysetPaginator implements PaginatorInterface
 
     public function getNextPageToken(): ?string
     {
-        $this->initReadCache();
-        $currentPageSize = $this->getCurrentPageSize();
-        if ($this->firstValue !== null && $currentPageSize === 0) {
-            throw new \RuntimeException('Next page token cannot be determined.');
-        } elseif ($this->firstValue !== null && $currentPageSize < $this->pageSize) {
-            return (string)$this->currentLastValue;
-        } elseif ($this->currentLastValue === null || $currentPageSize !== $this->pageSize) {
+        if($this->isOnLastPage()) {
             return null;
         }
         return (string)$this->currentLastValue;
@@ -186,24 +193,13 @@ class KeysetPaginator implements PaginatorInterface
 
         $new = clone $this;
         $new->pageSize = $pageSize;
-        $new->resetReadCache();
         return $new;
     }
 
     public function isOnLastPage(): bool
     {
-        if ($this->firstValue !== null) {
-            throw new \RuntimeException('The last page cannot be determined.');
-        }
-        $currentPageSize = $this->getCurrentPageSize();
-        if ($this->lastValue !== null) {
-            // going forward
-            return $currentPageSize !== $this->pageSize;
-        } elseif ($this->firstValue === null && $this->lastValue === null && $currentPageSize !== $this->pageSize) {
-            // first page and the number of pages is 1.
-            return true;
-        }
-        return false;
+        $this->initializeInternal();
+        return !$this->hasNextPageItem;
     }
 
     public function isOnFirstPage(): bool
@@ -212,49 +208,32 @@ class KeysetPaginator implements PaginatorInterface
             // Initial state, no values.
             return true;
         }
-        $currentPageSize = $this->getCurrentPageSize();
-
-        if ($this->firstValue === null && $this->lastValue === null && $currentPageSize !== $this->pageSize) {
-            // first page and the number of pages is 1.
-            return true;
-        } elseif ($this->firstValue !== null && $currentPageSize !== $this->pageSize) {
-            // going backward
-            return true;
-        }
-        throw new \RuntimeException('The first page cannot be determined.');
+        $this->initializeInternal();
+        return !$this->hasPreviousPageItem;
     }
 
     public function getCurrentPageSize(): int
     {
-        $this->initReadCache();
+        $this->initializeInternal();
         return count($this->readCache);
     }
 
-    /**
-     * Reset the read cache
-     *
-     * Properties of this object using the read cache are to prevent duplicate reads. However,
-     * for these properties to work properly after changing the parameters, it is need to clear the cache.
-     * Therefore, it is important that you call this method if you change the default parameters.
-     */
-    protected function resetReadCache(): void
+    public function __clone()
     {
         $this->readCache = null;
+        $this->hasNextPageItem = false;
+        $this->hasPreviousPageItem = false;
     }
 
-    /**
-     * Initializes the reading cache
-     */
-    protected function initReadCache(): void
+    protected function initializeInternal(): void
     {
         if ($this->readCache !== null) {
             return;
         }
-        $data = $this->read();
-        if ($data instanceof \Traversable && !($data instanceof \Countable)) {
-            $data = iterator_to_array($data);
+        $cache = [];
+        foreach ($this->read() as $value) {
+            $cache[] = $value;
         }
-        foreach ($data as $void) ;    // Always read all the data.
-        $this->readCache = $data;
+        $this->readCache = $cache;
     }
 }

@@ -21,15 +21,15 @@ final class OffsetPaginator implements PaginatorInterface
     private $pageSize = self::DEFAULT_PAGE_SIZE;
 
     /**
-     * @var iterable|null Reader cache against repeated scans.
+     * @var array|null Reader cache against repeated scans.
      *
-     * See more {@see resetCache()} and {@see initCache()}.
+     * See more {@see resetInternal()} and {@see initializeInternal()}.
      */
     private $readCache;
     /**
      * @var int|null Total count cache against repeated scans.
      *
-     * See more {@see resetCache()} and {@see initCache()}.
+     * See more {@see initializeInternal()}.
      */
     private $totalCountCache;
 
@@ -58,7 +58,6 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $new = clone $this;
-        $new->resetCache();
         $new->currentPage = $page;
         return $new;
     }
@@ -70,7 +69,6 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $new = clone $this;
-        $new->resetCache();
         $new->pageSize = $size;
         return $new;
     }
@@ -130,36 +128,25 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function getCurrentPageSize(): int
     {
-        $this->initCache();
+        $this->initializeInternal();
         return count($this->readCache);
     }
 
-    /**
-     * Reset the read cache
-     *
-     * Properties of this object using the read cache are to prevent duplicate reads. However,
-     * for these properties to work properly after changing the parameters, it is need to clear the cache.
-     * Therefore, it is important that you call this method if you change the default parameters.
-     */
-    protected function resetCache(): void
+    public function __clone()
     {
         $this->readCache = null;
         $this->totalCountCache = null;
     }
 
-    /**
-     * Initializes the reading cache
-     */
-    protected function initCache(): void
+    protected function initializeInternal(): void
     {
         if($this->readCache !== null) {
             return;
         }
-        $data = $this->read();
-        if ($data instanceof \Traversable && !($data instanceof \Countable)) {
-            $data = iterator_to_array($data);
+        $cache = [];
+        foreach ($this->read() as $value) {
+            $cache[] = $value;
         }
-        foreach($data as $void);    // Always read all the data.
-        $this->readCache = $data;
+        $this->readCache = $cache;
     }
 }
