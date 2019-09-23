@@ -121,6 +121,43 @@ final class KeysetPaginatorTest extends Testcase
         $this->iterableToArray($paginator->read());
     }
 
+    /**
+     * @dataProvider onePageDataProvider
+     */
+    public function testOnePage(array $dataSet, int $pageSize): void
+    {
+        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+
+        $dataReader = (new IterableDataReader($dataSet))
+            ->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize($pageSize);
+        $this->assertTrue($paginator->isOnFirstPage());
+        $this->assertTrue($paginator->isOnLastPage());
+    }
+
+    public function onePageDataProvider() {
+        return [
+            [[], 1],
+            [[], 2],
+            [[], 3],
+
+            [array_slice($this->getDataSet(), 0, 1), 1],
+
+            [array_slice($this->getDataSet(), 0, 1), 2],
+            [array_slice($this->getDataSet(), 0, 2), 2],
+
+            [array_slice($this->getDataSet(), 0, 1), 3],
+            [array_slice($this->getDataSet(), 0, 2), 3],
+            [array_slice($this->getDataSet(), 0, 3), 3],
+
+            [array_slice($this->getDataSet(), 0, 1), 4],
+            [array_slice($this->getDataSet(), 0, 2), 4],
+            [array_slice($this->getDataSet(), 0, 3), 4],
+            [array_slice($this->getDataSet(), 0, 4), 4],
+        ];
+    }
+
     public function testReadFirstPage(): void
     {
         $sort = (new Sort(['id', 'name']))->withOrderString('id');
@@ -366,7 +403,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame(1, $dataSet->getRewindCounter());
         $paginator->isOnLastPage();
         $this->assertSame(1, $dataSet->getRewindCounter());
-        foreach($paginator->read() as $void);
+        foreach ($paginator->read() as $void) ;
         $this->assertSame(1, $dataSet->getRewindCounter());
         // clear cache test
         $paginator = (new KeysetPaginator($dataReader))
@@ -379,7 +416,8 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame(2, $dataSet->getRewindCounter());
     }
 
-    public function testTokenResults():void {
+    public function testTokenResults(): void
+    {
         $sort = (new Sort(['id']))->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
@@ -390,7 +428,7 @@ final class KeysetPaginatorTest extends Testcase
         try {
             $paginator->getNextPageToken();
             $this->assertTrue(false);
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertTrue(true);
         }
         $this->assertNull($paginator->getPreviousPageToken());
@@ -407,7 +445,7 @@ final class KeysetPaginatorTest extends Testcase
         try {
             $paginator->getPreviousPageToken();
             $this->assertTrue(false);
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertTrue(true);
         }
         $this->assertNull($paginator->getNextPageToken());

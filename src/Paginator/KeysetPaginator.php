@@ -38,13 +38,13 @@ class KeysetPaginator implements PaginatorInterface
     private $currentLastValue;
 
     /**
-     * @var bool Next page has item indicator.
-     */
-    private $hasNextPageItem = false;
-    /**
      * @var bool Previous page has item indicator.
      */
     private $hasPreviousPageItem = false;
+    /**
+     * @var bool Next page has item indicator.
+     */
+    private $hasNextPageItem = false;
 
     /**
      * @var array|null Reader cache against repeated scans.
@@ -82,10 +82,8 @@ class KeysetPaginator implements PaginatorInterface
         if ($this->readCache) {
             return $this->readCache;
         }
-        $this->currentLastValue = null;
-        $this->currentFirstValue = null;
 
-        $dataReader = $this->dataReader->withLimit($this->pageSize + 2);
+        $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
 
         $sort = $this->dataReader->getSort();
         $order = $sort->getOrder();
@@ -113,32 +111,33 @@ class KeysetPaginator implements PaginatorInterface
             break;
         }
 
-        $valueForFilter = null;
         if ($goingToPreviousPage || $goingToNextPage) {
-            $valueForFilter = $goingToPreviousPage ? $this->firstValue : $this->lastValue;
+            $value = $goingToPreviousPage ? $this->firstValue : $this->lastValue;
 
             $filter = null;
+            $reverseFilter = null;
             if ($sorting === 'asc') {
-                $filter = new GreaterThanOrEqual($field, $valueForFilter);
+                $filter = new GreaterThan($field, $value);
+                $reverseFilter = new LessThanOrEqual($field, $value);
             } else {
-                $filter = new LessThanOrEqual($field, $valueForFilter);
+                $filter = new LessThan($field, $value);
+                $reverseFilter = new GreaterThanOrEqual($field, $value);
             }
 
             $dataReader = $dataReader->withFilter($filter);
+            foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
+                $this->hasPreviousPageItem = true;
+            }
         }
 
         $data = [];
         foreach ($dataReader->read() as $item) {
             if ($this->currentFirstValue === null) {
-                if ((string)$item[$field] === $valueForFilter) {
-                    $this->hasPreviousPageItem = true;
-                } else {
-                    $this->currentFirstValue = $item[$field];
-                }
+                $this->currentFirstValue = $item[$field];
             }
             if (count($data) === $this->pageSize) {
                 $this->hasNextPageItem = true;
-            } elseif ($this->currentFirstValue !== null && count($data) < $this->pageSize) {
+            } else {
                 $this->currentLastValue = $item[$field];
                 $data[] = $item;
             }
@@ -171,7 +170,7 @@ class KeysetPaginator implements PaginatorInterface
 
     public function getPreviousPageToken(): ?string
     {
-        if($this->isOnFirstPage()) {
+        if ($this->isOnFirstPage()) {
             return null;
         }
         return (string)$this->currentFirstValue;
@@ -179,7 +178,7 @@ class KeysetPaginator implements PaginatorInterface
 
     public function getNextPageToken(): ?string
     {
-        if($this->isOnLastPage()) {
+        if ($this->isOnLastPage()) {
             return null;
         }
         return (string)$this->currentLastValue;
@@ -221,8 +220,10 @@ class KeysetPaginator implements PaginatorInterface
     public function __clone()
     {
         $this->readCache = null;
-        $this->hasNextPageItem = false;
         $this->hasPreviousPageItem = false;
+        $this->hasNextPageItem = false;
+        $this->currentFirstValue = null;
+        $this->currentLastValue = null;
     }
 
     protected function initializeInternal(): void
