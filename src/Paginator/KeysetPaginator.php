@@ -36,7 +36,7 @@ class KeysetPaginator implements PaginatorInterface
     private $currentLastValue;
 
     /**
-     * @var iterable|null Reader cache against repeated scans.
+     * @var array|null Reader cache against repeated scans.
      *
      * See more {@see resetReadCache()} and {@see initReadCache()}.
      */
@@ -132,7 +132,7 @@ class KeysetPaginator implements PaginatorInterface
         return $this->readCache = $data;
     }
 
-    public function withPreviousPageToken($value)
+    public function withPreviousPageToken(string $value)
     {
         $new = clone $this;
         $new->firstValue = $value;
@@ -141,7 +141,7 @@ class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function withNextPageToken($value)
+    public function withNextPageToken(string $value)
     {
         $new = clone $this;
         $new->firstValue = null;
