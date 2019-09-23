@@ -95,6 +95,53 @@ final class FilterTest extends TestCase
                     ]
                 ]
             ],
+            'withFiltersArrayAll' => [
+                (new All())->withFiltersArray([
+                    ['<', 'test', 3],
+                ]),
+                [
+                    'and',
+                    [
+                        ['<', 'test', 3],
+                    ],
+                ]
+            ],
+            'withFiltersArrayAny' => [
+                (new Any())->withFiltersArray([
+                    ['<', 'test1', 3],
+                    new Equals('test2', 33),
+                ]),
+                [
+                    'or',
+                    [
+                        ['<', 'test1', 3],
+                        ['=', 'test2', 33],
+                    ],
+                ],
+            ],
+            'withFiltersArrayNestedGroup' => [
+                (new All())->withFiltersArray([
+                    ['<', 'test', 3],
+                    [
+                        'and',
+                        [
+                            ['>', 'test2', 99],
+                        ]
+                    ],
+                ]),
+                [
+                    'and',
+                    [
+                        ['<', 'test', 3],
+                        [
+                            'and',
+                            [
+                                ['>', 'test2', 99],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 

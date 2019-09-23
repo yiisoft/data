@@ -88,6 +88,22 @@ Filter could be composed with:
 - `Like`
 - `Not`
 
+#### Filtering with arrays
+
+The `All` and` Any` filters have a `withFiltersArray()` method, which allows you to define filters with arrays.
+
+```php
+$dataReader->withFilters((new All())->withFiltersArray([
+  ['=', 'id', 88],
+  [
+    'or' => [
+       ['=', 'color', 'red'],
+       ['=', 'state', 1],
+    ],
+  ]
+]));
+```
+
 ### Sorting
 
 In order to sort data in a data provider implementing `SortableDataInterface` you need to supply sort object to

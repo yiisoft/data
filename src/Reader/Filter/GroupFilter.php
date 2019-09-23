@@ -19,8 +19,36 @@ abstract class GroupFilter implements FilterInterface
     {
         $filtersArray = [];
         foreach ($this->filters as $filter) {
-            $filtersArray[] = $filter->toArray();
+            if ($filter instanceof FilterInterface) {
+                $filter = $filter->toArray();
+            }
+            $filtersArray[] = $filter;
         }
         return [static::getOperator(), $filtersArray];
+    }
+
+    /**
+     * Building criteria with array
+     *
+     * ~~~
+     * $dataReader->withFilters((new All())->withArray(
+     *   [
+     *     ['>', 'id', 88],
+     *     ['or', [
+     *        ['=', 'state', 2],
+     *        ['like', 'name', 'eva'],
+     *     ],
+     *   ]
+     * ))
+     * ~~~
+     *
+     * @param array $filtersArray
+     * @return static
+     */
+    public function withFiltersArray(array $filtersArray)
+    {
+        $new = clone $this;
+        $new->filters = $filtersArray;
+        return $new;
     }
 }
