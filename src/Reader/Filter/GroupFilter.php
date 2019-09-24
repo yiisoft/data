@@ -47,6 +47,17 @@ abstract class GroupFilter implements FilterInterface
      */
     public function withFiltersArray(array $filtersArray)
     {
+        foreach ($filtersArray as $key => $filter) {
+            if ($filter instanceof FilterInterface) {
+                continue;
+            } elseif (!is_array($filter)) {
+                throw new \RuntimeException(sprintf('Invalid filter at "%s" key', $key));
+            }
+            $first = array_shift($filter);
+            if (!is_string($first) || !strlen($first)) {
+                throw new \RuntimeException(sprintf('Invalid filter operator on "%s" key', $key));
+            }
+        }
         $new = clone $this;
         $new->filters = $filtersArray;
         return $new;

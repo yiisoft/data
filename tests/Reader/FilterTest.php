@@ -142,6 +142,13 @@ final class FilterTest extends TestCase
                     ],
                 ],
             ],
+            'withFiltersArrayEmpty' => [
+                (new All())->withFiltersArray([]),
+                [
+                    'and',
+                    [],
+                ],
+            ]
         ];
     }
 
@@ -151,5 +158,32 @@ final class FilterTest extends TestCase
     public function testFilter(FilterInterface $filter, array $filterArray): void
     {
         $this->assertSame($filterArray, $filter->toArray());
+    }
+
+    /**
+     * @dataProvider arrayFailDataProvider
+     */
+    public function testWithFiltersArrayFail(array $filtersArray)
+    {
+        $this->expectException(\RuntimeException::class);
+        (new All())->withFiltersArray($filtersArray);
+    }
+
+    public function arrayFailDataProvider(): array
+    {
+        return [
+            'filterIsNotArray' => [
+                ['test'],
+            ],
+            'emptyFilterArray' => [
+                [[]],
+            ],
+            'operatorFailInvalidType' => [
+                [[false]],
+            ],
+            'operatorFailWithEmptyString' => [
+                [['']],
+            ],
+        ];
     }
 }
