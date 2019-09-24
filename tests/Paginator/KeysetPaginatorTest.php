@@ -311,7 +311,6 @@ final class KeysetPaginatorTest extends Testcase
             ->withPreviousPageToken($paginator->getPreviousPageToken());
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
-        $first = reset($expected);
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken(), 'Last value fail!');
         $this->assertNull($paginator->getPreviousPageToken(), 'First value fail!');
