@@ -23,7 +23,7 @@ final class OffsetPaginator implements PaginatorInterface
     /**
      * @var array|null Reader cache against repeated scans.
      *
-     * See more {@see resetInternal()} and {@see initializeInternal()}.
+     * @see initializeInternal()
      */
     private $readCache;
     /**
