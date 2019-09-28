@@ -10,7 +10,7 @@ use Yiisoft\Data\Reader\OffsetableDataInterface;
 /**
  * OffsetPaginator
  */
-final class OffsetPaginator
+final class OffsetPaginator implements PaginatorInterface
 {
     /**
      * @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface
@@ -18,7 +18,20 @@ final class OffsetPaginator
     private $dataReader;
 
     private $currentPage = 1;
-    private $pageSize = 10;
+    private $pageSize = self::DEFAULT_PAGE_SIZE;
+
+    /**
+     * @var array|null Reader cache against repeated scans.
+     *
+     * @see initializeInternal()
+     */
+    private $readCache;
+    /**
+     * @var int|null Total count cache against repeated scans.
+     *
+     * See more {@see initializeInternal()}.
+     */
+    private $totalCountCache;
 
     public function __construct(DataReaderInterface $dataReader)
     {
@@ -38,7 +51,7 @@ final class OffsetPaginator
         return $this->currentPage;
     }
 
-    public function withCurrentPage(int $page): self
+    public function withCurrentPage(int $page)
     {
         if ($page < 1) {
             throw new \InvalidArgumentException('Current page should be at least 1');
@@ -49,7 +62,7 @@ final class OffsetPaginator
         return $new;
     }
 
-    public function withPageSize(int $size): self
+    public function withPageSize(int $size)
     {
         if ($size < 1) {
             throw new \InvalidArgumentException('Page size should be at least 1');
@@ -72,7 +85,11 @@ final class OffsetPaginator
 
     public function getTotalPages(): int
     {
-        return (int) ceil($this->dataReader->count() / $this->pageSize);
+        $totalCount = $this->totalCountCache;
+        if($totalCount === null) {
+            $totalCount = $this->dataReader->count();
+        }
+        return (int) ceil($totalCount / $this->pageSize);
     }
 
     private function getOffset(): int
@@ -82,7 +99,54 @@ final class OffsetPaginator
 
     public function read(): iterable
     {
+        if($this->readCache !== null) {
+            return $this->readCache;
+        }
         $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
         yield from $reader->read();
+    }
+
+    public function getNextPageToken(): ?string
+    {
+        return $this->isOnLastPage() ? null : (string) ($this->currentPage + 1);
+    }
+
+    public function getPreviousPageToken(): ?string
+    {
+        return $this->isOnFirstPage() ? null : (string) ($this->currentPage - 1);
+    }
+
+    public function withNextPageToken(?string $token)
+    {
+        return $this->withCurrentPage(intval($token));
+    }
+
+    public function withPreviousPageToken(?string $token)
+    {
+        return $this->withCurrentPage(intval($token));
+    }
+
+    public function getCurrentPageSize(): int
+    {
+        $this->initializeInternal();
+        return count($this->readCache);
+    }
+
+    public function __clone()
+    {
+        $this->readCache = null;
+        $this->totalCountCache = null;
+    }
+
+    protected function initializeInternal(): void
+    {
+        if($this->readCache !== null) {
+            return;
+        }
+        $cache = [];
+        foreach ($this->read() as $value) {
+            $cache[] = $value;
+        }
+        $this->readCache = $cache;
     }
 }

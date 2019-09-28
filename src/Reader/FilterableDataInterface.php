@@ -7,5 +7,8 @@ use Yiisoft\Data\Reader\Filter\FilterInterface;
 
 interface FilterableDataInterface
 {
+    /**
+     * @return static
+     */
     public function withFilter(FilterInterface $filter);
 }

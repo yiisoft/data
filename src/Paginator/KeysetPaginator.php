@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Paginator;
 
 use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\DataReaderInterface;
+use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
@@ -18,19 +20,38 @@ use Yiisoft\Data\Reader\SortableDataInterface;
  *
  * @link https://use-the-index-luke.com/no-offset
  */
-class KeysetPaginator
+class KeysetPaginator implements PaginatorInterface
 {
     /**
      * @var FilterableDataInterface|DataReaderInterface|SortableDataInterface
      */
     private $dataReader;
-    private $pageSize;
+    /**
+     * @var int
+     */
+    private $pageSize = self::DEFAULT_PAGE_SIZE;
 
     private $firstValue;
     private $lastValue;
 
     private $currentFirstValue;
     private $currentLastValue;
+
+    /**
+     * @var bool Previous page has item indicator.
+     */
+    private $hasPreviousPageItem = false;
+    /**
+     * @var bool Next page has item indicator.
+     */
+    private $hasNextPageItem = false;
+
+    /**
+     * @var array|null Reader cache against repeated scans.
+     *
+     * See more {@see __clone()} and {@see initializeInternal()}.
+     */
+    private $readCache;
 
     public function __construct(DataReaderInterface $dataReader)
     {
@@ -49,12 +70,20 @@ class KeysetPaginator
         $this->dataReader = $dataReader;
     }
 
+    /**
+     * Reads items of the page
+     *
+     * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetInternal()}
+     *
+     * @return iterable
+     */
     public function read(): iterable
     {
-        $this->currentLastValue = null;
-        $this->currentFirstValue = null;
+        if ($this->readCache) {
+            return $this->readCache;
+        }
 
-        $dataReader = $this->dataReader->withLimit($this->pageSize);
+        $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
 
         $sort = $this->dataReader->getSort();
         $order = $sort->getOrder();
@@ -86,55 +115,76 @@ class KeysetPaginator
             $value = $goingToPreviousPage ? $this->firstValue : $this->lastValue;
 
             $filter = null;
+            $reverseFilter = null;
             if ($sorting === 'asc') {
                 $filter = new GreaterThan($field, $value);
-            } elseif ($sorting === 'desc') {
+                $reverseFilter = new LessThanOrEqual($field, $value);
+            } else {
                 $filter = new LessThan($field, $value);
+                $reverseFilter = new GreaterThanOrEqual($field, $value);
             }
 
             $dataReader = $dataReader->withFilter($filter);
+            foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
+                $this->hasPreviousPageItem = true;
+            }
         }
 
         $data = [];
         foreach ($dataReader->read() as $item) {
-            $this->currentLastValue = $item[$field];
             if ($this->currentFirstValue === null) {
                 $this->currentFirstValue = $item[$field];
             }
-            $data[] = $item;
+            if (count($data) === $this->pageSize) {
+                $this->hasNextPageItem = true;
+            } else {
+                $this->currentLastValue = $item[$field];
+                $data[] = $item;
+            }
         }
 
         if ($goingToPreviousPage) {
             [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
-            return array_reverse($data);
+            [$this->hasPreviousPageItem, $this->hasNextPageItem] = [$this->hasNextPageItem, $this->hasPreviousPageItem];
+            $data = array_reverse($data);
         }
 
-        return $data;
+        return $this->readCache = $data;
     }
 
-    public function withFirst($value): self
+    public function withPreviousPageToken(?string $value)
     {
         $new = clone $this;
         $new->firstValue = $value;
+        $new->lastValue = null;
         return $new;
     }
 
-    public function withLast($value): self
+    public function withNextPageToken(?string $value)
     {
         $new = clone $this;
+        $new->firstValue = null;
         $new->lastValue = $value;
         return $new;
     }
 
-    public function getFirst() {
-        return $this->currentFirstValue;
+    public function getPreviousPageToken(): ?string
+    {
+        if ($this->isOnFirstPage()) {
+            return null;
+        }
+        return (string)$this->currentFirstValue;
     }
 
-    public function getLast() {
-        return $this->currentLastValue;
+    public function getNextPageToken(): ?string
+    {
+        if ($this->isOnLastPage()) {
+            return null;
+        }
+        return (string)$this->currentLastValue;
     }
 
-    public function withPageSize(int $pageSize): self
+    public function withPageSize(int $pageSize)
     {
         if ($pageSize < 1) {
             throw new \InvalidArgumentException('Page size should be at least 1');
@@ -143,5 +193,48 @@ class KeysetPaginator
         $new = clone $this;
         $new->pageSize = $pageSize;
         return $new;
+    }
+
+    public function isOnLastPage(): bool
+    {
+        $this->initializeInternal();
+        return !$this->hasNextPageItem;
+    }
+
+    public function isOnFirstPage(): bool
+    {
+        if ($this->lastValue === null && $this->firstValue === null) {
+            // Initial state, no values.
+            return true;
+        }
+        $this->initializeInternal();
+        return !$this->hasPreviousPageItem;
+    }
+
+    public function getCurrentPageSize(): int
+    {
+        $this->initializeInternal();
+        return count($this->readCache);
+    }
+
+    public function __clone()
+    {
+        $this->readCache = null;
+        $this->hasPreviousPageItem = false;
+        $this->hasNextPageItem = false;
+        $this->currentFirstValue = null;
+        $this->currentLastValue = null;
+    }
+
+    protected function initializeInternal(): void
+    {
+        if ($this->readCache !== null) {
+            return;
+        }
+        $cache = [];
+        foreach ($this->read() as $value) {
+            $cache[] = $value;
+        }
+        $this->readCache = $cache;
     }
 }
