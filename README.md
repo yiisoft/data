@@ -88,6 +88,22 @@ Filter could be composed with:
 - `Like`
 - `Not`
 
+#### Filtering with arrays
+
+The `All` and` Any` filters have a `withFiltersArray()` method, which allows you to define filters with arrays.
+
+```php
+$dataReader->withFilters((new All())->withFiltersArray([
+  ['=', 'id', 88],
+  [
+    'or' => [
+       ['=', 'color', 'red'],
+       ['=', 'state', 1],
+    ],
+  ]
+]));
+```
+
 #### Implementing your own filter
 
 In order to have your own filter you need to defined below:
