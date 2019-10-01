@@ -1,20 +1,29 @@
 <?php
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader;
+namespace Yiisoft\Data\Reader\Iterable;
 
+use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\All;
-use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\CountableDataInterface;
+use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\Equals;
-use Yiisoft\Data\Reader\Filter\GreaterThan;
-use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Filter\LessThan;
-use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
-use Yiisoft\Data\Reader\Filter\In;
-use Yiisoft\Data\Reader\Filter\Like;
-use Yiisoft\Data\Reader\Filter\Not;
+use Yiisoft\Data\Reader\Iterable\Processor\All;
+use Yiisoft\Data\Reader\Iterable\Processor\Any;
+use Yiisoft\Data\Reader\Iterable\Processor\Equals;
+use Yiisoft\Data\Reader\Iterable\Processor\GreaterThan;
+use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Processor\In;
+use Yiisoft\Data\Reader\Iterable\Processor\LessThan;
+use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Processor\Like;
+use Yiisoft\Data\Reader\Iterable\Processor\Not;
+use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
+use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
+use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\OffsetableDataInterface;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\SortableDataInterface;
 
 class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
 {
@@ -29,9 +38,26 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
     private $limit = self::DEFAULT_LIMIT;
     private $offset = 0;
 
+    /**
+     * @var array
+     */
+    private $filterProcessors = [];
+
     public function __construct(iterable $data)
     {
         $this->data = $data;
+        $this->filterProcessors = $this->withFilterProcessors(
+            new All(),
+            new Any(),
+            new Equals(),
+            new GreaterThan(),
+            new GreaterThanOrEqual(),
+            new In(),
+            new LessThan(),
+            new LessThanOrEqual(),
+            new Like(),
+            new Not()
+        )->filterProcessors;
     }
 
     public function withSort(?Sort $sort): self
@@ -68,47 +94,12 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         $operation = array_shift($filter);
         $arguments = $filter;
 
-        switch ($operation) {
-            case Not::getOperator():
-                return !$this->matchFilter($item, $arguments[0]);
-            case Any::getOperator():
-                foreach ($arguments[0] as $subFilter) {
-                    if ($this->matchFilter($item, $subFilter)) {
-                        return true;
-                    }
-                }
-                return false;
-            case All::getOperator():
-                foreach ($arguments[0] as $subFilter) {
-                    if (!$this->matchFilter($item, $subFilter)) {
-                        return false;
-                    }
-                }
-                return true;
-            case Equals::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] == $value;
-            case GreaterThan::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] > $value;
-            case GreaterThanOrEqual::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] >= $value;
-            case LessThan::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] < $value;
-            case LessThanOrEqual::getOperator():
-                [$field, $value] = $arguments;
-                return $item[$field] <= $value;
-            case In::getOperator():
-                [$field, $values] = $arguments;
-                return in_array($item[$field], $values, false);
-            case Like::getOperator():
-                [$field, $value] = $arguments;
-                return stripos($item[$field], $value) !== false;
-            default:
-                throw new \RuntimeException("Operation \"$operation\" is not supported");
+        $processor = $this->filterProcessors[$operation] ?? null;
+        if ($processor === null) {
+            throw new \RuntimeException(sprintf('Operation "%s" is not supported', $operation));
         }
+        /* @var $processor IterableProcessorInterface */
+        return $processor->match($item, $arguments, $this->filterProcessors);
     }
 
     public function withFilter(?FilterInterface $filter): self
@@ -174,6 +165,19 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
 
     private function iterableToArray(iterable $iterable): array
     {
-        return $iterable instanceof \Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
+        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
+    }
+
+    public function withFilterProcessors(FilterProcessorInterface... $filterProcessors): self
+    {
+        $new = clone $this;
+        $processors = [];
+        foreach ($filterProcessors as $filterProcessor) {
+            if ($filterProcessor instanceof IterableProcessorInterface) {
+                $processors[$filterProcessor->getOperator()] = $filterProcessor;
+            }
+        }
+        $new->filterProcessors = array_merge($this->filterProcessors, $processors);
+        return $new;
     }
 }
