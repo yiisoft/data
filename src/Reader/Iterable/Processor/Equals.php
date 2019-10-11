@@ -15,6 +15,9 @@ class Equals implements IterableProcessorInterface, FilterProcessorInterface
 
     public function match(array $item, array $arguments, array $filterProcessors): bool
     {
+        if (count($arguments) < 2) {
+            throw new \RuntimeException('The count of arguments is too small!');
+        }
         [$field, $value] = $arguments;
         return $item[$field] == $value;
     }
