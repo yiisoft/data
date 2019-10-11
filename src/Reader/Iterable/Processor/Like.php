@@ -16,7 +16,7 @@ class Like implements IterableProcessorInterface, FilterProcessorInterface
     public function match(array $item, array $arguments, array $filterProcessors): bool
     {
         [$field, $value] = $arguments;
-        return stripos($item[$field], $value) !== false;
+        return stripos($item[$field], (string)$value) !== false;
     }
 
 }
