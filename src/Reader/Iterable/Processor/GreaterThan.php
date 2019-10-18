@@ -15,6 +15,9 @@ class GreaterThan implements IterableProcessorInterface, FilterProcessorInterfac
 
     public function match(array $item, array $arguments, array $filterProcessors): bool
     {
+        if (count($arguments) !== 2) {
+            throw new \RuntimeException('$arguments should contain exactly two elements!');
+        }
         [$field, $value] = $arguments;
         return $item[$field] > $value;
     }

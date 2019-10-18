@@ -393,7 +393,8 @@ final class IterableDataReaderTest extends TestCase
 
     public function testCustomFilter(): void
     {
-        $digitalFilter = new class /*Digital*/ ('name') implements FilterInterface
+        $digitalFilter = new class /*Digital*/
+        ('name') implements FilterInterface
         {
             private $field;
 
@@ -432,4 +433,19 @@ final class IterableDataReaderTest extends TestCase
         $this->assertCount(1, $filtered);
         $this->assertSame('007', $filtered[0]['name']);
     }
+
+    public function testNotSupportedOperator()
+    {
+        $dataReader = (new IterableDataReader($this->getDataSet()))
+            ->withFilter(new class('id', 2) extends \Yiisoft\Data\Reader\Filter\Equals
+            {
+                public static function getOperator(): string
+                {
+                    return '----';
+                }
+            });
+        $this->expectException(\RuntimeException::class);
+        $dataReader->read();
+    }
+
 }

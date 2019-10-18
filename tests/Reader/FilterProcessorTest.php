@@ -3,6 +3,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader;
 
+use Yiisoft\Data\Reader\Iterable\Processor\All;
+use Yiisoft\Data\Reader\Iterable\Processor\GreaterThan;
+use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Processor\In;
+use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
+use Yiisoft\Data\Reader\Iterable\Processor\LessThan;
+use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Processor\Like;
+use Yiisoft\Data\Reader\Iterable\Processor\Not;
 use Yiisoft\Data\Tests\TestCase;
 use Yiisoft\Data\Reader\Iterable\Processor\Equals;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
@@ -43,10 +52,11 @@ class FilterProcessorTest extends TestCase
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort)
-            ->withFilterProcessors(new class extends Equals {
+            ->withFilterProcessors(new class extends Equals
+            {
                 public function match(array $item, array $arguments, array $filterUnits): bool
                 {
-                    [$field, ] = $arguments;
+                    [$field,] = $arguments;
                     if ($item[$field] === 2) {
                         return true;
                     }
@@ -63,5 +73,38 @@ class FilterProcessorTest extends TestCase
         ];
 
         $this->assertSame($expected, $this->iterableToArray($dataReader->read()));
+    }
+
+    public function invalidFiltersArrayDataProvider()
+    {
+        return [
+            'equalsArgumentsTooSmall' => [new Equals(), ['id'], []],
+            'greaterThanArgumentsTooSmall' => [new GreaterThan(), ['id'], []],
+            'greaterThanOrEqualArgumentsTooSmall' => [new GreaterThanOrEqual(), ['id'], []],
+            'lessThanArgumentsTooSmall' => [new LessThan(), ['id'], []],
+            'lessThanOrEqualArgumentsTooSmall' => [new LessThanOrEqual(), ['id'], []],
+            'likeArgumentsTooSmall' => [new Like(), ['id'], []],
+            'inArgumentsTooSmall' => [new In(), ['id'], []],
+            'inValuesNotArray' => [new In(), ['id', false], []],
+            'notArgumentsTooSmall' => [new Not(), [], []],
+            'notArguments[0]notArray' => [new Not(), [false], []],
+            'notArguments[0]tooSmall' => [new Not(), [[]], []],
+            'notInvalidOperator' => [new Not(), [['']], ['=' => new Equals()]],
+            'groupInvalidArguments' => [new All(), [], []],
+            'groupInvalidArgumentsNotArray' => [new All(), [false], []],
+            'groupInvalidSubFilter' => [new All(), [[false]], []],
+            'groupInvalidSubFilterCountFail' => [new All(), [[[]]], []],
+            'groupInvalidSubFilterOperatorFail' => [new All(), [[['']]], []],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidFiltersArrayDataProvider
+     */
+    public function testInvalidFiltersArray(IterableProcessorInterface $processor, $arguments, array $filterProcessors)
+    {
+        $item = $this->getDataSet()[0];
+        $this->expectException(\RuntimeException::class);
+        $processor->match($item, $arguments, $filterProcessors);
     }
 }

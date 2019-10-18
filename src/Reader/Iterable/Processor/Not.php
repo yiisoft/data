@@ -15,11 +15,23 @@ class Not implements IterableProcessorInterface, FilterProcessorInterface
 
     public function match(array $item, array $arguments, array $filterProcessors): bool
     {
-        $operation = array_shift($arguments[0]);
+        if (count($arguments) !== 1) {
+            throw new \RuntimeException('$arguments should contain exactly one element!');
+        } elseif (!is_array($arguments[0])) {
+            throw new \RuntimeException('$arguments[0] is not an array!');
+        } elseif (count($arguments[0]) < 1) {
+            throw new \RuntimeException('At least operator should be provided!');
+        }
+        $operator = array_shift($arguments[0]);
+        if (!is_string($operator)) {
+            throw new \RuntimeException('Operator is not a string!');
+        } elseif (strlen($operator) === 0) {
+            throw new \RuntimeException('The operator string cannot be empty!');
+        }
 
-        $processor = $filterProcessors[$operation] ?? null;
-        if($processor === null) {
-            throw new \RuntimeException(sprintf('Operation "%s" is not supported', $operation));
+        $processor = $filterProcessors[$operator] ?? null;
+        if ($processor === null) {
+            throw new \RuntimeException(sprintf('"%s" operator is not supported!', $operator));
         }
         /* @var $processor IterableProcessorInterface */
         return !$processor->match($item, $arguments[0], $filterProcessors);

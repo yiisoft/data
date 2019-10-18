@@ -15,7 +15,13 @@ class In implements IterableProcessorInterface, FilterProcessorInterface
 
     public function match(array $item, array $arguments, array $filterProcessors): bool
     {
+        if (count($arguments) !== 2) {
+            throw new \RuntimeException('$arguments should contain exactly two elements!');
+        }
         [$field, $values] = $arguments;
+        if (!is_array($values)) {
+            throw new \RuntimeException('The values not an array!');
+        }
         return in_array($item[$field], $values, false);
     }
 
