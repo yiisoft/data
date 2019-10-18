@@ -17,22 +17,28 @@ abstract class GroupProcessor implements IterableProcessorInterface, FilterProce
      */
     public function match(array $item, array $arguments, array $filterProcessors): bool
     {
-        if (count($arguments) < 1 || !is_array($arguments[0])) {
-            throw new \RuntimeException('Invalid arguments!');
+        if (count($arguments) < 1) {
+            throw new \RuntimeException('At least one argument should be provided!');
+        } elseif (!is_array($arguments[0])) {
+            throw new \RuntimeException('Sub filters is not an array!');
         }
         $results = [];
         foreach ($arguments[0] as $subFilter) {
-            if (!is_array($subFilter) || count($subFilter) < 1) {
-                throw new \RuntimeException('Invalid sub filter!');
+            if (!is_array($subFilter)) {
+                throw new \RuntimeException('Sub filter is not an array!');
+            } elseif (count($subFilter) < 1) {
+                throw new \RuntimeException('At least operator should be provided!');
             }
             $operator = array_shift($subFilter);
-            if (!is_string($operator) || strlen($operator) === '') {
-                throw new \RuntimeException('Invalid operator!');
+            if (!is_string($operator)) {
+                throw new \RuntimeException('Operator is not a string!');
+            } elseif (strlen($operator) === 0) {
+                throw new \RuntimeException('The operator string cannot be empty!');
             }
 
             $processor = $filterProcessors[$operator] ?? null;
             if ($processor === null) {
-                throw new \RuntimeException(sprintf('Operation "%s" is not supported', $operator));
+                throw new \RuntimeException(sprintf('"%s" operator is not supported!', $operator));
             }
             /* @var $processor IterableProcessorInterface */
             $result = $processor->match($item, $subFilter, $filterProcessors);
