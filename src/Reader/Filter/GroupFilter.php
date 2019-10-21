@@ -50,12 +50,14 @@ abstract class GroupFilter implements FilterInterface
         foreach ($filtersArray as $key => $filter) {
             if ($filter instanceof FilterInterface) {
                 continue;
-            } elseif (!is_array($filter)) {
-                throw new \RuntimeException(sprintf('Invalid filter at "%s" key', $key));
+            }
+
+            if (!is_array($filter)) {
+                throw new \InvalidArgumentException(sprintf('Invalid filter at "%s" key', $key));
             }
             $first = array_shift($filter);
-            if (!is_string($first) || !strlen($first)) {
-                throw new \RuntimeException(sprintf('Invalid filter operator on "%s" key', $key));
+            if (!is_string($first) || $first === '') {
+                throw new \InvalidArgumentException(sprintf('Invalid filter operator on "%s" key', $key));
             }
         }
         $new = clone $this;

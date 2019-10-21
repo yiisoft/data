@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
-
 class Any extends GroupProcessor
 {
 

@@ -52,8 +52,7 @@ class FilterProcessorTest extends TestCase
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort)
-            ->withFilterProcessors(new class extends Equals
-            {
+            ->withFilterProcessors(new class extends Equals {
                 public function match(array $item, array $arguments, array $filterUnits): bool
                 {
                     [$field,] = $arguments;
@@ -75,7 +74,7 @@ class FilterProcessorTest extends TestCase
         $this->assertSame($expected, $this->iterableToArray($dataReader->read()));
     }
 
-    public function invalidFiltersArrayDataProvider()
+    public function invalidFiltersArrayDataProvider(): array
     {
         return [
             'equalsArgumentsTooSmall' => [new Equals(), ['id'], []],
@@ -101,10 +100,10 @@ class FilterProcessorTest extends TestCase
     /**
      * @dataProvider invalidFiltersArrayDataProvider
      */
-    public function testInvalidFiltersArray(IterableProcessorInterface $processor, $arguments, array $filterProcessors)
+    public function testInvalidFiltersArray(IterableProcessorInterface $processor, $arguments, array $filterProcessors): void
     {
         $item = $this->getDataSet()[0];
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $processor->match($item, $arguments, $filterProcessors);
     }
 }

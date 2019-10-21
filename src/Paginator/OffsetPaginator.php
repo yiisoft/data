@@ -86,7 +86,7 @@ final class OffsetPaginator implements PaginatorInterface
     public function getTotalPages(): int
     {
         $totalCount = $this->totalCountCache;
-        if($totalCount === null) {
+        if ($totalCount === null) {
             $totalCount = $this->dataReader->count();
         }
         return (int) ceil($totalCount / $this->pageSize);
@@ -118,12 +118,12 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withNextPageToken(?string $token)
     {
-        return $this->withCurrentPage(intval($token));
+        return $this->withCurrentPage((int)$token);
     }
 
     public function withPreviousPageToken(?string $token)
     {
-        return $this->withCurrentPage(intval($token));
+        return $this->withCurrentPage((int)$token);
     }
 
     public function getCurrentPageSize(): int
@@ -138,9 +138,9 @@ final class OffsetPaginator implements PaginatorInterface
         $this->totalCountCache = null;
     }
 
-    protected function initializeInternal(): void
+    private function initializeInternal(): void
     {
-        if($this->readCache !== null) {
+        if ($this->readCache !== null) {
             return;
         }
         $cache = [];

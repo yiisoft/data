@@ -163,9 +163,9 @@ final class FilterTest extends TestCase
     /**
      * @dataProvider arrayFailDataProvider
      */
-    public function testWithFiltersArrayFail(array $filtersArray)
+    public function testWithFiltersArrayFail(array $filtersArray): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\InvalidArgumentException::class);
         (new All())->withFiltersArray($filtersArray);
     }
 

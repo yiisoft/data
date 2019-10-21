@@ -38,8 +38,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutOffsetableInterface(): void
     {
-        $nonOffsetableDataReader = new class implements DataReaderInterface
-        {
+        $nonOffsetableDataReader = new class implements DataReaderInterface {
             public function withLimit(int $limit)
             {
                 // do nothing

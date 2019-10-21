@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
-
 interface PaginatorInterface
 {
     public const DEFAULT_PAGE_SIZE = 10;
