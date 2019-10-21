@@ -99,7 +99,7 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function read(): iterable
     {
-        if($this->readCache !== null) {
+        if ($this->readCache !== null) {
             return $this->readCache;
         }
         $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());

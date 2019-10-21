@@ -405,7 +405,8 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame(1, $dataSet->getRewindCounter());
         $paginator->isOnLastPage();
         $this->assertSame(1, $dataSet->getRewindCounter());
-        foreach ($paginator->read() as $void) {}
+        foreach ($paginator->read() as $void) {
+        }
         $this->assertSame(1, $dataSet->getRewindCounter());
         // clear cache test
         $paginator = (new KeysetPaginator($dataReader))

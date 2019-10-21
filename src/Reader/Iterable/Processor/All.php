@@ -5,7 +5,6 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 class All extends GroupProcessor
 {
-
     protected function checkResults(array $results): bool
     {
         return true;

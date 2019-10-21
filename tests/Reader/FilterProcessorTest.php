@@ -19,7 +19,6 @@ use Yiisoft\Data\Reader\Sort;
 
 class FilterProcessorTest extends TestCase
 {
-
     private function getDataSet(): array
     {
         return [

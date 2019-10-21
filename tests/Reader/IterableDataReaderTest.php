@@ -393,7 +393,7 @@ final class IterableDataReaderTest extends TestCase
 
     public function testCustomFilter(): void
     {
-        $digitalFilter = new class /*Digital*/('name') implements FilterInterface {
+        $digitalFilter = new class /*Digital*/ ('name') implements FilterInterface {
             private $field;
 
             public function __construct(string $field)
@@ -411,7 +411,7 @@ final class IterableDataReaderTest extends TestCase
                 return 'digital';
             }
         };
-        $reader = new class ($this->getDataSet()) extends IterableDataReader {
+        $reader = new class($this->getDataSet()) extends IterableDataReader {
             protected function matchFilter(array $item, array $filter): bool
             {
                 [$operation, $field] = $filter;
@@ -443,5 +443,4 @@ final class IterableDataReaderTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $dataReader->read();
     }
-
 }
