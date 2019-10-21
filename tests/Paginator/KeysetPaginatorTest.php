@@ -461,5 +461,4 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertNotNull($paginator->getPreviousPageToken());
         $this->assertSame('5', $paginator->getPreviousPageToken());
     }
-
 }
