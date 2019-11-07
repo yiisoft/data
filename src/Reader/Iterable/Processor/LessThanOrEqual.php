@@ -9,7 +9,7 @@ class LessThanOrEqual implements IterableProcessorInterface, FilterProcessorInte
 {
     public function getOperator(): string
     {
-        return \YiiSoft\Data\Reader\Filter\LessThanOrEqual::getOperator();
+        return \Yiisoft\Data\Reader\Filter\LessThanOrEqual::getOperator();
     }
 
     public function match(array $item, array $arguments, array $filterProcessors): bool

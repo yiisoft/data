@@ -9,7 +9,7 @@ class Equals implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
     {
-        return \YiiSoft\Data\Reader\Filter\Equals::getOperator();
+        return \Yiisoft\Data\Reader\Filter\Equals::getOperator();
     }
 
     public function match(array $item, array $arguments, array $filterProcessors): bool

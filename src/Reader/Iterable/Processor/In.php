@@ -9,7 +9,7 @@ class In implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
     {
-        return \YiiSoft\Data\Reader\Filter\In::getOperator();
+        return \Yiisoft\Data\Reader\Filter\In::getOperator();
     }
 
     public function match(array $item, array $arguments, array $filterProcessors): bool
