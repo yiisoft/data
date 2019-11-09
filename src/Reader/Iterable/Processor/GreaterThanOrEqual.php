@@ -9,7 +9,7 @@ class GreaterThanOrEqual implements IterableProcessorInterface, FilterProcessorI
 {
     public function getOperator(): string
     {
-        return \YiiSoft\Data\Reader\Filter\GreaterThanOrEqual::getOperator();
+        return \Yiisoft\Data\Reader\Filter\GreaterThanOrEqual::getOperator();
     }
 
     public function match(array $item, array $arguments, array $filterProcessors): bool

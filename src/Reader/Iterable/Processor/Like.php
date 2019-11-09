@@ -9,7 +9,7 @@ class Like implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
     {
-        return \YiiSoft\Data\Reader\Filter\Like::getOperator();
+        return \Yiisoft\Data\Reader\Filter\Like::getOperator();
     }
 
     public function match(array $item, array $arguments, array $filterProcessors): bool

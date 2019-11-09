@@ -9,7 +9,7 @@ class LessThan implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
     {
-        return \YiiSoft\Data\Reader\Filter\LessThan::getOperator();
+        return \Yiisoft\Data\Reader\Filter\LessThan::getOperator();
     }
 
     public function match(array $item, array $arguments, array $filterProcessors): bool

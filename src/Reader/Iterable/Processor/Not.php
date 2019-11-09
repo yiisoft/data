@@ -9,7 +9,7 @@ class Not implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
     {
-        return \YiiSoft\Data\Reader\Filter\Not::getOperator();
+        return \Yiisoft\Data\Reader\Filter\Not::getOperator();
     }
 
     public function match(array $item, array $arguments, array $filterProcessors): bool

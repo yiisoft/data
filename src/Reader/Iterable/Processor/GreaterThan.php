@@ -9,7 +9,7 @@ class GreaterThan implements IterableProcessorInterface, FilterProcessorInterfac
 {
     public function getOperator(): string
     {
-        return \YiiSoft\Data\Reader\Filter\GreaterThan::getOperator();
+        return \Yiisoft\Data\Reader\Filter\GreaterThan::getOperator();
     }
 
     public function match(array $item, array $arguments, array $filterProcessors): bool
