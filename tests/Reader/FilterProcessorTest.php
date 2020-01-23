@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader;
@@ -51,7 +52,7 @@ class FilterProcessorTest extends TestCase
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort)
-            ->withFilterProcessors(new class extends Equals {
+            ->withFilterProcessors(new class() extends Equals {
                 public function match(array $item, array $arguments, array $filterUnits): bool
                 {
                     [$field,] = $arguments;

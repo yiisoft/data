@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
@@ -12,5 +13,5 @@ interface FilterableDataInterface
      * @return static
      */
     public function withFilter(FilterInterface $filter);
-    public function withFilterProcessors(FilterProcessorInterface... $filterProcessors);
+    public function withFilterProcessors(FilterProcessorInterface ... $filterProcessors);
 }

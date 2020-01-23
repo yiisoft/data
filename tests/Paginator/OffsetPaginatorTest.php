@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Paginator;
@@ -38,7 +39,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutOffsetableInterface(): void
     {
-        $nonOffsetableDataReader = new class implements DataReaderInterface {
+        $nonOffsetableDataReader = new class() implements DataReaderInterface {
             public function withLimit(int $limit)
             {
                 // do nothing

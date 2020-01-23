@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
@@ -10,7 +11,7 @@ abstract class GroupFilter implements FilterInterface
      */
     private $filters;
 
-    public function __construct(FilterInterface...$filters)
+    public function __construct(FilterInterface ...$filters)
     {
         $this->filters = $filters;
     }

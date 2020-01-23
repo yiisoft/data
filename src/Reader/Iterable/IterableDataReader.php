@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable;
@@ -168,7 +169,7 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 
-    public function withFilterProcessors(FilterProcessorInterface... $filterProcessors): self
+    public function withFilterProcessors(FilterProcessorInterface ... $filterProcessors): self
     {
         $new = clone $this;
         $processors = [];

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Paginator;
@@ -42,7 +43,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testDataReaderWithoutFilterableInterface(): void
     {
-        $nonFilterableDataReader = new class implements DataReaderInterface {
+        $nonFilterableDataReader = new class() implements DataReaderInterface {
             public function withLimit(int $limit)
             {
                 // do nothing
@@ -61,7 +62,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testDataReaderWithoutSortableInterface(): void
     {
-        $nonSortableDataReader = new class implements DataReaderInterface, FilterableDataInterface {
+        $nonSortableDataReader = new class() implements DataReaderInterface, FilterableDataInterface {
             public function withLimit(int $limit)
             {
                 // do nothing
