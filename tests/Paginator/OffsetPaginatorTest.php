@@ -56,22 +56,24 @@ final class OffsetPaginatorTest extends TestCase
         new OffsetPaginator($nonOffsetableDataReader);
     }
 
-    public function testCurrentPageCannotBeLessThanOne(): void
+    public function testCurrentPageShouldBeCorrectedIfLessThanOne(): void
     {
         $dataReader = new IterableDataReader($this->getDataSet());
         $paginator = new OffsetPaginator($dataReader);
 
-        $this->expectException(\InvalidArgumentException::class);
-        $paginator->withCurrentPage(0);
+        $paginator = $paginator->withCurrentPage(0);
+
+        $this->assertSame(1, $paginator->getCurrentPage());
     }
 
-    public function testPageSizeCannotBeLessThanOne(): void
+    public function testPageSizeShouldBeCorrectedIfLessThanOne(): void
     {
         $dataReader = new IterableDataReader($this->getDataSet());
         $paginator = new OffsetPaginator($dataReader);
 
-        $this->expectException(\InvalidArgumentException::class);
-        $paginator->withPageSize(0);
+        $paginator = $paginator->withPageSize(0);
+
+        $this->assertSame(1, $paginator->getPageSize());
     }
 
     public function testReadFirstPage(): void
