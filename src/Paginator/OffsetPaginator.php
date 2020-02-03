@@ -14,9 +14,10 @@ final class OffsetPaginator implements OffsetPaginatorInterface
     private DataReaderInterface $dataReader;
     private int $currentPage = 1;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
-
     /** Reader cache against repeated scans */
     private ?array $readCache = null;
+    /** Cached value */
+    private ?int $totalItemsCount = null;
 
     public function __construct(DataReaderInterface $dataReader)
     {
@@ -48,20 +49,26 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function getCurrentPage(): int
     {
-        return min($this->getTotalPages(), $this->currentPage);
+        return $this->currentPage;
     }
 
     public function withCurrentPage(int $page): self
     {
+        if ($page < 1) {
+            throw new PaginatorException('Current page should be at least 1');
+        }
         $new = clone $this;
-        $new->currentPage = max(1, $page);
+        $new->currentPage = $page;
         return $new;
     }
 
     public function withPageSize(int $size): self
     {
+        if ($size < 1) {
+            throw new PaginatorException('Page size should be at least 1');
+        }
         $new = clone $this;
-        $new->pageSize = max(1, $size);
+        $new->pageSize = $size;
         return $new;
     }
 
@@ -72,24 +79,29 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function isOnLastPage(): bool
     {
-        return $this->currentPage >= $this->getTotalPages();
+        if ($this->currentPage > $this->getTotalPages()) {
+            throw new PaginatorException('Page not found');
+        }
+        return $this->currentPage === $this->getTotalPages();
     }
 
     public function getTotalPages(): int
     {
-        $totalCount = $this->getTotalItems();
-        return (int) ceil($totalCount / $this->pageSize);
+        return (int) ceil($this->getTotalItems() / $this->pageSize);
     }
 
     public function getOffset(): int
     {
-        return $this->pageSize * ($this->getCurrentPage() - 1);
+        return $this->pageSize * ($this->currentPage - 1);
     }
 
     public function read(): iterable
     {
         if ($this->readCache !== null) {
             return $this->readCache;
+        }
+        if ($this->currentPage > $this->getTotalPages()) {
+            throw new PaginatorException('Page not found');
         }
         /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface $reader */
         $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
@@ -107,12 +119,12 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function getNextPageToken(): ?string
     {
-        return $this->isOnLastPage() ? null : (string) ($this->getCurrentPage() + 1);
+        return $this->isOnLastPage() ? null : (string) ($this->currentPage + 1);
     }
 
     public function getPreviousPageToken(): ?string
     {
-        return $this->isOnFirstPage() ? null : (string) ($this->getCurrentPage() - 1);
+        return $this->isOnFirstPage() ? null : (string) ($this->currentPage - 1);
     }
 
     public function withNextPageToken(?string $token): self
@@ -142,7 +154,10 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function getTotalItems(): int
     {
-        return $this->dataReader->count();
+        if ($this->totalItemsCount === null) {
+            $this->totalItemsCount = $this->dataReader->count();
+        }
+        return $this->totalItemsCount;
     }
 
     public function getPageSize(): int
