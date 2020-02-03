@@ -254,4 +254,60 @@ final class OffsetPaginatorTest extends TestCase
 
         $paginator->isOnLastPage();
     }
+
+    public function testEmptyDataSet(): void
+    {
+        $dataReader = new IterableDataReader([]);
+        $paginator = new OffsetPaginator($dataReader);
+
+        $this->assertSame(0, $paginator->getTotalItems());
+        $this->assertSame(0, $paginator->getTotalPages());
+        $this->assertSame(1, $paginator->getCurrentPage());
+        $this->assertSame(true, $paginator->isOnFirstPage());
+        $this->assertSame(true, $paginator->isOnLastPage());
+        $this->assertSame(false, $paginator->isRequired());
+        $this->assertSame([], $paginator->read());
+    }
+
+    public function testGetCurrentPageSizeFirstFullPage(): void
+    {
+        $dataReader = new IterableDataReader($this->getDataSet());
+        $paginator = (new OffsetPaginator($dataReader))
+            ->withPageSize(3);
+
+        $this->assertSame(3, $paginator->getCurrentPageSize());
+    }
+
+    public function testGetCurrentPageSizeLastPage(): void
+    {
+        $dataReader = new IterableDataReader($this->getDataSet());
+        $paginator = (new OffsetPaginator($dataReader))
+            ->withPageSize(3)
+            ->withCurrentPage(2);
+
+        $this->assertSame(2, $paginator->getCurrentPageSize());
+        $this->assertSame(5, $paginator->getTotalItems());
+    }
+
+    public function testGetCurrentPageSizeLastPageFromCache(): void
+    {
+        $dataReader = new IterableDataReader($this->getDataSet());
+        $paginator = (new OffsetPaginator($dataReader))
+            ->withPageSize(3)
+            ->withCurrentPage(2);
+
+        $paginator->read();
+
+        $this->assertSame(2, $paginator->getCurrentPageSize());
+    }
+
+    public function testGetCurrentPageSizeFirstNotFullPage(): void
+    {
+        $dataReader = new IterableDataReader($this->getDataSet());
+        $paginator = (new OffsetPaginator($dataReader))
+            ->withPageSize(30);
+
+        $this->assertSame(5, $paginator->getCurrentPageSize());
+        $this->assertSame(5, $paginator->getTotalItems());
+    }
 }

@@ -47,6 +47,11 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         $this->readCache = null;
     }
 
+    public function isRequired(): bool
+    {
+        return $this->getTotalPages() > 1;
+    }
+
     public function getCurrentPage(): int
     {
         return $this->currentPage;
@@ -79,10 +84,10 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function isOnLastPage(): bool
     {
-        if ($this->currentPage > $this->getTotalPages()) {
+        if ($this->currentPage > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found');
         }
-        return $this->currentPage === $this->getTotalPages();
+        return $this->currentPage === $this->getInternalTotalPages();
     }
 
     public function getTotalPages(): int
@@ -100,7 +105,10 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         if ($this->readCache !== null) {
             return $this->readCache;
         }
-        if ($this->currentPage > $this->getTotalPages()) {
+        if ($this->getTotalItems() === 0) {
+            return $this->readCache = [];
+        }
+        if ($this->currentPage > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found');
         }
         /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface $reader */
@@ -142,12 +150,15 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         if ($this->readCache !== null) {
             return count($this->readCache);
         }
-        $pages = $this->getTotalPages();
+        $pages = $this->getInternalTotalPages();
         if ($pages === 1) {
             return $this->getTotalItems();
         }
-        if ($this->currentPage >= $pages) {
+        if ($this->currentPage === $pages) {
             return $this->getTotalItems() - $this->getOffset();
+        }
+        if ($this->currentPage > $pages) {
+            throw new PaginatorException('Page not found');
         }
         return $this->pageSize;
     }
@@ -163,5 +174,10 @@ final class OffsetPaginator implements OffsetPaginatorInterface
     public function getPageSize(): int
     {
         return $this->pageSize;
+    }
+
+    private function getInternalTotalPages(): int
+    {
+        return max(1, $this->getTotalPages());
     }
 }
