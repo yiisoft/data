@@ -22,7 +22,7 @@ final class OffsetPaginator implements OffsetPaginatorInterface
     public function __construct(DataReaderInterface $dataReader)
     {
         if (!$dataReader instanceof OffsetableDataInterface) {
-            throw new PaginatorException(
+            throw new \InvalidArgumentException(
                 sprintf(
                     'Data reader should implement %s in order to be used with offset paginator',
                     OffsetableDataInterface::class
@@ -31,7 +31,7 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         }
 
         if (!$dataReader instanceof CountableDataInterface) {
-            throw new PaginatorException(
+            throw new \InvalidArgumentException(
                 sprintf(
                     'Data reader should implement %s in order to be used with offset paginator',
                     CountableDataInterface::class
@@ -113,12 +113,12 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         }
         /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface $reader */
         $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
-        $iterable = $reader->read();
-        if (is_array($iterable)) {
-            $this->readCache = $iterable;
+        $data = $reader->read();
+        if (is_array($data)) {
+            $this->readCache = $data;
         } else {
             $this->readCache = [];
-            foreach ($iterable as $item) {
+            foreach ($data as $item) {
                 $this->readCache[] = $item;
             }
         }

@@ -243,4 +243,9 @@ class KeysetPaginator implements PaginatorInterface
         }
         $this->readCache = $cache;
     }
+
+    public function isRequired(): bool
+    {
+        return !$this->isOnLastPage() && !$this->isOnLastPage();
+    }
 }

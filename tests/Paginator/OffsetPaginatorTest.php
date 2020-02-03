@@ -58,7 +58,7 @@ final class OffsetPaginatorTest extends TestCase
             }
         };
 
-        $this->expectException(PaginatorException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
             sprintf(
                 'Data reader should implement %s in order to be used with offset paginator',
@@ -90,7 +90,7 @@ final class OffsetPaginatorTest extends TestCase
             }
         };
 
-        $this->expectException(PaginatorException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
             sprintf(
                 'Data reader should implement %s in order to be used with offset paginator',
@@ -126,7 +126,7 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new IterableDataReader($this->getDataSet());
         $paginator = new OffsetPaginator($dataReader);
 
-        $this->assertSame(5, $paginator->getCurrentPageSize());
+        $this->assertSame(5, $paginator->getTotalItems());
     }
 
     public function testWithCurrentPage(): void
