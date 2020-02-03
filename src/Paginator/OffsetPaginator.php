@@ -22,7 +22,7 @@ final class OffsetPaginator implements OffsetPaginatorInterface
     public function __construct(DataReaderInterface $dataReader)
     {
         if (!$dataReader instanceof OffsetableDataInterface) {
-            throw new \InvalidArgumentException(
+            throw new PaginatorException(
                 sprintf(
                     'Data reader should implement %s in order to be used with offset paginator',
                     OffsetableDataInterface::class
@@ -31,7 +31,7 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         }
 
         if (!$dataReader instanceof CountableDataInterface) {
-            throw new \InvalidArgumentException(
+            throw new PaginatorException(
                 sprintf(
                     'Data reader should implement %s in order to be used with offset paginator',
                     CountableDataInterface::class
