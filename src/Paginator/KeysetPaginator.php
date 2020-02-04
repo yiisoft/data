@@ -246,6 +246,6 @@ class KeysetPaginator implements PaginatorInterface
 
     public function isRequired(): bool
     {
-        return !$this->isOnLastPage() && !$this->isOnLastPage();
+        return !$this->isOnFirstPage() || !$this->isOnLastPage();
     }
 }

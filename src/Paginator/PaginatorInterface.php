@@ -9,6 +9,9 @@ interface PaginatorInterface
     public const DEFAULT_PAGE_SIZE = 10;
 
     public function read(): iterable;
+    /**
+     * Check that Paginator has more than one page
+     */
     public function isRequired(): bool;
     public function isOnLastPage(): bool;
     public function isOnFirstPage(): bool;
