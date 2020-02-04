@@ -14,8 +14,7 @@ final class OffsetPaginator implements OffsetPaginatorInterface
     private DataReaderInterface $dataReader;
     private int $currentPage = 1;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
-    /** Cached value */
-    private ?int $totalItemsCount = null;
+    private ?DataReaderInterface $cachedReader = null;
 
     public function __construct(DataReaderInterface $dataReader)
     {
@@ -57,6 +56,7 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         }
         $new = clone $this;
         $new->currentPage = $page;
+        $new->cachedReader = null;
         return $new;
     }
 
@@ -67,6 +67,7 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         }
         $new = clone $this;
         $new->pageSize = $size;
+        $new->cachedReader = null;
         return $new;
     }
 
@@ -95,12 +96,16 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function read(): iterable
     {
+        if ($this->cachedReader !== null) {
+            yield from $this->cachedReader->read();
+            return;
+        }
         if ($this->currentPage > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found');
         }
         /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface $reader */
-        $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
-        yield from $reader->read();
+        $this->cachedReader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
+        yield from $this->cachedReader->read();
     }
 
     public function getNextPageToken(): ?string
