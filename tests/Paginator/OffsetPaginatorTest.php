@@ -157,7 +157,7 @@ final class OffsetPaginatorTest extends TestCase
 
         $this->assertSame(3, $paginator->getTotalPages());
         $this->expectException(PaginatorException::class);
-        $paginator->read();
+        $this->iterableToArray($paginator->read());
     }
 
     public function testWithPageSize(): void
@@ -323,18 +323,6 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertSame(5, $paginator->getTotalItems());
     }
 
-    public function testGetCurrentPageSizeLastPageFromCache(): void
-    {
-        $dataReader = new IterableDataReader($this->getDataSet());
-        $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(3)
-            ->withCurrentPage(2);
-
-        $paginator->read();
-
-        $this->assertSame(2, $paginator->getCurrentPageSize());
-    }
-
     public function testGetCurrentPageSizeFirstNotFullPage(): void
     {
         $dataReader = new IterableDataReader($this->getDataSet());
@@ -357,6 +345,6 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertTrue($paginator->isOnFirstPage());
         $this->assertTrue($paginator->isOnLastPage());
         $this->assertFalse($paginator->isRequired());
-        $this->assertSame([], $paginator->read());
+        $this->assertSame([], $this->iterableToArray($paginator->read()));
     }
 }

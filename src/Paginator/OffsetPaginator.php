@@ -14,8 +14,6 @@ final class OffsetPaginator implements OffsetPaginatorInterface
     private DataReaderInterface $dataReader;
     private int $currentPage = 1;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
-    /** Reader cache against repeated scans */
-    private ?array $readCache = null;
     /** Cached value */
     private ?int $totalItemsCount = null;
 
@@ -40,11 +38,6 @@ final class OffsetPaginator implements OffsetPaginatorInterface
         }
 
         $this->dataReader = $dataReader;
-    }
-
-    public function __clone()
-    {
-        $this->readCache = null;
     }
 
     public function isRequired(): bool
@@ -102,27 +95,12 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function read(): iterable
     {
-        if ($this->readCache !== null) {
-            return $this->readCache;
-        }
-        if ($this->getTotalItems() === 0) {
-            return $this->readCache = [];
-        }
         if ($this->currentPage > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found');
         }
         /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface $reader */
         $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
-        $data = $reader->read();
-        if (is_array($data)) {
-            $this->readCache = $data;
-        } else {
-            $this->readCache = [];
-            foreach ($data as $item) {
-                $this->readCache[] = $item;
-            }
-        }
-        return $this->readCache;
+        yield from $reader->read();
     }
 
     public function getNextPageToken(): ?string
@@ -147,9 +125,6 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function getCurrentPageSize(): int
     {
-        if ($this->readCache !== null) {
-            return count($this->readCache);
-        }
         $pages = $this->getInternalTotalPages();
         if ($pages === 1) {
             return $this->getTotalItems();
@@ -165,10 +140,7 @@ final class OffsetPaginator implements OffsetPaginatorInterface
 
     public function getTotalItems(): int
     {
-        if ($this->totalItemsCount === null) {
-            $this->totalItemsCount = $this->dataReader->count();
-        }
-        return $this->totalItemsCount;
+        return $this->dataReader->count();
     }
 
     public function getPageSize(): int
