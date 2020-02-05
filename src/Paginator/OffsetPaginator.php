@@ -8,7 +8,7 @@ use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 
-final class OffsetPaginator implements OffsetPaginatorInterface
+final class OffsetPaginator implements PaginatorInterface
 {
     /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface */
     private DataReaderInterface $dataReader;
