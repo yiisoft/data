@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Writer;
 
-interface DataWriterInteface
+interface DataWriterInterface
 {
     public function write(array $items): void;
 }

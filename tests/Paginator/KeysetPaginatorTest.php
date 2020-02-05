@@ -11,6 +11,7 @@ use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Data\Tests\TestCase;
 
 final class KeysetPaginatorTest extends Testcase
@@ -43,7 +44,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testDataReaderWithoutFilterableInterface(): void
     {
-        $nonFilterableDataReader = new class() implements DataReaderInterface {
+        $nonFilterableDataReader = new class() implements DataReaderInterface, SortableDataInterface {
             public function withLimit(int $limit)
             {
                 // do nothing
@@ -53,9 +54,20 @@ final class KeysetPaginatorTest extends Testcase
             {
                 return [];
             }
+            public function withSort(?Sort $sorting)
+            {
+                // do nothing
+            }
+            public function getSort(): ?Sort
+            {
+                return new Sort([]);
+            }
         };
 
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Data reader should implement FilterableDataInterface in order to be used with keyset paginator'
+        );
 
         new KeysetPaginator($nonFilterableDataReader);
     }
@@ -67,17 +79,14 @@ final class KeysetPaginatorTest extends Testcase
             {
                 // do nothing
             }
-
             public function read(): iterable
             {
                 return [];
             }
-
             public function withFilter(FilterInterface $filter)
             {
                 // do nothing
             }
-
             public function withFilterProcessors(FilterProcessorInterface ...$filterUnits)
             {
                 // do nothing
@@ -85,6 +94,9 @@ final class KeysetPaginatorTest extends Testcase
         };
 
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Data reader should implement SortableDataInterface in order to be used with keyset paginator'
+        );
 
         new KeysetPaginator($nonSortableDataReader);
     }

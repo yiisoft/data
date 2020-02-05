@@ -153,7 +153,7 @@ class KeysetPaginator implements PaginatorInterface
         return $this->readCache = $data;
     }
 
-    public function withPreviousPageToken(?string $value)
+    public function withPreviousPageToken(?string $value): self
     {
         $new = clone $this;
         $new->firstValue = $value;
@@ -161,7 +161,7 @@ class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function withNextPageToken(?string $value)
+    public function withNextPageToken(?string $value): self
     {
         $new = clone $this;
         $new->firstValue = null;
@@ -185,7 +185,7 @@ class KeysetPaginator implements PaginatorInterface
         return (string)$this->currentLastValue;
     }
 
-    public function withPageSize(int $pageSize)
+    public function withPageSize(int $pageSize): self
     {
         if ($pageSize < 1) {
             throw new \InvalidArgumentException('Page size should be at least 1');
@@ -210,6 +210,11 @@ class KeysetPaginator implements PaginatorInterface
         }
         $this->initializeInternal();
         return !$this->hasPreviousPageItem;
+    }
+
+    public function getPageSize(): int
+    {
+        return $this->pageSize;
     }
 
     public function getCurrentPageSize(): int
@@ -237,5 +242,10 @@ class KeysetPaginator implements PaginatorInterface
             $cache[] = $value;
         }
         $this->readCache = $cache;
+    }
+
+    public function isRequired(): bool
+    {
+        return !$this->isOnFirstPage() || !$this->isOnLastPage();
     }
 }

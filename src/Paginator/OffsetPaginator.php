@@ -8,43 +8,40 @@ use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 
-/**
- * OffsetPaginator
- */
 final class OffsetPaginator implements PaginatorInterface
 {
-    /**
-     * @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface
-     */
-    private $dataReader;
-
-    private $currentPage = 1;
-    private $pageSize = self::DEFAULT_PAGE_SIZE;
-
-    /**
-     * @var array|null Reader cache against repeated scans.
-     *
-     * @see initializeInternal()
-     */
-    private $readCache;
-    /**
-     * @var int|null Total count cache against repeated scans.
-     *
-     * See more {@see initializeInternal()}.
-     */
-    private $totalCountCache;
+    /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface */
+    private DataReaderInterface $dataReader;
+    private int $currentPage = 1;
+    private int $pageSize = self::DEFAULT_PAGE_SIZE;
+    private ?DataReaderInterface $cachedReader = null;
 
     public function __construct(DataReaderInterface $dataReader)
     {
         if (!$dataReader instanceof OffsetableDataInterface) {
-            throw new \InvalidArgumentException('Data reader should implement OffsetableDataInterface in order to be used with offset paginator');
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Data reader should implement %s in order to be used with offset paginator',
+                    OffsetableDataInterface::class
+                )
+            );
         }
 
         if (!$dataReader instanceof CountableDataInterface) {
-            throw new \InvalidArgumentException('Data reader should implement CountableDataInterface in order to be used with offset paginator');
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Data reader should implement %s in order to be used with offset paginator',
+                    CountableDataInterface::class
+                )
+            );
         }
 
         $this->dataReader = $dataReader;
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->getTotalPages() > 1;
     }
 
     public function getCurrentPage(): int
@@ -52,25 +49,25 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->currentPage;
     }
 
-    public function withCurrentPage(int $page)
+    public function withCurrentPage(int $page): self
     {
         if ($page < 1) {
-            throw new \InvalidArgumentException('Current page should be at least 1');
+            throw new PaginatorException('Current page should be at least 1');
         }
-
         $new = clone $this;
         $new->currentPage = $page;
+        $new->cachedReader = null;
         return $new;
     }
 
-    public function withPageSize(int $size)
+    public function withPageSize(int $size): self
     {
         if ($size < 1) {
-            throw new \InvalidArgumentException('Page size should be at least 1');
+            throw new PaginatorException('Page size should be at least 1');
         }
-
         $new = clone $this;
         $new->pageSize = $size;
+        $new->cachedReader = null;
         return $new;
     }
 
@@ -81,30 +78,34 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function isOnLastPage(): bool
     {
-        return $this->currentPage === $this->getTotalPages();
+        if ($this->currentPage > $this->getInternalTotalPages()) {
+            throw new PaginatorException('Page not found');
+        }
+        return $this->currentPage === $this->getInternalTotalPages();
     }
 
     public function getTotalPages(): int
     {
-        $totalCount = $this->totalCountCache;
-        if ($totalCount === null) {
-            $totalCount = $this->dataReader->count();
-        }
-        return (int) ceil($totalCount / $this->pageSize);
+        return (int) ceil($this->getTotalItems() / $this->pageSize);
     }
 
-    private function getOffset(): int
+    public function getOffset(): int
     {
         return $this->pageSize * ($this->currentPage - 1);
     }
 
     public function read(): iterable
     {
-        if ($this->readCache !== null) {
-            return $this->readCache;
+        if ($this->cachedReader !== null) {
+            yield from $this->cachedReader->read();
+            return;
         }
-        $reader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
-        yield from $reader->read();
+        if ($this->currentPage > $this->getInternalTotalPages()) {
+            throw new PaginatorException('Page not found');
+        }
+        /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface $reader */
+        $this->cachedReader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
+        yield from $this->cachedReader->read();
     }
 
     public function getNextPageToken(): ?string
@@ -117,37 +118,43 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->isOnFirstPage() ? null : (string) ($this->currentPage - 1);
     }
 
-    public function withNextPageToken(?string $token)
+    public function withNextPageToken(?string $token): self
     {
         return $this->withCurrentPage((int)$token);
     }
 
-    public function withPreviousPageToken(?string $token)
+    public function withPreviousPageToken(?string $token): self
     {
         return $this->withCurrentPage((int)$token);
     }
 
     public function getCurrentPageSize(): int
     {
-        $this->initializeInternal();
-        return count($this->readCache);
+        $pages = $this->getInternalTotalPages();
+        if ($pages === 1) {
+            return $this->getTotalItems();
+        }
+        if ($this->currentPage === $pages) {
+            return $this->getTotalItems() - $this->getOffset();
+        }
+        if ($this->currentPage > $pages) {
+            throw new PaginatorException('Page not found');
+        }
+        return $this->pageSize;
     }
 
-    public function __clone()
+    public function getTotalItems(): int
     {
-        $this->readCache = null;
-        $this->totalCountCache = null;
+        return $this->dataReader->count();
     }
 
-    private function initializeInternal(): void
+    public function getPageSize(): int
     {
-        if ($this->readCache !== null) {
-            return;
-        }
-        $cache = [];
-        foreach ($this->read() as $value) {
-            $cache[] = $value;
-        }
-        $this->readCache = $cache;
+        return $this->pageSize;
+    }
+
+    private function getInternalTotalPages(): int
+    {
+        return max(1, $this->getTotalPages());
     }
 }
