@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use Yiisoft\Data\Reader\Filter\CompareFilter;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
-use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\DataReaderInterface;
-use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
 /**
@@ -27,41 +27,40 @@ class KeysetPaginator implements PaginatorInterface
      * @var FilterableDataInterface|DataReaderInterface|SortableDataInterface
      */
     private $dataReader;
-    /**
-     * @var int
-     */
-    private $pageSize = self::DEFAULT_PAGE_SIZE;
-
-    private $firstValue;
-    private $lastValue;
-
+    private int $pageSize = self::DEFAULT_PAGE_SIZE;
+    private ?string $firstValue = null;
+    private ?string $lastValue = null;
     private $currentFirstValue;
     private $currentLastValue;
 
     /**
      * @var bool Previous page has item indicator.
      */
-    private $hasPreviousPageItem = false;
+    private bool $hasPreviousPageItem = false;
     /**
      * @var bool Next page has item indicator.
      */
-    private $hasNextPageItem = false;
+    private bool $hasNextPageItem = false;
 
     /**
      * @var array|null Reader cache against repeated scans.
      *
      * See more {@see __clone()} and {@see initializeInternal()}.
      */
-    private $readCache;
+    private ?array $readCache = null;
 
     public function __construct(DataReaderInterface $dataReader)
     {
         if (!$dataReader instanceof FilterableDataInterface) {
-            throw new \InvalidArgumentException('Data reader should implement FilterableDataInterface in order to be used with keyset paginator');
+            throw new \InvalidArgumentException(
+                'Data reader should implement FilterableDataInterface in order to be used with keyset paginator'
+            );
         }
 
         if (!$dataReader instanceof SortableDataInterface) {
-            throw new \InvalidArgumentException('Data reader should implement SortableDataInterface in order to be used with keyset paginator');
+            throw new \InvalidArgumentException(
+                'Data reader should implement SortableDataInterface in order to be used with keyset paginator'
+            );
         }
 
         if ($dataReader->getSort() === null) {
@@ -85,69 +84,21 @@ class KeysetPaginator implements PaginatorInterface
         }
 
         $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
+        $sort = $this->getSort();
 
-        $sort = $this->dataReader->getSort();
-        $order = $sort->getOrder();
-
-        if ($order === []) {
-            throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
+        if ($this->isGoingToPreviousPage()) {
+            $sort = $this->reverseSort($sort);
+            $dataReader = $dataReader->withSort($sort);
         }
 
-        $goingToPreviousPage = $this->firstValue !== null && $this->lastValue === null;
-        $goingToNextPage = $this->firstValue === null && $this->lastValue !== null;
-
-        if ($goingToPreviousPage) {
-            // reverse sorting
-            foreach ($order as &$sorting) {
-                $sorting = $sorting === 'asc' ? 'desc' : 'asc';
-            }
-            unset($sorting);
-            $dataReader = $dataReader->withSort($sort->withOrder($order));
+        if ($this->isGoingSomewhere()) {
+            $dataReader = $dataReader->withFilter($this->getFilterBySorting($sort));
+            $this->hasPreviousPageItem = true;
         }
 
-        // first order field is the field we are paging by
-        $field = null;
-        $sorting = null;
-        foreach ($order as $field => $sorting) {
-            break;
-        }
-
-        if ($goingToPreviousPage || $goingToNextPage) {
-            $value = $goingToPreviousPage ? $this->firstValue : $this->lastValue;
-
-            $filter = null;
-            $reverseFilter = null;
-            if ($sorting === 'asc') {
-                $filter = new GreaterThan($field, $value);
-                $reverseFilter = new LessThanOrEqual($field, $value);
-            } else {
-                $filter = new LessThan($field, $value);
-                $reverseFilter = new GreaterThanOrEqual($field, $value);
-            }
-
-            $dataReader = $dataReader->withFilter($filter);
-            foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
-                $this->hasPreviousPageItem = true;
-            }
-        }
-
-        $data = [];
-        foreach ($dataReader->read() as $item) {
-            if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = $item[$field];
-            }
-            if (count($data) === $this->pageSize) {
-                $this->hasNextPageItem = true;
-            } else {
-                $this->currentLastValue = $item[$field];
-                $data[] = $item;
-            }
-        }
-
-        if ($goingToPreviousPage) {
-            [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
-            [$this->hasPreviousPageItem, $this->hasNextPageItem] = [$this->hasNextPageItem, $this->hasPreviousPageItem];
-            $data = array_reverse($data);
+        $data = $this->readData($dataReader, $sort);
+        if ($this->isGoingToPreviousPage()) {
+            $data = $this->reverseData($data);
         }
 
         return $this->readCache = $data;
@@ -205,7 +156,6 @@ class KeysetPaginator implements PaginatorInterface
     public function isOnFirstPage(): bool
     {
         if ($this->lastValue === null && $this->firstValue === null) {
-            // Initial state, no values.
             return true;
         }
         $this->initializeInternal();
@@ -247,5 +197,87 @@ class KeysetPaginator implements PaginatorInterface
     public function isRequired(): bool
     {
         return !$this->isOnFirstPage() || !$this->isOnLastPage();
+    }
+
+    private function getSort(): Sort
+    {
+        $sort = $this->dataReader->getSort();
+        if ($sort->getOrder() === []) {
+            throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
+        }
+
+        return $sort;
+    }
+
+    private function isGoingToPreviousPage(): bool
+    {
+        return $this->firstValue !== null && $this->lastValue === null;
+    }
+
+    private function isGoingSomewhere(): bool
+    {
+        return $this->firstValue !== null || $this->lastValue !== null;
+    }
+
+    private function getFilterBySorting(Sort $sort): CompareFilter
+    {
+        [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
+        if ($sorting === 'asc') {
+            return new GreaterThan($field, $this->getValue());
+        }
+        return new LessThan($field, $this->getValue());
+    }
+
+    private function getValue(): string
+    {
+        return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
+    }
+
+    private function reverseSort(Sort $sort): Sort
+    {
+        $order = $sort->getOrder();
+        foreach ($order as &$sorting) {
+            $sorting = $sorting === 'asc' ? 'desc' : 'asc';
+        }
+
+        return $sort->withOrder($order);
+    }
+
+    private function getFieldAndSortingFromSort(Sort $sort): array
+    {
+        $field = null;
+        $sorting = null;
+        foreach ($sort->getOrder() as $field => $sorting) {
+            break;
+        }
+
+        return [$field, $sorting];
+    }
+
+    private function readData(DataReaderInterface $dataReader, Sort $sort): array
+    {
+        $data = [];
+        [$field] = $this->getFieldAndSortingFromSort($sort);
+
+        foreach ($dataReader->read() as $item) {
+            if ($this->currentFirstValue === null) {
+                $this->currentFirstValue = $item[$field];
+            }
+            if (count($data) === $this->pageSize) {
+                $this->hasNextPageItem = true;
+            } else {
+                $this->currentLastValue = $item[$field];
+                $data[] = $item;
+            }
+        }
+
+        return $data;
+    }
+
+    private function reverseData(array $data): array
+    {
+        [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
+        [$this->hasPreviousPageItem, $this->hasNextPageItem] = [$this->hasNextPageItem, $this->hasPreviousPageItem];
+        return array_reverse($data);
     }
 }
