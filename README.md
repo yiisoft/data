@@ -282,10 +282,10 @@ $dataReader = (new MyDataReader(...))
 
 $paginator = (new KeysetPaginator($dataReader))
     ->withPageSize(10)
-    ->withLast(13);
+    ->withNextPageToken('13');
 ```
 
-When displaying first page ID (or another field name to paginate by) of the item displayed last is used with `withLast()`
+When displaying first page ID (or another field name to paginate by) of the item displayed last is used with `withNextPageToken()`
 to obtain next page.   
 
 ## Writing data
