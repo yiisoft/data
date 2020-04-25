@@ -6,8 +6,10 @@ namespace Yiisoft\Data\Paginator;
 
 use Yiisoft\Data\Reader\Filter\CompareFilter;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\DataReaderInterface;
+use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -92,8 +94,8 @@ class KeysetPaginator implements PaginatorInterface
         }
 
         if ($this->isGoingSomewhere()) {
-            $dataReader = $dataReader->withFilter($this->getFilterBySorting($sort));
-            $this->hasPreviousPageItem = true;
+            $dataReader = $dataReader->withFilter($this->getFilter($sort));
+            $this->hasPreviousPageItem = $this->previousPageExist($dataReader, $sort);
         }
 
         $data = $this->readData($dataReader, $sort);
@@ -219,13 +221,22 @@ class KeysetPaginator implements PaginatorInterface
         return $this->firstValue !== null || $this->lastValue !== null;
     }
 
-    private function getFilterBySorting(Sort $sort): CompareFilter
+    private function getFilter(Sort $sort): CompareFilter
     {
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
         if ($sorting === 'asc') {
             return new GreaterThan($field, $this->getValue());
         }
         return new LessThan($field, $this->getValue());
+    }
+
+    private function getReverseFilter(Sort $sort): CompareFilter
+    {
+        [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
+        if ($sorting === 'asc') {
+            return new LessThanOrEqual($field, $this->getValue());
+        }
+        return new GreaterThanOrEqual($field, $this->getValue());
     }
 
     private function getValue(): string
@@ -279,5 +290,14 @@ class KeysetPaginator implements PaginatorInterface
         [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
         [$this->hasPreviousPageItem, $this->hasNextPageItem] = [$this->hasNextPageItem, $this->hasPreviousPageItem];
         return array_reverse($data);
+    }
+
+    private function previousPageExist(DataReaderInterface $dataReader, Sort $sort): bool
+    {
+        $reverseFilter = $this->getReverseFilter($sort);
+        foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
+            return true;
+        }
+        return false;
     }
 }

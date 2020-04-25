@@ -87,6 +87,20 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertTrue($paginator->isOnLastPage());
     }
 
+    public function testEmptyData(): void
+    {
+        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $dataReader = (new IterableDataReader([]))
+            ->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(1)
+            ->withNextPageToken('1');
+
+        $this->assertTrue($paginator->isOnFirstPage());
+        $this->assertTrue($paginator->isOnLastPage());
+        $this->assertEmpty($paginator->read());
+    }
+
     public function onePageDataProvider(): array
     {
         return [
