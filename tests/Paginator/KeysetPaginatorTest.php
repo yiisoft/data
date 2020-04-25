@@ -16,89 +16,24 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class KeysetPaginatorTest extends Testcase
 {
-    private function getDataSet(): array
-    {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Agent J',
-            ],
-            [
-                'id' => 6,
-                'name' => '007',
-            ],
-        ];
-    }
-
     public function testDataReaderWithoutFilterableInterface(): void
     {
-        $nonFilterableDataReader = new class() implements DataReaderInterface, SortableDataInterface {
-            public function withLimit(int $limit)
-            {
-                // do nothing
-            }
-
-            public function read(): iterable
-            {
-                return [];
-            }
-            public function withSort(?Sort $sorting)
-            {
-                // do nothing
-            }
-            public function getSort(): ?Sort
-            {
-                return new Sort([]);
-            }
-        };
-
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
             'Data reader should implement FilterableDataInterface in order to be used with keyset paginator'
         );
 
-        new KeysetPaginator($nonFilterableDataReader);
+        new KeysetPaginator($this->getNonFilterableDataReader());
     }
 
     public function testDataReaderWithoutSortableInterface(): void
     {
-        $nonSortableDataReader = new class() implements DataReaderInterface, FilterableDataInterface {
-            public function withLimit(int $limit)
-            {
-                // do nothing
-            }
-            public function read(): iterable
-            {
-                return [];
-            }
-            public function withFilter(FilterInterface $filter)
-            {
-                // do nothing
-            }
-            public function withFilterProcessors(FilterProcessorInterface ...$filterUnits)
-            {
-                // do nothing
-            }
-        };
-
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
             'Data reader should implement SortableDataInterface in order to be used with keyset paginator'
         );
 
-        new KeysetPaginator($nonSortableDataReader);
+        new KeysetPaginator($this->getNonSortableDataReader());
     }
 
     public function testPageSizeCannotBeLessThanOne(): void
@@ -341,6 +276,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2);
         $this->assertTrue($paginator->isOnFirstPage());
+        $this->assertTrue($paginator->isRequired());
     }
 
     public function testIsOnLastPage(): void
@@ -361,6 +297,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertTrue($paginator->isOnLastPage());
         $paginator = $paginator->withNextPageToken('2');
         $this->assertFalse($paginator->isOnLastPage());
+        $this->assertTrue($paginator->isRequired());
     }
 
     public function testCurrentPageSize(): void
@@ -473,5 +410,99 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertNull($paginator->getNextPageToken());
         $this->assertNotNull($paginator->getPreviousPageToken());
         $this->assertSame('5', $paginator->getPreviousPageToken());
+    }
+
+    public function testDefaultPageSize(): void
+    {
+        $sort = (new Sort(['id']))->withOrderString('id');
+        $dataReader = (new IterableDataReader($this->getDataSet()))->withSort($sort);
+        $paginator = new KeysetPaginator($dataReader);
+        $this->assertSame(10, $paginator->getPageSize());
+        $this->assertCount(5, $paginator->read());
+    }
+
+    public function testCustomPageSize(): void
+    {
+        $sort = (new Sort(['id']))->withOrderString('id');
+        $dataReader = (new IterableDataReader($this->getDataSet()))->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
+        $this->assertSame(2, $paginator->getPageSize());
+        $this->assertCount(2, $paginator->read());
+    }
+
+    private function getDataSet(): array
+    {
+        return [
+            [
+                'id' => 1,
+                'name' => 'Codename Boris',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Codename Doris',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Agent K',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Agent J',
+            ],
+            [
+                'id' => 6,
+                'name' => '007',
+            ],
+        ];
+    }
+
+    private function getNonSortableDataReader()
+    {
+        return new class() implements DataReaderInterface, FilterableDataInterface {
+            public function withLimit(int $limit)
+            {
+                // do nothing
+            }
+
+            public function read(): iterable
+            {
+                return [];
+            }
+
+            public function withFilter(FilterInterface $filter)
+            {
+                // do nothing
+            }
+
+            public function withFilterProcessors(FilterProcessorInterface ...$filterUnits)
+            {
+                // do nothing
+            }
+        };
+    }
+
+    private function getNonFilterableDataReader()
+    {
+        return new class() implements DataReaderInterface, SortableDataInterface {
+            public function withLimit(int $limit)
+            {
+                // do nothing
+            }
+
+            public function read(): iterable
+            {
+                return [];
+            }
+
+            public function withSort(?Sort $sorting)
+            {
+                // do nothing
+            }
+
+            public function getSort(): ?Sort
+            {
+                return new Sort([]);
+            }
+        };
     }
 }
