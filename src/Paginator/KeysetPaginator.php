@@ -69,6 +69,10 @@ class KeysetPaginator implements PaginatorInterface
             throw new \RuntimeException('Data sorting should be configured in order to work with keyset pagination');
         }
 
+        if ($dataReader->getSort()->getOrder() === []) {
+            throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
+        }
+
         $this->dataReader = $dataReader;
     }
 
@@ -203,12 +207,7 @@ class KeysetPaginator implements PaginatorInterface
 
     private function getSort(): Sort
     {
-        $sort = $this->dataReader->getSort();
-        if ($sort->getOrder() === []) {
-            throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
-        }
-
-        return $sort;
+        return $this->dataReader->getSort();
     }
 
     private function isGoingToPreviousPage(): bool
@@ -256,13 +255,12 @@ class KeysetPaginator implements PaginatorInterface
 
     private function getFieldAndSortingFromSort(Sort $sort): array
     {
-        $field = null;
-        $sorting = null;
-        foreach ($sort->getOrder() as $field => $sorting) {
-            break;
-        }
+        $order = $sort->getOrder();
 
-        return [$field, $sorting];
+        return [
+            key($order),
+            reset($order),
+        ];
     }
 
     private function readData(DataReaderInterface $dataReader, Sort $sort): array

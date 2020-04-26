@@ -38,7 +38,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testPageSizeCannotBeLessThanOne(): void
     {
-        $sort = new Sort(['id', 'name']);
+        $sort = (new Sort(['id', 'name']))->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
         $paginator = new KeysetPaginator($dataReader);
@@ -63,13 +63,9 @@ final class KeysetPaginatorTest extends Testcase
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
 
-        $paginator = (new KeysetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withNextPageToken('3');
-
         $this->expectException(\RuntimeException::class);
 
-        $this->iterableToArray($paginator->read());
+        new KeysetPaginator($dataReader);
     }
 
     /**
