@@ -28,7 +28,7 @@ class KeysetPaginator implements PaginatorInterface
     /**
      * @var FilterableDataInterface|DataReaderInterface|SortableDataInterface
      */
-    private $dataReader;
+    private DataReaderInterface $dataReader;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
     private ?string $firstValue = null;
     private ?string $lastValue = null;
