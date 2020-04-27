@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable;
 
 use Traversable;
-use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Arrays\ArraySorter;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
@@ -84,7 +84,7 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         $criteria = $sort->getCriteria();
         if ($criteria !== []) {
             $items = $this->iterableToArray($items);
-            ArrayHelper::multisort($items, array_keys($criteria), array_values($criteria));
+            ArraySorter::multisort($items, array_keys($criteria), array_values($criteria));
         }
 
         return $items;
