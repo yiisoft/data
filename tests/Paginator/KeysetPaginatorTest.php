@@ -337,7 +337,7 @@ final class KeysetPaginatorTest extends Testcase
     {
         $sort = (new Sort(['id']))->withOrderString('id');
         $dataSet = new class($this->getDataSet()) extends \ArrayIterator {
-            private $rewindCounter = 0;
+            private int $rewindCounter = 0;
 
             public function rewind()
             {
