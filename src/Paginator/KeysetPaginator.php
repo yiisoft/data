@@ -55,22 +55,22 @@ class KeysetPaginator implements PaginatorInterface
     {
         if (!$dataReader instanceof FilterableDataInterface) {
             throw new \InvalidArgumentException(
-                'Data reader should implement FilterableDataInterface in order to be used with keyset paginator'
+                'Data reader should implement FilterableDataInterface to be used with keyset paginator.'
             );
         }
 
         if (!$dataReader instanceof SortableDataInterface) {
             throw new \InvalidArgumentException(
-                'Data reader should implement SortableDataInterface in order to be used with keyset paginator'
+                'Data reader should implement SortableDataInterface to be used with keyset paginator.'
             );
         }
 
         if ($dataReader->getSort() === null) {
-            throw new \RuntimeException('Data sorting should be configured in order to work with keyset pagination');
+            throw new \RuntimeException('Data sorting should be configured to work with keyset pagination.');
         }
 
         if ($dataReader->getSort()->getOrder() === []) {
-            throw new \RuntimeException('Data should be always sorted in order to work with keyset pagination');
+            throw new \RuntimeException('Data should be always sorted to work with keyset pagination.');
         }
 
         $this->dataReader = $dataReader;
@@ -145,7 +145,7 @@ class KeysetPaginator implements PaginatorInterface
     public function withPageSize(int $pageSize): self
     {
         if ($pageSize < 1) {
-            throw new \InvalidArgumentException('Page size should be at least 1');
+            throw new \InvalidArgumentException('Page size should be at least 1.');
         }
 
         $new = clone $this;

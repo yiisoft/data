@@ -20,7 +20,7 @@ final class KeysetPaginatorTest extends Testcase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Data reader should implement FilterableDataInterface in order to be used with keyset paginator'
+            'Data reader should implement FilterableDataInterface to be used with keyset paginator.'
         );
 
         new KeysetPaginator($this->getNonFilterableDataReader());
@@ -30,7 +30,7 @@ final class KeysetPaginatorTest extends Testcase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Data reader should implement SortableDataInterface in order to be used with keyset paginator'
+            'Data reader should implement SortableDataInterface to be used with keyset paginator.'
         );
 
         new KeysetPaginator($this->getNonSortableDataReader());
