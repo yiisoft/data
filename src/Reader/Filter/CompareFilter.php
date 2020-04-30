@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader\Filter;
 
 abstract class CompareFilter implements FilterInterface
 {
-    private $field;
+    private string $field;
     private $value;
 
     public function __construct(string $field, $value)
