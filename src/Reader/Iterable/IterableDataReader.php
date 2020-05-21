@@ -166,7 +166,7 @@ class IterableDataReader implements
         return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 
-    public function withFilterProcessors(FilterProcessorInterface ... $filterProcessors): self
+    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self
     {
         $new = clone $this;
         $processors = [];

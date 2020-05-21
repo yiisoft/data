@@ -18,5 +18,5 @@ interface FilterableDataInterface
      * @param FilterProcessorInterface[] $filterProcessors
      * @return $this
      */
-    public function withFilterProcessors(FilterProcessorInterface ... $filterProcessors);
+    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors);
 }
