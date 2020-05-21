@@ -10,8 +10,13 @@ use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 interface FilterableDataInterface
 {
     /**
-     * @return static
+     * @param FilterInterface $filter
+     * @return $this
      */
     public function withFilter(FilterInterface $filter);
+    /**
+     * @param FilterProcessorInterface[] $filterProcessors
+     * @return $this
+     */
     public function withFilterProcessors(FilterProcessorInterface ... $filterProcessors);
 }

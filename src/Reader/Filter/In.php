@@ -6,8 +6,8 @@ namespace Yiisoft\Data\Reader\Filter;
 
 final class In implements FilterInterface
 {
-    private $field;
-    private $value;
+    private string $field;
+    private array $value;
 
     public function __construct(string $field, array $value)
     {

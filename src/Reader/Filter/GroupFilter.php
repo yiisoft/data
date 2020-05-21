@@ -9,7 +9,7 @@ abstract class GroupFilter implements FilterInterface
     /**
      * @var FilterInterface[]
      */
-    private $filters;
+    private array $filters;
 
     public function __construct(FilterInterface ...$filters)
     {
@@ -44,7 +44,7 @@ abstract class GroupFilter implements FilterInterface
      * ~~~
      *
      * @param array $filtersArray
-     * @return static
+     * @return $this
      */
     public function withFiltersArray(array $filtersArray)
     {
