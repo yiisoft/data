@@ -37,6 +37,9 @@
             "dev-master": "3.0.x-dev"
         }
     },
+    "scripts": {
+        "test": "phpunit --colors=always"
+    },
     "config": {
         "sort-packages": true
     }
