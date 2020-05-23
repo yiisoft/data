@@ -80,8 +80,6 @@ class KeysetPaginator implements PaginatorInterface
      * Reads items of the page
      *
      * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetInternal()}
-     *
-     * @return iterable
      */
     public function read(): iterable
     {

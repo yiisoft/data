@@ -26,23 +26,20 @@ use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
-class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
+class IterableDataReader implements
+    DataReaderInterface,
+    SortableDataInterface,
+    FilterableDataInterface,
+    OffsetableDataInterface,
+    CountableDataInterface
 {
-    protected $data;
-    private $sort;
+    protected iterable $data;
+    private ?Sort $sort = null;
+    private ?FilterInterface $filter = null;
+    private int $limit = self::DEFAULT_LIMIT;
+    private int $offset = 0;
 
-    /**
-     * @var FilterInterface
-     */
-    private $filter;
-
-    private $limit = self::DEFAULT_LIMIT;
-    private $offset = 0;
-
-    /**
-     * @var array
-     */
-    private $filterProcessors = [];
+    private array $filterProcessors = [];
 
     public function __construct(iterable $data)
     {
@@ -169,7 +166,7 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 
-    public function withFilterProcessors(FilterProcessorInterface ... $filterProcessors): self
+    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self
     {
         $new = clone $this;
         $processors = [];
