@@ -133,6 +133,26 @@ final class IterableDataReaderTest extends TestCase
         $this->assertCount(5, $reader);
     }
 
+    public function testReadOne(): void
+    {
+        $data = $this->getDataSet();
+        $reader = new IterableDataReader($data);
+
+        $this->assertSame($data[0], $reader->readOne());
+    }
+
+    public function testReadOneWithSortingAndOffset(): void
+    {
+        $sorting = (new Sort(['id', 'name']))->withOrder(['name' => 'asc']);
+
+        $data = $this->getDataSet();
+        $reader = (new IterableDataReader($data))
+            ->withSort($sorting)
+            ->withOffset(2);
+
+        $this->assertSame($this->getDataSetSortedByName()[2], $reader->readOne());
+    }
+
     public function testsWithFilterIsImmutable(): void
     {
         $reader = new IterableDataReader([]);

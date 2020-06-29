@@ -479,6 +479,11 @@ final class KeysetPaginatorTest extends Testcase
                 return [];
             }
 
+            public function readOne()
+            {
+                return null;
+            }
+
             public function withFilter(FilterInterface $filter)
             {
                 // do nothing
@@ -502,6 +507,11 @@ final class KeysetPaginatorTest extends Testcase
             public function read(): iterable
             {
                 return [];
+            }
+
+            public function readOne()
+            {
+                return null;
             }
 
             public function withSort(?Sort $sorting)

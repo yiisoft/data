@@ -136,7 +136,7 @@ class IterableDataReader implements
 
             // skip offset items
             if ($skipped < $this->offset) {
-                $skipped++;
+                ++$skipped;
                 continue;
             }
 
@@ -147,6 +147,13 @@ class IterableDataReader implements
         }
 
         return $data;
+    }
+
+    public function readOne()
+    {
+        return (static function (iterable $data): \Generator {
+            yield from $data;
+        })($this->withLimit(1)->read())->current();
     }
 
     public function withOffset(int $offset): self
