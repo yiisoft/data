@@ -31,7 +31,8 @@ class IterableDataReader implements
     SortableDataInterface,
     FilterableDataInterface,
     OffsetableDataInterface,
-    CountableDataInterface
+    CountableDataInterface,
+    \IteratorAggregate
 {
     protected iterable $data;
     private ?Sort $sort = null;
@@ -151,9 +152,12 @@ class IterableDataReader implements
 
     public function readOne()
     {
-        return (static function (iterable $data): \Generator {
-            yield from $data;
-        })($this->withLimit(1)->read())->current();
+        return $this->withLimit(1)->getIterator()->current();
+    }
+
+    public function getIterator(): \Generator
+    {
+        yield from $this->read();
     }
 
     public function withOffset(int $offset): self
