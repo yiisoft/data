@@ -14,4 +14,5 @@ interface DataReaderInterface
      */
     public function withLimit(int $limit);
     public function read(): iterable;
+    public function readOne();
 }

@@ -31,7 +31,8 @@ class IterableDataReader implements
     SortableDataInterface,
     FilterableDataInterface,
     OffsetableDataInterface,
-    CountableDataInterface
+    CountableDataInterface,
+    \IteratorAggregate
 {
     protected iterable $data;
     private ?Sort $sort = null;
@@ -136,7 +137,7 @@ class IterableDataReader implements
 
             // skip offset items
             if ($skipped < $this->offset) {
-                $skipped++;
+                ++$skipped;
                 continue;
             }
 
@@ -147,6 +148,16 @@ class IterableDataReader implements
         }
 
         return $data;
+    }
+
+    public function readOne()
+    {
+        return $this->withLimit(1)->getIterator()->current();
+    }
+
+    public function getIterator(): \Generator
+    {
+        yield from $this->read();
     }
 
     public function withOffset(int $offset): self

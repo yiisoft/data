@@ -52,6 +52,10 @@ final class OffsetPaginatorTest extends TestCase
             {
                 return [];
             }
+            public function readOne()
+            {
+                return null;
+            }
             public function count(): int
             {
                 return 0;
@@ -79,6 +83,10 @@ final class OffsetPaginatorTest extends TestCase
             public function read(): iterable
             {
                 return [];
+            }
+            public function readOne()
+            {
+                return null;
             }
             public function count(): int
             {
