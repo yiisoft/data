@@ -8,9 +8,9 @@ use Yiisoft\Data\Reader\Filter\CompareFilter;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
-use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
@@ -26,9 +26,9 @@ use Yiisoft\Data\Reader\SortableDataInterface;
 class KeysetPaginator implements PaginatorInterface
 {
     /**
-     * @var FilterableDataInterface|DataReaderInterface|SortableDataInterface
+     * @var FilterableDataInterface|ReadableDataInterface|SortableDataInterface
      */
-    private DataReaderInterface $dataReader;
+    private ReadableDataInterface $dataReader;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
     private ?string $firstValue = null;
     private ?string $lastValue = null;
@@ -51,7 +51,7 @@ class KeysetPaginator implements PaginatorInterface
      */
     private ?array $readCache = null;
 
-    public function __construct(DataReaderInterface $dataReader)
+    public function __construct(ReadableDataInterface $dataReader)
     {
         if (!$dataReader instanceof FilterableDataInterface) {
             throw new \InvalidArgumentException(
@@ -261,7 +261,7 @@ class KeysetPaginator implements PaginatorInterface
         ];
     }
 
-    private function readData(DataReaderInterface $dataReader, Sort $sort): array
+    private function readData(ReadableDataInterface $dataReader, Sort $sort): array
     {
         $data = [];
         [$field] = $this->getFieldAndSortingFromSort($sort);
@@ -288,7 +288,7 @@ class KeysetPaginator implements PaginatorInterface
         return array_reverse($data);
     }
 
-    private function previousPageExist(DataReaderInterface $dataReader, Sort $sort): bool
+    private function previousPageExist(ReadableDataInterface $dataReader, Sort $sort): bool
     {
         $reverseFilter = $this->getReverseFilter($sort);
         foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {

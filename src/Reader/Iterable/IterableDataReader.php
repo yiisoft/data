@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Reader\Iterable;
 
 use Traversable;
 use Yiisoft\Arrays\ArraySorter;
-use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\All;
@@ -21,19 +20,9 @@ use Yiisoft\Data\Reader\Iterable\Processor\Like;
 use Yiisoft\Data\Reader\Iterable\Processor\Not;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
-use Yiisoft\Data\Reader\FilterableDataInterface;
-use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Reader\SortableDataInterface;
 
-class IterableDataReader implements
-    DataReaderInterface,
-    SortableDataInterface,
-    FilterableDataInterface,
-    OffsetableDataInterface,
-    CountableDataInterface,
-    \IteratorAggregate
-{
+class IterableDataReader implements DataReaderInterface {
     protected iterable $data;
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
