@@ -22,7 +22,8 @@ use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 use Yiisoft\Data\Reader\Sort;
 
-class IterableDataReader implements DataReaderInterface {
+class IterableDataReader implements DataReaderInterface
+{
     protected iterable $data;
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
