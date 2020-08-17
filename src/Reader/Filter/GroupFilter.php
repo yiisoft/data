@@ -32,7 +32,7 @@ abstract class GroupFilter implements FilterInterface
      * Building criteria with array
      *
      * ~~~
-     * $dataReader->withFilters((new All())->withArray(
+     * $dataReader->withFilter((new All())->withFiltersArray(
      *   [
      *     ['>', 'id', 88],
      *     ['or', [
