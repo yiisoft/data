@@ -8,8 +8,8 @@ use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Data\Tests\TestCase;
@@ -468,7 +468,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonSortableDataReader()
     {
-        return new class() implements DataReaderInterface, FilterableDataInterface {
+        return new class() implements ReadableDataInterface, FilterableDataInterface {
             public function withLimit(int $limit)
             {
                 // do nothing
@@ -498,7 +498,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonFilterableDataReader()
     {
-        return new class() implements DataReaderInterface, SortableDataInterface {
+        return new class() implements ReadableDataInterface, SortableDataInterface {
             public function withLimit(int $limit)
             {
                 // do nothing
