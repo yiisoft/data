@@ -300,9 +300,9 @@ class KeysetPaginator implements PaginatorInterface
 
     private function getValueFromItem($item, string $field)
     {
-        $getterName = 'get' . ucfirst($field);
-        if (is_object($item) && method_exists($item, $getterName)) {
-            return $item->$getterName();
+        $methodName = 'get' . ucfirst($field);
+        if (is_object($item) && is_callable([$item, $methodName])) {
+            return $item->$methodName();
         }
 
         return ArrayHelper::getValue($item, $field);
