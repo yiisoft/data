@@ -10,8 +10,6 @@ namespace Yiisoft\Data\Reader;
 final class Sort
 {
     /**
-     * @var array
-     *
      * ```php
      * [
      *     'age', // means will be sorted as is
@@ -36,12 +34,12 @@ final class Sort
      * ]
      * ```
      */
-    private $config;
+    private array $config;
 
     /**
      * @var array field names to order by as keys, direction as values
      */
-    private $currentOrder = [];
+    private array $currentOrder = [];
 
     public function __construct(array $config)
     {
@@ -81,7 +79,7 @@ final class Sort
      * or the field name prefixed with `-` for descending.
      *
      * @param string $orderString
-     * @return Sort
+     * @return $this
      */
     public function withOrderString(string $orderString): self
     {
@@ -99,7 +97,7 @@ final class Sort
 
     /**
      * @param array $order field names to order by as keys, direction as values
-     * @return Sort
+     * @return $this
      */
     public function withOrder(array $order): self
     {

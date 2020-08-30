@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
-interface DataReaderInterface
-{
-    public const DEFAULT_LIMIT = 10;
+use IteratorAggregate;
 
-    /**
-     * @param int $limit
-     * @return $this
-     */
-    public function withLimit(int $limit);
-    public function read(): iterable;
+interface DataReaderInterface extends
+    ReadableDataInterface,
+    OffsetableDataInterface,
+    CountableDataInterface,
+    SortableDataInterface,
+    FilterableDataInterface,
+    IteratorAggregate
+{
 }

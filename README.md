@@ -93,13 +93,14 @@ Filter could be composed with:
 The `All` and` Any` filters have a `withFiltersArray()` method, which allows you to define filters with arrays.
 
 ```php
-$dataReader->withFilters((new All())->withFiltersArray([
+$dataReader->withFilter((new All())->withFiltersArray([
   ['=', 'id', 88],
   [
-    'or' => [
-       ['=', 'color', 'red'],
-       ['=', 'state', 1],
-    ],
+    'or',
+    [
+      ['=', 'color', 'red'],
+      ['=', 'state', 1],
+    ]
   ]
 ]));
 ```
@@ -282,10 +283,10 @@ $dataReader = (new MyDataReader(...))
 
 $paginator = (new KeysetPaginator($dataReader))
     ->withPageSize(10)
-    ->withLast(13);
+    ->withNextPageToken('13');
 ```
 
-When displaying first page ID (or another field name to paginate by) of the item displayed last is used with `withLast()`
+When displaying first page ID (or another field name to paginate by) of the item displayed last is used with `withNextPageToken()`
 to obtain next page.   
 
 ## Writing data

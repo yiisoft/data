@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable;
 
 use Traversable;
-use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\CountableDataInterface;
+use Yiisoft\Arrays\ArraySorter;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\All;
@@ -21,28 +20,17 @@ use Yiisoft\Data\Reader\Iterable\Processor\Like;
 use Yiisoft\Data\Reader\Iterable\Processor\Not;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
-use Yiisoft\Data\Reader\FilterableDataInterface;
-use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Reader\SortableDataInterface;
 
-class IterableDataReader implements DataReaderInterface, SortableDataInterface, FilterableDataInterface, OffsetableDataInterface, CountableDataInterface
+class IterableDataReader implements DataReaderInterface
 {
-    protected $data;
-    private $sort;
+    protected iterable $data;
+    private ?Sort $sort = null;
+    private ?FilterInterface $filter = null;
+    private int $limit = self::DEFAULT_LIMIT;
+    private int $offset = 0;
 
-    /**
-     * @var FilterInterface
-     */
-    private $filter;
-
-    private $limit = self::DEFAULT_LIMIT;
-    private $offset = 0;
-
-    /**
-     * @var array
-     */
-    private $filterProcessors = [];
+    private array $filterProcessors = [];
 
     public function __construct(iterable $data)
     {
@@ -84,7 +72,7 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         $criteria = $sort->getCriteria();
         if ($criteria !== []) {
             $items = $this->iterableToArray($items);
-            ArrayHelper::multisort($items, array_keys($criteria), array_values($criteria));
+            ArraySorter::multisort($items, array_keys($criteria), array_values($criteria));
         }
 
         return $items;
@@ -139,7 +127,7 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
 
             // skip offset items
             if ($skipped < $this->offset) {
-                $skipped++;
+                ++$skipped;
                 continue;
             }
 
@@ -150,6 +138,16 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         }
 
         return $data;
+    }
+
+    public function readOne()
+    {
+        return $this->withLimit(1)->getIterator()->current();
+    }
+
+    public function getIterator(): \Generator
+    {
+        yield from $this->read();
     }
 
     public function withOffset(int $offset): self
@@ -169,7 +167,7 @@ class IterableDataReader implements DataReaderInterface, SortableDataInterface, 
         return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 
-    public function withFilterProcessors(FilterProcessorInterface ... $filterProcessors): self
+    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self
     {
         $new = clone $this;
         $processors = [];

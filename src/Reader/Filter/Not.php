@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader\Filter;
 
 final class Not implements FilterInterface
 {
-    private $filter;
+    private FilterInterface $filter;
 
     public function __construct(FilterInterface $filter)
     {

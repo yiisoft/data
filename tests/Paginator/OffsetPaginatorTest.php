@@ -8,8 +8,8 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Tests\TestCase;
 
 final class OffsetPaginatorTest extends TestCase
@@ -42,7 +42,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutOffsetableInterface(): void
     {
-        $nonOffsetableDataReader = new class() implements DataReaderInterface, CountableDataInterface {
+        $nonOffsetableDataReader = new class() implements ReadableDataInterface, CountableDataInterface {
             public function withLimit(int $limit)
             {
                 // do nothing
@@ -51,6 +51,10 @@ final class OffsetPaginatorTest extends TestCase
             public function read(): iterable
             {
                 return [];
+            }
+            public function readOne()
+            {
+                return null;
             }
             public function count(): int
             {
@@ -71,7 +75,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutCountableInterface(): void
     {
-        $nonCountableDataReader = new class() implements DataReaderInterface, OffsetableDataInterface {
+        $nonCountableDataReader = new class() implements ReadableDataInterface, OffsetableDataInterface {
             public function withLimit(int $limit)
             {
                 // do nothing
@@ -79,6 +83,10 @@ final class OffsetPaginatorTest extends TestCase
             public function read(): iterable
             {
                 return [];
+            }
+            public function readOne()
+            {
+                return null;
             }
             public function count(): int
             {

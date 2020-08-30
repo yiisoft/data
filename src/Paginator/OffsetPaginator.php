@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Paginator;
 
 use Yiisoft\Data\Reader\CountableDataInterface;
-use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 
 final class OffsetPaginator implements PaginatorInterface
 {
-    /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface */
-    private DataReaderInterface $dataReader;
+    /** @var OffsetableDataInterface|ReadableDataInterface|CountableDataInterface */
+    private ReadableDataInterface $dataReader;
     private int $currentPage = 1;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
-    private ?DataReaderInterface $cachedReader = null;
+    private ?ReadableDataInterface $cachedReader = null;
 
-    public function __construct(DataReaderInterface $dataReader)
+    public function __construct(ReadableDataInterface $dataReader)
     {
         if (!$dataReader instanceof OffsetableDataInterface) {
             throw new \InvalidArgumentException(
@@ -103,7 +103,7 @@ final class OffsetPaginator implements PaginatorInterface
         if ($this->currentPage > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found');
         }
-        /** @var OffsetableDataInterface|DataReaderInterface|CountableDataInterface $reader */
+        /** @var OffsetableDataInterface|ReadableDataInterface|CountableDataInterface $reader */
         $this->cachedReader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
         yield from $this->cachedReader->read();
     }
