@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\CompareFilter;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -268,12 +269,12 @@ class KeysetPaginator implements PaginatorInterface
 
         foreach ($dataReader->read() as $item) {
             if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = $item[$field];
+                $this->currentFirstValue = $this->getValueFromItem($item, $field);
             }
             if (count($data) === $this->pageSize) {
                 $this->hasNextPageItem = true;
             } else {
-                $this->currentLastValue = $item[$field];
+                $this->currentLastValue = $this->getValueFromItem($item, $field);
                 $data[] = $item;
             }
         }
@@ -295,5 +296,20 @@ class KeysetPaginator implements PaginatorInterface
             return true;
         }
         return false;
+    }
+
+    private function getValueFromItem($item, string $field)
+    {
+        $getterName = $this->getGetterName($field);
+        if (is_object($item) && method_exists($item, $getterName)) {
+            return $item->$getterName();
+        }
+
+        return ArrayHelper::getValue($item, $field);
+    }
+
+    private function getGetterName(string $field): string
+    {
+        return 'get' . ucfirst($field);
     }
 }
