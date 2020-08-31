@@ -148,6 +148,43 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertTrue($paginator->isOnFirstPage());
     }
 
+
+    public function testReadObjectsWithPublicProperties(): void
+    {
+        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $data = [
+            $this->createObjectWithPublicProperties(1, 'Codename Boris 1'),
+            $this->createObjectWithPublicProperties(2, 'Codename Boris 2'),
+            $this->createObjectWithPublicProperties(3, 'Codename Boris 3')
+        ];
+
+        $dataReader = (new IterableDataReader($data))->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2);
+
+        $this->assertSame([$data[0], $data[1]], $this->iterableToArray($paginator->read()));
+        $this->assertSame((string)$data[1]->id, $paginator->getNextPageToken());
+        $this->assertTrue($paginator->isOnFirstPage());
+    }
+
+    public function testReadObjectsWithGetters(): void
+    {
+        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $data = [
+            $this->createObjectWithGetters(1, 'Codename Boris 1'),
+            $this->createObjectWithGetters(2, 'Codename Boris 2'),
+            $this->createObjectWithGetters(3, 'Codename Boris 3')
+        ];
+
+        $dataReader = $this->createObjectDataReader($data)->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2);
+
+        $this->assertSame([$data[0], $data[1]], $this->iterableToArray($paginator->read()));
+        $this->assertSame((string)$data[1]->getId(), $paginator->getNextPageToken());
+        $this->assertTrue($paginator->isOnFirstPage());
+    }
+
     public function testReadSecondPage(): void
     {
         $sort = (new Sort(['id', 'name']))->withOrderString('id');
@@ -522,6 +559,58 @@ final class KeysetPaginatorTest extends Testcase
             public function getSort(): ?Sort
             {
                 return new Sort([]);
+            }
+        };
+    }
+
+    private function createObjectWithPublicProperties(int $id, string $name): \stdClass
+    {
+        $object = new \stdClass();
+        $object->id = $id;
+        $object->name = $name;
+
+        return $object;
+    }
+
+    private function createObjectWithGetters(int $id, string $name): object
+    {
+        return new class($id, $name) {
+            private $id;
+            private $name;
+
+            public function __construct($id, $name)
+            {
+                $this->id = $id;
+                $this->name = $name;
+            }
+
+            public function getId(): string
+            {
+                return (string)$this->id;
+            }
+
+            public function getName(): string
+            {
+                return $this->id;
+            }
+        };
+    }
+
+    private function createObjectDataReader(array $data): IterableDataReader
+    {
+        return new class($data) extends IterableDataReader {
+            public function read(): iterable
+            {
+                $data = [];
+                foreach ($this->data as $item) {
+                    if (count($data) === 3) {
+                        break;
+                    }
+
+                    $data[] = $item;
+                }
+
+                return $data;
             }
         };
     }
