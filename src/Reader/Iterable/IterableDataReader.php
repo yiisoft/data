@@ -27,7 +27,7 @@ class IterableDataReader implements DataReaderInterface
     protected iterable $data;
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
-    private int $limit = self::DEFAULT_LIMIT;
+    private ?int $limit = null;
     private int $offset = 0;
 
     private array $filterProcessors = [];
@@ -121,7 +121,7 @@ class IterableDataReader implements DataReaderInterface
 
         foreach ($sortedData as $item) {
             // do not return more than limit items
-            if (count($data) === $this->limit) {
+            if ($this->limit !== null && count($data) === $this->limit) {
                 break;
             }
 
