@@ -105,7 +105,7 @@ class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
-    public function read(): iterable
+    public function read(): array
     {
         $filter = null;
         if ($this->filter !== null) {
@@ -159,7 +159,7 @@ class IterableDataReader implements DataReaderInterface
 
     public function count(): int
     {
-        return count((array) $this->read());
+        return count($this->read());
     }
 
     private function iterableToArray(iterable $iterable): array
