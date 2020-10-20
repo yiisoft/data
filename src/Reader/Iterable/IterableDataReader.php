@@ -65,7 +65,7 @@ class IterableDataReader implements DataReaderInterface
      * Sorts data items according to the given sort definition.
      * @param iterable $items the items to be sorted
      * @param Sort $sort the sort definition
-     * @return array the sorted items
+     * @return iterable the sorted items
      */
     private function sortItems(iterable $items, Sort $sort): iterable
     {
@@ -159,7 +159,7 @@ class IterableDataReader implements DataReaderInterface
 
     public function count(): int
     {
-        return count($this->read());
+        return count((array) $this->read());
     }
 
     private function iterableToArray(iterable $iterable): array
