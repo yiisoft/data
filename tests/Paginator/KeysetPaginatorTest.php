@@ -599,7 +599,7 @@ final class KeysetPaginatorTest extends Testcase
     private function createObjectDataReader(array $data): IterableDataReader
     {
         return new class($data) extends IterableDataReader {
-            public function read(): iterable
+            public function read(): array
             {
                 $data = [];
                 foreach ($this->data as $item) {
