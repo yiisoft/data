@@ -7,16 +7,19 @@ namespace Yiisoft\Data\Reader;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 
+/**
+ * @psalm-immutable
+ */
 interface FilterableDataInterface
 {
     /**
      * @param FilterInterface $filter
      * @return $this
      */
-    public function withFilter(FilterInterface $filter);
+    public function withFilter(FilterInterface $filter): self;
     /**
      * @param FilterProcessorInterface[] $filterProcessors
      * @return $this
      */
-    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors);
+    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self;
 }

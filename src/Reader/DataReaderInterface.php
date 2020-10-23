@@ -6,6 +6,12 @@ namespace Yiisoft\Data\Reader;
 
 use IteratorAggregate;
 
+/**
+ * @template TKey as array-key
+ * @template TValue
+ * @extend ReadableDataInterface<TKey, TValue>
+ * @extends IteratorAggregate<TKey, TValue>
+ */
 interface DataReaderInterface extends
     ReadableDataInterface,
     OffsetableDataInterface,
