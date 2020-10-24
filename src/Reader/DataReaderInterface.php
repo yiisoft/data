@@ -9,6 +9,7 @@ use IteratorAggregate;
 /**
  * @template TKey as array-key
  * @template TValue
+ *
  * @extend ReadableDataInterface<TKey, TValue>
  * @extends IteratorAggregate<TKey, TValue>
  */
