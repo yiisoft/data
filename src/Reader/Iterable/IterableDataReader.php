@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable;
 
+use Generator;
 use Traversable;
 use Yiisoft\Arrays\ArraySorter;
 use Yiisoft\Data\Reader\DataReaderInterface;
@@ -22,16 +23,30 @@ use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 use Yiisoft\Data\Reader\Sort;
 
+/**
+ * @psalm-immutable
+ *
+ * @template TKey as array-key
+ * @template TValue
+ *
+ * @template-implements DataReaderInterface<TKey, TValue>
+ */
 class IterableDataReader implements DataReaderInterface
 {
+    /**
+     * @psalm-var iterable<TKey, TValue>
+     */
     protected iterable $data;
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
-    private int $limit = self::DEFAULT_LIMIT;
+    private ?int $limit = null;
     private int $offset = 0;
 
     private array $filterProcessors = [];
 
+    /**
+     * psalm-param iterable<TKey, TValue> $data
+     */
     public function __construct(iterable $data)
     {
         $this->data = $data;
@@ -100,6 +115,9 @@ class IterableDataReader implements DataReaderInterface
 
     public function withLimit(int $limit): self
     {
+        if ($limit < 0) {
+            throw new \InvalidArgumentException('$limit must not be less than 0.');
+        }
         $new = clone $this;
         $new->limit = $limit;
         return $new;
@@ -109,6 +127,7 @@ class IterableDataReader implements DataReaderInterface
     {
         $filter = null;
         if ($this->filter !== null) {
+            /** @psalm-suppress ImpureMethodCall */
             $filter = $this->filter->toArray();
         }
 
@@ -121,7 +140,7 @@ class IterableDataReader implements DataReaderInterface
 
         foreach ($sortedData as $item) {
             // do not return more than limit items
-            if (count($data) === $this->limit) {
+            if ($this->limit !== null && count($data) === $this->limit) {
                 break;
             }
 
@@ -142,10 +161,14 @@ class IterableDataReader implements DataReaderInterface
 
     public function readOne()
     {
+        /** @psalm-suppress ImpureMethodCall */
         return $this->withLimit(1)->getIterator()->current();
     }
 
-    public function getIterator(): \Generator
+    /**
+     * @psalm-return Generator<TValue>
+     */
+    public function getIterator(): Generator
     {
         yield from $this->read();
     }
