@@ -20,6 +20,7 @@
         "yiisoft/arrays": "^3.0@dev"
     },
     "require-dev": {
+        "infection/infection": "^0.16.3",
         "phpunit/phpunit": "^9.3",
         "vimeo/psalm": "^4.0"
     },
@@ -39,7 +40,11 @@
         }
     },
     "scripts": {
-        "test": "phpunit --colors=always"
+        "test": [
+            "phpunit --colors=always",
+            "infection --no-progress",
+            "psalm"
+        ]
     },
     "config": {
         "sort-packages": true
