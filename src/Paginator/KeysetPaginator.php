@@ -59,7 +59,7 @@ class KeysetPaginator implements PaginatorInterface
     private ?array $readCache = null;
 
     /**
-     * psalm-param ReadableDataInterface<TKey, TValue> $data
+     * @psalm-param ReadableDataInterface<TKey, TValue> $dataReader
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
