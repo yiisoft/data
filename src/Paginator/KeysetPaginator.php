@@ -98,7 +98,7 @@ class KeysetPaginator implements PaginatorInterface
         }
 
         $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
-        $sort = $dataReader->getSort();
+        $sort = $this->dataReader->getSort();
 
         if ($this->isGoingToPreviousPage()) {
             $sort = $this->reverseSort($sort);
