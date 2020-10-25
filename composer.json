@@ -15,13 +15,14 @@
         "source": "https://github.com/yiisoft/data"
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": "^7.4|^8.0",
         "yiisoft/arrays": "^3.0@dev"
     },
     "require-dev": {
         "infection/infection": "^0.16.3",
-        "phpunit/phpunit": "^9.3",
+        "phpunit/phpunit": "^9.4",
         "vimeo/psalm": "^4.0"
     },
     "autoload": {
@@ -48,6 +49,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "prefer-stable": true
+    }
 }
