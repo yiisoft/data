@@ -24,12 +24,10 @@ use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 use Yiisoft\Data\Reader\Sort;
 
 /**
- * @psalm-immutable
- *
  * @template TKey as array-key
  * @template TValue
  *
- * @template-implements DataReaderInterface<TKey, TValue>
+ * @implements DataReaderInterface<TKey, TValue>
  */
 class IterableDataReader implements DataReaderInterface
 {
@@ -64,6 +62,9 @@ class IterableDataReader implements DataReaderInterface
         )->filterProcessors;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withSort(?Sort $sort): self
     {
         $new = clone $this;
@@ -106,6 +107,9 @@ class IterableDataReader implements DataReaderInterface
         return $processor->match($item, $arguments, $this->filterProcessors);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withFilter(?FilterInterface $filter): self
     {
         $new = clone $this;
@@ -113,6 +117,9 @@ class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withLimit(int $limit): self
     {
         if ($limit < 0) {
@@ -127,7 +134,6 @@ class IterableDataReader implements DataReaderInterface
     {
         $filter = null;
         if ($this->filter !== null) {
-            /** @psalm-suppress ImpureMethodCall */
             $filter = $this->filter->toArray();
         }
 
@@ -161,7 +167,6 @@ class IterableDataReader implements DataReaderInterface
 
     public function readOne()
     {
-        /** @psalm-suppress ImpureMethodCall */
         return $this->withLimit(1)->getIterator()->current();
     }
 
@@ -173,6 +178,9 @@ class IterableDataReader implements DataReaderInterface
         yield from $this->read();
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withOffset(int $offset): self
     {
         $new = clone $this;
@@ -190,12 +198,16 @@ class IterableDataReader implements DataReaderInterface
         return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self
     {
         $new = clone $this;
         $processors = [];
         foreach ($filterProcessors as $filterProcessor) {
             if ($filterProcessor instanceof IterableProcessorInterface) {
+                /** @psalm-suppress ImpureMethodCall */
                 $processors[$filterProcessor->getOperator()] = $filterProcessor;
             }
         }

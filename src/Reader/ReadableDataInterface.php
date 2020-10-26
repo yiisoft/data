@@ -9,7 +9,6 @@ use InvalidArgumentException;
 /**
  * @template TKey as array-key
  * @template TValue
- * @psalm-immutable
  */
 interface ReadableDataInterface
 {
@@ -17,6 +16,8 @@ interface ReadableDataInterface
      * @param int $limit A limit of 0 means "no limit".
      * @return $this
      * @throws InvalidArgumentException if limit less than 0.
+     *
+     * @psalm-mutation-free
      */
     public function withLimit(int $limit): self;
     /**

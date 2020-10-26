@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Reader;
 
 /**
  * Sort represents information relevant to sorting according to one or multiple item fields.
+ *
+ * @psalm-immutable
  */
 final class Sort
 {

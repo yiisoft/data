@@ -16,6 +16,29 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class KeysetPaginatorTest extends Testcase
 {
+    private const DEFAULT_DATASET = [
+        [
+            'id' => 1,
+            'name' => 'Codename Boris',
+        ],
+        [
+            'id' => 2,
+            'name' => 'Codename Doris',
+        ],
+        [
+            'id' => 3,
+            'name' => 'Agent K',
+        ],
+        [
+            'id' => 5,
+            'name' => 'Agent J',
+        ],
+        [
+            'id' => 6,
+            'name' => '007',
+        ],
+    ];
+
     public function testDataReaderWithoutFilterableInterface(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -68,6 +91,28 @@ final class KeysetPaginatorTest extends Testcase
         new KeysetPaginator($dataReader);
     }
 
+    public function onePageDataProvider(): array
+    {
+        return [
+            [[], 1],
+            [[], 2],
+            [[], 3],
+
+            [$this->getDataSet([0]), 1],
+
+            [$this->getDataSet([0]), 2],
+            [$this->getDataSet([0, 1]), 2],
+
+            [$this->getDataSet([0]), 3],
+            [$this->getDataSet([0, 1]), 3],
+            [$this->getDataSet([0, 1, 2]), 3],
+
+            [$this->getDataSet([0]), 4],
+            [$this->getDataSet([0, 1]), 4],
+            [$this->getDataSet([0, 1, 2]), 4],
+            [$this->getDataSet([0, 1, 2, 3]), 4],
+        ];
+    }
     /**
      * @dataProvider onePageDataProvider
      */
@@ -97,29 +142,6 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertEmpty($paginator->read());
     }
 
-    public function onePageDataProvider(): array
-    {
-        return [
-            [[], 1],
-            [[], 2],
-            [[], 3],
-
-            [array_slice($this->getDataSet(), 0, 1), 1],
-
-            [array_slice($this->getDataSet(), 0, 1), 2],
-            [array_slice($this->getDataSet(), 0, 2), 2],
-
-            [array_slice($this->getDataSet(), 0, 1), 3],
-            [array_slice($this->getDataSet(), 0, 2), 3],
-            [array_slice($this->getDataSet(), 0, 3), 3],
-
-            [array_slice($this->getDataSet(), 0, 1), 4],
-            [array_slice($this->getDataSet(), 0, 2), 4],
-            [array_slice($this->getDataSet(), 0, 3), 4],
-            [array_slice($this->getDataSet(), 0, 4), 4],
-        ];
-    }
-
     public function testReadFirstPage(): void
     {
         $sort = (new Sort(['id', 'name']))->withOrderString('id');
@@ -131,23 +153,13 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2);
 
-        $expected = [
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
-        ];
+        $expected = $this->getDataSet([0, 1]);
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken());
         $this->assertTrue($paginator->isOnFirstPage());
     }
-
 
     public function testReadObjectsWithPublicProperties(): void
     {
@@ -196,18 +208,9 @@ final class KeysetPaginatorTest extends Testcase
             ->withPageSize(2)
             ->withNextPageToken("2");
 
-        $expected = [
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Agent J',
-            ],
-        ];
+        $expected = $this->getDataSet([2, 3]);
 
-        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $this->assertSame($expected, $paginator->read());
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken());
     }
@@ -223,16 +226,7 @@ final class KeysetPaginatorTest extends Testcase
             ->withPageSize(2)
             ->withNextPageToken('Agent J');
 
-        $expected = [
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-        ];
+        $expected = $this->getDataSet([2, 0]);
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
         $last = end($expected);
@@ -250,17 +244,10 @@ final class KeysetPaginatorTest extends Testcase
             ->withPageSize(2)
             ->withPreviousPageToken('5');
 
-        $expected = [
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-        ];
-        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $expected = $this->getDataSet([1, 2]);
+        $read = array_values($this->iterableToArray($paginator->read()));
+
+        $this->assertSame($expected, $read);
         $first = reset($expected);
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken(), 'Last value fail!');
@@ -278,38 +265,24 @@ final class KeysetPaginatorTest extends Testcase
             ->withPageSize(2)
             ->withNextPageToken("2");
 
-        $expected = [
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Agent J',
-            ],
-        ];
-        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $expected = $this->getDataSet([2, 3]);
+        $read = array_values($this->iterableToArray($paginator->read()));
+
+        $this->assertSame($expected, $read);
         $first = reset($expected);
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken(), 'Last value fail!');
         $this->assertSame((string)$first['id'], $paginator->getPreviousPageToken(), 'First value fail!');
 
-        $expected = [
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
-        ];
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
             ->withPreviousPageToken($paginator->getPreviousPageToken());
 
-        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $expected = $this->getDataSet([0, 1]);
+        $read = array_values($this->iterableToArray($paginator->read()));
+
+        $this->assertSame($expected, $read);
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken(), 'Last value fail!');
         $this->assertNull($paginator->getPreviousPageToken(), 'First value fail!');
@@ -477,30 +450,16 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertCount(2, $paginator->read());
     }
 
-    private function getDataSet(): array
+    private function getDataSet(array $keys = null): array
     {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Agent J',
-            ],
-            [
-                'id' => 6,
-                'name' => '007',
-            ],
-        ];
+        if ($keys === null) {
+            return self::DEFAULT_DATASET;
+        }
+        $result = [];
+        foreach ($keys as $key) {
+            $result[] = self::DEFAULT_DATASET[$key];
+        }
+        return $result;
     }
 
     private function getNonSortableDataReader()

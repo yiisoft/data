@@ -6,5 +6,5 @@ namespace Yiisoft\Data\Writer;
 
 interface DataWriterInterface
 {
-    public function write(array $items): void;
+    public function write(iterable $items): void;
 }

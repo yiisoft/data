@@ -23,6 +23,11 @@ use Yiisoft\Data\Reader\SortableDataInterface;
  * - Cannot get to specific page, only "next" and "previous"
  *
  * @link https://use-the-index-luke.com/no-offset
+ *
+ * @template TKey as array-key
+ * @template TValue
+ *
+ * @implements PaginatorInterface<TKey, TValue>
  */
 class KeysetPaginator implements PaginatorInterface
 {
@@ -46,12 +51,16 @@ class KeysetPaginator implements PaginatorInterface
     private bool $hasNextPageItem = false;
 
     /**
-     * @var array|null Reader cache against repeated scans.
-     *
+     * Reader cache against repeated scans.
      * See more {@see __clone()} and {@see initializeInternal()}.
+     *
+     * @psalm-var array<TKey, TValue>|null
      */
     private ?array $readCache = null;
 
+    /**
+     * @psalm-param ReadableDataInterface<TKey, TValue> $dataReader
+     */
     public function __construct(ReadableDataInterface $dataReader)
     {
         if (!$dataReader instanceof FilterableDataInterface) {
@@ -84,12 +93,12 @@ class KeysetPaginator implements PaginatorInterface
      */
     public function read(): iterable
     {
-        if ($this->readCache) {
+        if ($this->readCache !== null) {
             return $this->readCache;
         }
 
         $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
-        $sort = $this->getSort();
+        $sort = $this->dataReader->getSort();
 
         if ($this->isGoingToPreviousPage()) {
             $sort = $this->reverseSort($sort);
@@ -106,9 +115,15 @@ class KeysetPaginator implements PaginatorInterface
             $data = $this->reverseData($data);
         }
 
+        /** @psalm-var array<TKey, TValue> $data */
         return $this->readCache = $data;
     }
 
+    /**
+     * @return $this
+     *
+     * @psalm-mutation-free
+     */
     public function withPreviousPageToken(?string $value): self
     {
         $new = clone $this;
@@ -117,6 +132,11 @@ class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
+    /**
+     * @return $this
+     *
+     * @psalm-mutation-free
+     */
     public function withNextPageToken(?string $value): self
     {
         $new = clone $this;
@@ -141,6 +161,11 @@ class KeysetPaginator implements PaginatorInterface
         return (string)$this->currentLastValue;
     }
 
+    /**
+     * @return $this
+     *
+     * @psalm-mutation-free
+     */
     public function withPageSize(int $pageSize): self
     {
         if ($pageSize < 1) {
@@ -193,8 +218,8 @@ class KeysetPaginator implements PaginatorInterface
             return;
         }
         $cache = [];
-        foreach ($this->read() as $value) {
-            $cache[] = $value;
+        foreach ($this->read() as $key => $value) {
+            $cache[$key] = $value;
         }
         $this->readCache = $cache;
     }
@@ -202,11 +227,6 @@ class KeysetPaginator implements PaginatorInterface
     public function isRequired(): bool
     {
         return !$this->isOnFirstPage() || !$this->isOnLastPage();
-    }
-
-    private function getSort(): Sort
-    {
-        return $this->dataReader->getSort();
     }
 
     private function isGoingToPreviousPage(): bool
@@ -262,12 +282,16 @@ class KeysetPaginator implements PaginatorInterface
         ];
     }
 
+    /**
+     * @psalm-param ReadableDataInterface<TKey, TValue> $dataReader
+     * @psalm-return array<TKey, TValue>
+     */
     private function readData(ReadableDataInterface $dataReader, Sort $sort): array
     {
         $data = [];
         [$field] = $this->getFieldAndSortingFromSort($sort);
 
-        foreach ($dataReader->read() as $item) {
+        foreach ($dataReader->read() as $key => $item) {
             if ($this->currentFirstValue === null) {
                 $this->currentFirstValue = $this->getValueFromItem($item, $field);
             }
@@ -275,18 +299,22 @@ class KeysetPaginator implements PaginatorInterface
                 $this->hasNextPageItem = true;
             } else {
                 $this->currentLastValue = $this->getValueFromItem($item, $field);
-                $data[] = $item;
+                $data[$key] = $item;
             }
         }
 
         return $data;
     }
 
+    /**
+     * @psalm-param array<TKey, TValue>
+     * @psalm-return array<TKey, TValue>
+     */
     private function reverseData(array $data): array
     {
         [$this->currentFirstValue, $this->currentLastValue] = [$this->currentLastValue, $this->currentFirstValue];
         [$this->hasPreviousPageItem, $this->hasNextPageItem] = [$this->hasNextPageItem, $this->hasPreviousPageItem];
-        return array_reverse($data);
+        return array_reverse($data, true);
     }
 
     private function previousPageExist(ReadableDataInterface $dataReader, Sort $sort): bool

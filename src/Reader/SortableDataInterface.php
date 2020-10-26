@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
-/**
- * @psalm-immutable
- */
 interface SortableDataInterface
 {
     /**
      * @param Sort|null $sorting
      * @return $this
+     *
+     * @psalm-mutation-free
      */
     public function withSort(?Sort $sorting): self;
 

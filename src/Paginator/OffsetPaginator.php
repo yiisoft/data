@@ -8,14 +8,26 @@ use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 
+/**
+ * @template TKey as array-key
+ * @template TValue
+ *
+ * @implements PaginatorInterface<TKey, TValue>
+ */
 final class OffsetPaginator implements PaginatorInterface
 {
     /** @var OffsetableDataInterface|ReadableDataInterface|CountableDataInterface */
     private ReadableDataInterface $dataReader;
     private int $currentPage = 1;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
+    /**
+     * @psalm-var ReadableDataInterface<TKey, TValue>
+     */
     private ?ReadableDataInterface $cachedReader = null;
 
+    /**
+     * psalm-param ReadableDataInterface<TKey, TValue> $data
+     */
     public function __construct(ReadableDataInterface $dataReader)
     {
         if (!$dataReader instanceof OffsetableDataInterface) {
@@ -49,6 +61,11 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->currentPage;
     }
 
+    /**
+     * @return $this
+     *
+     * @psalm-mutation-free
+     */
     public function withCurrentPage(int $page): self
     {
         if ($page < 1) {
@@ -60,6 +77,11 @@ final class OffsetPaginator implements PaginatorInterface
         return $new;
     }
 
+    /**
+     * @return $this
+     *
+     * @psalm-mutation-free
+     */
     public function withPageSize(int $size): self
     {
         if ($size < 1) {
@@ -94,6 +116,9 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->pageSize * ($this->currentPage - 1);
     }
 
+    /**
+     * @psalm-return \Generator<TKey, TValue, mixed, void>
+     */
     public function read(): iterable
     {
         if ($this->cachedReader !== null) {
@@ -118,11 +143,21 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->isOnFirstPage() ? null : (string) ($this->currentPage - 1);
     }
 
+    /**
+     * @return $this
+     *
+     * @psalm-mutation-free
+     */
     public function withNextPageToken(?string $token): self
     {
         return $this->withCurrentPage((int)$token);
     }
 
+    /**
+     * @return $this
+     *
+     * @psalm-mutation-free
+     */
     public function withPreviousPageToken(?string $token): self
     {
         return $this->withCurrentPage((int)$token);
