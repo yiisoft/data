@@ -21,7 +21,7 @@
         "yiisoft/arrays": "^3.0@dev"
     },
     "require-dev": {
-        "infection/infection": "^0.16.3",
+        "infection/infection": "^0.16.3 || ^0.18.0",
         "phpunit/phpunit": "^9.4",
         "vimeo/psalm": "^4.0"
     },
