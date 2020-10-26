@@ -26,7 +26,7 @@ final class OffsetPaginator implements PaginatorInterface
     private ?ReadableDataInterface $cachedReader = null;
 
     /**
-     * psalm-param ReadableDataInterface<TKey, TValue> $data
+     * @psalm-param ReadableDataInterface<TKey, TValue> $dataReader
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
