@@ -42,9 +42,7 @@
     },
     "scripts": {
         "test": [
-            "phpunit --colors=always",
-            "infection --no-progress",
-            "psalm"
+            "phpunit --colors --no-interaction"
         ]
     },
     "config": {
