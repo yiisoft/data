@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader;
 
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Iterable\Processor\All;
+use Yiisoft\Data\Reader\Iterable\Processor\Equals;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThan;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Processor\In;
@@ -13,10 +15,8 @@ use Yiisoft\Data\Reader\Iterable\Processor\LessThan;
 use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Processor\Like;
 use Yiisoft\Data\Reader\Iterable\Processor\Not;
-use Yiisoft\Data\Tests\TestCase;
-use Yiisoft\Data\Reader\Iterable\Processor\Equals;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Tests\TestCase;
 
 class FilterProcessorTest extends TestCase
 {
@@ -68,7 +68,7 @@ class FilterProcessorTest extends TestCase
             [
                 'id' => 2,
                 'name' => 'Codename Doris',
-            ]
+            ],
         ];
 
         $this->assertSame($expected, $this->iterableToArray($dataReader->read()));

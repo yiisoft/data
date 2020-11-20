@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Paginator;
 
 use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -113,6 +113,7 @@ final class KeysetPaginatorTest extends Testcase
             [$this->getDataSet([0, 1, 2, 3]), 4],
         ];
     }
+
     /**
      * @dataProvider onePageDataProvider
      */
@@ -167,7 +168,7 @@ final class KeysetPaginatorTest extends Testcase
         $data = [
             $this->createObjectWithPublicProperties(1, 'Codename Boris 1'),
             $this->createObjectWithPublicProperties(2, 'Codename Boris 2'),
-            $this->createObjectWithPublicProperties(3, 'Codename Boris 3')
+            $this->createObjectWithPublicProperties(3, 'Codename Boris 3'),
         ];
 
         $dataReader = (new IterableDataReader($data))->withSort($sort);
@@ -185,7 +186,7 @@ final class KeysetPaginatorTest extends Testcase
         $data = [
             $this->createObjectWithGetters(1, 'Codename Boris 1'),
             $this->createObjectWithGetters(2, 'Codename Boris 2'),
-            $this->createObjectWithGetters(3, 'Codename Boris 3')
+            $this->createObjectWithGetters(3, 'Codename Boris 3'),
         ];
 
         $dataReader = $this->createObjectDataReader($data)->withSort($sort);
@@ -206,7 +207,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
-            ->withNextPageToken("2");
+            ->withNextPageToken('2');
 
         $expected = $this->getDataSet([2, 3]);
 
@@ -263,7 +264,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
-            ->withNextPageToken("2");
+            ->withNextPageToken('2');
 
         $expected = $this->getDataSet([2, 3]);
         $read = array_values($this->iterableToArray($paginator->read()));

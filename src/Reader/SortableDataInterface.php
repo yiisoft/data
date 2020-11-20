@@ -8,6 +8,7 @@ interface SortableDataInterface
 {
     /**
      * @param Sort|null $sorting
+     *
      * @return $this
      *
      * @psalm-mutation-free

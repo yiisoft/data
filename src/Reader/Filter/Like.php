@@ -15,7 +15,6 @@ final class Like implements FilterInterface
         $this->value = $value;
     }
 
-
     public function toArray(): array
     {
         return [self::getOperator(), $this->field, $this->value];

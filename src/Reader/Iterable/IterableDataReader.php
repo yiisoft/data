@@ -9,18 +9,18 @@ use Traversable;
 use Yiisoft\Arrays\ArraySorter;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
+use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\All;
 use Yiisoft\Data\Reader\Iterable\Processor\Any;
 use Yiisoft\Data\Reader\Iterable\Processor\Equals;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThan;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Processor\In;
+use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\LessThan;
 use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Processor\Like;
 use Yiisoft\Data\Reader\Iterable\Processor\Not;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
-use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 use Yiisoft\Data\Reader\Sort;
 
 /**
@@ -79,8 +79,10 @@ class IterableDataReader implements DataReaderInterface
 
     /**
      * Sorts data items according to the given sort definition.
+     *
      * @param iterable $items the items to be sorted
      * @param Sort $sort the sort definition
+     *
      * @return iterable the sorted items
      */
     private function sortItems(iterable $items, Sort $sort): iterable
