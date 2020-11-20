@@ -113,7 +113,7 @@ final class IterableDataReaderTest extends TestCase
     {
         $sorting = new Sort([
             'id',
-            'name'
+            'name',
         ]);
 
         $sorting = $sorting->withOrder(['name' => 'asc']);
@@ -390,7 +390,7 @@ final class IterableDataReaderTest extends TestCase
         $reader = new IterableDataReader(new \ArrayIterator($this->getDataSet()));
         $sorting = new Sort([
             'id',
-            'name'
+            'name',
         ]);
         $sorting = $sorting->withOrder(['name' => 'asc']);
         $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());
@@ -406,7 +406,7 @@ final class IterableDataReaderTest extends TestCase
         $reader = new IterableDataReader($this->getDataSetAsGenerator());
         $sorting = new Sort([
             'id',
-            'name'
+            'name',
         ]);
         $sorting = $sorting->withOrder(['name' => 'asc']);
         $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());

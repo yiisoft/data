@@ -6,8 +6,8 @@ namespace Yiisoft\Data\Tests\Reader;
 
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\In;
@@ -62,7 +62,7 @@ final class FilterTest extends TestCase
                 ['or', [
                     ['=', 'test', 1],
                     ['=', 'test', 2],
-                ]]
+                ]],
             ],
             'All' => [
                 new All(
@@ -72,7 +72,7 @@ final class FilterTest extends TestCase
                 ['and', [
                     ['<', 'test', 3],
                     ['>', 'test', 2],
-                ]]
+                ]],
             ],
             'NestedGroup' => [
                 new All(
@@ -91,10 +91,10 @@ final class FilterTest extends TestCase
                             [
                                 ['=', 'test', 1],
                                 ['=', 'test', 2],
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'withFiltersArrayAll' => [
                 (new All())->withFiltersArray([
@@ -105,7 +105,7 @@ final class FilterTest extends TestCase
                     [
                         ['<', 'test', 3],
                     ],
-                ]
+                ],
             ],
             'withFiltersArrayAny' => [
                 (new Any())->withFiltersArray([
@@ -127,7 +127,7 @@ final class FilterTest extends TestCase
                         'and',
                         [
                             ['>', 'test2', 99],
-                        ]
+                        ],
                     ],
                 ]),
                 [
@@ -149,7 +149,7 @@ final class FilterTest extends TestCase
                     'and',
                     [],
                 ],
-            ]
+            ],
         ];
     }
 

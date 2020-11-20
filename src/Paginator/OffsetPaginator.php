@@ -16,7 +16,7 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
  */
 final class OffsetPaginator implements PaginatorInterface
 {
-    /** @var OffsetableDataInterface|ReadableDataInterface|CountableDataInterface */
+    /** @var CountableDataInterface|OffsetableDataInterface|ReadableDataInterface */
     private ReadableDataInterface $dataReader;
     private int $currentPage = 1;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
@@ -128,7 +128,7 @@ final class OffsetPaginator implements PaginatorInterface
         if ($this->currentPage > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found');
         }
-        /** @var OffsetableDataInterface|ReadableDataInterface|CountableDataInterface $reader */
+        /** @var CountableDataInterface|OffsetableDataInterface|ReadableDataInterface $reader */
         $this->cachedReader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
         yield from $this->cachedReader->read();
     }

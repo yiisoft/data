@@ -81,6 +81,7 @@ final class Sort
      * or the field name prefixed with `-` for descending.
      *
      * @param string $orderString
+     *
      * @return $this
      */
     public function withOrderString(string $orderString): self
@@ -99,6 +100,7 @@ final class Sort
 
     /**
      * @param array $order field names to order by as keys, direction as values
+     *
      * @return $this
      */
     public function withOrder(array $order): self

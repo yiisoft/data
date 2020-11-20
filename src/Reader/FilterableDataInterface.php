@@ -11,13 +11,16 @@ interface FilterableDataInterface
 {
     /**
      * @param FilterInterface $filter
+     *
      * @return $this
      *
      * @psalm-mutation-free
      */
     public function withFilter(FilterInterface $filter): self;
+
     /**
      * @param FilterProcessorInterface[] $filterProcessors
+     *
      * @return $this
      *
      * @psalm-mutation-free

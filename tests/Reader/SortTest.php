@@ -124,7 +124,7 @@ final class SortTest extends TestCase
                 'desc' => ['bee' => SORT_DESC],
                 'default' => 'asc',
                 'label' => 'B',
-            ]
+            ],
         ]))
             ->withOrder([
                 'a' => 'desc',

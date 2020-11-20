@@ -14,16 +14,20 @@ interface ReadableDataInterface
 {
     /**
      * @param int $limit A limit of 0 means "no limit".
-     * @return $this
+     *
      * @throws InvalidArgumentException if limit less than 0.
+     *
+     * @return $this
      *
      * @psalm-mutation-free
      */
     public function withLimit(int $limit): self;
+
     /**
      * @psalm-return iterable<TKey, TValue>
      */
     public function read(): iterable;
+
     /**
      * @psalm-return TValue
      */

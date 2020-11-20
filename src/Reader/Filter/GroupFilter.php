@@ -44,6 +44,7 @@ abstract class GroupFilter implements FilterInterface
      * ~~~
      *
      * @param array $filtersArray
+     *
      * @return $this
      */
     public function withFiltersArray(array $filtersArray)

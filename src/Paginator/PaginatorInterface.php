@@ -16,32 +16,42 @@ interface PaginatorInterface
      * @psalm-return iterable<TKey, TValue>
      */
     public function read(): iterable;
+
     /**
      * Check that Paginator has more than one page
      */
     public function isRequired(): bool;
+
     public function isOnLastPage(): bool;
+
     public function isOnFirstPage(): bool;
+
     public function getNextPageToken(): ?string;
+
     public function getPreviousPageToken(): ?string;
+
     /**
      * @return $this
      *
      * @psalm-mutation-free
      */
     public function withNextPageToken(?string $token): self;
+
     /**
      * @return $this
      *
      * @psalm-mutation-free
      */
     public function withPreviousPageToken(?string $token): self;
+
     /**
      * @return $this
      *
      * @psalm-mutation-free
      */
     public function withPageSize(int $limit): self;
+
     public function getPageSize(): int;
+
     public function getCurrentPageSize(): int;
 }

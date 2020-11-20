@@ -8,6 +8,7 @@ interface OffsetableDataInterface
 {
     /**
      * @param int $offset
+     *
      * @return $this
      *
      * @psalm-mutation-free

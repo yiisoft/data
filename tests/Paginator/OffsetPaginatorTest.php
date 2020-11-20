@@ -52,10 +52,12 @@ final class OffsetPaginatorTest extends TestCase
             {
                 return [];
             }
+
             public function readOne()
             {
                 return null;
             }
+
             public function count(): int
             {
                 return 0;
@@ -80,18 +82,22 @@ final class OffsetPaginatorTest extends TestCase
             {
                 // do nothing
             }
+
             public function read(): iterable
             {
                 return [];
             }
+
             public function readOne()
             {
                 return null;
             }
+
             public function count(): int
             {
                 return 0;
             }
+
             public function withOffset(int $offset): self
             {
                 // do nothing
