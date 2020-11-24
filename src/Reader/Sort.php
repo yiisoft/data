@@ -39,6 +39,11 @@ final class Sort
     private array $config;
 
     /**
+     * @var array this field for handling default sort if order not set
+     */
+    private array $defaultOrder = [];
+
+    /**
      * @var array field names to order by as keys, direction as values
      */
     private array $currentOrder = [];
@@ -75,13 +80,23 @@ final class Sort
     }
 
     /**
+     * @param array $defaultOrder field name for default sort if order not set
+     * @return $this
+     */
+    public function withDefaultOrder(array $defaultOrder): self
+    {
+        $new = clone $this;
+        $new->defaultOrder = $defaultOrder;
+        return $new;
+    }
+
+    /**
      * Change sorting order based on order string.
      *
      * The format must be the field name only for ascending
      * or the field name prefixed with `-` for descending.
      *
      * @param string $orderString
-     *
      * @return $this
      */
     public function withOrderString(string $orderString): self
@@ -100,7 +115,6 @@ final class Sort
 
     /**
      * @param array $order field names to order by as keys, direction as values
-     *
      * @return $this
      */
     public function withOrder(array $order): self
@@ -132,6 +146,15 @@ final class Sort
                 $criteria = array_merge($criteria, $this->config[$field][$direction]);
             }
         }
+
+        if(empty($criteria)) {
+            foreach ($this->defaultOrder as $field => $direction) {
+                if (isset($this->config[$field][$direction])) {
+                    $criteria = array_merge($criteria, $this->config[$field][$direction]);
+                }
+            }
+        }
+
         return $criteria;
     }
 }
