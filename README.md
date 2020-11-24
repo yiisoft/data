@@ -199,7 +199,7 @@ In sorting constructor you set which fields should be order-able and, optionally
 The order to apply is specified via `withOrder()` where you supply an array with keys correspond to field names
 and values correspond to order (`asc` or `desc`). Alternatively `withOrderString()` can be used. In this case
 ordering is represented as a single string containing comma separate field names. If name is prefixed by `-`, ordering
-direction is set to `desc`. 
+direction is set to `desc`. You can set default sort if you are not set order statement using `withDefaultOrder()`. 
 
 ### Skipping some items
 
