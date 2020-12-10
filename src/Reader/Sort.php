@@ -12,10 +12,13 @@ use function is_string;
 /**
  * Sort represents information relevant to sorting according to one or multiple item fields.
  *
+ * @template TConfigItem as array{asc: mixed, desc: mixed, default: string, label: string}
+ * @template TConfig as array<string, TConfigItem>
  * @psalm-immutable
  */
 final class Sort
 {
+    /** @var TConfig */
     private array $config;
 
     /**
@@ -24,7 +27,7 @@ final class Sort
     private array $currentOrder = [];
 
     /**
-     * @var array $config A list of sortable fields along with their
+     * @var array<int, string>|array<string, array<string, int|string>> $config A list of sortable fields along with their
      * configuration.
      *
      * ```php
@@ -65,10 +68,7 @@ final class Sort
     {
         $normalizedConfig = [];
         foreach ($config as $fieldName => $fieldConfig) {
-            if (
-                !(is_int($fieldName) && is_string($fieldConfig))
-                && !(is_string($fieldName) && is_array($fieldConfig))
-            ) {
+            if (!(is_int($fieldName) && is_string($fieldConfig) || is_string($fieldName) && is_array($fieldConfig))) {
                 throw new \InvalidArgumentException('Invalid config format.');
             }
 
@@ -77,6 +77,7 @@ final class Sort
                 $fieldConfig = [];
             }
 
+            /** @var TConfig $fieldConfig */
             $normalizedConfig[$fieldName] = array_merge([
                 'asc' => [$fieldName => SORT_ASC],
                 'desc' => [$fieldName => SORT_DESC],
@@ -85,6 +86,7 @@ final class Sort
             ], $fieldConfig);
         }
 
+        /** @var TConfig $normalizedConfig */
         $this->config = $normalizedConfig;
     }
 
@@ -153,13 +155,13 @@ final class Sort
                 continue;
             }
 
-            $criteria = array_merge($criteria, $config[$field][$direction]);
+            $criteria += $config[$field][$direction];
 
             unset($config[$field]);
         }
 
         foreach ($config as $field => $fieldConfig) {
-            $criteria = array_merge($criteria, $fieldConfig[$fieldConfig['default']]);
+            $criteria += $fieldConfig[$fieldConfig['default']];
         }
 
         return $criteria;
