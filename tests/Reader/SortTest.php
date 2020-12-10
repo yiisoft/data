@@ -135,4 +135,36 @@ final class SortTest extends TestCase
             'bee' => SORT_ASC,
         ], $sort->getCriteria());
     }
+
+    public function testGetCriteriaDefaults(): void
+    {
+        $sort = (new Sort([
+            'b' => [
+                'asc' => ['bee' => SORT_ASC],
+                'desc' => ['bee' => SORT_DESC],
+                'default' => 'desc',
+                'label' => 'B',
+            ],
+        ]))
+            ->withOrder([]);
+
+        $this->assertSame([
+            'bee' => SORT_DESC,
+        ], $sort->getCriteria());
+    }
+
+    public function testGetCriteriaDefaultsWhenConfigIsNotComplete(): void
+    {
+        $sort = (new Sort([
+            'b' => [
+                'asc' => ['bee' => SORT_ASC],
+                'desc' => ['bee' => SORT_DESC],
+            ],
+        ]))
+            ->withOrder([]);
+
+        $this->assertSame([
+            'bee' => SORT_ASC,
+        ], $sort->getCriteria());
+    }
 }
