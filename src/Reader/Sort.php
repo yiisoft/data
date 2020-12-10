@@ -12,13 +12,14 @@ use function is_string;
 /**
  * Sort represents information relevant to sorting according to one or multiple item fields.
  *
- * @template TConfigItem as array{asc: mixed, desc: mixed, default: string, label: string}
+ * @template TSortFieldItem as array<string, int>
+ * @template TConfigItem as array{asc: TSortFieldItem, desc: TSortFieldItem, default: string, label: string}
  * @template TConfig as array<string, TConfigItem>
  * @psalm-immutable
  */
 final class Sort
 {
-    /** @var TConfig */
+    /** @psalm-var TConfig */
     private array $config;
 
     /**
@@ -27,7 +28,7 @@ final class Sort
     private array $currentOrder = [];
 
     /**
-     * @var array<int, string>|array<string, array<string, int|string>> $config A list of sortable fields along with their
+     * @var array $config A list of sortable fields along with their
      * configuration.
      *
      * ```php
@@ -63,6 +64,7 @@ final class Sort
      * - `desc` - criteria for descending sorting.
      * - `default` - default sorting. Could be either `asc` or `desc`. If not specified, `asc` is used.
      * - `label` -
+     * @psalm-var array<int, string>|array<string, array<string, int|string>> $config
      */
     public function __construct(array $config)
     {
@@ -77,7 +79,7 @@ final class Sort
                 $fieldConfig = [];
             }
 
-            /** @var TConfig $fieldConfig */
+            /** @psalm-var TConfig $fieldConfig */
             $normalizedConfig[$fieldName] = array_merge([
                 'asc' => [$fieldName => SORT_ASC],
                 'desc' => [$fieldName => SORT_DESC],
@@ -86,7 +88,7 @@ final class Sort
             ], $fieldConfig);
         }
 
-        /** @var TConfig $normalizedConfig */
+        /** @psalm-var TConfig $normalizedConfig */
         $this->config = $normalizedConfig;
     }
 
