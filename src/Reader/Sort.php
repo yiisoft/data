@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
+use function array_key_exists;
 use function is_array;
 use function is_int;
 use function is_string;
@@ -145,9 +146,20 @@ final class Sort
         $criteria = [];
         $order = $this->getOrder();
 
-        foreach ($this->config as $field => $config) {
-            $direction = $order[$field] ?? $config['default'];
-            $criteria = array_merge($criteria, $config[$direction]);
+        $config = $this->config;
+
+        foreach ($order as $field => $direction) {
+            if (!array_key_exists($field, $config)) {
+                continue;
+            }
+
+            $criteria = array_merge($criteria, $config[$field][$direction]);
+
+            unset($config[$field]);
+        }
+
+        foreach ($config as $field => $fieldConfig) {
+            $criteria = array_merge($criteria, $fieldConfig[$fieldConfig['default']]);
         }
 
         return $criteria;
