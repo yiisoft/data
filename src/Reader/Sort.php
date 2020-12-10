@@ -4,14 +4,33 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
+use function array_key_exists;
+use function is_array;
+use function is_int;
+use function is_string;
+
 /**
  * Sort represents information relevant to sorting according to one or multiple item fields.
  *
+ * @template TSortFieldItem as array<string, int>
+ * @template TConfigItem as array{asc: TSortFieldItem, desc: TSortFieldItem, default: string, label: string}
+ * @template TConfig as array<string, TConfigItem>
  * @psalm-immutable
  */
 final class Sort
 {
+    /** @psalm-var TConfig */
+    private array $config;
+
     /**
+     * @var array Field names to order by as keys, direction as values.
+     */
+    private array $currentOrder = [];
+
+    /**
+     * @var array $config A list of sortable fields along with their
+     * configuration.
+     *
      * ```php
      * [
      *     'age', // means will be sorted as is
@@ -35,23 +54,24 @@ final class Sort
      *     'label' => Inflector::camel2words('age'),
      * ]
      * ```
+     *
+     * The name field is a virtual field name that consists of two real fields, `first_name` amd `last_name`. Virtual
+     * field name is used in order string or order array while real fields are used in final sorting criteria.
+     *
+     * Each configuration has the following options:
+     *
+     * - `asc` - criteria for ascending sorting.
+     * - `desc` - criteria for descending sorting.
+     * - `default` - default sorting. Could be either `asc` or `desc`. If not specified, `asc` is used.
+     * - `label` -
+     * @psalm-var array<int, string>|array<string, array<string, int|string>> $config
      */
-    private array $config;
-
-    /**
-     * @var array field names to order by as keys, direction as values
-     */
-    private array $currentOrder = [];
-
     public function __construct(array $config)
     {
         $normalizedConfig = [];
         foreach ($config as $fieldName => $fieldConfig) {
-            if (
-                !(is_int($fieldName) && is_string($fieldConfig))
-                && !(is_string($fieldName) && is_array($fieldConfig))
-            ) {
-                throw new \InvalidArgumentException('Invalid config format');
+            if (!(is_int($fieldName) && is_string($fieldConfig) || is_string($fieldName) && is_array($fieldConfig))) {
+                throw new \InvalidArgumentException('Invalid config format.');
             }
 
             if (is_string($fieldConfig)) {
@@ -59,18 +79,16 @@ final class Sort
                 $fieldConfig = [];
             }
 
-            if (!isset($fieldConfig['asc'], $fieldConfig['desc'])) {
-                $normalizedConfig[$fieldName] = array_merge([
-                    'asc' => [$fieldName => SORT_ASC],
-                    'desc' => [$fieldName => SORT_DESC],
-                    'default' => 'asc',
-                    'label' => $fieldName,
-                ], $fieldConfig);
-            } else {
-                $normalizedConfig[$fieldName] = $fieldConfig;
-            }
+            /** @psalm-var TConfig $fieldConfig */
+            $normalizedConfig[$fieldName] = array_merge([
+                'asc' => [$fieldName => SORT_ASC],
+                'desc' => [$fieldName => SORT_DESC],
+                'default' => 'asc',
+                'label' => $fieldName,
+            ], $fieldConfig);
         }
 
+        /** @psalm-var TConfig $normalizedConfig */
         $this->config = $normalizedConfig;
     }
 
@@ -99,7 +117,7 @@ final class Sort
     }
 
     /**
-     * @param array $order field names to order by as keys, direction as values
+     * @param array $order Field names to order by as keys, direction as values.
      *
      * @return $this
      */
@@ -124,14 +142,30 @@ final class Sort
         return implode(',', $parts);
     }
 
+    /**
+     * Final sorting criteria to apply.
+     */
     public function getCriteria(): array
     {
         $criteria = [];
-        foreach ($this->getOrder() as $field => $direction) {
-            if (isset($this->config[$field][$direction])) {
-                $criteria = array_merge($criteria, $this->config[$field][$direction]);
+        $order = $this->getOrder();
+
+        $config = $this->config;
+
+        foreach ($order as $field => $direction) {
+            if (!array_key_exists($field, $config)) {
+                continue;
             }
+
+            $criteria += $config[$field][$direction];
+
+            unset($config[$field]);
         }
+
+        foreach ($config as $field => $fieldConfig) {
+            $criteria += $fieldConfig[$fieldConfig['default']];
+        }
+
         return $criteria;
     }
 }
