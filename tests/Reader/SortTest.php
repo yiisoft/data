@@ -157,7 +157,7 @@ final class SortTest extends TestCase
     {
         $sort = (new Sort([
             'b',
-            'c'
+            'c',
         ]))
             ->withOrder(['c' => 'desc']);
 
