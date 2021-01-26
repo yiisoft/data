@@ -71,7 +71,10 @@ final class Sort
         $this->modeOnly = $anyFields;
         $normalizedConfig = [];
         foreach ($config as $fieldName => $fieldConfig) {
-            if (!(is_int($fieldName) && is_string($fieldConfig)) && !(is_string($fieldName) && is_array($fieldConfig))) {
+            if (
+                !(is_int($fieldName) && is_string($fieldConfig))
+                && !(is_string($fieldName) && is_array($fieldConfig))
+            ) {
                 throw new \InvalidArgumentException('Invalid config format.');
             }
 
