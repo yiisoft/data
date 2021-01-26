@@ -13,7 +13,7 @@ use function is_string;
  * Sort represents information relevant to sorting according to one or multiple item fields.
  *
  * @template TSortFieldItem as array<string, int>
- * @template TConfigItem as array{asc: TSortFieldItem, desc: TSortFieldItem, default: string, label: string}
+ * @template TConfigItem as array{asc: TSortFieldItem, desc: TSortFieldItem, default: string}
  * @template TConfig as array<string, TConfigItem>
  * @psalm-immutable
  */
@@ -38,7 +38,6 @@ final class Sort
      *         'asc' => ['first_name' => SORT_ASC, 'last_name' => SORT_ASC],
      *         'desc' => ['first_name' => SORT_DESC, 'last_name' => SORT_DESC],
      *         'default' => 'desc',
-     *         'label' => 'Name',
      *     ],
      * ]
      * ```
@@ -51,7 +50,6 @@ final class Sort
      *     'asc' => ['age' => SORT_ASC],
      *     'desc' => ['age' => SORT_DESC],
      *     'default' => 'asc',
-     *     'label' => Inflector::camel2words('age'),
      * ]
      * ```
      *
@@ -63,7 +61,6 @@ final class Sort
      * - `asc` - criteria for ascending sorting.
      * - `desc` - criteria for descending sorting.
      * - `default` - default sorting. Could be either `asc` or `desc`. If not specified, `asc` is used.
-     * - `label` -
      * @psalm-var array<int, string>|array<string, array<string, int|string>> $config
      */
     public function __construct(array $config)
@@ -84,7 +81,6 @@ final class Sort
                 'asc' => [$fieldName => SORT_ASC],
                 'desc' => [$fieldName => SORT_DESC],
                 'default' => 'asc',
-                'label' => $fieldName,
             ], $fieldConfig);
         }
 
