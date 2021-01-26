@@ -181,7 +181,7 @@ In order to sort data in a data provider implementing `SortableDataInterface` yo
 `sortFilter()` method:
 
 ```php
-$sorting = new Sort([
+$sorting = Sort::only([
     'id',
     'name'
 ]);
@@ -279,7 +279,7 @@ Disadvantages:
 Usage is the following:
 
 ```php
-$sort = (new Sort(['id', 'name']))->withOrderString('id');
+$sort = Sort::only(['id', 'name'])->withOrderString('id');
 
 $dataReader = (new MyDataReader(...))
     ->withSort($sort);
