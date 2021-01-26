@@ -36,7 +36,6 @@ final class SortTest extends TestCase
                 'asc' => ['first_name' => SORT_ASC, 'last_name' => SORT_ASC],
                 'desc' => ['first_name' => SORT_DESC, 'last_name' => SORT_DESC],
                 'default' => 'desc',
-                'label' => 'Name',
             ],
         ]);
 
@@ -49,7 +48,6 @@ final class SortTest extends TestCase
                     'a' => SORT_DESC,
                 ],
                 'default' => 'asc',
-                'label' => 'a',
             ],
             'b' => [
                 'asc' => [
@@ -59,13 +57,11 @@ final class SortTest extends TestCase
                     'b' => SORT_DESC,
                 ],
                 'default' => 'desc',
-                'label' => 'b',
             ],
             'name' => [
                 'asc' => ['first_name' => SORT_ASC, 'last_name' => SORT_ASC],
                 'desc' => ['first_name' => SORT_DESC, 'last_name' => SORT_DESC],
                 'default' => 'desc',
-                'label' => 'Name',
             ],
         ];
         $this->assertSame($expected, $this->getInaccessibleProperty($sort, 'config'));
@@ -123,7 +119,6 @@ final class SortTest extends TestCase
                 'asc' => ['bee' => SORT_ASC],
                 'desc' => ['bee' => SORT_DESC],
                 'default' => 'asc',
-                'label' => 'B',
             ],
         ]))
             ->withOrder([
@@ -143,7 +138,6 @@ final class SortTest extends TestCase
                 'asc' => ['bee' => SORT_ASC],
                 'desc' => ['bee' => SORT_DESC],
                 'default' => 'desc',
-                'label' => 'B',
             ],
         ]))
             ->withOrder([]);
