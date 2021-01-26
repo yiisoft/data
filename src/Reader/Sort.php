@@ -70,22 +70,22 @@ final class Sort
     {
         $this->modeOnly = $anyFields;
         $normalizedConfig = [];
-        foreach ($config as $fldName => $fldConfig) {
-            if (!(is_int($fldName) && is_string($fldConfig)) && !(is_string($fldName) && is_array($fldConfig))) {
+        foreach ($config as $fieldName => $fieldConfig) {
+            if (!(is_int($fieldName) && is_string($fieldConfig)) && !(is_string($fieldName) && is_array($fieldConfig))) {
                 throw new \InvalidArgumentException('Invalid config format.');
             }
 
-            if (is_string($fldConfig)) {
-                $fldName = $fldConfig;
-                $fldConfig = [];
+            if (is_string($fieldConfig)) {
+                $fieldName = $fieldConfig;
+                $fieldConfig = [];
             }
 
-            /** @psalm-var TConfig $fldConfig */
-            $normalizedConfig[$fldName] = array_merge([
-                'asc' => [$fldName => SORT_ASC],
-                'desc' => [$fldName => SORT_DESC],
+            /** @psalm-var TConfig $fieldConfig */
+            $normalizedConfig[$fieldName] = array_merge([
+                'asc' => [$fieldName => SORT_ASC],
+                'desc' => [$fieldName => SORT_DESC],
                 'default' => 'asc',
-            ], $fldConfig);
+            ], $fieldConfig);
         }
 
         /** @psalm-var TConfig $normalizedConfig */
