@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader;
 
+use InvalidArgumentException;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -11,23 +12,25 @@ final class SortTest extends TestCase
 {
     public function testInvalidConfigWithoutFieldName(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        new Sort([
+        $this->expectException(InvalidArgumentException::class);
+
+        Sort::only([
             1 => [],
         ]);
     }
 
     public function testInvalidConfigWithoutConfig(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        new Sort([
+        $this->expectException(InvalidArgumentException::class);
+
+        Sort::only([
             'field' => 'whatever',
         ]);
     }
 
     public function testConfig(): void
     {
-        $sort = new Sort([
+        $config = [
             'a',
             'b' => [
                 'default' => 'desc',
@@ -37,7 +40,9 @@ final class SortTest extends TestCase
                 'desc' => ['first_name' => SORT_DESC, 'last_name' => SORT_DESC],
                 'default' => 'desc',
             ],
-        ]);
+        ];
+        $sortOnly = Sort::only($config);
+        $sortAny = Sort::any($config);
 
         $expected = [
             'a' => [
@@ -64,25 +69,25 @@ final class SortTest extends TestCase
                 'default' => 'desc',
             ],
         ];
-        $this->assertSame($expected, $this->getInaccessibleProperty($sort, 'config'));
+        $this->assertSame($expected, $this->getInaccessibleProperty($sortAny, 'config'));
+        $this->assertSame($expected, $this->getInaccessibleProperty($sortOnly, 'config'));
     }
 
     public function testWithOrderStringIsImmutable(): void
     {
-        $sort = new Sort([]);
+        $sort = Sort::any();
         $this->assertNotSame($sort, $sort->withOrderString('a'));
     }
 
     public function testWithOrderIsImmutable(): void
     {
-        $sort = new Sort([]);
+        $sort = Sort::any();
         $this->assertNotSame($sort, $sort->withOrder([]));
     }
 
     public function testWithOrderString(): void
     {
-        $sort = (new Sort([]))
-            ->withOrderString(' -a, b');
+        $sort = Sort::any()->withOrderString(' -a, b');
 
         $this->assertSame([
             'a' => 'desc',
@@ -92,7 +97,7 @@ final class SortTest extends TestCase
 
     public function testGetOrderAsString(): void
     {
-        $sort = (new Sort([]))
+        $sort = Sort::any()
             ->withOrder([
                 'a' => 'desc',
                 'b' => 'asc',
@@ -101,9 +106,9 @@ final class SortTest extends TestCase
         $this->assertSame('-a,b', $sort->getOrderAsString());
     }
 
-    public function testGetCriteriaWithEmptyConfig(): void
+    public function testOnlyModeGetCriteriaWithEmptyConfig(): void
     {
-        $sort = (new Sort([]))
+        $sort = Sort::only([])
             ->withOrder([
                 'a' => 'desc',
                 'b' => 'asc',
@@ -112,35 +117,65 @@ final class SortTest extends TestCase
         $this->assertSame([], $sort->getCriteria());
     }
 
+    public function testAnyModeGetCriteriaWithEmptyConfig(): void
+    {
+        $sort = Sort::any([])
+            ->withOrder([
+                'a' => 'desc',
+                'b' => 'asc',
+            ]);
+
+        $this->assertSame(['a' => 'desc', 'b' => 'asc'], $sort->getCriteria());
+    }
+
     public function testGetCriteria(): void
     {
-        $sort = (new Sort([
+        $sort = Sort::only([
             'b' => [
                 'asc' => ['bee' => SORT_ASC],
                 'desc' => ['bee' => SORT_DESC],
                 'default' => 'asc',
             ],
-        ]))
-            ->withOrder([
-                'a' => 'desc',
-                'b' => 'asc',
-            ]);
+        ])->withOrder([
+            'a' => 'desc',
+            'b' => 'asc',
+        ]);
 
         $this->assertSame([
             'bee' => SORT_ASC,
         ], $sort->getCriteria());
     }
 
+    public function testAnyModeGetCriteriaWhenAnyFieldConflictsWithConfig(): void
+    {
+        $sort = Sort::any([
+            'a' => [
+                'asc' => ['foo' => 'asc'],
+                'desc' => ['foo' => 'desc'],
+                'default' => 'asc',
+            ],
+            'b' => [
+                'asc' => ['bee' => 'asc'],
+                'desc' => ['bee' => 'desc'],
+                'default' => 'asc',
+            ],
+        ])->withOrderString('-bee,b,a,-foo');
+
+        $this->assertSame([
+            'bee' => 'desc',
+            'foo' => 'asc',
+        ], $sort->getCriteria());
+    }
+
     public function testGetCriteriaDefaults(): void
     {
-        $sort = (new Sort([
+        $sort = Sort::only([
             'b' => [
                 'asc' => ['bee' => SORT_ASC],
                 'desc' => ['bee' => SORT_DESC],
                 'default' => 'desc',
             ],
-        ]))
-            ->withOrder([]);
+        ])->withOrder([]);
 
         $this->assertSame([
             'bee' => SORT_DESC,
@@ -149,10 +184,10 @@ final class SortTest extends TestCase
 
     public function testGetCriteriaOrder(): void
     {
-        $sort = (new Sort([
+        $sort = Sort::only([
             'b',
             'c',
-        ]))
+        ])
             ->withOrder(['c' => 'desc']);
 
         $this->assertSame([
@@ -163,13 +198,12 @@ final class SortTest extends TestCase
 
     public function testGetCriteriaDefaultsWhenConfigIsNotComplete(): void
     {
-        $sort = (new Sort([
+        $sort = Sort::only([
             'b' => [
                 'asc' => ['bee' => SORT_ASC],
                 'desc' => ['bee' => SORT_DESC],
             ],
-        ]))
-            ->withOrder([]);
+        ])->withOrder([]);
 
         $this->assertSame([
             'bee' => SORT_ASC,
@@ -178,10 +212,10 @@ final class SortTest extends TestCase
 
     public function testGetCriteriaWithShortFieldSyntax(): void
     {
-        $sort = (new Sort([
+        $sort = Sort::only([
             'id',
             'name',
-        ]))->withOrder(['name' => 'desc']);
+        ])->withOrder(['name' => 'desc']);
 
         $this->assertSame([
             'name' => SORT_DESC,

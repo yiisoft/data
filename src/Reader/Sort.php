@@ -15,12 +15,15 @@ use function is_string;
  * @template TSortFieldItem as array<string, int>
  * @template TConfigItem as array{asc: TSortFieldItem, desc: TSortFieldItem, default: string}
  * @template TConfig as array<string, TConfigItem>
+ * @template TUserConfig as array<int, string>|array<string, array<string, int|string>>
  * @psalm-immutable
  */
 final class Sort
 {
     /** @psalm-var TConfig */
     private array $config;
+
+    private bool $modeOnly;
 
     /**
      * @var array Field names to order by as keys, direction as values.
@@ -61,31 +64,48 @@ final class Sort
      * - `asc` - criteria for ascending sorting.
      * - `desc` - criteria for descending sorting.
      * - `default` - default sorting. Could be either `asc` or `desc`. If not specified, `asc` is used.
-     * @psalm-var array<int, string>|array<string, array<string, int|string>> $config
+     * @psalm-var TUserConfig $config
      */
-    public function __construct(array $config)
+    private function __construct(bool $anyFields, array $config)
     {
+        $this->modeOnly = $anyFields;
         $normalizedConfig = [];
-        foreach ($config as $fieldName => $fieldConfig) {
-            if (!(is_int($fieldName) && is_string($fieldConfig) || is_string($fieldName) && is_array($fieldConfig))) {
+        foreach ($config as $fldName => $fldConfig) {
+            if (!(is_int($fldName) && is_string($fldConfig)) && !(is_string($fldName) && is_array($fldConfig))) {
                 throw new \InvalidArgumentException('Invalid config format.');
             }
 
-            if (is_string($fieldConfig)) {
-                $fieldName = $fieldConfig;
-                $fieldConfig = [];
+            if (is_string($fldConfig)) {
+                $fldName = $fldConfig;
+                $fldConfig = [];
             }
 
-            /** @psalm-var TConfig $fieldConfig */
-            $normalizedConfig[$fieldName] = array_merge([
-                'asc' => [$fieldName => SORT_ASC],
-                'desc' => [$fieldName => SORT_DESC],
+            /** @psalm-var TConfig $fldConfig */
+            $normalizedConfig[$fldName] = array_merge([
+                'asc' => [$fldName => SORT_ASC],
+                'desc' => [$fldName => SORT_DESC],
                 'default' => 'asc',
-            ], $fieldConfig);
+            ], $fldConfig);
         }
 
         /** @psalm-var TConfig $normalizedConfig */
         $this->config = $normalizedConfig;
+    }
+
+    /**
+     * @psalm-var TUserConfig $config
+     */
+    public static function only(array $config): self
+    {
+        return new self(true, $config);
+    }
+
+    /**
+     * @psalm-var TUserConfig $config
+     */
+    public static function any(array $config = []): self
+    {
+        return new self(false, $config);
     }
 
     /**
@@ -149,13 +169,16 @@ final class Sort
         $config = $this->config;
 
         foreach ($order as $field => $direction) {
-            if (!array_key_exists($field, $config)) {
-                continue;
+            $fieldExists = array_key_exists($field, $config);
+            if (!$fieldExists) {
+                if ($this->modeOnly) {
+                    continue;
+                }
+                $criteria += [$field => $direction];
+            } else {
+                $criteria += $config[$field][$direction];
+                unset($config[$field]);
             }
-
-            $criteria += $config[$field][$direction];
-
-            unset($config[$field]);
         }
 
         foreach ($config as $field => $fieldConfig) {

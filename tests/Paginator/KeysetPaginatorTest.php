@@ -61,7 +61,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testPageSizeCannotBeLessThanOne(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
         $paginator = new KeysetPaginator($dataReader);
@@ -81,7 +81,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testThrowsExceptionWhenNotSorted(): void
     {
-        $sort = new Sort(['id', 'name']);
+        $sort = Sort::only(['id', 'name']);
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
@@ -119,7 +119,7 @@ final class KeysetPaginatorTest extends Testcase
      */
     public function testOnePage(array $dataSet, int $pageSize): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
 
         $dataReader = (new IterableDataReader($dataSet))
             ->withSort($sort);
@@ -131,7 +131,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testEmptyData(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
         $dataReader = (new IterableDataReader([]))
             ->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))
@@ -145,7 +145,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testReadFirstPage(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
@@ -164,7 +164,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testReadObjectsWithPublicProperties(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
         $data = [
             $this->createObjectWithPublicProperties(1, 'Codename Boris 1'),
             $this->createObjectWithPublicProperties(2, 'Codename Boris 2'),
@@ -182,7 +182,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testReadObjectsWithGetters(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
         $data = [
             $this->createObjectWithGetters(1, 'Codename Boris 1'),
             $this->createObjectWithGetters(2, 'Codename Boris 2'),
@@ -200,7 +200,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testReadSecondPage(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
@@ -218,7 +218,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testReadSecondPageOrderedByName(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('name');
+        $sort = Sort::only(['id', 'name'])->withOrderString('name');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
@@ -236,7 +236,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testBackwardPagination(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
@@ -257,7 +257,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testForwardAndBackwardPagination(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
@@ -291,7 +291,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testIsOnFirstPage(): void
     {
-        $sort = (new Sort(['id']))->withOrderString('id');
+        $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))
@@ -302,7 +302,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testIsOnLastPage(): void
     {
-        $sort = (new Sort(['id']))->withOrderString('id');
+        $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))
@@ -323,7 +323,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testCurrentPageSize(): void
     {
-        $sort = (new Sort(['id']))->withOrderString('id');
+        $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))
@@ -346,7 +346,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testReadCache(): void
     {
-        $sort = (new Sort(['id']))->withOrderString('id');
+        $sort = Sort::only(['id'])->withOrderString('id');
         $dataSet = new class($this->getDataSet()) extends \ArrayIterator {
             private int $rewindCounter = 0;
 
@@ -392,7 +392,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testTokenResults(): void
     {
-        $sort = (new Sort(['id']))->withOrderString('id');
+        $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))
@@ -435,7 +435,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testDefaultPageSize(): void
     {
-        $sort = (new Sort(['id']))->withOrderString('id');
+        $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))->withSort($sort);
         $paginator = new KeysetPaginator($dataReader);
         $this->assertSame(10, $paginator->getPageSize());
@@ -444,7 +444,7 @@ final class KeysetPaginatorTest extends Testcase
 
     public function testCustomPageSize(): void
     {
-        $sort = (new Sort(['id']))->withOrderString('id');
+        $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
         $this->assertSame(2, $paginator->getPageSize());
@@ -518,7 +518,7 @@ final class KeysetPaginatorTest extends Testcase
 
             public function getSort(): ?Sort
             {
-                return new Sort([]);
+                return Sort::only([]);
             }
         };
     }

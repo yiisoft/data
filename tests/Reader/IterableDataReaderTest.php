@@ -111,7 +111,7 @@ final class IterableDataReaderTest extends TestCase
 
     public function testSorting(): void
     {
-        $sorting = new Sort([
+        $sorting = Sort::only([
             'id',
             'name',
         ]);
@@ -143,7 +143,7 @@ final class IterableDataReaderTest extends TestCase
 
     public function testReadOneWithSortingAndOffset(): void
     {
-        $sorting = (new Sort(['id', 'name']))->withOrder(['name' => 'asc']);
+        $sorting = Sort::only(['id', 'name'])->withOrder(['name' => 'asc']);
 
         $data = $this->getDataSet();
         $reader = (new IterableDataReader($data))
@@ -358,7 +358,7 @@ final class IterableDataReaderTest extends TestCase
     {
         $readerMin = (new IterableDataReader($this->getDataSet()))
             ->withSort(
-                (new Sort(['id']))->withOrder(['id' => 'asc'])
+                Sort::only(['id'])->withOrder(['id' => 'asc'])
             )
             ->withLimit(1);
         $min = $readerMin->read()[0]['id'];
@@ -366,7 +366,7 @@ final class IterableDataReaderTest extends TestCase
 
         $readerMax = (new IterableDataReader($this->getDataSet()))
             ->withSort(
-                (new Sort(['id']))->withOrder(['id' => 'desc'])
+                Sort::only(['id'])->withOrder(['id' => 'desc'])
             )
             ->withLimit(1);
         $max = $readerMax->read()[0]['id'];
@@ -388,7 +388,7 @@ final class IterableDataReaderTest extends TestCase
     public function testIteratorIteratorAsDataSet(): void
     {
         $reader = new IterableDataReader(new \ArrayIterator($this->getDataSet()));
-        $sorting = new Sort([
+        $sorting = Sort::only([
             'id',
             'name',
         ]);
@@ -404,7 +404,7 @@ final class IterableDataReaderTest extends TestCase
     public function testGeneratorAsDataSet(): void
     {
         $reader = new IterableDataReader($this->getDataSetAsGenerator());
-        $sorting = new Sort([
+        $sorting = Sort::only([
             'id',
             'name',
         ]);
