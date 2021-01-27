@@ -48,7 +48,7 @@ class FilterProcessorTest extends TestCase
 
     public function testCustomEquals(): void
     {
-        $sort = (new Sort(['id', 'name']))->withOrderString('id');
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
 
         $dataReader = (new IterableDataReader($this->getDataSet()))
             ->withSort($sort)
