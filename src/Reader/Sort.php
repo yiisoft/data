@@ -40,6 +40,7 @@ final class Sort
 {
     /**
      * Logical fields config.
+     *
      * @psalm-var TConfig
      */
     private array $config;
@@ -56,6 +57,7 @@ final class Sort
 
     /**
      * @psalm-param TUserConfig $config
+     *
      * @param array $config Logical fields config.
      * @param bool $ignoreExtraFields Whether to ignore logical fields not present in the config when forming criteria.
      */
@@ -92,6 +94,7 @@ final class Sort
      * Create a sort instance that ignores current order for extra logical fields that have no configuration.
      *
      * @psalm-param TUserConfig $config
+     *
      * @param array $config Logical fields config.
      * ```php
      * [
@@ -135,6 +138,7 @@ final class Sort
      * Create a sort instance that uses logical field itself and direction provided when there is no configuration.
      *
      * @psalm-param TUserConfig $config
+     *
      * @param array $config Logical fields config.
      * ```php
      * [
@@ -166,6 +170,7 @@ final class Sort
      * - `asc` - criteria for ascending sorting.
      * - `desc` - criteria for descending sorting.
      * - `default` - default sorting. Could be either `asc` or `desc`. If not specified, `asc` is used.
+     *
      * @return Sort
      */
     public static function any(array $config = []): self
