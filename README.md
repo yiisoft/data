@@ -177,8 +177,8 @@ $data = $reader->read();
 
 ### Sorting
 
-In order to sort data in a data provider implementing `SortableDataInterface` you need to supply sort object to
-`sortFilter()` method:
+In order to sort data in a data provider implementing `SortableDataInterface` you need to supply a sort object to
+`withSort()` method:
 
 ```php
 $sorting = Sort::only([
@@ -195,11 +195,23 @@ $reader = (new MyDataReader(...))
 $data = $reader->read();
 ```
 
-In sorting constructor you set which fields should be order-able and, optionally, details on how these should be ordered.
-The order to apply is specified via `withOrder()` where you supply an array with keys correspond to field names
-and values correspond to order (`asc` or `desc`). Alternatively `withOrderString()` can be used. In this case
-ordering is represented as a single string containing comma separate field names. If name is prefixed by `-`, ordering
-direction is set to `desc`. 
+The goal of the `Sort` is to map logical fields sorting to real data set fields sorting and form a criteria for the data
+reader. Logical fields are the ones user operates with. Real fields are the ones actually present in a data set.
+Such a mapping helps when you need to sort by a single logical field that, in fact, consists of multiple fields
+in underlying the data set. For example, we provide a user with a username which consists of first name and last name
+fields in actual data set.
+
+To get a `Sort` instance, you can use either `Sort::only()` or `Sort::any()`. `Sort::only()` ignores user-specified order
+for logical fields that have no configuration. `Sort::any()` uses user-specified logical field name and order directly
+for fields that have no configuration.
+
+Either way you pass a config array that specifies which logical fields should be order-able and, optionally, details on
+how these should map to real fields order.
+
+The current order to apply is specified via `withOrder()` where you supply an array with keys corresponding to logical
+field names and values correspond to order (`asc` or `desc`). Alternatively `withOrderString()` can be used. In this case
+ordering is represented as a single string containing comma separate logical field names. If the name is prefixed by `-`,
+ordering direction is set to `desc`.
 
 ### Skipping some items
 
