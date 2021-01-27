@@ -30,10 +30,10 @@ use function is_string;
  * - {@see Sort::only()} ignores user-specified order for logical fields that have no configuration.
  * - {@see Sort::any()} uses user-specified logical field name and order directly for fields that have no configuration.
  *
- * @template TSortFieldItem as array<string, int>
- * @template TConfigItem as array{asc: TSortFieldItem, desc: TSortFieldItem, default: string}
- * @template TConfig as array<string, TConfigItem>
- * @template TUserConfig as array<int, string>|array<string, array<string, int|string>>
+ * @psalm-type TSortFieldItem = array<string, int>
+ * @psalm-type TConfigItem = array{asc: TSortFieldItem, desc: TSortFieldItem, default: string}
+ * @psalm-type TConfig = array<string, TConfigItem>
+ * @psalm-type TUserConfig = array<int, string>|array<string, array<string, int|string>>
  * @psalm-immutable
  */
 final class Sort
@@ -134,7 +134,7 @@ final class Sort
     /**
      * Create a sort instance that uses logical field itself and direction provided when there is no configuration.
      *
-     * @psalm-var TUserConfig $config
+     * @psalm-param TUserConfig $config
      * @param array $config Logical fields config.
      * ```php
      * [
