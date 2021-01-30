@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Writer;
 
-interface DataWriterInterface
+interface DataWriterInterface extends WriteableInterface, DeletableInterface
 {
-    public function write(iterable $items): void;
 }
