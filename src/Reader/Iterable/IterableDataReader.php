@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader\Iterable;
 
 use Generator;
 use Traversable;
-use Yiisoft\Arrays\ArraySorter;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
@@ -90,7 +90,17 @@ class IterableDataReader implements DataReaderInterface
         $criteria = $sort->getCriteria();
         if ($criteria !== []) {
             $items = $this->iterableToArray($items);
-            ArraySorter::multisort($items, array_keys($criteria), array_values($criteria));
+            uasort($items, static function ($itemA, $itemB) use ($criteria) {
+                foreach ($criteria as $key => $order) {
+                    $valueA = ArrayHelper::getValue($itemA, $key);
+                    $valueB = ArrayHelper::getValue($itemB, $key);
+                    if ($valueB === $valueA) {
+                        continue;
+                    }
+                    return ($valueA > $valueB xor $order === SORT_DESC) ? 1 : -1;
+                }
+                return 0;
+            });
         }
 
         return $items;
@@ -146,7 +156,7 @@ class IterableDataReader implements DataReaderInterface
             ? $this->data
             : $this->sortItems($this->data, $this->sort);
 
-        foreach ($sortedData as $item) {
+        foreach ($sortedData as $key => $item) {
             // do not return more than limit items
             if ($this->limit > 0 && count($data) === $this->limit) {
                 break;
@@ -160,7 +170,7 @@ class IterableDataReader implements DataReaderInterface
 
             // filter items
             if ($filter === null || $this->matchFilter($item, $filter)) {
-                $data[] = $item;
+                $data[$key] = $item;
             }
         }
 
