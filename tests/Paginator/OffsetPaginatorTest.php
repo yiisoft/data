@@ -14,31 +14,33 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class OffsetPaginatorTest extends TestCase
 {
-    private function getDataSet(): array
-    {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Agent J',
-            ],
-            [
-                'id' => 6,
-                'name' => '007',
-            ],
-        ];
-    }
+    private const ITEM_1 = [
+        'id' => 1,
+        'name' => 'Codename Boris',
+    ];
+    private const ITEM_2 = [
+        'id' => 2,
+        'name' => 'Codename Doris',
+    ];
+    private const ITEM_3 = [
+        'id' => 3,
+        'name' => 'Agent K',
+    ];
+    private const ITEM_4 = [
+        'id' => 5,
+        'name' => 'Agent J',
+    ];
+    private const ITEM_5 = [
+        'id' => 6,
+        'name' => '007',
+    ];
+    private const DEFAULT_DATASET = [
+        0 => self::ITEM_1,
+        1 => self::ITEM_2,
+        2 => self::ITEM_3,
+        3 => self::ITEM_4,
+        4 => self::ITEM_5,
+    ];
 
     public function testDataReaderWithoutOffsetableInterface(): void
     {
@@ -117,7 +119,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDefaultState(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = new OffsetPaginator($dataReader);
 
         $this->assertSame(0, $paginator->getOffset());
@@ -128,7 +130,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testIsRequired(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2);
 
@@ -137,7 +139,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testGetTotalItems(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = new OffsetPaginator($dataReader);
 
         $this->assertSame(5, $paginator->getTotalItems());
@@ -145,7 +147,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testWithCurrentPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = new OffsetPaginator($dataReader);
         $newPaginator = $paginator->withCurrentPage(20);
 
@@ -155,7 +157,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testCurrentPageCannotBeLessThanOne(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = new OffsetPaginator($dataReader);
 
         $this->expectException(PaginatorException::class);
@@ -164,7 +166,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testCurrentPageCannotBeLargerThanMaxPages(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(4);
@@ -176,7 +178,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testWithPageSize(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = new OffsetPaginator($dataReader);
         $newPaginator = $paginator->withPageSize(125);
 
@@ -186,7 +188,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testPageSizeCannotBeLessThanOne(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = new OffsetPaginator($dataReader);
 
         $this->expectException(PaginatorException::class);
@@ -195,21 +197,15 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testReadFirstPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
 
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(1);
 
         $expected = [
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
+            0 => self::ITEM_1,
+            1 => self::ITEM_2,
         ];
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
@@ -217,21 +213,15 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testReadSecondPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
 
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(2);
 
         $expected = [
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Agent J',
-            ],
+            2 => self::ITEM_3,
+            3 => self::ITEM_4,
         ];
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
@@ -239,17 +229,14 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testReadLastPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
 
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(3);
 
         $expected = [
-            [
-                'id' => 6,
-                'name' => '007',
-            ],
+            4 => self::ITEM_5,
         ];
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
@@ -257,7 +244,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testTotalPages(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2);
 
@@ -266,7 +253,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testIsFirstPageOnFirstPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(1);
@@ -276,7 +263,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testIsFirstPageOnSecondPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(2);
@@ -286,7 +273,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testIsLastPageOnFirstPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(1);
@@ -296,7 +283,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testIsLastPageOnLastPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(3);
@@ -306,7 +293,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testIsLastPageBeyondMaxPages(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
             ->withCurrentPage(4);
@@ -319,7 +306,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testGetCurrentPageSizeFirstFullPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(3);
 
@@ -328,7 +315,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testGetCurrentPageSizeLastPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(3)
             ->withCurrentPage(2);
@@ -339,7 +326,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testGetCurrentPageSizeFirstNotFullPage(): void
     {
-        $dataReader = new IterableDataReader($this->getDataSet());
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(30);
 

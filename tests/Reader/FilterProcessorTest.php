@@ -20,37 +20,39 @@ use Yiisoft\Data\Tests\TestCase;
 
 class FilterProcessorTest extends TestCase
 {
-    private function getDataSet(): array
-    {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Codename Boris',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Agent K',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Agent J',
-            ],
-            [
-                'id' => 6,
-                'name' => '007',
-            ],
-        ];
-    }
+    private const ITEM_1 = [
+        'id' => 1,
+        'name' => 'Codename Boris',
+    ];
+    private const ITEM_2 = [
+        'id' => 2,
+        'name' => 'Codename Doris',
+    ];
+    private const ITEM_3 = [
+        'id' => 3,
+        'name' => 'Agent K',
+    ];
+    private const ITEM_4 = [
+        'id' => 5,
+        'name' => 'Agent J',
+    ];
+    private const ITEM_5 = [
+        'id' => 6,
+        'name' => '007',
+    ];
+    private const DEFAULT_DATASET = [
+        0 => self::ITEM_1,
+        1 => self::ITEM_2,
+        2 => self::ITEM_3,
+        3 => self::ITEM_4,
+        4 => self::ITEM_5,
+    ];
 
     public function testCustomEquals(): void
     {
         $sort = Sort::only(['id', 'name'])->withOrderString('id');
 
-        $dataReader = (new IterableDataReader($this->getDataSet()))
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
             ->withFilterProcessors(new class() extends Equals {
                 public function match(array $item, array $arguments, array $filterUnits): bool
@@ -65,10 +67,7 @@ class FilterProcessorTest extends TestCase
         $dataReader = $dataReader->withFilter(new \Yiisoft\Data\Reader\Filter\Equals('id', 100));
 
         $expected = [
-            [
-                'id' => 2,
-                'name' => 'Codename Doris',
-            ],
+            1 => self::ITEM_2,
         ];
 
         $this->assertSame($expected, $this->iterableToArray($dataReader->read()));
@@ -102,7 +101,7 @@ class FilterProcessorTest extends TestCase
      */
     public function testInvalidFiltersArray(IterableProcessorInterface $processor, $arguments, array $filterProcessors): void
     {
-        $item = $this->getDataSet()[0];
+        $item = self::DEFAULT_DATASET[0];
         $this->expectException(\InvalidArgumentException::class);
         $processor->match($item, $arguments, $filterProcessors);
     }
