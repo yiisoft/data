@@ -67,10 +67,10 @@ class FilterProcessorTest extends TestCase
         $dataReader = $dataReader->withFilter(new \Yiisoft\Data\Reader\Filter\Equals('id', 100));
 
         $expected = [
-            1 => self::ITEM_2,
+            self::ITEM_2,
         ];
 
-        $this->assertSame($expected, $this->iterableToArray($dataReader->read()));
+        $this->assertSame($expected, array_values($this->iterableToArray($dataReader->read())));
     }
 
     public function invalidFiltersArrayDataProvider(): array

@@ -204,8 +204,8 @@ final class OffsetPaginatorTest extends TestCase
             ->withCurrentPage(1);
 
         $expected = [
-            0 => self::ITEM_1,
-            1 => self::ITEM_2,
+            self::ITEM_1,
+            self::ITEM_2,
         ];
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
@@ -220,11 +220,11 @@ final class OffsetPaginatorTest extends TestCase
             ->withCurrentPage(2);
 
         $expected = [
-            2 => self::ITEM_3,
-            3 => self::ITEM_4,
+            self::ITEM_3,
+            self::ITEM_4,
         ];
 
-        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $this->assertSame($expected, array_values($this->iterableToArray($paginator->read())));
     }
 
     public function testReadLastPage(): void
@@ -236,10 +236,10 @@ final class OffsetPaginatorTest extends TestCase
             ->withCurrentPage(3);
 
         $expected = [
-            4 => self::ITEM_5,
+            self::ITEM_5,
         ];
 
-        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $this->assertSame($expected, array_values($this->iterableToArray($paginator->read())));
     }
 
     public function testTotalPages(): void

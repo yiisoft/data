@@ -216,7 +216,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $expected = $this->getDataSet([2, 3]);
 
-        $this->assertSame($expected, $paginator->read());
+        $this->assertSame($expected, array_values($paginator->read()));
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken());
     }
@@ -234,7 +234,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $expected = $this->getDataSet([2, 0]);
 
-        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $this->assertSame($expected, array_values($this->iterableToArray($paginator->read())));
         $last = end($expected);
         $this->assertSame((string)$last['name'], $paginator->getNextPageToken());
     }
@@ -251,7 +251,7 @@ final class KeysetPaginatorTest extends Testcase
             ->withPreviousPageToken('5');
 
         $expected = $this->getDataSet([1, 2]);
-        $read = $this->iterableToArray($paginator->read());
+        $read = array_values($this->iterableToArray($paginator->read()));
 
         $this->assertSame($expected, $read);
         $first = reset($expected);
@@ -272,7 +272,7 @@ final class KeysetPaginatorTest extends Testcase
             ->withNextPageToken('2');
 
         $expected = $this->getDataSet([2, 3]);
-        $read = $this->iterableToArray($paginator->read());
+        $read = array_values($this->iterableToArray($paginator->read()));
 
         $this->assertSame($expected, $read);
         $first = reset($expected);
@@ -463,7 +463,7 @@ final class KeysetPaginatorTest extends Testcase
         }
         $result = [];
         foreach ($keys as $key) {
-            $result[$key] = self::DEFAULT_DATASET[$key];
+            $result[] = self::DEFAULT_DATASET[$key];
         }
         return $result;
     }
