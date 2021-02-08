@@ -16,27 +16,32 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class KeysetPaginatorTest extends Testcase
 {
+    private const ITEM_1 = [
+        'id' => 1,
+        'name' => 'Codename Boris',
+    ];
+    private const ITEM_2 = [
+        'id' => 2,
+        'name' => 'Codename Doris',
+    ];
+    private const ITEM_3 = [
+        'id' => 3,
+        'name' => 'Agent K',
+    ];
+    private const ITEM_4 = [
+        'id' => 5,
+        'name' => 'Agent J',
+    ];
+    private const ITEM_5 = [
+        'id' => 6,
+        'name' => '007',
+    ];
     private const DEFAULT_DATASET = [
-        [
-            'id' => 1,
-            'name' => 'Codename Boris',
-        ],
-        [
-            'id' => 2,
-            'name' => 'Codename Doris',
-        ],
-        [
-            'id' => 3,
-            'name' => 'Agent K',
-        ],
-        [
-            'id' => 5,
-            'name' => 'Agent J',
-        ],
-        [
-            'id' => 6,
-            'name' => '007',
-        ],
+        0 => self::ITEM_1,
+        1 => self::ITEM_2,
+        2 => self::ITEM_3,
+        3 => self::ITEM_4,
+        4 => self::ITEM_5,
     ];
 
     public function testDataReaderWithoutFilterableInterface(): void
@@ -211,7 +216,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $expected = $this->getDataSet([2, 3]);
 
-        $this->assertSame($expected, $paginator->read());
+        $this->assertSame($expected, array_values($paginator->read()));
         $last = end($expected);
         $this->assertSame((string)$last['id'], $paginator->getNextPageToken());
     }
@@ -229,7 +234,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $expected = $this->getDataSet([2, 0]);
 
-        $this->assertSame($expected, $this->iterableToArray($paginator->read()));
+        $this->assertSame($expected, array_values($this->iterableToArray($paginator->read())));
         $last = end($expected);
         $this->assertSame((string)$last['name'], $paginator->getNextPageToken());
     }

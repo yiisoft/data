@@ -182,6 +182,13 @@ final class SortTest extends TestCase
         ], $sort->getCriteria());
     }
 
+    public function testGetCriteriaDefaultsWithSimpleConfig(): void
+    {
+        $sort = Sort::only(['a', 'b'])->withOrder([]);
+
+        $this->assertSame([], $sort->getOrder());
+    }
+
     public function testGetCriteriaOrder(): void
     {
         $sort = Sort::only([
