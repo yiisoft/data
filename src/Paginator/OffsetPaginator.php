@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Paginator;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TKey as array-key
@@ -186,6 +187,11 @@ final class OffsetPaginator implements PaginatorInterface
     public function getPageSize(): int
     {
         return $this->pageSize;
+    }
+
+    public function getSort(): ?Sort
+    {
+        return $this->dataReader->getSort();
     }
 
     private function getInternalTotalPages(): int

@@ -10,6 +10,7 @@ use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
 
 final class OffsetPaginatorTest extends TestCase
@@ -347,5 +348,20 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertTrue($paginator->isOnLastPage());
         $this->assertFalse($paginator->isRequired());
         $this->assertSame([], $this->iterableToArray($paginator->read()));
+    }
+
+    public function testGetSort(): void
+    {
+        $dataReader = new IterableDataReader([]);
+        $paginator = new OffsetPaginator($dataReader);
+
+        $this->assertNull($paginator->getSort());
+
+        $sorting = Sort::only(['id']);
+
+        $dataReader = (new IterableDataReader([['id' => 1], ['id' => 2]]))->withSort($sorting);
+        $paginator = new OffsetPaginator($dataReader);
+
+        $this->assertInstanceOf(Sort::class, $paginator->getSort());
     }
 }
