@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use Yiisoft\Data\Reader\Sort;
+
 /**
  * @template TKey as array-key
  * @template TValue
@@ -54,4 +56,9 @@ interface PaginatorInterface
     public function getPageSize(): int;
 
     public function getCurrentPageSize(): int;
+
+    /**
+     * @return Sort|null Current sort object or null if no sorting is used.
+     */
+    public function getSort(): ?Sort;
 }
