@@ -335,4 +335,9 @@ class KeysetPaginator implements PaginatorInterface
 
         return ArrayHelper::getValue($item, $field);
     }
+
+    public function getSort(): ?Sort
+    {
+        return $this->dataReader->getSort();
+    }
 }
