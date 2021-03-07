@@ -6,7 +6,7 @@
     <br>
 </p>
 
-The package provides generic data abstractions. The aim is to hide stoarge aspect from the operations of reading,
+The package provides generic data abstractions. The aim is to hide storage aspect from the operations of reading,
 writing and processing data.
 
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/data/v/stable.png)](https://packagist.org/packages/yiisoft/data)
