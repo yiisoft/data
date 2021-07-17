@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 
+use function array_key_exists;
+
 class In implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
@@ -22,6 +24,6 @@ class In implements IterableProcessorInterface, FilterProcessorInterface
         if (!is_array($values)) {
             throw new \InvalidArgumentException('The values not an array');
         }
-        return in_array($item[$field], $values, false);
+        return array_key_exists($field, $item) && in_array($item[$field], $values, false);
     }
 }
