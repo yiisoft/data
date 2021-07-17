@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 
+use function array_key_exists;
+
 class LessThanOrEqual implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
@@ -19,6 +21,6 @@ class LessThanOrEqual implements IterableProcessorInterface, FilterProcessorInte
             throw new \InvalidArgumentException('$arguments should contain exactly two elements');
         }
         [$field, $value] = $arguments;
-        return $item[$field] <= $value;
+        return array_key_exists($field, $item) && $item[$field] <= $value;
     }
 }

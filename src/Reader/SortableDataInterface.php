@@ -13,7 +13,7 @@ interface SortableDataInterface
      *
      * @psalm-mutation-free
      */
-    public function withSort(?Sort $sorting): self;
+    public function withSort(?Sort $sort): self;
 
     public function getSort(): ?Sort;
 }

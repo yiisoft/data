@@ -124,10 +124,10 @@ class KeysetPaginator implements PaginatorInterface
      *
      * @psalm-mutation-free
      */
-    public function withPreviousPageToken(?string $value): self
+    public function withPreviousPageToken(?string $token): self
     {
         $new = clone $this;
-        $new->firstValue = $value;
+        $new->firstValue = $token;
         $new->lastValue = null;
         return $new;
     }
@@ -137,11 +137,11 @@ class KeysetPaginator implements PaginatorInterface
      *
      * @psalm-mutation-free
      */
-    public function withNextPageToken(?string $value): self
+    public function withNextPageToken(?string $token): self
     {
         $new = clone $this;
         $new->firstValue = null;
-        $new->lastValue = $value;
+        $new->lastValue = $token;
         return $new;
     }
 
