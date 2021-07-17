@@ -8,7 +8,7 @@ use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 
 abstract class GroupProcessor implements IterableProcessorInterface, FilterProcessorInterface
 {
-    abstract protected function checkResults(array $result): bool;
+    abstract protected function checkResults(array $results): bool;
 
     abstract protected function checkResult($result): ?bool;
 

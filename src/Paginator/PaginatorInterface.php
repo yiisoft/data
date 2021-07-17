@@ -51,7 +51,7 @@ interface PaginatorInterface
      *
      * @psalm-mutation-free
      */
-    public function withPageSize(int $limit): self;
+    public function withPageSize(int $pageSize): self;
 
     public function getPageSize(): int;
 
