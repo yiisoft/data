@@ -84,13 +84,13 @@ final class OffsetPaginator implements PaginatorInterface
      *
      * @psalm-mutation-free
      */
-    public function withPageSize(int $size): self
+    public function withPageSize(int $pageSize): self
     {
-        if ($size < 1) {
+        if ($pageSize < 1) {
             throw new PaginatorException('Page size should be at least 1');
         }
         $new = clone $this;
-        $new->pageSize = $size;
+        $new->pageSize = $pageSize;
         $new->cachedReader = null;
         return $new;
     }
