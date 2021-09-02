@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use InvalidArgumentException;
+use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\CompareFilter;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
@@ -15,6 +17,10 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
+use function count;
+use function is_callable;
+use function is_object;
+
 /**
  * Keyset paginator
  *
@@ -24,6 +30,8 @@ use Yiisoft\Data\Reader\SortableDataInterface;
  *
  * @link https://use-the-index-luke.com/no-offset
  *
+ * @psalm-template DataReaderType = FilterableDataInterface&ReadableDataInterface&SortableDataInterface
+ *
  * @template TKey as array-key
  * @template TValue
  *
@@ -32,7 +40,7 @@ use Yiisoft\Data\Reader\SortableDataInterface;
 class KeysetPaginator implements PaginatorInterface
 {
     /**
-     * @var FilterableDataInterface|ReadableDataInterface|SortableDataInterface
+     * @var DataReaderType
      */
     private ReadableDataInterface $dataReader;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
@@ -59,28 +67,28 @@ class KeysetPaginator implements PaginatorInterface
     private ?array $readCache = null;
 
     /**
-     * @psalm-param ReadableDataInterface<TKey, TValue> $dataReader
+     * @psalm-param DataReaderType $dataReader
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
         if (!$dataReader instanceof FilterableDataInterface) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Data reader should implement FilterableDataInterface to be used with keyset paginator.'
             );
         }
 
         if (!$dataReader instanceof SortableDataInterface) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Data reader should implement SortableDataInterface to be used with keyset paginator.'
             );
         }
 
         if ($dataReader->getSort() === null) {
-            throw new \RuntimeException('Data sorting should be configured to work with keyset pagination.');
+            throw new RuntimeException('Data sorting should be configured to work with keyset pagination.');
         }
 
         if ($dataReader->getSort()->getOrder() === []) {
-            throw new \RuntimeException('Data should be always sorted to work with keyset pagination.');
+            throw new RuntimeException('Data should be always sorted to work with keyset pagination.');
         }
 
         $this->dataReader = $dataReader;
@@ -169,7 +177,7 @@ class KeysetPaginator implements PaginatorInterface
     public function withPageSize(int $pageSize): self
     {
         if ($pageSize < 1) {
-            throw new \InvalidArgumentException('Page size should be at least 1.');
+            throw new InvalidArgumentException('Page size should be at least 1.');
         }
 
         $new = clone $this;
@@ -229,6 +237,10 @@ class KeysetPaginator implements PaginatorInterface
         return !$this->isOnFirstPage() || !$this->isOnLastPage();
     }
 
+    /**
+     * @psalm-assert-if-true string $this->firstValue
+     * @psalm-assert-if-true null $this->lastValue
+     */
     private function isGoingToPreviousPage(): bool
     {
         return $this->firstValue !== null && $this->lastValue === null;
@@ -257,7 +269,7 @@ class KeysetPaginator implements PaginatorInterface
         return new GreaterThanOrEqual($field, $this->getValue());
     }
 
-    private function getValue(): string
+    private function getValue(): ?string
     {
         return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
     }
@@ -317,6 +329,9 @@ class KeysetPaginator implements PaginatorInterface
         return array_reverse($data, true);
     }
 
+    /**
+     * @psalm-param DataReaderType $dataReader
+     */
     private function previousPageExist(ReadableDataInterface $dataReader, Sort $sort): bool
     {
         $reverseFilter = $this->getReverseFilter($sort);
