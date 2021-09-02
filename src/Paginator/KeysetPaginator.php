@@ -75,7 +75,7 @@ class KeysetPaginator implements PaginatorInterface
     private ?array $readCache = null;
 
     /**
-     * @param DataReaderType $dataReader
+     * @psalm-param DataReaderType $dataReader
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
