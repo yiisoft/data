@@ -40,7 +40,7 @@ use function is_object;
 class KeysetPaginator implements PaginatorInterface
 {
     /**
-     * @var DataReaderType
+     * @psalm-var DataReaderType
      */
     private ReadableDataInterface $dataReader;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
