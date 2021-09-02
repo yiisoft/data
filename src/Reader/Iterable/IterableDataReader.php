@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable;
 
 use Generator;
+use InvalidArgumentException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderInterface;
@@ -137,7 +138,7 @@ class IterableDataReader implements DataReaderInterface
     public function withLimit(int $limit): self
     {
         if ($limit < 0) {
-            throw new \InvalidArgumentException('$limit must not be less than 0.');
+            throw new InvalidArgumentException('$limit must not be less than 0.');
         }
         $new = clone $this;
         $new->limit = $limit;

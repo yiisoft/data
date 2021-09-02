@@ -30,7 +30,7 @@ use function is_object;
  *
  * @link https://use-the-index-luke.com/no-offset
  *
- * @psalm-template DataReaderType = FilterableDataInterface&ReadableDataInterface&SortableDataInterface
+ * @psalm-template DataReaderType = ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface
  *
  * @template TKey as array-key
  * @template TValue
@@ -67,7 +67,7 @@ class KeysetPaginator implements PaginatorInterface
     private ?array $readCache = null;
 
     /**
-     * @psalm-param DataReaderType $dataReader
+     * @param DataReaderType $dataReader
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
@@ -87,6 +87,7 @@ class KeysetPaginator implements PaginatorInterface
             throw new RuntimeException('Data sorting should be configured to work with keyset pagination.');
         }
 
+        /** @psalm-suppress PossiblyNullReference */
         if ($dataReader->getSort()->getOrder() === []) {
             throw new RuntimeException('Data should be always sorted to work with keyset pagination.');
         }
@@ -220,6 +221,9 @@ class KeysetPaginator implements PaginatorInterface
         $this->currentLastValue = null;
     }
 
+    /**
+     * @psalm-assert array<TKey, TValue> $this->readCache
+     */
     protected function initializeInternal(): void
     {
         if ($this->readCache !== null) {

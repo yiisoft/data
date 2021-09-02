@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use Generator;
+use InvalidArgumentException;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
@@ -11,6 +13,8 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
 /**
+ * @psalm-template DataReaderType = ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface
+ *
  * @template TKey as array-key
  * @template TValue
  *
@@ -18,22 +22,26 @@ use Yiisoft\Data\Reader\SortableDataInterface;
  */
 final class OffsetPaginator implements PaginatorInterface
 {
-    /** @var CountableDataInterface|OffsetableDataInterface|ReadableDataInterface */
+    /**
+     * @psalm-var DataReaderType
+     */
     private ReadableDataInterface $dataReader;
+
     private int $currentPage = 1;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
+
     /**
-     * @psalm-var ReadableDataInterface<TKey, TValue>
+     * @psalm-var DataReaderType|null
      */
     private ?ReadableDataInterface $cachedReader = null;
 
     /**
-     * @psalm-param ReadableDataInterface<TKey, TValue> $dataReader
+     * @psalm-param DataReaderType $dataReader
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
         if (!$dataReader instanceof OffsetableDataInterface) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Data reader should implement %s in order to be used with offset paginator',
                     OffsetableDataInterface::class
@@ -42,7 +50,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         if (!$dataReader instanceof CountableDataInterface) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Data reader should implement %s in order to be used with offset paginator',
                     CountableDataInterface::class
@@ -119,7 +127,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-return \Generator<TKey, TValue, mixed, void>
+     * @psalm-return Generator<TKey, TValue, mixed, void>
      */
     public function read(): iterable
     {
@@ -130,7 +138,6 @@ final class OffsetPaginator implements PaginatorInterface
         if ($this->currentPage > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found');
         }
-        /** @var CountableDataInterface|OffsetableDataInterface|ReadableDataInterface $reader */
         $this->cachedReader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
         yield from $this->cachedReader->read();
     }
