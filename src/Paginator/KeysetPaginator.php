@@ -319,7 +319,7 @@ class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-param array<TKey, TValue>
+     * @psalm-param array<TKey, TValue> $data
      * @psalm-return array<TKey, TValue>
      */
     private function reverseData(array $data): array

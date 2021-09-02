@@ -23,6 +23,8 @@ use Yiisoft\Data\Reader\Iterable\Processor\Like;
 use Yiisoft\Data\Reader\Iterable\Processor\Not;
 use Yiisoft\Data\Reader\Sort;
 
+use function count;
+
 /**
  * @template TKey as array-key
  * @template TValue
@@ -207,7 +209,7 @@ class IterableDataReader implements DataReaderInterface
 
     private function iterableToArray(iterable $iterable): array
     {
-        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
+        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : $iterable;
     }
 
     /**
