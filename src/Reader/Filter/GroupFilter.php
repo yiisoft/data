@@ -12,7 +12,7 @@ use function is_string;
 abstract class GroupFilter implements FilterInterface
 {
     /**
-     * @var FilterInterface[]|array[]
+     * @var array[]|FilterInterface[]
      */
     private array $filters;
 
