@@ -93,17 +93,24 @@ class IterableDataReader implements DataReaderInterface
         $criteria = $sort->getCriteria();
         if ($criteria !== []) {
             $items = $this->iterableToArray($items);
-            uasort($items, static function ($itemA, $itemB) use ($criteria) {
-                foreach ($criteria as $key => $order) {
-                    $valueA = ArrayHelper::getValue($itemA, $key);
-                    $valueB = ArrayHelper::getValue($itemB, $key);
-                    if ($valueB === $valueA) {
-                        continue;
+            uasort(
+                $items,
+                /**
+                 * @param mixed $itemA
+                 * @param mixed $itemB
+                 */
+                static function ($itemA, $itemB) use ($criteria) {
+                    foreach ($criteria as $key => $order) {
+                        $valueA = ArrayHelper::getValue($itemA, $key);
+                        $valueB = ArrayHelper::getValue($itemB, $key);
+                        if ($valueB === $valueA) {
+                            continue;
+                        }
+                        return ($valueA > $valueB xor $order === SORT_DESC) ? 1 : -1;
                     }
-                    return ($valueA > $valueB xor $order === SORT_DESC) ? 1 : -1;
+                    return 0;
                 }
-                return 0;
-            });
+            );
         }
 
         return $items;

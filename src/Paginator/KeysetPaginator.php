@@ -46,7 +46,15 @@ class KeysetPaginator implements PaginatorInterface
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
     private ?string $firstValue = null;
     private ?string $lastValue = null;
+
+    /**
+     * @var mixed
+     */
     private $currentFirstValue;
+
+    /**
+     * @var mixed
+     */
     private $currentLastValue;
 
     /**
@@ -345,6 +353,11 @@ class KeysetPaginator implements PaginatorInterface
         return false;
     }
 
+    /**
+     * @param mixed $item
+     *
+     * @return mixed
+     */
     private function getValueFromItem($item, string $field)
     {
         $methodName = 'get' . ucfirst($field);
