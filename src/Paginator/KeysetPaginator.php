@@ -274,7 +274,11 @@ class KeysetPaginator implements PaginatorInterface
         return new GreaterThanOrEqual($field, $this->getValue());
     }
 
-    private function getValue(): ?string
+    /**
+     * @psalm-suppress NullableReturnStatement,InvalidNullableReturnType The code calling this method
+     * must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
+     */
+    private function getValue(): string
     {
         return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
     }
