@@ -47,16 +47,8 @@ class KeysetPaginator implements PaginatorInterface
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
     private ?string $firstValue = null;
     private ?string $lastValue = null;
-
-    /**
-     * @var mixed
-     */
-    private $currentFirstValue;
-
-    /**
-     * @var mixed
-     */
-    private $currentLastValue;
+    private ?string $currentFirstValue = null;
+    private ?string $currentLastValue = null;
 
     /**
      * @var bool Previous page has item indicator.
@@ -168,7 +160,7 @@ class KeysetPaginator implements PaginatorInterface
         if ($this->isOnFirstPage()) {
             return null;
         }
-        return (string)$this->currentFirstValue;
+        return $this->currentFirstValue;
     }
 
     public function getNextPageToken(): ?string
@@ -176,7 +168,7 @@ class KeysetPaginator implements PaginatorInterface
         if ($this->isOnLastPage()) {
             return null;
         }
-        return (string)$this->currentLastValue;
+        return $this->currentLastValue;
     }
 
     /**
@@ -318,12 +310,12 @@ class KeysetPaginator implements PaginatorInterface
 
         foreach ($dataReader->read() as $key => $item) {
             if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = $this->getValueFromItem($item, $field);
+                $this->currentFirstValue = (string)$this->getValueFromItem($item, $field);
             }
             if (count($data) === $this->pageSize) {
                 $this->hasNextPageItem = true;
             } else {
-                $this->currentLastValue = $this->getValueFromItem($item, $field);
+                $this->currentLastValue = (string)$this->getValueFromItem($item, $field);
                 $data[$key] = $item;
             }
         }
