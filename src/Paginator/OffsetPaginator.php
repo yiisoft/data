@@ -23,6 +23,7 @@ use Yiisoft\Data\Reader\SortableDataInterface;
 final class OffsetPaginator implements PaginatorInterface
 {
     /**
+     * @var ReadableDataInterface|OffsetableDataInterface|CountableDataInterface
      * @psalm-var DataReaderType
      */
     private ReadableDataInterface $dataReader;
