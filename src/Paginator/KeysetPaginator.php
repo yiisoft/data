@@ -40,6 +40,7 @@ use function is_object;
 class KeysetPaginator implements PaginatorInterface
 {
     /**
+     * @var FilterableDataInterface|ReadableDataInterface|SortableDataInterface
      * @psalm-var DataReaderType
      */
     private ReadableDataInterface $dataReader;
