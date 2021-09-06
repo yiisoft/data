@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
 
+use InvalidArgumentException;
+
+use function is_array;
+use function is_string;
+
 abstract class GroupFilter implements FilterInterface
 {
     /**
-     * @var FilterInterface[]
+     * @var array[]|FilterInterface[]
      */
     private array $filters;
 
@@ -45,9 +50,9 @@ abstract class GroupFilter implements FilterInterface
      *
      * @param array $filtersArray
      *
-     * @return $this
+     * @return static
      */
-    public function withFiltersArray(array $filtersArray)
+    public function withFiltersArray(array $filtersArray): self
     {
         foreach ($filtersArray as $key => $filter) {
             if ($filter instanceof FilterInterface) {
@@ -55,11 +60,11 @@ abstract class GroupFilter implements FilterInterface
             }
 
             if (!is_array($filter)) {
-                throw new \InvalidArgumentException(sprintf('Invalid filter at "%s" key', $key));
+                throw new InvalidArgumentException(sprintf('Invalid filter at "%s" key', $key));
             }
             $first = array_shift($filter);
             if (!is_string($first) || $first === '') {
-                throw new \InvalidArgumentException(sprintf('Invalid filter operator on "%s" key', $key));
+                throw new InvalidArgumentException(sprintf('Invalid filter operator on "%s" key', $key));
             }
         }
         $new = clone $this;

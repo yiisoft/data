@@ -12,7 +12,7 @@ interface FilterableDataInterface
     /**
      * @param FilterInterface $filter
      *
-     * @return $this
+     * @return static
      *
      * @psalm-mutation-free
      */
@@ -21,7 +21,7 @@ interface FilterableDataInterface
     /**
      * @param FilterProcessorInterface[] $filterProcessors
      *
-     * @return $this
+     * @return static
      *
      * @psalm-mutation-free
      */

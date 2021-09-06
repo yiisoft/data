@@ -16,7 +16,7 @@ class All extends GroupProcessor
         return \Yiisoft\Data\Reader\Filter\All::getOperator();
     }
 
-    protected function checkResult($result): ?bool
+    protected function checkResult(bool $result): ?bool
     {
         return !$result ? false : null;
     }

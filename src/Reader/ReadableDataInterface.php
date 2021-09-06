@@ -17,7 +17,7 @@ interface ReadableDataInterface
      *
      * @throws InvalidArgumentException if limit less than 0.
      *
-     * @return $this
+     * @return static
      *
      * @psalm-mutation-free
      */

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use InvalidArgumentException;
+use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\CompareFilter;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
@@ -15,6 +17,10 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
+use function count;
+use function is_callable;
+use function is_object;
+
 /**
  * Keyset paginator
  *
@@ -23,6 +29,8 @@ use Yiisoft\Data\Reader\SortableDataInterface;
  * - Cannot get to specific page, only "next" and "previous"
  *
  * @link https://use-the-index-luke.com/no-offset
+ *
+ * @psalm-template DataReaderType = ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface
  *
  * @template TKey as array-key
  * @template TValue
@@ -33,13 +41,14 @@ class KeysetPaginator implements PaginatorInterface
 {
     /**
      * @var FilterableDataInterface|ReadableDataInterface|SortableDataInterface
+     * @psalm-var DataReaderType
      */
     private ReadableDataInterface $dataReader;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
     private ?string $firstValue = null;
     private ?string $lastValue = null;
-    private $currentFirstValue;
-    private $currentLastValue;
+    private ?string $currentFirstValue = null;
+    private ?string $currentLastValue = null;
 
     /**
      * @var bool Previous page has item indicator.
@@ -59,28 +68,29 @@ class KeysetPaginator implements PaginatorInterface
     private ?array $readCache = null;
 
     /**
-     * @psalm-param ReadableDataInterface<TKey, TValue> $dataReader
+     * @psalm-param DataReaderType $dataReader
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
         if (!$dataReader instanceof FilterableDataInterface) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Data reader should implement FilterableDataInterface to be used with keyset paginator.'
             );
         }
 
         if (!$dataReader instanceof SortableDataInterface) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Data reader should implement SortableDataInterface to be used with keyset paginator.'
             );
         }
 
         if ($dataReader->getSort() === null) {
-            throw new \RuntimeException('Data sorting should be configured to work with keyset pagination.');
+            throw new RuntimeException('Data sorting should be configured to work with keyset pagination.');
         }
 
+        /** @psalm-suppress PossiblyNullReference */
         if ($dataReader->getSort()->getOrder() === []) {
-            throw new \RuntimeException('Data should be always sorted to work with keyset pagination.');
+            throw new RuntimeException('Data should be always sorted to work with keyset pagination.');
         }
 
         $this->dataReader = $dataReader;
@@ -150,7 +160,7 @@ class KeysetPaginator implements PaginatorInterface
         if ($this->isOnFirstPage()) {
             return null;
         }
-        return (string)$this->currentFirstValue;
+        return $this->currentFirstValue;
     }
 
     public function getNextPageToken(): ?string
@@ -158,7 +168,7 @@ class KeysetPaginator implements PaginatorInterface
         if ($this->isOnLastPage()) {
             return null;
         }
-        return (string)$this->currentLastValue;
+        return $this->currentLastValue;
     }
 
     /**
@@ -169,7 +179,7 @@ class KeysetPaginator implements PaginatorInterface
     public function withPageSize(int $pageSize): self
     {
         if ($pageSize < 1) {
-            throw new \InvalidArgumentException('Page size should be at least 1.');
+            throw new InvalidArgumentException('Page size should be at least 1.');
         }
 
         $new = clone $this;
@@ -212,6 +222,9 @@ class KeysetPaginator implements PaginatorInterface
         $this->currentLastValue = null;
     }
 
+    /**
+     * @psalm-assert array<TKey, TValue> $this->readCache
+     */
     protected function initializeInternal(): void
     {
         if ($this->readCache !== null) {
@@ -229,6 +242,10 @@ class KeysetPaginator implements PaginatorInterface
         return !$this->isOnFirstPage() || !$this->isOnLastPage();
     }
 
+    /**
+     * @psalm-assert-if-true string $this->firstValue
+     * @psalm-assert-if-true null $this->lastValue
+     */
     private function isGoingToPreviousPage(): bool
     {
         return $this->firstValue !== null && $this->lastValue === null;
@@ -257,6 +274,10 @@ class KeysetPaginator implements PaginatorInterface
         return new GreaterThanOrEqual($field, $this->getValue());
     }
 
+    /**
+     * @psalm-suppress NullableReturnStatement,InvalidNullableReturnType The code calling this method
+     * must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
+     */
     private function getValue(): string
     {
         return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
@@ -293,12 +314,12 @@ class KeysetPaginator implements PaginatorInterface
 
         foreach ($dataReader->read() as $key => $item) {
             if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = $this->getValueFromItem($item, $field);
+                $this->currentFirstValue = (string)$this->getValueFromItem($item, $field);
             }
             if (count($data) === $this->pageSize) {
                 $this->hasNextPageItem = true;
             } else {
-                $this->currentLastValue = $this->getValueFromItem($item, $field);
+                $this->currentLastValue = (string)$this->getValueFromItem($item, $field);
                 $data[$key] = $item;
             }
         }
@@ -307,7 +328,7 @@ class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-param array<TKey, TValue>
+     * @psalm-param array<TKey, TValue> $data
      * @psalm-return array<TKey, TValue>
      */
     private function reverseData(array $data): array
@@ -317,6 +338,9 @@ class KeysetPaginator implements PaginatorInterface
         return array_reverse($data, true);
     }
 
+    /**
+     * @psalm-param DataReaderType $dataReader
+     */
     private function previousPageExist(ReadableDataInterface $dataReader, Sort $sort): bool
     {
         $reverseFilter = $this->getReverseFilter($sort);
@@ -326,6 +350,11 @@ class KeysetPaginator implements PaginatorInterface
         return false;
     }
 
+    /**
+     * @param mixed $item
+     *
+     * @return mixed
+     */
     private function getValueFromItem($item, string $field)
     {
         $methodName = 'get' . ucfirst($field);

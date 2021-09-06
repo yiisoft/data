@@ -30,8 +30,9 @@ use function is_string;
  * - {@see Sort::only()} ignores user-specified order for logical fields that have no configuration.
  * - {@see Sort::any()} uses user-specified logical field name and order directly for fields that have no configuration.
  *
+ * @psalm-type TOrder = array<string, "asc"|"desc">
  * @psalm-type TSortFieldItem = array<string, int>
- * @psalm-type TConfigItem = array{asc: TSortFieldItem, desc: TSortFieldItem, default: string}
+ * @psalm-type TConfigItem = array{asc: TSortFieldItem, desc: TSortFieldItem, default: "asc"|"desc"}
  * @psalm-type TConfig = array<string, TConfigItem>
  * @psalm-type TUserConfig = array<int, string>|array<string, array<string, int|string>>
  * @psalm-immutable
@@ -217,6 +218,9 @@ final class Sort
         return $new;
     }
 
+    /**
+     * @psalm-return TOrder
+     */
     public function getOrder(): array
     {
         return $this->currentOrder;

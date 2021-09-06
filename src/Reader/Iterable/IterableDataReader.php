@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable;
 
 use Generator;
+use InvalidArgumentException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderInterface;
@@ -22,6 +23,8 @@ use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Processor\Like;
 use Yiisoft\Data\Reader\Iterable\Processor\Not;
 use Yiisoft\Data\Reader\Sort;
+
+use function count;
 
 /**
  * @template TKey as array-key
@@ -90,17 +93,24 @@ class IterableDataReader implements DataReaderInterface
         $criteria = $sort->getCriteria();
         if ($criteria !== []) {
             $items = $this->iterableToArray($items);
-            uasort($items, static function ($itemA, $itemB) use ($criteria) {
-                foreach ($criteria as $key => $order) {
-                    $valueA = ArrayHelper::getValue($itemA, $key);
-                    $valueB = ArrayHelper::getValue($itemB, $key);
-                    if ($valueB === $valueA) {
-                        continue;
+            uasort(
+                $items,
+                /**
+                 * @param mixed $itemA
+                 * @param mixed $itemB
+                 */
+                static function ($itemA, $itemB) use ($criteria) {
+                    foreach ($criteria as $key => $order) {
+                        $valueA = ArrayHelper::getValue($itemA, $key);
+                        $valueB = ArrayHelper::getValue($itemB, $key);
+                        if ($valueB === $valueA) {
+                            continue;
+                        }
+                        return ($valueA > $valueB xor $order === SORT_DESC) ? 1 : -1;
                     }
-                    return ($valueA > $valueB xor $order === SORT_DESC) ? 1 : -1;
+                    return 0;
                 }
-                return 0;
-            });
+            );
         }
 
         return $items;
@@ -135,7 +145,7 @@ class IterableDataReader implements DataReaderInterface
     public function withLimit(int $limit): self
     {
         if ($limit < 0) {
-            throw new \InvalidArgumentException('$limit must not be less than 0.');
+            throw new InvalidArgumentException('$limit must not be less than 0.');
         }
         $new = clone $this;
         $new->limit = $limit;
@@ -207,7 +217,7 @@ class IterableDataReader implements DataReaderInterface
 
     private function iterableToArray(iterable $iterable): array
     {
-        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
+        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : $iterable;
     }
 
     /**
