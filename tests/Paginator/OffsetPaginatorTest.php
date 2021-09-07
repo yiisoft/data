@@ -45,7 +45,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutOffsetableInterface(): void
     {
-        $nonOffsetableDataReader = new class() implements ReadableDataInterface, CountableDataInterface {
+        $nonOffsetableDataReader = new class () implements ReadableDataInterface, CountableDataInterface {
             public function withLimit(int $limit): self
             {
                 // do nothing
@@ -80,7 +80,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutCountableInterface(): void
     {
-        $nonCountableDataReader = new class() implements ReadableDataInterface, OffsetableDataInterface {
+        $nonCountableDataReader = new class () implements ReadableDataInterface, OffsetableDataInterface {
             public function withLimit(int $limit): self
             {
                 // do nothing

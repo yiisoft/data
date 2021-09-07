@@ -54,7 +54,7 @@ class FilterProcessorTest extends TestCase
 
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
-            ->withFilterProcessors(new class() extends Equals {
+            ->withFilterProcessors(new class () extends Equals {
                 public function match(array $item, array $arguments, array $filterUnits): bool
                 {
                     [$field,] = $arguments;

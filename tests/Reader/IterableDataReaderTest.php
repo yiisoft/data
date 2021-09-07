@@ -357,7 +357,7 @@ final class IterableDataReaderTest extends TestCase
                 return 'digital';
             }
         };
-        $reader = new class(self::DEFAULT_DATASET) extends IterableDataReader {
+        $reader = new class (self::DEFAULT_DATASET) extends IterableDataReader {
             protected function matchFilter(array $item, array $filter): bool
             {
                 [$operation, $field] = $filter;
@@ -379,7 +379,7 @@ final class IterableDataReaderTest extends TestCase
     public function testNotSupportedOperator(): void
     {
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withFilter(new class('id', 2) extends Equals {
+            ->withFilter(new class ('id', 2) extends Equals {
                 public static function getOperator(): string
                 {
                     return '----';

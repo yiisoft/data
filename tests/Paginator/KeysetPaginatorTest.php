@@ -352,7 +352,7 @@ final class KeysetPaginatorTest extends Testcase
     public function testReadCache(): void
     {
         $sort = Sort::only(['id'])->withOrderString('id');
-        $dataSet = new class($this->getDataSet()) extends \ArrayIterator {
+        $dataSet = new class ($this->getDataSet()) extends \ArrayIterator {
             private int $rewindCounter = 0;
 
             public function rewind()
@@ -470,7 +470,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonSortableDataReader()
     {
-        return new class() implements ReadableDataInterface, FilterableDataInterface {
+        return new class () implements ReadableDataInterface, FilterableDataInterface {
             public function withLimit(int $limit): self
             {
                 // do nothing
@@ -500,7 +500,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonFilterableDataReader()
     {
-        return new class() implements ReadableDataInterface, SortableDataInterface {
+        return new class () implements ReadableDataInterface, SortableDataInterface {
             public function withLimit(int $limit): self
             {
                 // do nothing
@@ -539,7 +539,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function createObjectWithGetters(int $id, string $name): object
     {
-        return new class($id, $name) {
+        return new class ($id, $name) {
             private $id;
             private $name;
 
@@ -563,7 +563,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function createObjectDataReader(array $data): IterableDataReader
     {
-        return new class($data) extends IterableDataReader {
+        return new class ($data) extends IterableDataReader {
             public function read(): array
             {
                 $data = [];
