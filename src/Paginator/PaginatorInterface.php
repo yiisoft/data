@@ -33,22 +33,16 @@ interface PaginatorInterface
     public function getPreviousPageToken(): ?string;
 
     /**
-     * @return $this
-     *
      * @psalm-mutation-free
      */
     public function withNextPageToken(?string $token): self;
 
     /**
-     * @return $this
-     *
      * @psalm-mutation-free
      */
     public function withPreviousPageToken(?string $token): self;
 
     /**
-     * @return $this
-     *
      * @psalm-mutation-free
      */
     public function withPageSize(int $pageSize): self;
