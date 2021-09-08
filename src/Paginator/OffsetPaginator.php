@@ -73,8 +73,6 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @return $this
-     *
      * @psalm-mutation-free
      */
     public function withCurrentPage(int $page): self
@@ -89,7 +87,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @return $this
+     * @return self
      *
      * @psalm-mutation-free
      */
@@ -154,7 +152,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @return $this
+     * @return self
      *
      * @psalm-mutation-free
      */
@@ -164,7 +162,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @return $this
+     * @return self
      *
      * @psalm-mutation-free
      */
