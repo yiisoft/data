@@ -130,6 +130,8 @@ class KeysetPaginator implements PaginatorInterface
     }
 
     /**
+     * @return self
+     *
      * @psalm-mutation-free
      */
     public function withPreviousPageToken(?string $token): self
@@ -141,6 +143,8 @@ class KeysetPaginator implements PaginatorInterface
     }
 
     /**
+     * @return self
+     *
      * @psalm-mutation-free
      */
     public function withNextPageToken(?string $token): self
@@ -168,6 +172,8 @@ class KeysetPaginator implements PaginatorInterface
     }
 
     /**
+     * @return self
+     *
      * @psalm-mutation-free
      */
     public function withPageSize(int $pageSize): self

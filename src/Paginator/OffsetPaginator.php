@@ -87,6 +87,8 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
+     * @return self
+     *
      * @psalm-mutation-free
      */
     public function withPageSize(int $pageSize): self
@@ -150,6 +152,8 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
+     * @return self
+     *
      * @psalm-mutation-free
      */
     public function withNextPageToken(?string $token): self
@@ -158,6 +162,8 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
+     * @return self
+     *
      * @psalm-mutation-free
      */
     public function withPreviousPageToken(?string $token): self
