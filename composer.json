@@ -15,6 +15,16 @@
         "chat": "https://t.me/yii3en",
         "source": "https://github.com/yiisoft/data"
     },
+    "funding": [
+        {
+            "type": "opencollective",
+            "url": "https://opencollective.com/yiisoft"
+        },
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/yiisoft"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
@@ -42,11 +52,11 @@
             "dev-master": "3.0.x-dev"
         }
     },
+    "config": {
+        "sort-packages": true
+    },
     "scripts": {
         "test": "phpunit --testdox --no-interaction",
         "test-watch": "phpunit-watcher watch"
-    },
-    "config": {
-        "sort-packages": true
     }
 }
