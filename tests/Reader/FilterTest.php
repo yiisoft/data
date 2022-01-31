@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader;
 
+use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Equals;
@@ -166,7 +167,7 @@ final class FilterTest extends TestCase
      */
     public function testWithFiltersArrayFail(array $filtersArray): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         (new All())->withFiltersArray($filtersArray);
     }
 
