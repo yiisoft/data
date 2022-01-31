@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader;
 
+use ArrayIterator;
+use Generator;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Equals;
@@ -312,7 +315,7 @@ final class IterableDataReaderTest extends TestCase
 
     public function testIteratorIteratorAsDataSet(): void
     {
-        $reader = new IterableDataReader(new \ArrayIterator(self::DEFAULT_DATASET));
+        $reader = new IterableDataReader(new ArrayIterator(self::DEFAULT_DATASET));
         $sorting = Sort::only([
             'id',
             'name',
@@ -321,7 +324,7 @@ final class IterableDataReaderTest extends TestCase
         $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());
     }
 
-    private function getDataSetAsGenerator(): \Generator
+    private function getDataSetAsGenerator(): Generator
     {
         yield from self::DEFAULT_DATASET;
     }
@@ -340,7 +343,7 @@ final class IterableDataReaderTest extends TestCase
     public function testCustomFilter(): void
     {
         $digitalFilter = new class /*Digital*/ ('name') implements FilterInterface {
-            private $field;
+            private string $field;
 
             public function __construct(string $field)
             {
@@ -385,7 +388,7 @@ final class IterableDataReaderTest extends TestCase
                     return '----';
                 }
             });
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $dataReader->read();
     }
 }

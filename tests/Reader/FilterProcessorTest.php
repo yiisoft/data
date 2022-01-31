@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader;
 
+use InvalidArgumentException;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Iterable\Processor\All;
 use Yiisoft\Data\Reader\Iterable\Processor\Equals;
@@ -18,7 +19,7 @@ use Yiisoft\Data\Reader\Iterable\Processor\Not;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
 
-class FilterProcessorTest extends TestCase
+final class FilterProcessorTest extends TestCase
 {
     private const ITEM_1 = [
         'id' => 1,
@@ -55,13 +56,13 @@ class FilterProcessorTest extends TestCase
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
             ->withFilterProcessors(new class () extends Equals {
-                public function match(array $item, array $arguments, array $filterUnits): bool
+                public function match(array $item, array $arguments, array $filterProcessors): bool
                 {
                     [$field,] = $arguments;
                     if ($item[$field] === 2) {
                         return true;
                     }
-                    return parent::match($item, $arguments, $filterUnits);
+                    return parent::match($item, $arguments, $filterProcessors);
                 }
             });
         $dataReader = $dataReader->withFilter(new \Yiisoft\Data\Reader\Filter\Equals('id', 100));
@@ -102,7 +103,7 @@ class FilterProcessorTest extends TestCase
     public function testInvalidFiltersArray(IterableProcessorInterface $processor, $arguments, array $filterProcessors): void
     {
         $item = self::DEFAULT_DATASET[0];
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $processor->match($item, $arguments, $filterProcessors);
     }
 }

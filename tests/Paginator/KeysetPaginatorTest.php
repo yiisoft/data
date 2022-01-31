@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Paginator;
 
+use ArrayIterator;
+use RuntimeException;
+use stdClass;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
@@ -352,10 +355,10 @@ final class KeysetPaginatorTest extends Testcase
     public function testReadCache(): void
     {
         $sort = Sort::only(['id'])->withOrderString('id');
-        $dataSet = new class ($this->getDataSet()) extends \ArrayIterator {
+        $dataSet = new class ($this->getDataSet()) extends ArrayIterator {
             private int $rewindCounter = 0;
 
-            public function rewind()
+            public function rewind(): void
             {
                 $this->rewindCounter++;
                 parent::rewind();
@@ -407,7 +410,7 @@ final class KeysetPaginatorTest extends Testcase
         try {
             $paginator->getNextPageToken();
             $this->assertTrue(false);
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertTrue(true);
         }
         $this->assertNull($paginator->getPreviousPageToken());
@@ -424,7 +427,7 @@ final class KeysetPaginatorTest extends Testcase
         try {
             $paginator->getPreviousPageToken();
             $this->assertTrue(false);
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertTrue(true);
         }
         $this->assertNull($paginator->getNextPageToken());
@@ -471,9 +474,9 @@ final class KeysetPaginatorTest extends Testcase
     private function getNonSortableDataReader()
     {
         return new class () implements ReadableDataInterface, FilterableDataInterface {
-            public function withLimit(int $limit): self
+            public function withLimit(int $limit): ReadableDataInterface
             {
-                // do nothing
+                return clone $this;
             }
 
             public function read(): iterable
@@ -486,14 +489,14 @@ final class KeysetPaginatorTest extends Testcase
                 return null;
             }
 
-            public function withFilter(FilterInterface $filter): self
+            public function withFilter(FilterInterface $filter): FilterableDataInterface
             {
-                // do nothing
+                return clone $this;
             }
 
-            public function withFilterProcessors(FilterProcessorInterface ...$filterUnits): self
+            public function withFilterProcessors(FilterProcessorInterface ...$filterUnits): FilterableDataInterface
             {
-                // do nothing
+                return clone $this;
             }
         };
     }
@@ -501,9 +504,9 @@ final class KeysetPaginatorTest extends Testcase
     private function getNonFilterableDataReader()
     {
         return new class () implements ReadableDataInterface, SortableDataInterface {
-            public function withLimit(int $limit): self
+            public function withLimit(int $limit): ReadableDataInterface
             {
-                // do nothing
+                return clone $this;
             }
 
             public function read(): iterable
@@ -516,9 +519,9 @@ final class KeysetPaginatorTest extends Testcase
                 return null;
             }
 
-            public function withSort(?Sort $sorting): self
+            public function withSort(?Sort $sort): SortableDataInterface
             {
-                // do nothing
+                return clone $this;
             }
 
             public function getSort(): ?Sort
@@ -528,9 +531,9 @@ final class KeysetPaginatorTest extends Testcase
         };
     }
 
-    private function createObjectWithPublicProperties(int $id, string $name): \stdClass
+    private function createObjectWithPublicProperties(int $id, string $name): stdClass
     {
-        $object = new \stdClass();
+        $object = new stdClass();
         $object->id = $id;
         $object->name = $name;
 
@@ -540,8 +543,8 @@ final class KeysetPaginatorTest extends Testcase
     private function createObjectWithGetters(int $id, string $name): object
     {
         return new class ($id, $name) {
-            private $id;
-            private $name;
+            private int $id;
+            private string $name;
 
             public function __construct($id, $name)
             {
@@ -551,12 +554,12 @@ final class KeysetPaginatorTest extends Testcase
 
             public function getId(): string
             {
-                return (string)$this->id;
+                return (string) $this->id;
             }
 
             public function getName(): string
             {
-                return $this->id;
+                return $this->name;
             }
         };
     }
