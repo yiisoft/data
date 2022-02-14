@@ -94,7 +94,10 @@ Filter could be composed with:
 
 - `All`
 - `Any`
+- `Between`
 - `Equals`
+- `EqualsEmpty`
+- `EqualsNull`
 - `GreaterThan`
 - `GreaterThanOrEqual`
 - `In`
