@@ -4,13 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
 
-use InvalidArgumentException;
-
-use function get_class;
-use function gettype;
-use function is_scalar;
-use function is_object;
-use function sprintf;
+use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 final class Between implements FilterInterface
 {
@@ -35,8 +29,8 @@ final class Between implements FilterInterface
     {
         $this->field = $field;
 
-        $this->validateValue($firstValue);
-        $this->validateValue($secondValue);
+        FilterDataValidationHelper::validateScalarValueType($firstValue);
+        FilterDataValidationHelper::validateScalarValueType($secondValue);
 
         $this->firstValue = $firstValue;
         $this->secondValue = $secondValue;
@@ -50,18 +44,5 @@ final class Between implements FilterInterface
     public static function getOperator(): string
     {
         return 'between';
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private function validateValue($value): void
-    {
-        if (!is_scalar($value)) {
-            throw new InvalidArgumentException(sprintf(
-                'The value should be scalar. The %s is received.',
-                is_object($value) ? get_class($value) : gettype($value),
-            ));
-        }
     }
 }

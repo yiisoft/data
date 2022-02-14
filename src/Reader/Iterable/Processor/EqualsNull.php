@@ -6,8 +6,10 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
+use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function array_key_exists;
+use function count;
 
 class EqualsNull implements IterableProcessorInterface, FilterProcessorInterface
 {
@@ -23,6 +25,9 @@ class EqualsNull implements IterableProcessorInterface, FilterProcessorInterface
         }
 
         [$field] = $arguments;
+        FilterDataValidationHelper::validateFieldValueType($field);
+
+        /** @var string $field */
         return array_key_exists($field, $item) && $item[$field] === null;
     }
 }

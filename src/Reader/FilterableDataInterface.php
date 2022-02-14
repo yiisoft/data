@@ -9,21 +9,7 @@ use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 
 interface FilterableDataInterface
 {
-    /**
-     * @param FilterInterface $filter
-     *
-     * @return static
-     *
-     * @psalm-mutation-free
-     */
     public function withFilter(FilterInterface $filter): self;
 
-    /**
-     * @param FilterProcessorInterface[] $filterProcessors
-     *
-     * @return static
-     *
-     * @psalm-mutation-free
-     */
     public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
 
-use InvalidArgumentException;
+use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 abstract class CompareFilter implements FilterInterface
 {
@@ -16,13 +16,11 @@ abstract class CompareFilter implements FilterInterface
     private $value;
 
     /**
-     * @param mixed $value
+     * @param bool|float|int|string $value
      */
     public function __construct(string $field, $value)
     {
-        if (!is_scalar($value)) {
-            throw new InvalidArgumentException('Value should be scalar');
-        }
+        FilterDataValidationHelper::validateScalarValueType($value);
 
         $this->field = $field;
         $this->value = $value;

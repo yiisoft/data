@@ -6,6 +6,9 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
+use Yiisoft\Data\Reader\FilterDataValidationHelper;
+
+use function count;
 
 class EqualsEmpty implements IterableProcessorInterface, FilterProcessorInterface
 {
@@ -21,6 +24,9 @@ class EqualsEmpty implements IterableProcessorInterface, FilterProcessorInterfac
         }
 
         [$field] = $arguments;
+        FilterDataValidationHelper::validateFieldValueType($field);
+
+        /** @var string $field */
         return empty($item[$field]);
     }
 }

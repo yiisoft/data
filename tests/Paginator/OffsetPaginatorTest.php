@@ -70,7 +70,7 @@ final class OffsetPaginatorTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
             sprintf(
-                'Data reader should implement %s in order to be used with offset paginator',
+                'Data reader should implement "%s" in order to be used with offset paginator.',
                 OffsetableDataInterface::class
             )
         );
@@ -110,7 +110,7 @@ final class OffsetPaginatorTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
             sprintf(
-                'Data reader should implement %s in order to be used with offset paginator',
+                'Data reader should implement "%s" in order to be used with offset paginator.',
                 CountableDataInterface::class
             )
         );
