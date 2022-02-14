@@ -6,8 +6,11 @@ namespace Yiisoft\Data\Reader\Filter;
 
 use InvalidArgumentException;
 
+use function get_class;
 use function gettype;
 use function is_scalar;
+use function is_object;
+use function sprintf;
 
 final class Between implements FilterInterface
 {
@@ -57,7 +60,7 @@ final class Between implements FilterInterface
         if (!is_scalar($value)) {
             throw new InvalidArgumentException(sprintf(
                 'The value should be scalar. The %s is received.',
-                gettype($value),
+                is_object($value) ? get_class($value) : gettype($value),
             ));
         }
     }
