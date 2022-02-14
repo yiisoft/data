@@ -7,7 +7,10 @@ namespace Yiisoft\Data\Tests\Reader;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Iterable\Processor\All;
+use Yiisoft\Data\Reader\Iterable\Processor\Between;
 use Yiisoft\Data\Reader\Iterable\Processor\Equals;
+use Yiisoft\Data\Reader\Iterable\Processor\EqualsEmpty;
+use Yiisoft\Data\Reader\Iterable\Processor\EqualsNull;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThan;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Processor\In;
@@ -77,7 +80,10 @@ final class FilterProcessorTest extends TestCase
     public function invalidFiltersArrayDataProvider(): array
     {
         return [
+            'betweenArgumentsTooSmall' => [new Between(), ['id'], []],
             'equalsArgumentsTooSmall' => [new Equals(), ['id'], []],
+            'equalsEmptyArgumentsTooSmall' => [new EqualsEmpty(), [], []],
+            'equalsNullArgumentsTooSmall' => [new EqualsNull(), [], []],
             'greaterThanArgumentsTooSmall' => [new GreaterThan(), ['id'], []],
             'greaterThanOrEqualArgumentsTooSmall' => [new GreaterThanOrEqual(), ['id'], []],
             'lessThanArgumentsTooSmall' => [new LessThan(), ['id'], []],

@@ -7,7 +7,10 @@ namespace Yiisoft\Data\Tests\Reader;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\EqualsEmpty;
+use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -23,9 +26,21 @@ final class FilterTest extends TestCase
     public function filterDataProvider(): array
     {
         return [
+            'Between' => [
+                new Between('test', 42, 44),
+                ['between', 'test', 42, 44],
+            ],
             'Equals' => [
                 new Equals('test', 42),
                 ['=', 'test', 42],
+            ],
+            'EqualsEmpty' => [
+                new EqualsEmpty('test'),
+                ['empty', 'test'],
+            ],
+            'EqualsNull' => [
+                new EqualsNull('test'),
+                ['null', 'test'],
             ],
             'In' => [
                 new In('test', [1, 2, 3]),
