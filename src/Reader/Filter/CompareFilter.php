@@ -20,7 +20,7 @@ abstract class CompareFilter implements FilterInterface
      */
     public function __construct(string $field, $value)
     {
-        FilterDataValidationHelper::validateScalarValueType($value);
+        FilterDataValidationHelper::assertIsScalar($value);
 
         $this->field = $field;
         $this->value = $value;

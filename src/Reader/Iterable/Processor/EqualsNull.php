@@ -25,7 +25,7 @@ class EqualsNull implements IterableProcessorInterface, FilterProcessorInterface
         }
 
         [$field] = $arguments;
-        FilterDataValidationHelper::validateFieldValueType($field);
+        FilterDataValidationHelper::assertFieldIsString($field);
 
         /** @var string $field */
         return array_key_exists($field, $item) && $item[$field] === null;

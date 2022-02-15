@@ -24,7 +24,7 @@ class EqualsEmpty implements IterableProcessorInterface, FilterProcessorInterfac
         }
 
         [$field] = $arguments;
-        FilterDataValidationHelper::validateFieldValueType($field);
+        FilterDataValidationHelper::assertFieldIsString($field);
 
         /** @var string $field */
         return empty($item[$field]);

@@ -29,8 +29,8 @@ final class Between implements FilterInterface
     {
         $this->field = $field;
 
-        FilterDataValidationHelper::validateScalarValueType($firstValue);
-        FilterDataValidationHelper::validateScalarValueType($secondValue);
+        FilterDataValidationHelper::assertIsScalar($firstValue);
+        FilterDataValidationHelper::assertIsScalar($secondValue);
 
         $this->firstValue = $firstValue;
         $this->secondValue = $secondValue;

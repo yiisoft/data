@@ -29,7 +29,7 @@ class In implements IterableProcessorInterface, FilterProcessorInterface
         }
 
         [$field, $values] = $arguments;
-        FilterDataValidationHelper::validateFieldValueType($field);
+        FilterDataValidationHelper::assertFieldIsString($field);
 
         if (!is_array($values)) {
             throw new InvalidArgumentException(sprintf(

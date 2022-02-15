@@ -18,7 +18,7 @@ final class In implements FilterInterface
     public function __construct(string $field, array $value)
     {
         foreach ($value as $arrayValue) {
-            FilterDataValidationHelper::validateScalarValueType($arrayValue);
+            FilterDataValidationHelper::assertIsScalar($arrayValue);
         }
 
         $this->field = $field;

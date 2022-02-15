@@ -18,7 +18,7 @@ final class FilterDataValidationHelper
     /**
      * @param mixed $field
      */
-    public static function validateFieldValueType($field): void
+    public static function assertFieldIsString($field): void
     {
         if (!is_string($field)) {
             throw new InvalidArgumentException(sprintf(
@@ -31,7 +31,7 @@ final class FilterDataValidationHelper
     /**
      * @param mixed $value
      */
-    public static function validateScalarValueType($value): void
+    public static function assertIsScalar($value): void
     {
         if (!is_scalar($value)) {
             throw new InvalidArgumentException(sprintf(

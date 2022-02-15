@@ -25,7 +25,7 @@ class LessThan implements IterableProcessorInterface, FilterProcessorInterface
         }
 
         [$field, $value] = $arguments;
-        FilterDataValidationHelper::validateFieldValueType($field);
+        FilterDataValidationHelper::assertFieldIsString($field);
 
         /** @var string $field */
         return array_key_exists($field, $item) && $item[$field] < $value;
