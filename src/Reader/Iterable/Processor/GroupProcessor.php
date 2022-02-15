@@ -6,11 +6,13 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
+use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
-use function count;
+use function array_shift;
 use function is_array;
 use function is_bool;
 use function is_string;
+use function sprintf;
 
 abstract class GroupProcessor implements IterableProcessorInterface, FilterProcessorInterface
 {
@@ -18,48 +20,58 @@ abstract class GroupProcessor implements IterableProcessorInterface, FilterProce
 
     abstract protected function checkResult(bool $result): ?bool;
 
-    /**
-     * PHP variable specific execute
-     */
     public function match(array $item, array $arguments, array $filterProcessors): bool
     {
-        if (count($arguments) < 1) {
-            throw new InvalidArgumentException('At least one argument should be provided');
+        if (empty($arguments)) {
+            throw new InvalidArgumentException('At least one argument should be provided.');
         }
 
-        if (!is_array($arguments[0])) {
-            throw new InvalidArgumentException('Sub filters is not an array');
+        [$subFilters] = $arguments;
+
+        if (!is_array($subFilters)) {
+            throw new InvalidArgumentException('Sub filters is not an array.');
         }
 
         $results = [];
-        foreach ($arguments[0] as $subFilter) {
+
+        foreach ($subFilters as $subFilter) {
             if (!is_array($subFilter)) {
-                throw new InvalidArgumentException('Sub filter is not an array');
+                throw new InvalidArgumentException(sprintf(
+                    'The sub filter should be array. The %s is received.',
+                    FilterDataValidationHelper::getValueType($subFilter),
+                ));
             }
 
-            if (count($subFilter) < 1) {
-                throw new InvalidArgumentException('At least operator should be provided');
+            if (empty($subFilter)) {
+                throw new InvalidArgumentException('At least operator should be provided.');
             }
 
             $operator = array_shift($subFilter);
+
             if (!is_string($operator)) {
-                throw new InvalidArgumentException('Operator is not a string');
+                throw new InvalidArgumentException(sprintf(
+                    'The operator should be string. The %s is received.',
+                    FilterDataValidationHelper::getValueType($subFilter),
+                ));
             }
 
             if ($operator === '') {
-                throw new InvalidArgumentException('The operator string cannot be empty');
+                throw new InvalidArgumentException('The operator string cannot be empty.');
             }
 
+            /** @var IterableProcessorInterface|null $processor */
             $processor = $filterProcessors[$operator] ?? null;
+
             if ($processor === null) {
-                throw new InvalidArgumentException(sprintf('"%s" operator is not supported', $operator));
+                throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
             }
 
-            /* @var $processor IterableProcessorInterface */
             $result = $processor->match($item, $subFilter, $filterProcessors);
+
             if (is_bool($this->checkResult($result))) {
                 return $result;
             }
+
             $results[] = $result;
         }
 

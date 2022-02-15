@@ -6,8 +6,10 @@ namespace Yiisoft\Data\Reader\Filter;
 
 use InvalidArgumentException;
 
+use function array_shift;
 use function is_array;
 use function is_string;
+use function sprintf;
 
 abstract class GroupFilter implements FilterInterface
 {
@@ -24,19 +26,22 @@ abstract class GroupFilter implements FilterInterface
     public function toArray(): array
     {
         $filtersArray = [];
+
         foreach ($this->filters as $filter) {
             if ($filter instanceof FilterInterface) {
                 $filter = $filter->toArray();
             }
+
             $filtersArray[] = $filter;
         }
+
         return [static::getOperator(), $filtersArray];
     }
 
     /**
-     * Building criteria with array
+     * Building criteria with array.
      *
-     * ~~~
+     * ```php
      * $dataReader->withFilter((new All())->withFiltersArray(
      *   [
      *     ['>', 'id', 88],
@@ -45,10 +50,10 @@ abstract class GroupFilter implements FilterInterface
      *        ['like', 'name', 'eva'],
      *     ],
      *   ]
-     * ))
-     * ~~~
+     * ));
+     * ```
      *
-     * @param array $filtersArray
+     * @param array[]|FilterInterface[] $filtersArray
      *
      * @return static
      */
@@ -59,14 +64,18 @@ abstract class GroupFilter implements FilterInterface
                 continue;
             }
 
+            /** @psalm-suppress DocblockTypeContradiction */
             if (!is_array($filter)) {
-                throw new InvalidArgumentException(sprintf('Invalid filter at "%s" key', $key));
+                throw new InvalidArgumentException(sprintf('Invalid filter at "%s" key.', $key));
             }
+
             $first = array_shift($filter);
+
             if (!is_string($first) || $first === '') {
-                throw new InvalidArgumentException(sprintf('Invalid filter operator on "%s" key', $key));
+                throw new InvalidArgumentException(sprintf('Invalid filter operator on "%s" key.', $key));
             }
         }
+
         $new = clone $this;
         $new->filters = $filtersArray;
         return $new;

@@ -4,35 +4,25 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
 
-use InvalidArgumentException;
-
-use function is_array;
+use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 final class In implements FilterInterface
 {
     private string $field;
     private array $value;
 
+    /**
+     * @param string $field
+     * @param bool[]|float[]|int[]|string[] $value
+     */
     public function __construct(string $field, array $value)
     {
-        $this->validateValue($value);
+        foreach ($value as $arrayValue) {
+            FilterDataValidationHelper::assertIsScalar($arrayValue);
+        }
 
         $this->field = $field;
         $this->value = $value;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private function validateValue($value): void
-    {
-        if (is_array($value)) {
-            foreach ($value as $arrayValue) {
-                if (!is_scalar($arrayValue)) {
-                    throw new InvalidArgumentException('All array values should be scalar');
-                }
-            }
-        }
     }
 
     public function toArray(): array

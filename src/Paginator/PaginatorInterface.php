@@ -14,44 +14,15 @@ interface PaginatorInterface
 {
     public const DEFAULT_PAGE_SIZE = 10;
 
-    /**
-     * @psalm-return iterable<TKey, TValue>
-     */
-    public function read(): iterable;
+    public function withNextPageToken(?string $token): self;
 
-    /**
-     * Check that Paginator has more than one page
-     */
-    public function isRequired(): bool;
+    public function withPreviousPageToken(?string $token): self;
 
-    public function isOnLastPage(): bool;
-
-    public function isOnFirstPage(): bool;
+    public function withPageSize(int $pageSize): self;
 
     public function getNextPageToken(): ?string;
 
     public function getPreviousPageToken(): ?string;
-
-    /**
-     * @return static
-     *
-     * @psalm-mutation-free
-     */
-    public function withNextPageToken(?string $token): self;
-
-    /**
-     * @return static
-     *
-     * @psalm-mutation-free
-     */
-    public function withPreviousPageToken(?string $token): self;
-
-    /**
-     * @return static
-     *
-     * @psalm-mutation-free
-     */
-    public function withPageSize(int $pageSize): self;
 
     public function getPageSize(): int;
 
@@ -61,4 +32,18 @@ interface PaginatorInterface
      * @return Sort|null Current sort object or null if no sorting is used.
      */
     public function getSort(): ?Sort;
+
+    /**
+     * @psalm-return iterable<TKey, TValue>
+     */
+    public function read(): iterable;
+
+    public function isOnLastPage(): bool;
+
+    public function isOnFirstPage(): bool;
+
+    /**
+     * Check that Paginator has more than one page.
+     */
+    public function isRequired(): bool;
 }

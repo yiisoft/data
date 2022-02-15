@@ -17,12 +17,16 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
+use function array_reverse;
 use function count;
 use function is_callable;
 use function is_object;
+use function key;
+use function reset;
+use function ucfirst;
 
 /**
- * Keyset paginator
+ * Keyset paginator.
  *
  * - Equally fast for 1st and 1000nd page
  * - Total number of pages is not available
@@ -40,7 +44,6 @@ use function is_object;
 class KeysetPaginator implements PaginatorInterface
 {
     /**
-     * @var FilterableDataInterface|ReadableDataInterface|SortableDataInterface
      * @psalm-var DataReaderType
      */
     private ReadableDataInterface $dataReader;
@@ -96,42 +99,15 @@ class KeysetPaginator implements PaginatorInterface
         $this->dataReader = $dataReader;
     }
 
-    /**
-     * Reads items of the page
-     *
-     * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetInternal()}
-     */
-    public function read(): iterable
+    public function __clone()
     {
-        if ($this->readCache !== null) {
-            return $this->readCache;
-        }
-
-        $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
-        $sort = $this->dataReader->getSort();
-
-        if ($this->isGoingToPreviousPage()) {
-            $sort = $this->reverseSort($sort);
-            $dataReader = $dataReader->withSort($sort);
-        }
-
-        if ($this->isGoingSomewhere()) {
-            $dataReader = $dataReader->withFilter($this->getFilter($sort));
-            $this->hasPreviousPageItem = $this->previousPageExist($dataReader, $sort);
-        }
-
-        $data = $this->readData($dataReader, $sort);
-        if ($this->isGoingToPreviousPage()) {
-            $data = $this->reverseData($data);
-        }
-
-        /** @psalm-var array<TKey, TValue> $data */
-        return $this->readCache = $data;
+        $this->readCache = null;
+        $this->hasPreviousPageItem = false;
+        $this->hasNextPageItem = false;
+        $this->currentFirstValue = null;
+        $this->currentLastValue = null;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function withPreviousPageToken(?string $token): self
     {
         $new = clone $this;
@@ -140,9 +116,6 @@ class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
-    /**
-     * @psalm-mutation-free
-     */
     public function withNextPageToken(?string $token): self
     {
         $new = clone $this;
@@ -151,25 +124,6 @@ class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function getPreviousPageToken(): ?string
-    {
-        if ($this->isOnFirstPage()) {
-            return null;
-        }
-        return $this->currentFirstValue;
-    }
-
-    public function getNextPageToken(): ?string
-    {
-        if ($this->isOnLastPage()) {
-            return null;
-        }
-        return $this->currentLastValue;
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
     public function withPageSize(int $pageSize): self
     {
         if ($pageSize < 1) {
@@ -181,19 +135,46 @@ class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function isOnLastPage(): bool
+    /**
+     * Reads items of the page.
+     *
+     * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetInternal()}.
+     *
+     * @psalm-suppress MixedMethodCall
+     */
+    public function read(): iterable
     {
-        $this->initializeInternal();
-        return !$this->hasNextPageItem;
-    }
-
-    public function isOnFirstPage(): bool
-    {
-        if ($this->lastValue === null && $this->firstValue === null) {
-            return true;
+        if ($this->readCache !== null) {
+            return $this->readCache;
         }
-        $this->initializeInternal();
-        return !$this->hasPreviousPageItem;
+
+        /** @var Sort $sort */
+        $sort = $this->dataReader->getSort();
+        /** @psalm-var DataReaderType $dataReader */
+        $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
+
+        if ($this->isGoingToPreviousPage()) {
+            $sort = $this->reverseSort($sort);
+            /** @psalm-var DataReaderType $dataReader */
+            $dataReader = $dataReader->withSort($sort);
+        }
+
+        if ($this->isGoingSomewhere()) {
+            /** @psalm-var FilterableDataInterface $dataReader */
+            $dataReader = $dataReader->withFilter($this->getFilter($sort));
+            /** @psalm-var DataReaderType $dataReader */
+            $this->hasPreviousPageItem = $this->previousPageExist($dataReader, $sort);
+        }
+
+        /** @psalm-var ReadableDataInterface<TKey, TValue> $dataReader */
+        $data = $this->readData($dataReader, $sort);
+
+        if ($this->isGoingToPreviousPage()) {
+            $data = $this->reverseData($data);
+        }
+
+        /** @psalm-var array<TKey, TValue> $data */
+        return $this->readCache = $data;
     }
 
     public function getPageSize(): int
@@ -207,13 +188,41 @@ class KeysetPaginator implements PaginatorInterface
         return count($this->readCache);
     }
 
-    public function __clone()
+    public function getPreviousPageToken(): ?string
     {
-        $this->readCache = null;
-        $this->hasPreviousPageItem = false;
-        $this->hasNextPageItem = false;
-        $this->currentFirstValue = null;
-        $this->currentLastValue = null;
+        return $this->isOnFirstPage() ? null : $this->currentFirstValue;
+    }
+
+    public function getNextPageToken(): ?string
+    {
+        return $this->isOnLastPage() ? null : $this->currentLastValue;
+    }
+
+    public function getSort(): ?Sort
+    {
+        /** @psalm-var SortableDataInterface $this->dataReader */
+        return $this->dataReader->getSort();
+    }
+
+    public function isOnFirstPage(): bool
+    {
+        if ($this->lastValue === null && $this->firstValue === null) {
+            return true;
+        }
+
+        $this->initializeInternal();
+        return !$this->hasPreviousPageItem;
+    }
+
+    public function isOnLastPage(): bool
+    {
+        $this->initializeInternal();
+        return !$this->hasNextPageItem;
+    }
+
+    public function isRequired(): bool
+    {
+        return !$this->isOnFirstPage() || !$this->isOnLastPage();
     }
 
     /**
@@ -224,77 +233,14 @@ class KeysetPaginator implements PaginatorInterface
         if ($this->readCache !== null) {
             return;
         }
+
         $cache = [];
+
         foreach ($this->read() as $key => $value) {
             $cache[$key] = $value;
         }
+
         $this->readCache = $cache;
-    }
-
-    public function isRequired(): bool
-    {
-        return !$this->isOnFirstPage() || !$this->isOnLastPage();
-    }
-
-    /**
-     * @psalm-assert-if-true string $this->firstValue
-     * @psalm-assert-if-true null $this->lastValue
-     */
-    private function isGoingToPreviousPage(): bool
-    {
-        return $this->firstValue !== null && $this->lastValue === null;
-    }
-
-    private function isGoingSomewhere(): bool
-    {
-        return $this->firstValue !== null || $this->lastValue !== null;
-    }
-
-    private function getFilter(Sort $sort): CompareFilter
-    {
-        [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
-        if ($sorting === 'asc') {
-            return new GreaterThan($field, $this->getValue());
-        }
-        return new LessThan($field, $this->getValue());
-    }
-
-    private function getReverseFilter(Sort $sort): CompareFilter
-    {
-        [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
-        if ($sorting === 'asc') {
-            return new LessThanOrEqual($field, $this->getValue());
-        }
-        return new GreaterThanOrEqual($field, $this->getValue());
-    }
-
-    /**
-     * @psalm-suppress NullableReturnStatement,InvalidNullableReturnType The code calling this method
-     * must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
-     */
-    private function getValue(): string
-    {
-        return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
-    }
-
-    private function reverseSort(Sort $sort): Sort
-    {
-        $order = $sort->getOrder();
-        foreach ($order as &$sorting) {
-            $sorting = $sorting === 'asc' ? 'desc' : 'asc';
-        }
-
-        return $sort->withOrder($order);
-    }
-
-    private function getFieldAndSortingFromSort(Sort $sort): array
-    {
-        $order = $sort->getOrder();
-
-        return [
-            key($order),
-            reset($order),
-        ];
     }
 
     /**
@@ -304,16 +250,18 @@ class KeysetPaginator implements PaginatorInterface
     private function readData(ReadableDataInterface $dataReader, Sort $sort): array
     {
         $data = [];
+        /** @var string $field */
         [$field] = $this->getFieldAndSortingFromSort($sort);
 
         foreach ($dataReader->read() as $key => $item) {
             if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = (string)$this->getValueFromItem($item, $field);
+                $this->currentFirstValue = (string) $this->getValueFromItem($item, $field);
             }
+
             if (count($data) === $this->pageSize) {
                 $this->hasNextPageItem = true;
             } else {
-                $this->currentLastValue = (string)$this->getValueFromItem($item, $field);
+                $this->currentLastValue = (string) $this->getValueFromItem($item, $field);
                 $data[$key] = $item;
             }
         }
@@ -334,13 +282,16 @@ class KeysetPaginator implements PaginatorInterface
 
     /**
      * @psalm-param DataReaderType $dataReader
+     * @psalm-suppress MixedAssignment, MixedMethodCall, UnusedForeachValue
      */
     private function previousPageExist(ReadableDataInterface $dataReader, Sort $sort): bool
     {
         $reverseFilter = $this->getReverseFilter($sort);
+
         foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
             return true;
         }
+
         return false;
     }
 
@@ -352,15 +303,68 @@ class KeysetPaginator implements PaginatorInterface
     private function getValueFromItem($item, string $field)
     {
         $methodName = 'get' . ucfirst($field);
+
         if (is_object($item) && is_callable([$item, $methodName])) {
             return $item->$methodName();
         }
 
+        /** @psalm-suppress MixedArgument */
         return ArrayHelper::getValue($item, $field);
     }
 
-    public function getSort(): ?Sort
+    private function getFilter(Sort $sort): CompareFilter
     {
-        return $this->dataReader->getSort();
+        $value = $this->getValue();
+        /** @var string $field */
+        [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
+        return $sorting === 'asc' ? new GreaterThan($field, $value) : new LessThan($field, $value);
+    }
+
+    private function getReverseFilter(Sort $sort): CompareFilter
+    {
+        $value = $this->getValue();
+        /** @var string $field */
+        [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
+        return $sorting === 'asc' ? new LessThanOrEqual($field, $value) : new GreaterThanOrEqual($field, $value);
+    }
+
+    /**
+     * @psalm-suppress NullableReturnStatement, InvalidNullableReturnType The code calling this method
+     * must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
+     */
+    private function getValue(): string
+    {
+        return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
+    }
+
+    private function reverseSort(Sort $sort): Sort
+    {
+        $order = $sort->getOrder();
+
+        foreach ($order as &$sorting) {
+            $sorting = $sorting === 'asc' ? 'desc' : 'asc';
+        }
+
+        return $sort->withOrder($order);
+    }
+
+    private function getFieldAndSortingFromSort(Sort $sort): array
+    {
+        $order = $sort->getOrder();
+
+        return [
+            (string) key($order),
+            reset($order),
+        ];
+    }
+
+    private function isGoingToPreviousPage(): bool
+    {
+        return $this->firstValue !== null && $this->lastValue === null;
+    }
+
+    private function isGoingSomewhere(): bool
+    {
+        return $this->firstValue !== null || $this->lastValue !== null;
     }
 }

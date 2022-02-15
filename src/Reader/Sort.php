@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
+use InvalidArgumentException;
+
 use function array_key_exists;
+use function array_merge;
+use function implode;
 use function is_array;
 use function is_int;
 use function is_string;
+use function preg_split;
+use function strpos;
+use function substr;
+use function trim;
 
 /**
  * Sort represents data sorting settings:
@@ -35,7 +43,6 @@ use function is_string;
  * @psalm-type TConfigItem = array{asc: TSortFieldItem, desc: TSortFieldItem, default: "asc"|"desc"}
  * @psalm-type TConfig = array<string, TConfigItem>
  * @psalm-type TUserConfig = array<int, string>|array<string, array<string, int|string>>
- * @psalm-immutable
  */
 final class Sort
 {
@@ -53,6 +60,7 @@ final class Sort
 
     /**
      * @var array Logical fields to order by in form of [name => direction].
+     * @psalm-var TOrder
      */
     private array $currentOrder = [];
 
@@ -66,12 +74,13 @@ final class Sort
     {
         $this->ignoreExtraFields = $ignoreExtraFields;
         $normalizedConfig = [];
+
         foreach ($config as $fieldName => $fieldConfig) {
             if (
                 !(is_int($fieldName) && is_string($fieldConfig))
                 && !(is_string($fieldName) && is_array($fieldConfig))
             ) {
-                throw new \InvalidArgumentException('Invalid config format.');
+                throw new InvalidArgumentException('Invalid config format.');
             }
 
             if (is_string($fieldConfig)) {
@@ -172,7 +181,7 @@ final class Sort
      * - `desc` - criteria for descending sorting.
      * - `default` - default sorting. Could be either `asc` or `desc`. If not specified, `asc` is used.
      *
-     * @return Sort
+     * @return self
      */
     public static function any(array $config = []): self
     {
@@ -194,6 +203,7 @@ final class Sort
     {
         $order = [];
         $parts = preg_split('/\s*,\s*/', trim($orderString), -1, PREG_SPLIT_NO_EMPTY);
+
         foreach ($parts as $part) {
             if (strpos($part, '-') === 0) {
                 $order[substr($part, 1)] = 'desc';
@@ -201,6 +211,7 @@ final class Sort
                 $order[$part] = 'asc';
             }
         }
+
         return $this->withOrder($order);
     }
 
@@ -208,6 +219,7 @@ final class Sort
      * Change current logical fields order.
      *
      * @param array $order A map with logical field names to order by as keys, direction as values.
+     * @psalm-param TOrder $order
      *
      * @return self
      */
@@ -238,29 +250,33 @@ final class Sort
     public function getOrderAsString(): string
     {
         $parts = [];
+
         foreach ($this->currentOrder as $field => $direction) {
             $parts[] = ($direction === 'desc' ? '-' : '') . $field;
         }
+
         return implode(',', $parts);
     }
 
     /**
      * A sorting criteria to be applied to {@see SortableDataInterface}
      * when obtaining the data i.e. a list of real fields along with their order directions.
+     *
+     * @psalm-return array<string, "asc"|"desc"|int>
      */
     public function getCriteria(): array
     {
         $criteria = [];
-        $order = $this->getOrder();
-
         $config = $this->config;
 
-        foreach ($order as $field => $direction) {
+        foreach ($this->currentOrder as $field => $direction) {
             $fieldExists = array_key_exists($field, $config);
+
             if (!$fieldExists) {
                 if ($this->ignoreExtraFields) {
                     continue;
                 }
+
                 $criteria += [$field => $direction];
             } else {
                 $criteria += $config[$field][$direction];
@@ -268,7 +284,7 @@ final class Sort
             }
         }
 
-        foreach ($config as $field => $fieldConfig) {
+        foreach ($config as $fieldConfig) {
             $criteria += $fieldConfig[$fieldConfig['default']];
         }
 
