@@ -199,6 +199,10 @@ class IterableDataReader implements DataReaderInterface
             ));
         }
 
+        if ($operation === '') {
+            throw new RuntimeException('The operator string cannot be empty.');
+        }
+
         $processor = $this->filterProcessors[$operation] ?? null;
 
         if ($processor === null) {
