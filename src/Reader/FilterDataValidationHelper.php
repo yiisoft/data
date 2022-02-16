@@ -45,7 +45,7 @@ final class FilterDataValidationHelper
     /**
      * @param mixed $filterProcessor
      */
-    public static function assertIsFilterProcessorIsIterable($filterProcessor): void
+    public static function assertFilterProcessorIsIterable($filterProcessor): void
     {
         if (!$filterProcessor instanceof IterableProcessorInterface) {
             throw new InvalidArgumentException(sprintf(

@@ -67,7 +67,7 @@ abstract class GroupProcessor implements IterableProcessorInterface, FilterProce
                 throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
             }
 
-            FilterDataValidationHelper::assertIsFilterProcessorIsIterable($filterProcessor);
+            FilterDataValidationHelper::assertFilterProcessorIsIterable($filterProcessor);
             $results[] = $filterProcessor->match($item, $subFilter, $filterProcessors);
         }
 
