@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Reader;
 
 use ArrayIterator;
 use Generator;
-use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 use RuntimeException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
@@ -21,6 +21,11 @@ use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Tests\TestCase;
+
+use function array_slice;
+use function array_values;
+use function count;
 
 final class IterableDataReaderTest extends TestCase
 {
@@ -52,22 +57,23 @@ final class IterableDataReaderTest extends TestCase
         4 => self::ITEM_5,
     ];
 
-    private function getDataSetSortedByName(): array
-    {
-        return [
-            4 => self::ITEM_5,
-            3 => self::ITEM_4,
-            2 => self::ITEM_3,
-            0 => self::ITEM_1,
-            1 => self::ITEM_2,
-        ];
-    }
-
-    public function testWithLimitIsImmutable(): void
+    public function testImmutability(): void
     {
         $reader = new IterableDataReader([]);
 
+        $this->assertNotSame($reader, $reader->withFilterProcessors());
+        $this->assertNotSame($reader, $reader->withFilter(null));
+        $this->assertNotSame($reader, $reader->withSort(null));
+        $this->assertNotSame($reader, $reader->withOffset(1));
         $this->assertNotSame($reader, $reader->withLimit(1));
+    }
+
+    public function testWithLimitFailForNegativeValues(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The limit must not be less than 0.');
+
+        (new IterableDataReader([]))->withLimit(-1);
     }
 
     public function testLimitIsApplied(): void
@@ -96,14 +102,7 @@ final class IterableDataReaderTest extends TestCase
         ], $data);
     }
 
-    public function testsWithSortIsImmutable(): void
-    {
-        $reader = new IterableDataReader([]);
-
-        $this->assertNotSame($reader, $reader->withSort(null));
-    }
-
-    public function testSorting(): void
+    public function testAscSorting(): void
     {
         $sorting = Sort::only([
             'id',
@@ -117,7 +116,24 @@ final class IterableDataReaderTest extends TestCase
 
         $data = $reader->read();
 
-        $this->assertSame($this->getDataSetSortedByName(), $data);
+        $this->assertSame($this->getDataSetAscSortedByName(), $data);
+    }
+
+    public function testDescSorting(): void
+    {
+        $sorting = Sort::only([
+            'id',
+            'name',
+        ]);
+
+        $sorting = $sorting->withOrder(['name' => 'desc']);
+
+        $reader = (new IterableDataReader(self::DEFAULT_DATASET))
+            ->withSort($sorting);
+
+        $data = $reader->read();
+
+        $this->assertSame($this->getDataSetDescSortedByName(), $data);
     }
 
     public function testCounting(): void
@@ -144,14 +160,7 @@ final class IterableDataReaderTest extends TestCase
             ->withSort($sorting)
             ->withOffset(2);
 
-        $this->assertSame($this->getDataSetSortedByName()[2], $reader->readOne());
-    }
-
-    public function testsWithFilterIsImmutable(): void
-    {
-        $reader = new IterableDataReader([]);
-
-        $this->assertNotSame($reader, $reader->withFilter(null));
+        $this->assertSame($this->getDataSetAscSortedByName()[2], $reader->readOne());
     }
 
     public function testEqualsFiltering(): void
@@ -321,12 +330,7 @@ final class IterableDataReaderTest extends TestCase
             'name',
         ]);
         $sorting = $sorting->withOrder(['name' => 'asc']);
-        $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());
-    }
-
-    private function getDataSetAsGenerator(): Generator
-    {
-        yield from self::DEFAULT_DATASET;
+        $this->assertSame($this->getDataSetAscSortedByName(), $reader->withSort($sorting)->read());
     }
 
     public function testGeneratorAsDataSet(): void
@@ -337,7 +341,7 @@ final class IterableDataReaderTest extends TestCase
             'name',
         ]);
         $sorting = $sorting->withOrder(['name' => 'asc']);
-        $this->assertSame($this->getDataSetSortedByName(), $reader->withSort($sorting)->read());
+        $this->assertSame($this->getDataSetAscSortedByName(), $reader->withSort($sorting)->read());
     }
 
     public function testCustomFilter(): void
@@ -360,6 +364,7 @@ final class IterableDataReaderTest extends TestCase
                 return 'digital';
             }
         };
+
         $reader = new class (self::DEFAULT_DATASET) extends IterableDataReader {
             protected function matchFilter(array $item, array $filter): bool
             {
@@ -379,16 +384,97 @@ final class IterableDataReaderTest extends TestCase
         $this->assertSame([4 => self::ITEM_5], $filtered);
     }
 
+    public function testCustomEqualsProcessor(): void
+    {
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
+
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
+            ->withSort($sort)
+            ->withFilterProcessors(new class () extends \Yiisoft\Data\Reader\Iterable\Processor\Equals {
+                public function match(array $item, array $arguments, array $filterProcessors): bool
+                {
+                    [$field,] = $arguments;
+                    if ($item[$field] === 2) {
+                        return true;
+                    }
+                    return parent::match($item, $arguments, $filterProcessors);
+                }
+            });
+
+        $dataReader = $dataReader->withFilter(new Equals('id', 100));
+        $expected = [self::ITEM_2];
+
+        $this->assertSame($expected, array_values($this->iterableToArray($dataReader->read())));
+    }
+
     public function testNotSupportedOperator(): void
     {
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withFilter(new class ('id', 2) extends Equals {
-                public static function getOperator(): string
-                {
-                    return '----';
-                }
-            });
+            ->withFilter($this->createFilterWithNotSupportedOperator('---'));
+
         $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Operation "---" is not supported.');
+
         $dataReader->read();
+    }
+
+    public function testNotSupportedEmptyOperator(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
+            ->withFilter($this->createFilterWithNotSupportedOperator(''));
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The operator string cannot be empty.');
+
+        $dataReader->read();
+    }
+
+    private function createFilterWithNotSupportedOperator(string $operator): FilterInterface
+    {
+        return new class ($operator) implements FilterInterface {
+            private static string $operator;
+
+            public function __construct(string $operator)
+            {
+                self::$operator = $operator;
+            }
+
+            public static function getOperator(): string
+            {
+                return self::$operator;
+            }
+
+            public function toArray(): array
+            {
+                return [self::getOperator(), self::$operator];
+            }
+        };
+    }
+
+    private function getDataSetAsGenerator(): Generator
+    {
+        yield from self::DEFAULT_DATASET;
+    }
+
+    private function getDataSetAscSortedByName(): array
+    {
+        return [
+            4 => self::ITEM_5,
+            3 => self::ITEM_4,
+            2 => self::ITEM_3,
+            0 => self::ITEM_1,
+            1 => self::ITEM_2,
+        ];
+    }
+
+    private function getDataSetDescSortedByName(): array
+    {
+        return [
+            1 => self::ITEM_2,
+            0 => self::ITEM_1,
+            2 => self::ITEM_3,
+            3 => self::ITEM_4,
+            4 => self::ITEM_5,
+        ];
     }
 }
