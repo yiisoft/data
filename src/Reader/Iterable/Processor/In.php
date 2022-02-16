@@ -10,9 +10,6 @@ use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function array_key_exists;
 use function count;
-use function get_class;
-use function gettype;
-use function is_object;
 use function sprintf;
 
 class In implements IterableProcessorInterface, FilterProcessorInterface
@@ -34,7 +31,7 @@ class In implements IterableProcessorInterface, FilterProcessorInterface
         if (!is_array($values)) {
             throw new InvalidArgumentException(sprintf(
                 'The values should be array. The %s is received.',
-                is_object($values) ? get_class($values) : gettype($values),
+                FilterDataValidationHelper::getValueType($values),
             ));
         }
 

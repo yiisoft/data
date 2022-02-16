@@ -45,7 +45,7 @@ class Not implements IterableProcessorInterface, FilterProcessorInterface
         if (!is_string($operator)) {
             throw new InvalidArgumentException(sprintf(
                 'The operator should be string. The %s is received.',
-                FilterDataValidationHelper::getValueType($values),
+                FilterDataValidationHelper::getValueType($operator),
             ));
         }
 
@@ -53,13 +53,14 @@ class Not implements IterableProcessorInterface, FilterProcessorInterface
             throw new InvalidArgumentException('The operator string cannot be empty.');
         }
 
-        /** @var IterableProcessorInterface|null $processor */
-        $processor = $filterProcessors[$operator] ?? null;
+        /** @var IterableProcessorInterface|null $filterProcessor */
+        $filterProcessor = $filterProcessors[$operator] ?? null;
 
-        if ($processor === null) {
+        if ($filterProcessor === null) {
             throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
         }
 
-        return !$processor->match($item, $values, $filterProcessors);
+        FilterDataValidationHelper::assertIsFilterProcessorIsIterable($filterProcessor);
+        return !$filterProcessor->match($item, $values, $filterProcessors);
     }
 }

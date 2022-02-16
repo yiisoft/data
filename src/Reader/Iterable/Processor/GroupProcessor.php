@@ -9,8 +9,8 @@ use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function array_shift;
+use function count;
 use function is_array;
-use function is_bool;
 use function is_string;
 use function sprintf;
 
@@ -18,18 +18,19 @@ abstract class GroupProcessor implements IterableProcessorInterface, FilterProce
 {
     abstract protected function checkResults(array $results): bool;
 
-    abstract protected function checkResult(bool $result): ?bool;
-
     public function match(array $item, array $arguments, array $filterProcessors): bool
     {
-        if (empty($arguments)) {
-            throw new InvalidArgumentException('At least one argument should be provided.');
+        if (count($arguments) !== 1) {
+            throw new InvalidArgumentException('$arguments should contain exactly one element.');
         }
 
         [$subFilters] = $arguments;
 
         if (!is_array($subFilters)) {
-            throw new InvalidArgumentException('Sub filters is not an array.');
+            throw new InvalidArgumentException(sprintf(
+                'The sub filters should be array. The %s is received.',
+                FilterDataValidationHelper::getValueType($subFilters),
+            ));
         }
 
         $results = [];
@@ -51,7 +52,7 @@ abstract class GroupProcessor implements IterableProcessorInterface, FilterProce
             if (!is_string($operator)) {
                 throw new InvalidArgumentException(sprintf(
                     'The operator should be string. The %s is received.',
-                    FilterDataValidationHelper::getValueType($subFilter),
+                    FilterDataValidationHelper::getValueType($operator),
                 ));
             }
 
@@ -59,20 +60,15 @@ abstract class GroupProcessor implements IterableProcessorInterface, FilterProce
                 throw new InvalidArgumentException('The operator string cannot be empty.');
             }
 
-            /** @var IterableProcessorInterface|null $processor */
-            $processor = $filterProcessors[$operator] ?? null;
+            /** @var IterableProcessorInterface|null $filterProcessor */
+            $filterProcessor = $filterProcessors[$operator] ?? null;
 
-            if ($processor === null) {
+            if ($filterProcessor === null) {
                 throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
             }
 
-            $result = $processor->match($item, $subFilter, $filterProcessors);
-
-            if (is_bool($this->checkResult($result))) {
-                return $result;
-            }
-
-            $results[] = $result;
+            FilterDataValidationHelper::assertIsFilterProcessorIsIterable($filterProcessor);
+            $results[] = $filterProcessor->match($item, $subFilter, $filterProcessors);
         }
 
         return $this->checkResults($results);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
+use function in_array;
+
 class Any extends GroupProcessor
 {
     public function getOperator(): string
@@ -13,11 +15,6 @@ class Any extends GroupProcessor
 
     protected function checkResults(array $results): bool
     {
-        return false;
-    }
-
-    protected function checkResult(bool $result): ?bool
-    {
-        return $result ? true : null;
+        return in_array(true, $results, true);
     }
 }
