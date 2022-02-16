@@ -66,7 +66,7 @@ abstract class GroupFilter implements FilterInterface
 
             /** @psalm-suppress DocblockTypeContradiction */
             if (!is_array($filter)) {
-                throw new InvalidArgumentException(sprintf('Invalid filter at "%s" key.', $key));
+                throw new InvalidArgumentException(sprintf('Invalid filter on "%s" key.', $key));
             }
 
             $first = array_shift($filter);

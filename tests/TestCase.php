@@ -5,12 +5,76 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests;
 
 use ReflectionObject;
+use stdClass;
 use Traversable;
 
 use function iterator_to_array;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
+    public function invalidArrayValueDataProvider(): array
+    {
+        return [
+            'bool-true' => [true],
+            'bool-false' => [false],
+            'callback' => [fn () => null],
+            'float' => [1.0],
+            'int' => [1],
+            'null' => [null],
+            'string' => ['string'],
+            'object' => [new stdClass()],
+        ];
+    }
+
+    public function invalidStringValueDataProvider(): array
+    {
+        return [
+            'array' => [[]],
+            'bool-true' => [true],
+            'bool-false' => [false],
+            'callback' => [fn () => null],
+            'float' => [1.0],
+            'int' => [1],
+            'null' => [null],
+            'object' => [new stdClass()],
+        ];
+    }
+
+    public function invalidFilterDataProvider(): array
+    {
+        return [
+            'callback' => [fn () => null],
+            'float' => [1.0],
+            'int' => [1],
+            'null' => [null],
+            'string' => ['string'],
+            'object' => [new stdClass()],
+        ];
+    }
+
+    public function invalidFilterOperatorDataProvider(): array
+    {
+        return [
+            'array' => [[[]]],
+            'callback' => [[fn () => null]],
+            'empty-string' => [['']],
+            'float' => [[1.0]],
+            'int' => [[1]],
+            'null' => [[null]],
+            'object' => [[new stdClass()]],
+        ];
+    }
+
+    public function invalidScalarValueDataProvider(): array
+    {
+        return [
+            'array' => [[]],
+            'callback' => [fn () => null],
+            'null' => [null],
+            'object' => [new stdClass()],
+        ];
+    }
+
     /**
      * Gets an inaccessible object property.
      *
@@ -41,6 +105,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function iterableToArray(iterable $iterable): array
     {
-        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array)$iterable;
+        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array) $iterable;
     }
 }

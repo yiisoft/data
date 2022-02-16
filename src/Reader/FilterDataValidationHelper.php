@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader;
 
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 
 use function get_class;
 use function gettype;
@@ -36,7 +37,21 @@ final class FilterDataValidationHelper
         if (!is_scalar($value)) {
             throw new InvalidArgumentException(sprintf(
                 'The value should be scalar. The %s is received.',
-                is_object($value) ? get_class($value) : gettype($value),
+                self::getValueType($value),
+            ));
+        }
+    }
+
+    /**
+     * @param mixed $filterProcessor
+     */
+    public static function assertFilterProcessorIsIterable($filterProcessor): void
+    {
+        if (!$filterProcessor instanceof IterableProcessorInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'The filter processor should be an object and implement "%s". The %s is received.',
+                IterableProcessorInterface::class,
+                self::getValueType($filterProcessor),
             ));
         }
     }

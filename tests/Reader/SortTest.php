@@ -13,6 +13,7 @@ final class SortTest extends TestCase
     public function testInvalidConfigWithoutFieldName(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid config format.');
 
         Sort::only([
             1 => [],
@@ -22,6 +23,7 @@ final class SortTest extends TestCase
     public function testInvalidConfigWithoutConfig(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid config format.');
 
         Sort::only([
             'field' => 'whatever',
@@ -41,6 +43,7 @@ final class SortTest extends TestCase
                 'default' => 'desc',
             ],
         ];
+
         $sortOnly = Sort::only($config);
         $sortAny = Sort::any($config);
 
@@ -69,6 +72,7 @@ final class SortTest extends TestCase
                 'default' => 'desc',
             ],
         ];
+
         $this->assertSame($expected, $this->getInaccessibleProperty($sortAny, 'config'));
         $this->assertSame($expected, $this->getInaccessibleProperty($sortOnly, 'config'));
     }
@@ -97,33 +101,30 @@ final class SortTest extends TestCase
 
     public function testGetOrderAsString(): void
     {
-        $sort = Sort::any()
-            ->withOrder([
-                'a' => 'desc',
-                'b' => 'asc',
-            ]);
+        $sort = Sort::any()->withOrder([
+            'a' => 'desc',
+            'b' => 'asc',
+        ]);
 
         $this->assertSame('-a,b', $sort->getOrderAsString());
     }
 
     public function testOnlyModeGetCriteriaWithEmptyConfig(): void
     {
-        $sort = Sort::only([])
-            ->withOrder([
-                'a' => 'desc',
-                'b' => 'asc',
-            ]);
+        $sort = Sort::only([])->withOrder([
+            'a' => 'desc',
+            'b' => 'asc',
+        ]);
 
         $this->assertSame([], $sort->getCriteria());
     }
 
     public function testAnyModeGetCriteriaWithEmptyConfig(): void
     {
-        $sort = Sort::any([])
-            ->withOrder([
-                'a' => 'desc',
-                'b' => 'asc',
-            ]);
+        $sort = Sort::any([])->withOrder([
+            'a' => 'desc',
+            'b' => 'asc',
+        ]);
 
         $this->assertSame(['a' => 'desc', 'b' => 'asc'], $sort->getCriteria());
     }
@@ -194,8 +195,7 @@ final class SortTest extends TestCase
         $sort = Sort::only([
             'b',
             'c',
-        ])
-            ->withOrder(['c' => 'desc']);
+        ])->withOrder(['c' => 'desc']);
 
         $this->assertSame([
             'c' => SORT_DESC,
