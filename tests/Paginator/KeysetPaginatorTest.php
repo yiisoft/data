@@ -343,7 +343,6 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = $paginator->withPageSize(2);
 
         $this->assertTrue($paginator->isRequired());
-
     }
 
     public function testCurrentPageSize(): void
