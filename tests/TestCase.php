@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests;
 
+use ReflectionException;
 use ReflectionObject;
 use stdClass;
 use Traversable;
@@ -78,13 +79,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Gets an inaccessible object property.
      *
-     * @param object $object
-     * @param string $propertyName
-     * @param bool $revoke whether to make property inaccessible after getting
-     *
      * @return mixed
      */
-    protected function getInaccessibleProperty(object $object, string $propertyName, bool $revoke = true)
+    protected function getInaccessibleProperty(object $object, string $propertyName)
     {
         $class = new ReflectionObject($object);
 
@@ -95,10 +92,25 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $property = $class->getProperty($propertyName);
         $property->setAccessible(true);
         $result = $property->getValue($object);
+        $property->setAccessible(false);
 
-        if ($revoke) {
-            $property->setAccessible(false);
-        }
+        return $result;
+    }
+
+    /**
+     * Invokes an inaccessible method.
+     *
+     * @throws ReflectionException
+     *
+     * @return mixed
+     */
+    protected function invokeMethod(object $object, string $method, array $args = [])
+    {
+        $reflection = new ReflectionObject($object);
+        $method = $reflection->getMethod($method);
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($object, $args);
+        $method->setAccessible(false);
 
         return $result;
     }

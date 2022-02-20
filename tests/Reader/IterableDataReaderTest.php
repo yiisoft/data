@@ -19,6 +19,7 @@ use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
+use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
@@ -405,6 +406,31 @@ final class IterableDataReaderTest extends TestCase
         $expected = [self::ITEM_2];
 
         $this->assertSame($expected, array_values($this->iterableToArray($dataReader->read())));
+    }
+
+    /**
+     * @dataProvider invalidStringValueDataProvider
+     */
+    public function testMatchFilterFailIfOperatorIsNotString($operation): void
+    {
+        $dataReader = new class (self::DEFAULT_DATASET) extends IterableDataReader {
+            public function __construct(iterable $data)
+            {
+                parent::__construct($data);
+            }
+
+            public function matchFilter(array $item, array $filter): bool
+            {
+                return parent::matchFilter($item, $filter);
+            }
+        };
+
+        $type = FilterDataValidationHelper::getValueType($operation);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("The operator should be string. The $type is received.");
+
+        $dataReader->matchFilter(['id' => 1], [$operation, 'field', 'value']);
     }
 
     public function testNotSupportedOperator(): void
