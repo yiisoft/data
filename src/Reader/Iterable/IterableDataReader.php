@@ -49,6 +49,7 @@ class IterableDataReader implements DataReaderInterface
      * @psalm-var iterable<TKey, TValue>
      */
     protected iterable $data;
+
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
     private int $limit = 0;
