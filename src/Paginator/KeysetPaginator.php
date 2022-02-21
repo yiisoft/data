@@ -23,6 +23,7 @@ use function is_callable;
 use function is_object;
 use function key;
 use function reset;
+use function sprintf;
 use function ucfirst;
 
 /**
@@ -76,15 +77,17 @@ class KeysetPaginator implements PaginatorInterface
     public function __construct(ReadableDataInterface $dataReader)
     {
         if (!$dataReader instanceof FilterableDataInterface) {
-            throw new InvalidArgumentException(
-                'Data reader should implement FilterableDataInterface to be used with keyset paginator.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Data reader should implement "%s" to be used with keyset paginator.',
+                FilterableDataInterface::class,
+            ));
         }
 
         if (!$dataReader instanceof SortableDataInterface) {
-            throw new InvalidArgumentException(
-                'Data reader should implement SortableDataInterface to be used with keyset paginator.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Data reader should implement "%s" to be used with keyset paginator.',
+                SortableDataInterface::class,
+            ));
         }
 
         if ($dataReader->getSort() === null) {
@@ -108,19 +111,19 @@ class KeysetPaginator implements PaginatorInterface
         $this->currentLastValue = null;
     }
 
-    public function withPreviousPageToken(?string $token): self
-    {
-        $new = clone $this;
-        $new->firstValue = $token;
-        $new->lastValue = null;
-        return $new;
-    }
-
     public function withNextPageToken(?string $token): self
     {
         $new = clone $this;
         $new->firstValue = null;
         $new->lastValue = $token;
+        return $new;
+    }
+
+    public function withPreviousPageToken(?string $token): self
+    {
+        $new = clone $this;
+        $new->firstValue = $token;
+        $new->lastValue = null;
         return $new;
     }
 

@@ -74,7 +74,7 @@ final class OffsetPaginator implements PaginatorInterface
     public function withPageSize(int $pageSize): self
     {
         if ($pageSize < 1) {
-            throw new PaginatorException('Page size should be at least 1');
+            throw new PaginatorException('Page size should be at least 1.');
         }
 
         $new = clone $this;
@@ -83,15 +83,10 @@ final class OffsetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function getCurrentPage(): int
-    {
-        return $this->currentPage;
-    }
-
     public function withCurrentPage(int $page): self
     {
         if ($page < 1) {
-            throw new PaginatorException('Current page should be at least 1');
+            throw new PaginatorException('Current page should be at least 1.');
         }
 
         $new = clone $this;
@@ -113,6 +108,11 @@ final class OffsetPaginator implements PaginatorInterface
     public function getPageSize(): int
     {
         return $this->pageSize;
+    }
+
+    public function getCurrentPage(): int
+    {
+        return $this->currentPage;
     }
 
     public function getCurrentPageSize(): int
