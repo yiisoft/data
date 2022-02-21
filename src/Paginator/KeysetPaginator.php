@@ -42,7 +42,7 @@ use function ucfirst;
  *
  * @implements PaginatorInterface<TKey, TValue>
  */
-class KeysetPaginator implements PaginatorInterface
+final class KeysetPaginator implements PaginatorInterface
 {
     /**
      * @psalm-var DataReaderType
@@ -58,6 +58,7 @@ class KeysetPaginator implements PaginatorInterface
      * @var bool Previous page has item indicator.
      */
     private bool $hasPreviousPageItem = false;
+
     /**
      * @var bool Next page has item indicator.
      */
@@ -65,7 +66,7 @@ class KeysetPaginator implements PaginatorInterface
 
     /**
      * Reader cache against repeated scans.
-     * See more {@see __clone()} and {@see initializeInternal()}.
+     * See more {@see __clone()} and {@see initialize()}.
      *
      * @psalm-var array<TKey, TValue>|null
      */
@@ -187,7 +188,7 @@ class KeysetPaginator implements PaginatorInterface
 
     public function getCurrentPageSize(): int
     {
-        $this->initializeInternal();
+        $this->initialize();
         return count($this->readCache);
     }
 
@@ -213,13 +214,13 @@ class KeysetPaginator implements PaginatorInterface
             return true;
         }
 
-        $this->initializeInternal();
+        $this->initialize();
         return !$this->hasPreviousPageItem;
     }
 
     public function isOnLastPage(): bool
     {
-        $this->initializeInternal();
+        $this->initialize();
         return !$this->hasNextPageItem;
     }
 
@@ -231,7 +232,7 @@ class KeysetPaginator implements PaginatorInterface
     /**
      * @psalm-assert array<TKey, TValue> $this->readCache
      */
-    protected function initializeInternal(): void
+    private function initialize(): void
     {
         if ($this->readCache !== null) {
             return;

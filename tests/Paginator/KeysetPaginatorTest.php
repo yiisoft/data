@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Tests\Paginator;
 
 use ArrayIterator;
 use InvalidArgumentException;
-use ReflectionObject;
 use RuntimeException;
 use stdClass;
 use Yiisoft\Data\Paginator\KeysetPaginator;
@@ -720,41 +719,5 @@ final class KeysetPaginatorTest extends Testcase
             GreaterThanOrEqual::class,
             $this->invokeMethod($paginator, 'getReverseFilter', [$sort]),
         );
-    }
-
-    public function testExtendsKeysetPaginatorWithOverrideInitializeInternalMethodForCoverage(): void
-    {
-        $sort = Sort::only(['id'])->withOrderString('id');
-        $dataReader = (new IterableDataReader($this->getDataSet()))->withSort($sort);
-        $paginator = new KeysetPaginator($dataReader);
-
-        $this->assertSame(5, $paginator->getCurrentPageSize());
-        $this->assertSame($this->getDataSet(), $this->getInaccessibleProperty($paginator, 'readCache'));
-
-        $childPaginator = new class ($dataReader) extends KeysetPaginator {
-            public function __construct(ReadableDataInterface $dataReader)
-            {
-                parent::__construct($dataReader);
-            }
-
-            public function getCurrentPageSize(): int
-            {
-                $this->initializeInternal();
-                return 0;
-            }
-
-            protected function initializeInternal(): void
-            {
-                parent::initializeInternal();
-                $parentClass = (new ReflectionObject($this))->getParentClass();
-                $property = $parentClass->getProperty('readCache');
-                $property->setAccessible(true);
-                $property->setValue($this, null);
-                $property->setAccessible(false);
-            }
-        };
-
-        $this->assertSame(0, $childPaginator->getCurrentPageSize());
-        $this->assertNull($this->getInaccessibleProperty($childPaginator, 'readCache'));
     }
 }
