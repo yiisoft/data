@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader;
+namespace Yiisoft\Data\Tests\Reader\Iterable;
 
 use ArrayIterator;
 use Generator;
@@ -27,6 +27,7 @@ use Yiisoft\Data\Tests\TestCase;
 use function array_slice;
 use function array_values;
 use function count;
+use function ctype_digit;
 
 final class IterableDataReaderTest extends TestCase
 {

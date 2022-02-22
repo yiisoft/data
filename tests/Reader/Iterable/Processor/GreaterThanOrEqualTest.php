@@ -18,7 +18,7 @@ final class GreaterThanOrEqualTest extends TestCase
             [true, ['value', 45]],
             [true, ['value', '45']],
             [false, ['value', 46]],
-            [false, ['not-exist', 25]],
+            [false, ['not-exist', 44]],
         ];
     }
 
