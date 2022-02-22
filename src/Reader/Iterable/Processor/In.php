@@ -4,38 +4,18 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
-use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use function in_array;
+use function is_array;
 
-use function array_key_exists;
-use function count;
-use function sprintf;
-
-class In implements IterableProcessorInterface, FilterProcessorInterface
+class In extends CompareProcessor
 {
     public function getOperator(): string
     {
         return \Yiisoft\Data\Reader\Filter\In::getOperator();
     }
 
-    public function match(array $item, array $arguments, array $filterProcessors): bool
+    protected function compare($itemValue, $argumentValue): bool
     {
-        if (count($arguments) !== 2) {
-            throw new InvalidArgumentException('$arguments should contain exactly two elements.');
-        }
-
-        [$field, $values] = $arguments;
-        FilterDataValidationHelper::assertFieldIsString($field);
-
-        if (!is_array($values)) {
-            throw new InvalidArgumentException(sprintf(
-                'The values should be array. The %s is received.',
-                FilterDataValidationHelper::getValueType($values),
-            ));
-        }
-
-        /** @var string $field */
-        return array_key_exists($field, $item) && in_array($item[$field], $values, false);
+        return is_array($argumentValue) && in_array($itemValue, $argumentValue, false);
     }
 }

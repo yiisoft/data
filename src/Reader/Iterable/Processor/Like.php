@@ -4,33 +4,18 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
-use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
-
-use function array_key_exists;
-use function count;
 use function is_string;
+use function stripos;
 
-class Like implements IterableProcessorInterface, FilterProcessorInterface
+class Like extends CompareProcessor
 {
     public function getOperator(): string
     {
         return \Yiisoft\Data\Reader\Filter\Like::getOperator();
     }
 
-    public function match(array $item, array $arguments, array $filterProcessors): bool
+    protected function compare($itemValue, $argumentValue): bool
     {
-        if (count($arguments) !== 2) {
-            throw new InvalidArgumentException('$arguments should contain exactly two elements.');
-        }
-
-        [$field, $value] = $arguments;
-        FilterDataValidationHelper::assertFieldIsString($field);
-
-        /** @var string $field */
-        return array_key_exists($field, $item)
-            && is_string($item[$field])
-            && stripos($item[$field], (string) $value) !== false;
+        return is_string($itemValue) && is_string($argumentValue) && stripos($itemValue, $argumentValue) !== false;
     }
 }

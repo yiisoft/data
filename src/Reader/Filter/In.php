@@ -9,25 +9,29 @@ use Yiisoft\Data\Reader\FilterDataValidationHelper;
 final class In implements FilterInterface
 {
     private string $field;
-    private array $value;
+
+    /**
+     * @var bool[]|float[]|int[]|string[]
+     */
+    private array $values;
 
     /**
      * @param string $field
-     * @param bool[]|float[]|int[]|string[] $value
+     * @param bool[]|float[]|int[]|string[] $values
      */
-    public function __construct(string $field, array $value)
+    public function __construct(string $field, array $values)
     {
-        foreach ($value as $arrayValue) {
-            FilterDataValidationHelper::assertIsScalar($arrayValue);
+        foreach ($values as $value) {
+            FilterDataValidationHelper::assertIsScalar($value);
         }
 
         $this->field = $field;
-        $this->value = $value;
+        $this->values = $values;
     }
 
     public function toArray(): array
     {
-        return [self::getOperator(), $this->field, $this->value];
+        return [self::getOperator(), $this->field, $this->values];
     }
 
     public static function getOperator(): string

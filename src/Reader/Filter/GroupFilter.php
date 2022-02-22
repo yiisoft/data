@@ -69,9 +69,9 @@ abstract class GroupFilter implements FilterInterface
                 throw new InvalidArgumentException(sprintf('Invalid filter on "%s" key.', $key));
             }
 
-            $first = array_shift($filter);
+            $operator = array_shift($filter);
 
-            if (!is_string($first) || $first === '') {
+            if (!is_string($operator) || $operator === '') {
                 throw new InvalidArgumentException(sprintf('Invalid filter operator on "%s" key.', $key));
             }
         }

@@ -58,19 +58,6 @@ final class InTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidArrayValueDataProvider
-     */
-    public function testMatchFailForInvalidArgumentValue($value): void
-    {
-        $type = FilterDataValidationHelper::getValueType($value);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("The values should be array. The $type is received.");
-
-        (new In())->match(['id' => 1], ['field', $value], []);
-    }
-
-    /**
      * @dataProvider invalidStringValueDataProvider
      */
     public function testMatchFailForInvalidFieldValue($field): void
