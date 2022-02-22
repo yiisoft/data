@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
+use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
@@ -24,10 +25,21 @@ class Between implements IterableProcessorInterface, FilterProcessorInterface
             throw new InvalidArgumentException('$arguments should contain exactly three elements.');
         }
 
+        /** @var string $field */
         [$field, $firstValue, $secondValue] = $arguments;
         FilterDataValidationHelper::assertFieldIsString($field);
 
-        /** @var string $field */
-        return array_key_exists($field, $item) && $item[$field] >= $firstValue && $item[$field] <= $secondValue;
+        if (!array_key_exists($field, $item)) {
+            return false;
+        }
+
+        if (!$item[$field] instanceof DateTimeInterface) {
+            return $item[$field] >= $firstValue && $item[$field] <= $secondValue;
+        }
+
+        return $firstValue instanceof DateTimeInterface
+            && $secondValue instanceof DateTimeInterface
+            && $item[$field]->getTimestamp() >= $firstValue->getTimestamp()
+            && $item[$field]->getTimestamp() <= $secondValue->getTimestamp();
     }
 }
