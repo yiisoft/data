@@ -12,12 +12,12 @@ abstract class CompareFilter implements FilterInterface
     private string $field;
 
     /**
-     * @var bool|float|int|string|DateTimeInterface
+     * @var bool|DateTimeInterface|float|int|string
      */
     private $value;
 
     /**
-     * @param bool|float|int|string|DateTimeInterface $value
+     * @param bool|DateTimeInterface|float|int|string $value
      */
     public function __construct(string $field, $value)
     {

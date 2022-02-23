@@ -12,19 +12,19 @@ final class Between implements FilterInterface
     private string $field;
 
     /**
-     * @var bool|float|int|string|DateTimeInterface
+     * @var bool|DateTimeInterface|float|int|string
      */
     private $firstValue;
 
     /**
-     * @var bool|float|int|string|DateTimeInterface
+     * @var bool|DateTimeInterface|float|int|string
      */
     private $secondValue;
 
     /**
      * @param string $field
-     * @param bool|float|int|string|DateTimeInterface $firstValue
-     * @param bool|float|int|string|DateTimeInterface $secondValue
+     * @param bool|DateTimeInterface|float|int|string $firstValue
+     * @param bool|DateTimeInterface|float|int|string $secondValue
      */
     public function __construct(string $field, $firstValue, $secondValue)
     {
