@@ -108,7 +108,7 @@ Filter could be composed with:
 
 #### Filtering with arrays
 
-The `All` and` Any` filters have a `withFiltersArray()` method, which allows you to define filters with arrays.
+The `All` and `Any` filters have a `withFiltersArray()` method, which allows you to define filters with arrays.
 
 ```php
 $dataReader->withFilter((new All())->withFiltersArray([
