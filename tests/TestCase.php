@@ -83,7 +83,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         return [
             'bool-true' => [true],
             'bool-false' => [false],
-            'float' => [1,1],
+            'float' => [1.1],
             'int' => [1],
             'string' => [''],
             DateTimeInterface::class => [new DateTimeImmutable()],
