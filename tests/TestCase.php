@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use ReflectionException;
 use ReflectionObject;
 use stdClass;
@@ -73,6 +75,18 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'callback' => [fn () => null],
             'null' => [null],
             'object' => [new stdClass()],
+        ];
+    }
+
+    public function scalarAndDataTimeInterfaceValueDataProvider(): array
+    {
+        return [
+            'bool-true' => [true],
+            'bool-false' => [false],
+            'float' => [1.1],
+            'int' => [1],
+            'string' => [''],
+            DateTimeInterface::class => [new DateTimeImmutable()],
         ];
     }
 
