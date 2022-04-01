@@ -194,9 +194,20 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertTrue($paginator->isOnFirstPage());
     }
 
-    public function testReadObjectsWithGetters(): void
+    public function readObjectsWithGettersDataProvider(): array
     {
-        $sort = Sort::only(['id', 'name'])->withOrderString('id');
+        return [
+            'order by id field' => ['id', 'getId'],
+            'order by created_at field' => ['created_at', 'getCreatedAt'],
+        ];
+    }
+
+    /**
+     * @dataProvider readObjectsWithGettersDataProvider
+     */
+    public function testReadObjectsWithGetters(string $orderByField, string $getter): void
+    {
+        $sort = Sort::only(['id', 'name', 'created_at'])->withOrderString($orderByField);
         $data = [
             $this->createObjectWithGetters(1, 'Codename Boris 1'),
             $this->createObjectWithGetters(2, 'Codename Boris 2'),
@@ -207,7 +218,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         $this->assertSame([$data[0], $data[1]], $this->iterableToArray($paginator->read()));
-        $this->assertSame((string) $data[1]->getId(), $paginator->getNextPageToken());
+        $this->assertSame((string) $data[1]->$getter(), $paginator->getNextPageToken());
         $this->assertTrue($paginator->isOnFirstPage());
     }
 
@@ -573,11 +584,13 @@ final class KeysetPaginatorTest extends Testcase
         return new class ($id, $name) {
             private int $id;
             private string $name;
+            private int $createdAt;
 
-            public function __construct(int $id, string $name)
+            public function __construct(int $id, string $name, int $createdAt = null)
             {
                 $this->id = $id;
                 $this->name = $name;
+                $this->createdAt = $createdAt ?: time();
             }
 
             public function getId(): string
@@ -588,6 +601,11 @@ final class KeysetPaginatorTest extends Testcase
             public function getName(): string
             {
                 return $this->name;
+            }
+
+            public function getCreatedAt(): int
+            {
+                return $this->createdAt;
             }
         };
     }
