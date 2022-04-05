@@ -17,6 +17,7 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
+use Yiisoft\Strings\Inflector;
 use function array_reverse;
 use function count;
 use function is_callable;
@@ -24,7 +25,6 @@ use function is_object;
 use function key;
 use function reset;
 use function sprintf;
-use function ucfirst;
 
 /**
  * Keyset paginator.
@@ -306,7 +306,7 @@ final class KeysetPaginator implements PaginatorInterface
      */
     private function getValueFromItem($item, string $field)
     {
-        $methodName = 'get' . ucfirst($field);
+        $methodName = 'get' . (new Inflector())->toPascalCase($field);
 
         if (is_object($item) && is_callable([$item, $methodName])) {
             return $item->$methodName();
