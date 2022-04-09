@@ -233,13 +233,13 @@ final class SortTest extends TestCase
     public function testWithoutDefaultSortingWhenFormingCriteria(): void
     {
         $sort = Sort::only([
-                               'a',
-                               'b' => [
-                                   'asc' => ['bee' => SORT_ASC],
-                                   'desc' => ['bee' => SORT_DESC],
-                                   'default' => 'asc',
-                               ],
-                           ])
+            'a',
+            'b' => [
+                'asc' => ['bee' => SORT_ASC],
+                'desc' => ['bee' => SORT_DESC],
+                'default' => 'asc',
+            ],
+        ])
             ->withOrder(
                 [
                     'b' => 'desc',
