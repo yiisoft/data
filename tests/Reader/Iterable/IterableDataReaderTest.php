@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\Iterable;
 
 use ArrayIterator;
+use DateTimeInterface;
 use Generator;
 use InvalidArgumentException;
 use RuntimeException;
@@ -392,14 +393,37 @@ final class IterableDataReaderTest extends TestCase
 
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
-            ->withFilterProcessors(new class () extends \Yiisoft\Data\Reader\Iterable\Processor\Equals {
+            ->withFilterProcessors(new class () extends \Yiisoft\Data\Reader\Iterable\Processor\CompareProcessor {
+                public function getOperator(): string
+                {
+                    return \Yiisoft\Data\Reader\Filter\Equals::getOperator();
+                }
+
+                protected function compare($itemValue, $argumentValue): bool
+                {
+                    if (!$itemValue instanceof DateTimeInterface) {
+                        return $itemValue == $argumentValue;
+                    }
+
+                    return $argumentValue instanceof DateTimeInterface
+                        && $itemValue->getTimestamp() === $argumentValue->getTimestamp();
+                }
+
                 public function match(array $item, array $arguments, array $filterProcessors): bool
                 {
-                    [$field,] = $arguments;
+                    if (count($arguments) !== 2) {
+                        throw new InvalidArgumentException('$arguments should contain exactly two elements.');
+                    }
+
+                    [$field, $value] = $arguments;
+                    FilterDataValidationHelper::assertFieldIsString($field);
+
                     if ($item[$field] === 2) {
                         return true;
                     }
-                    return parent::match($item, $arguments, $filterProcessors);
+
+                    /** @var string $field */
+                    return array_key_exists($field, $item) && $this->compare($item[$field], $value);
                 }
             });
 

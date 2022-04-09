@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 use function in_array;
 use function is_array;
 
-class In extends CompareProcessor
+final class In extends CompareProcessor
 {
     public function getOperator(): string
     {

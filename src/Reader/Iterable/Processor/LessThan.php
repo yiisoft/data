@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use DateTimeInterface;
 
-class LessThan extends CompareProcessor
+final class LessThan extends CompareProcessor
 {
     public function getOperator(): string
     {

@@ -59,6 +59,11 @@ final class Sort
     private bool $ignoreExtraFields;
 
     /**
+     * @var bool Whether to add default sorting when forming criteria.
+     */
+    private bool $withDefaultSorting = true;
+
+    /**
      * @var array Logical fields to order by in form of [name => direction].
      * @psalm-var TOrder
      */
@@ -128,7 +133,7 @@ final class Sort
      * ]
      * ```
      *
-     * The name field is a virtual field name that consists of two real fields, `first_name` amd `last_name`. Virtual
+     * The name field is a virtual field name that consists of two real fields, `first_name` and `last_name`. Virtual
      * field name is used in order string or order array while real fields are used in final sorting criteria.
      *
      * Each configuration has the following options:
@@ -172,7 +177,7 @@ final class Sort
      * ]
      * ```
      *
-     * The name field is a virtual field name that consists of two real fields, `first_name` amd `last_name`. Virtual
+     * The name field is a virtual field name that consists of two real fields, `first_name` and `last_name`. Virtual
      * field name is used in order string or order array while real fields are used in final sorting criteria.
      *
      * Each configuration has the following options:
@@ -193,7 +198,7 @@ final class Sort
      *
      * The string consists of comma-separated field names.
      * If the name is prefixed with `-`, field order is descending.
-     * Otherwise the order is ascending.
+     * Otherwise, the order is ascending.
      *
      * @param string $orderString Logical fields order as comma-separated string.
      *
@@ -231,6 +236,18 @@ final class Sort
     }
 
     /**
+     * Formation of criteria without default sorting.
+     *
+     * @return self
+     */
+    public function withoutDefaultSorting(): self
+    {
+        $new = clone $this;
+        $new->withDefaultSorting = false;
+        return $new;
+    }
+
+    /**
      * @psalm-return TOrder
      */
     public function getOrder(): array
@@ -243,7 +260,7 @@ final class Sort
      *
      * The string consists of comma-separated field names.
      * If the name is prefixed with `-`, field order is descending.
-     * Otherwise the order is ascending.
+     * Otherwise, the order is ascending.
      *
      * @return string An order string.
      */
@@ -284,8 +301,10 @@ final class Sort
             }
         }
 
-        foreach ($config as $fieldConfig) {
-            $criteria += $fieldConfig[$fieldConfig['default']];
+        if ($this->withDefaultSorting) {
+            foreach ($config as $fieldConfig) {
+                $criteria += $fieldConfig[$fieldConfig['default']];
+            }
         }
 
         return $criteria;

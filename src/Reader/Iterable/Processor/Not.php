@@ -14,7 +14,7 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
-class Not implements IterableProcessorInterface, FilterProcessorInterface
+final class Not implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
     {
