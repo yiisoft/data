@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 use function is_string;
 use function stripos;
 
-class Like extends CompareProcessor
+final class Like extends CompareProcessor
 {
     public function getOperator(): string
     {

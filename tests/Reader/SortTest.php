@@ -229,4 +229,29 @@ final class SortTest extends TestCase
             'id' => SORT_ASC,
         ], $sort->getCriteria());
     }
+
+    public function testWithoutDefaultSortingWhenFormingCriteria(): void
+    {
+        $sort = Sort::only([
+            'a',
+            'b' => [
+                'asc' => ['bee' => SORT_ASC],
+                'desc' => ['bee' => SORT_DESC],
+                'default' => 'asc',
+            ],
+        ])
+            ->withOrder(
+                [
+                    'b' => 'desc',
+                ]
+            )
+            ->withoutDefaultSorting();
+
+        $this->assertSame(
+            [
+                'bee' => SORT_DESC,
+            ],
+            $sort->getCriteria()
+        );
+    }
 }

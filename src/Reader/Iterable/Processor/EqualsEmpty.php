@@ -10,7 +10,7 @@ use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function count;
 
-class EqualsEmpty implements IterableProcessorInterface, FilterProcessorInterface
+final class EqualsEmpty implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
     {

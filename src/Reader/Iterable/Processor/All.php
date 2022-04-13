@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use function in_array;
 
-class All extends GroupProcessor
+final class All extends GroupProcessor
 {
     public function getOperator(): string
     {

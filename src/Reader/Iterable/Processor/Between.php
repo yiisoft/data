@@ -12,7 +12,7 @@ use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use function array_key_exists;
 use function count;
 
-class Between implements IterableProcessorInterface, FilterProcessorInterface
+final class Between implements IterableProcessorInterface, FilterProcessorInterface
 {
     public function getOperator(): string
     {
