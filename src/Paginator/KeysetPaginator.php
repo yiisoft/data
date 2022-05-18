@@ -292,7 +292,10 @@ final class KeysetPaginator implements PaginatorInterface
     {
         $reverseFilter = $this->getReverseFilter($sort);
 
-        foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
+        foreach ($dataReader
+                     ->withFilter($reverseFilter)
+                     ->withLimit(1)
+                     ->read() as $void) {
             return true;
         }
 

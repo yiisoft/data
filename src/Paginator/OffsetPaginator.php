@@ -170,7 +170,9 @@ final class OffsetPaginator implements PaginatorInterface
             throw new PaginatorException('Page not found.');
         }
 
-        $this->cachedReader = $this->dataReader->withLimit($this->pageSize)->withOffset($this->getOffset());
+        $this->cachedReader = $this->dataReader
+            ->withLimit($this->pageSize)
+            ->withOffset($this->getOffset());
         yield from $this->cachedReader->read();
     }
 
