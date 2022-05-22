@@ -333,7 +333,12 @@ final class IterableDataReaderTest extends TestCase
             'name',
         ]);
         $sorting = $sorting->withOrder(['name' => 'asc']);
-        $this->assertSame($this->getDataSetAscSortedByName(), $reader->withSort($sorting)->read());
+        $this->assertSame(
+            $this->getDataSetAscSortedByName(),
+            $reader
+                ->withSort($sorting)
+                ->read(),
+        );
     }
 
     public function testGeneratorAsDataSet(): void
@@ -344,7 +349,12 @@ final class IterableDataReaderTest extends TestCase
             'name',
         ]);
         $sorting = $sorting->withOrder(['name' => 'asc']);
-        $this->assertSame($this->getDataSetAscSortedByName(), $reader->withSort($sorting)->read());
+        $this->assertSame(
+            $this->getDataSetAscSortedByName(),
+            $reader
+                ->withSort($sorting)
+                ->read(),
+        );
     }
 
     public function testCustomFilter(): void

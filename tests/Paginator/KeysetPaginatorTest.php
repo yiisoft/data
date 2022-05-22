@@ -214,7 +214,9 @@ final class KeysetPaginatorTest extends Testcase
             $this->createObjectWithGetters(3, 'Codename Boris 3'),
         ];
 
-        $dataReader = $this->createObjectDataReader($data)->withSort($sort);
+        $dataReader = $this
+            ->createObjectDataReader($data)
+            ->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         $this->assertSame([$data[0], $data[1]], $this->iterableToArray($paginator->read()));

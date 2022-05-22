@@ -185,7 +185,10 @@ class IterableDataReader implements DataReaderInterface
      */
     public function readOne()
     {
-        return $this->withLimit(1)->getIterator()->current();
+        return $this
+            ->withLimit(1)
+            ->getIterator()
+            ->current();
     }
 
     protected function matchFilter(array $item, array $filter): bool
