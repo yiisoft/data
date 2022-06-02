@@ -96,7 +96,9 @@ final class KeysetPaginator implements PaginatorInterface
         }
 
         /** @psalm-suppress PossiblyNullReference */
-        if ($dataReader->getSort()->getOrder() === []) {
+        if ($dataReader
+                ->getSort()
+                ->getOrder() === []) {
             throw new RuntimeException('Data should be always sorted to work with keyset pagination.');
         }
 
