@@ -710,7 +710,9 @@ final class KeysetPaginatorTest extends Testcase
             $this->invokeMethod($paginator, 'getFilter', [$sort]),
         );
 
-        $sort = Sort::only(['id'])->withOrderString('id')->withOrder(['id' => 'desc']);
+        $sort = Sort::only(['id'])
+            ->withOrderString('id')
+            ->withOrder(['id' => 'desc']);
         $dataReader = (new IterableDataReader([]))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withNextPageToken('1');
 
@@ -731,7 +733,9 @@ final class KeysetPaginatorTest extends Testcase
             $this->invokeMethod($paginator, 'getReverseFilter', [$sort]),
         );
 
-        $sort = Sort::only(['42'])->withOrderString('42')->withOrder(['42' => 'desc']);
+        $sort = Sort::only(['42'])
+            ->withOrderString('42')
+            ->withOrder(['42' => 'desc']);
         $dataReader = (new IterableDataReader([]))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withNextPageToken('1');
 
