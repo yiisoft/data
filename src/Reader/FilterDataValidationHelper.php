@@ -8,19 +8,13 @@ use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 
-use function get_class;
-use function gettype;
-use function is_object;
 use function is_scalar;
 use function is_string;
 use function sprintf;
 
 final class FilterDataValidationHelper
 {
-    /**
-     * @param mixed $field
-     */
-    public static function assertFieldIsString($field): void
+    public static function assertFieldIsString(mixed $field): void
     {
         if (!is_string($field)) {
             throw new InvalidArgumentException(sprintf(
@@ -30,10 +24,7 @@ final class FilterDataValidationHelper
         }
     }
 
-    /**
-     * @param mixed $filterProcessor
-     */
-    public static function assertFilterProcessorIsIterable($filterProcessor): void
+    public static function assertFilterProcessorIsIterable(mixed $filterProcessor): void
     {
         if (!$filterProcessor instanceof IterableProcessorInterface) {
             throw new InvalidArgumentException(sprintf(
@@ -44,10 +35,7 @@ final class FilterDataValidationHelper
         }
     }
 
-    /**
-     * @param mixed $value
-     */
-    public static function assertIsScalar($value): void
+    public static function assertIsScalar(mixed $value): void
     {
         if (!is_scalar($value)) {
             throw new InvalidArgumentException(sprintf(
@@ -57,10 +45,7 @@ final class FilterDataValidationHelper
         }
     }
 
-    /**
-     * @param mixed $value
-     */
-    public static function assertIsScalarOrInstanceOfDataTimeInterface($value): void
+    public static function assertIsScalarOrInstanceOfDataTimeInterface(mixed $value): void
     {
         if (!$value instanceof DateTimeInterface && !is_scalar($value)) {
             throw new InvalidArgumentException(sprintf(
@@ -71,11 +56,8 @@ final class FilterDataValidationHelper
         }
     }
 
-    /**
-     * @param mixed $value
-     */
-    public static function getValueType($value): string
+    public static function getValueType(mixed $value): string
     {
-        return is_object($value) ? get_class($value) : gettype($value);
+        return get_debug_type($value);
     }
 }
