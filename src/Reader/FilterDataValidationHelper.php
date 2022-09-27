@@ -8,9 +8,6 @@ use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 
-use function get_class;
-use function gettype;
-use function is_object;
 use function is_scalar;
 use function is_string;
 use function sprintf;

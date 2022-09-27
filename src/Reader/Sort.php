@@ -13,7 +13,6 @@ use function is_array;
 use function is_int;
 use function is_string;
 use function preg_split;
-use function strpos;
 use function substr;
 use function trim;
 

@@ -61,7 +61,8 @@ class IterableDataReader implements DataReaderInterface
     public function __construct(/**
      * @psalm-var iterable<TKey, TValue>
      */
-    protected iterable $data)
+    protected iterable $data
+    )
     {
         $this->filterProcessors = $this->withFilterProcessors(
             new All(),
