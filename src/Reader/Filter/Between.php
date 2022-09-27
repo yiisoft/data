@@ -9,27 +9,16 @@ use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 final class Between implements FilterInterface
 {
-    private string $field;
+    private bool|\DateTimeInterface|float|int|string $firstValue;
+
+    private bool|\DateTimeInterface|float|int|string $secondValue;
 
     /**
-     * @var bool|DateTimeInterface|float|int|string
-     */
-    private $firstValue;
-
-    /**
-     * @var bool|DateTimeInterface|float|int|string
-     */
-    private $secondValue;
-
-    /**
-     * @param string $field
      * @param bool|DateTimeInterface|float|int|string $firstValue
      * @param bool|DateTimeInterface|float|int|string $secondValue
      */
-    public function __construct(string $field, $firstValue, $secondValue)
+    public function __construct(private string $field, $firstValue, $secondValue)
     {
-        $this->field = $field;
-
         FilterDataValidationHelper::assertIsScalarOrInstanceOfDataTimeInterface($firstValue);
         FilterDataValidationHelper::assertIsScalarOrInstanceOfDataTimeInterface($secondValue);
 

@@ -191,7 +191,7 @@ final class KeysetPaginator implements PaginatorInterface
     public function getCurrentPageSize(): int
     {
         $this->initialize();
-        return count($this->readCache);
+        return count((array) $this->readCache);
     }
 
     public function getPreviousPageToken(): ?string
@@ -305,11 +305,9 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @param mixed $item
-     *
      * @return mixed
      */
-    private function getValueFromItem($item, string $field)
+    private function getValueFromItem(mixed $item, string $field)
     {
         $methodName = 'get' . (new Inflector())->toPascalCase($field);
 

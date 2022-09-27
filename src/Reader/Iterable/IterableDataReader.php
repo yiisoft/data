@@ -45,11 +45,6 @@ use function uasort;
  */
 class IterableDataReader implements DataReaderInterface
 {
-    /**
-     * @psalm-var iterable<TKey, TValue>
-     */
-    protected iterable $data;
-
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
     private int $limit = 0;
@@ -63,9 +58,11 @@ class IterableDataReader implements DataReaderInterface
     /**
      * @psalm-param iterable<TKey, TValue> $data
      */
-    public function __construct(iterable $data)
+    public function __construct(/**
+     * @psalm-var iterable<TKey, TValue>
+     */
+    protected iterable $data)
     {
-        $this->data = $data;
         $this->filterProcessors = $this->withFilterProcessors(
             new All(),
             new Any(),
@@ -236,7 +233,7 @@ class IterableDataReader implements DataReaderInterface
                  * @param mixed $itemA
                  * @param mixed $itemB
                  */
-                static function ($itemA, $itemB) use ($criteria) {
+                static function (mixed $itemA, mixed $itemB) use ($criteria) {
                     foreach ($criteria as $key => $order) {
                         /** @psalm-suppress MixedArgument, MixedAssignment */
                         $valueA = ArrayHelper::getValue($itemA, $key);

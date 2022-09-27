@@ -6,13 +6,8 @@ namespace Yiisoft\Data\Reader\Filter;
 
 final class Like implements FilterInterface
 {
-    private string $field;
-    private string $value;
-
-    public function __construct(string $field, string $value)
+    public function __construct(private string $field, private string $value)
     {
-        $this->field = $field;
-        $this->value = $value;
     }
 
     public function toArray(): array

@@ -54,11 +54,6 @@ final class Sort
     private array $config;
 
     /**
-     * @var bool Whether to ignore logical fields not present in the config when forming criteria.
-     */
-    private bool $ignoreExtraFields;
-
-    /**
      * @var bool Whether to add default sorting when forming criteria.
      */
     private bool $withDefaultSorting = true;
@@ -75,9 +70,8 @@ final class Sort
      * @param array $config Logical fields config.
      * @param bool $ignoreExtraFields Whether to ignore logical fields not present in the config when forming criteria.
      */
-    private function __construct(bool $ignoreExtraFields, array $config)
+    private function __construct(private bool $ignoreExtraFields, array $config)
     {
-        $this->ignoreExtraFields = $ignoreExtraFields;
         $normalizedConfig = [];
 
         foreach ($config as $fieldName => $fieldConfig) {
@@ -141,8 +135,6 @@ final class Sort
      * - `asc` - criteria for ascending sorting.
      * - `desc` - criteria for descending sorting.
      * - `default` - default sorting. Could be either `asc` or `desc`. If not specified, `asc` is used.
-     *
-     * @return self
      */
     public static function only(array $config): self
     {
@@ -185,8 +177,6 @@ final class Sort
      * - `asc` - criteria for ascending sorting.
      * - `desc` - criteria for descending sorting.
      * - `default` - default sorting. Could be either `asc` or `desc`. If not specified, `asc` is used.
-     *
-     * @return self
      */
     public static function any(array $config = []): self
     {
@@ -201,8 +191,6 @@ final class Sort
      * Otherwise, the order is ascending.
      *
      * @param string $orderString Logical fields order as comma-separated string.
-     *
-     * @return self
      */
     public function withOrderString(string $orderString): self
     {
@@ -210,7 +198,7 @@ final class Sort
         $parts = preg_split('/\s*,\s*/', trim($orderString), -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($parts as $part) {
-            if (strpos($part, '-') === 0) {
+            if (str_starts_with($part, '-')) {
                 $order[substr($part, 1)] = 'desc';
             } else {
                 $order[$part] = 'asc';
@@ -225,8 +213,6 @@ final class Sort
      *
      * @param array $order A map with logical field names to order by as keys, direction as values.
      * @psalm-param TOrder $order
-     *
-     * @return self
      */
     public function withOrder(array $order): self
     {
@@ -237,8 +223,6 @@ final class Sort
 
     /**
      * Formation of criteria without default sorting.
-     *
-     * @return self
      */
     public function withoutDefaultSorting(): self
     {

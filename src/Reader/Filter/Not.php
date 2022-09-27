@@ -6,11 +6,8 @@ namespace Yiisoft\Data\Reader\Filter;
 
 final class Not implements FilterInterface
 {
-    private FilterInterface $filter;
-
-    public function __construct(FilterInterface $filter)
+    public function __construct(private FilterInterface $filter)
     {
-        $this->filter = $filter;
     }
 
     public function toArray(): array

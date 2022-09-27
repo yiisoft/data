@@ -360,11 +360,8 @@ final class IterableDataReaderTest extends TestCase
     public function testCustomFilter(): void
     {
         $digitalFilter = new class /*Digital*/ ('name') implements FilterInterface {
-            private string $field;
-
-            public function __construct(string $field)
+            public function __construct(private string $field)
             {
-                $this->field = $field;
             }
 
             public function toArray(): array
