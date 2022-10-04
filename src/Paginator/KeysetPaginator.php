@@ -29,7 +29,7 @@ use function sprintf;
 /**
  * Keyset paginator.
  *
- * - Equally fast for 1st and 1000nd page
+ * - Equally fast for 1st and 1000th page
  * - Total number of pages is not available
  * - Cannot get to specific page, only "next" and "previous"
  *
