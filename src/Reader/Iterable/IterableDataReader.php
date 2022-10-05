@@ -58,12 +58,7 @@ class IterableDataReader implements DataReaderInterface
     /**
      * @psalm-param iterable<TKey, TValue> $data
      */
-    public function __construct(/**
-     * @psalm-var iterable<TKey, TValue>
-     */
-    protected iterable $data
-    )
-    {
+    public function __construct(protected iterable $data) {
         $this->filterProcessors = $this->withFilterProcessors(
             new All(),
             new Any(),
@@ -150,7 +145,7 @@ class IterableDataReader implements DataReaderInterface
     {
         $data = [];
         $skipped = 0;
-        $filter = $this->filter === null ? null : $this->filter->toArray();
+        $filter = $this->filter?->toArray();
         $sortedData = $this->sort === null ? $this->data : $this->sortItems($this->data, $this->sort);
 
         /**
@@ -195,10 +190,12 @@ class IterableDataReader implements DataReaderInterface
         $arguments = $filter;
 
         if (!is_string($operation)) {
-            throw new RuntimeException(sprintf(
-                'The operator should be string. The %s is received.',
-                FilterDataValidationHelper::getValueType($operation),
-            ));
+            throw new RuntimeException(
+                sprintf(
+                    'The operator should be string. The %s is received.',
+                    FilterDataValidationHelper::getValueType($operation),
+                )
+            );
         }
 
         if ($operation === '') {
@@ -258,7 +255,6 @@ class IterableDataReader implements DataReaderInterface
 
     private function iterableToArray(iterable $iterable): array
     {
-        /** @psalm-suppress RedundantCast */
-        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : (array) $iterable;
+        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : $iterable;
     }
 }

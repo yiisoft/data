@@ -68,7 +68,7 @@ final class KeysetPaginator implements PaginatorInterface
      * Reader cache against repeated scans.
      * See more {@see __clone()} and {@see initialize()}.
      *
-     * @psalm-var array<TKey, TValue>|null
+     * @psalm-var null|array<TKey, TValue>
      */
     private ?array $readCache = null;
 
@@ -191,7 +191,7 @@ final class KeysetPaginator implements PaginatorInterface
     public function getCurrentPageSize(): int
     {
         $this->initialize();
-        return count((array) $this->readCache);
+        return count($this->readCache);
     }
 
     public function getPreviousPageToken(): ?string
@@ -294,10 +294,7 @@ final class KeysetPaginator implements PaginatorInterface
     {
         $reverseFilter = $this->getReverseFilter($sort);
 
-        foreach ($dataReader
-                     ->withFilter($reverseFilter)
-                     ->withLimit(1)
-                     ->read() as $void) {
+        foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
             return true;
         }
 
