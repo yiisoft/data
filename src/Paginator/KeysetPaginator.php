@@ -29,7 +29,7 @@ use function sprintf;
 /**
  * Keyset paginator.
  *
- * - Equally fast for 1st and 1000nd page
+ * - Equally fast for 1st and 1000th page
  * - Total number of pages is not available
  * - Cannot get to specific page, only "next" and "previous"
  *
@@ -68,7 +68,7 @@ final class KeysetPaginator implements PaginatorInterface
      * Reader cache against repeated scans.
      * See more {@see __clone()} and {@see initialize()}.
      *
-     * @psalm-var array<TKey, TValue>|null
+     * @psalm-var null|array<TKey, TValue>
      */
     private ?array $readCache = null;
 
@@ -294,10 +294,7 @@ final class KeysetPaginator implements PaginatorInterface
     {
         $reverseFilter = $this->getReverseFilter($sort);
 
-        foreach ($dataReader
-                     ->withFilter($reverseFilter)
-                     ->withLimit(1)
-                     ->read() as $void) {
+        foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
             return true;
         }
 
@@ -305,11 +302,9 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @param mixed $item
-     *
      * @return mixed
      */
-    private function getValueFromItem($item, string $field)
+    private function getValueFromItem(mixed $item, string $field)
     {
         $methodName = 'get' . (new Inflector())->toPascalCase($field);
 

@@ -442,7 +442,7 @@ final class KeysetPaginatorTest extends Testcase
         try {
             $paginator->getNextPageToken();
             $this->assertTrue(false);
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             $this->assertTrue(true);
         }
         $this->assertNull($paginator->getPreviousPageToken());
@@ -461,7 +461,7 @@ final class KeysetPaginatorTest extends Testcase
         try {
             $paginator->getPreviousPageToken();
             $this->assertTrue(false);
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             $this->assertTrue(true);
         }
         $this->assertNull($paginator->getNextPageToken());
@@ -584,14 +584,10 @@ final class KeysetPaginatorTest extends Testcase
     private function createObjectWithGetters(int $id, string $name): object
     {
         return new class ($id, $name) {
-            private int $id;
-            private string $name;
             private int $createdAt;
 
-            public function __construct(int $id, string $name, int $createdAt = null)
+            public function __construct(private int $id, private string $name, int $createdAt = null)
             {
-                $this->id = $id;
-                $this->name = $name;
                 $this->createdAt = $createdAt ?: time();
             }
 

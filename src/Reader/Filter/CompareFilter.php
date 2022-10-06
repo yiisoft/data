@@ -9,21 +9,14 @@ use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 abstract class CompareFilter implements FilterInterface
 {
-    private string $field;
-
-    /**
-     * @var bool|DateTimeInterface|float|int|string
-     */
-    private $value;
+    private bool|\DateTimeInterface|float|int|string $value;
 
     /**
      * @param bool|DateTimeInterface|float|int|string $value
      */
-    public function __construct(string $field, $value)
+    public function __construct(private string $field, $value)
     {
         FilterDataValidationHelper::assertIsScalarOrInstanceOfDataTimeInterface($value);
-
-        $this->field = $field;
         $this->value = $value;
     }
 
