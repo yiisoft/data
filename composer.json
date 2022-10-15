@@ -29,7 +29,8 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
-        "yiisoft/arrays": "^2.0"
+        "yiisoft/arrays": "^2.0",
+        "yiisoft/strings": "^2.1"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^4.2",
