@@ -188,7 +188,7 @@ final class KeysetPaginator implements PaginatorInterface
         return $this->pageSize;
     }
 
-    public function getCurrentPageSize(): int
+    public function getCountItems(): int
     {
         $this->initialize();
         return count($this->readCache);

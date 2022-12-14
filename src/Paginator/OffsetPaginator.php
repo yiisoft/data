@@ -115,7 +115,7 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->currentPage;
     }
 
-    public function getCurrentPageSize(): int
+    public function getCountItems(): int
     {
         $pages = $this->getInternalTotalPages();
 

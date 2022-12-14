@@ -324,15 +324,15 @@ final class OffsetPaginatorTest extends TestCase
         $paginator->isOnLastPage();
     }
 
-    public function testGetCurrentPageSizeFirstFullPage(): void
+    public function testGetCountItemsFirstFullPage(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))->withPageSize(3);
 
-        $this->assertSame(3, $paginator->getCurrentPageSize());
+        $this->assertSame(3, $paginator->getCountItems());
     }
 
-    public function testGetCurrentPageSizeLastPage(): void
+    public function testGetCountItemsLastPage(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
@@ -340,16 +340,16 @@ final class OffsetPaginatorTest extends TestCase
             ->withCurrentPage(2)
         ;
 
-        $this->assertSame(2, $paginator->getCurrentPageSize());
+        $this->assertSame(2, $paginator->getCountItems());
         $this->assertSame(5, $paginator->getTotalItems());
     }
 
-    public function testGetCurrentPageSizeFirstNotFullPage(): void
+    public function testGetCountItemsFirstNotFullPage(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))->withPageSize(30);
 
-        $this->assertSame(5, $paginator->getCurrentPageSize());
+        $this->assertSame(5, $paginator->getCountItems());
         $this->assertSame(5, $paginator->getTotalItems());
     }
 
@@ -358,7 +358,7 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))->withCurrentPage(5);
 
-        $this->assertSame(5, $paginator->getCurrentPageSize());
+        $this->assertSame(5, $paginator->getCountItems());
         $this->assertSame(5, $paginator->getTotalItems());
     }
 
@@ -374,7 +374,7 @@ final class OffsetPaginatorTest extends TestCase
         $this->expectException(PaginatorException::class);
         $this->expectExceptionMessage('Page not found.');
 
-        $paginator->getCurrentPageSize();
+        $paginator->getCountItems();
     }
 
     public function testEmptyDataSet(): void
@@ -384,7 +384,7 @@ final class OffsetPaginatorTest extends TestCase
 
         $this->assertSame(0, $paginator->getTotalItems());
         $this->assertSame(0, $paginator->getTotalPages());
-        $this->assertSame(0, $paginator->getCurrentPageSize());
+        $this->assertSame(0, $paginator->getCountItems());
         $this->assertSame(1, $paginator->getCurrentPage());
         $this->assertTrue($paginator->isOnFirstPage());
         $this->assertTrue($paginator->isOnLastPage());

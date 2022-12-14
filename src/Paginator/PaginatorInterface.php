@@ -26,7 +26,7 @@ interface PaginatorInterface
 
     public function getPageSize(): int;
 
-    public function getCurrentPageSize(): int;
+    public function getCountItems(): int;
 
     /**
      * @return Sort|null Current sort object or null if no sorting is used.

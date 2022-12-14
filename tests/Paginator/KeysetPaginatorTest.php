@@ -362,25 +362,25 @@ final class KeysetPaginatorTest extends Testcase
         $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
-        $this->assertSame(2, $paginator->getCurrentPageSize());
+        $this->assertSame(2, $paginator->getCountItems());
 
         $paginator = $paginator->withPreviousPageToken('1');
-        $this->assertSame(0, $paginator->getCurrentPageSize());
+        $this->assertSame(0, $paginator->getCountItems());
 
         $paginator = $paginator->withPreviousPageToken('2');
-        $this->assertSame(1, $paginator->getCurrentPageSize());
+        $this->assertSame(1, $paginator->getCountItems());
 
         $paginator = $paginator->withPreviousPageToken('3');
-        $this->assertSame(2, $paginator->getCurrentPageSize());
+        $this->assertSame(2, $paginator->getCountItems());
 
         $paginator = $paginator->withNextPageToken('6');
-        $this->assertSame(0, $paginator->getCurrentPageSize());
+        $this->assertSame(0, $paginator->getCountItems());
 
         $paginator = $paginator->withNextPageToken('5');
-        $this->assertSame(1, $paginator->getCurrentPageSize());
+        $this->assertSame(1, $paginator->getCountItems());
 
         $paginator = $paginator->withNextPageToken('4');
-        $this->assertSame(2, $paginator->getCurrentPageSize());
+        $this->assertSame(2, $paginator->getCountItems());
     }
 
     public function testReadCache(): void
@@ -405,10 +405,10 @@ final class KeysetPaginatorTest extends Testcase
         // not use datase test
         $this->assertSame(0, $dataSet->getRewindCounter());
         // first use dataset test
-        $paginator->getCurrentPageSize();
+        $paginator->getCountItems();
         $this->assertSame(1, $dataSet->getRewindCounter());
         // repeated use dataset test
-        $paginator->getCurrentPageSize();
+        $paginator->getCountItems();
         $this->assertSame(1, $dataSet->getRewindCounter());
 
         $paginator->isOnFirstPage();
@@ -425,9 +425,9 @@ final class KeysetPaginatorTest extends Testcase
             ->withPageSize(3);
         $this->assertSame(1, $dataSet->getRewindCounter());
         // recreate cache
-        $paginator->getCurrentPageSize();
+        $paginator->getCountItems();
         $this->assertSame(2, $dataSet->getRewindCounter());
-        $paginator->getCurrentPageSize();
+        $paginator->getCountItems();
         $this->assertSame(2, $dataSet->getRewindCounter());
     }
 
