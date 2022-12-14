@@ -11,7 +11,6 @@ use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
-use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
 
 final class OffsetPaginatorTest extends TestCase

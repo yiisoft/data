@@ -9,8 +9,6 @@ use InvalidArgumentException;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Reader\SortableDataInterface;
 
 use function ceil;
 use function max;
