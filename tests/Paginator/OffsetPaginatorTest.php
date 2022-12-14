@@ -392,21 +392,6 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertSame([], $this->iterableToArray($paginator->read()));
     }
 
-    public function testGetSort(): void
-    {
-        $dataReader = new IterableDataReader([]);
-        $paginator = new OffsetPaginator($dataReader);
-
-        $this->assertNull($paginator->getSort());
-
-        $sorting = Sort::only(['id']);
-
-        $dataReader = (new IterableDataReader([['id' => 1], ['id' => 2]]))->withSort($sorting);
-        $paginator = new OffsetPaginator($dataReader);
-
-        $this->assertInstanceOf(Sort::class, $paginator->getSort());
-    }
-
     public function testNextPageToken(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);

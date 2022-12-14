@@ -204,12 +204,6 @@ final class KeysetPaginator implements PaginatorInterface
         return $this->isOnLastPage() ? null : $this->currentLastValue;
     }
 
-    public function getSort(): ?Sort
-    {
-        /** @psalm-var SortableDataInterface $this->dataReader */
-        return $this->dataReader->getSort();
-    }
-
     public function isOnFirstPage(): bool
     {
         if ($this->lastValue === null && $this->firstValue === null) {

@@ -628,15 +628,6 @@ final class KeysetPaginatorTest extends Testcase
         };
     }
 
-    public function testGetSort(): void
-    {
-        $sort = Sort::only(['id'])->withOrderString('id');
-        $dataReader = (new IterableDataReader($this->getDataSet()))->withSort($sort);
-        $paginator = (new KeysetPaginator($dataReader));
-
-        $this->assertInstanceOf(Sort::class, $paginator->getSort());
-    }
-
     public function testWithPreviousPageTokenAndIsOnFirstPageSameTrue(): void
     {
         $sort = Sort::only(['id'])->withOrderString('id');

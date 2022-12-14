@@ -150,11 +150,6 @@ final class OffsetPaginator implements PaginatorInterface
         return (int) ceil($this->getTotalItems() / $this->pageSize);
     }
 
-    public function getSort(): ?Sort
-    {
-        return $this->dataReader instanceof SortableDataInterface ? $this->dataReader->getSort() : null;
-    }
-
     /**
      * @psalm-return Generator<TKey, TValue, mixed, void>
      * @psalm-suppress MixedAssignment, MixedMethodCall, MixedReturnTypeCoercion
