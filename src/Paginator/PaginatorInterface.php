@@ -14,11 +14,11 @@ interface PaginatorInterface
 {
     public const DEFAULT_PAGE_SIZE = 10;
 
-    public function withNextPageToken(?string $token): self;
+    public function withNextPageToken(?string $token): static;
 
-    public function withPreviousPageToken(?string $token): self;
+    public function withPreviousPageToken(?string $token): static;
 
-    public function withPageSize(int $pageSize): self;
+    public function withPageSize(int $pageSize): static;
 
     public function getNextPageToken(): ?string;
 

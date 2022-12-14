@@ -114,7 +114,7 @@ final class KeysetPaginator implements PaginatorInterface
         $this->currentLastValue = null;
     }
 
-    public function withNextPageToken(?string $token): self
+    public function withNextPageToken(?string $token): static
     {
         $new = clone $this;
         $new->firstValue = null;
@@ -122,7 +122,7 @@ final class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function withPreviousPageToken(?string $token): self
+    public function withPreviousPageToken(?string $token): static
     {
         $new = clone $this;
         $new->firstValue = $token;
@@ -130,7 +130,7 @@ final class KeysetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function withPageSize(int $pageSize): self
+    public function withPageSize(int $pageSize): static
     {
         if ($pageSize < 1) {
             throw new InvalidArgumentException('Page size should be at least 1.');

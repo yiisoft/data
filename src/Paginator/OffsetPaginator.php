@@ -61,17 +61,17 @@ final class OffsetPaginator implements PaginatorInterface
         $this->dataReader = $dataReader;
     }
 
-    public function withNextPageToken(?string $token): self
+    public function withNextPageToken(?string $token): static
     {
         return $this->withCurrentPage((int) $token);
     }
 
-    public function withPreviousPageToken(?string $token): self
+    public function withPreviousPageToken(?string $token): static
     {
         return $this->withCurrentPage((int) $token);
     }
 
-    public function withPageSize(int $pageSize): self
+    public function withPageSize(int $pageSize): static
     {
         if ($pageSize < 1) {
             throw new PaginatorException('Page size should be at least 1.');
