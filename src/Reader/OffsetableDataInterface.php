@@ -6,5 +6,5 @@ namespace Yiisoft\Data\Reader;
 
 interface OffsetableDataInterface
 {
-    public function withOffset(int $offset): self;
+    public function withOffset(int $offset): static;
 }

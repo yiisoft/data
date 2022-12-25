@@ -77,7 +77,7 @@ class IterableDataReader implements DataReaderInterface
         )->filterProcessors;
     }
 
-    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): self
+    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): static
     {
         $new = clone $this;
         $processors = [];
@@ -92,14 +92,14 @@ class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
-    public function withFilter(?FilterInterface $filter): self
+    public function withFilter(?FilterInterface $filter): static
     {
         $new = clone $this;
         $new->filter = $filter;
         return $new;
     }
 
-    public function withLimit(int $limit): self
+    public function withLimit(int $limit): static
     {
         if ($limit < 0) {
             throw new InvalidArgumentException('The limit must not be less than 0.');
@@ -110,14 +110,14 @@ class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
-    public function withOffset(int $offset): self
+    public function withOffset(int $offset): static
     {
         $new = clone $this;
         $new->offset = $offset;
         return $new;
     }
 
-    public function withSort(?Sort $sort): self
+    public function withSort(?Sort $sort): static
     {
         $new = clone $this;
         $new->sort = $sort;

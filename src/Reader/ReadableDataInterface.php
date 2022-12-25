@@ -17,7 +17,7 @@ interface ReadableDataInterface
      *
      * @throws InvalidArgumentException if limit less than 0.
      */
-    public function withLimit(int $limit): self;
+    public function withLimit(int $limit): static;
 
     /**
      * @psalm-return iterable<TKey, TValue>

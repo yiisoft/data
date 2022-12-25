@@ -515,7 +515,7 @@ final class KeysetPaginatorTest extends Testcase
     private function getNonSortableDataReader()
     {
         return new class () implements ReadableDataInterface, FilterableDataInterface {
-            public function withLimit(int $limit): ReadableDataInterface
+            public function withLimit(int $limit): static
             {
                 return clone $this;
             }
@@ -530,12 +530,12 @@ final class KeysetPaginatorTest extends Testcase
                 return null;
             }
 
-            public function withFilter(FilterInterface $filter): FilterableDataInterface
+            public function withFilter(FilterInterface $filter): static
             {
                 return clone $this;
             }
 
-            public function withFilterProcessors(FilterProcessorInterface ...$filterUnits): FilterableDataInterface
+            public function withFilterProcessors(FilterProcessorInterface ...$filterUnits): static
             {
                 return clone $this;
             }
@@ -545,7 +545,7 @@ final class KeysetPaginatorTest extends Testcase
     private function getNonFilterableDataReader()
     {
         return new class () implements ReadableDataInterface, SortableDataInterface {
-            public function withLimit(int $limit): ReadableDataInterface
+            public function withLimit(int $limit): static
             {
                 return clone $this;
             }
@@ -560,7 +560,7 @@ final class KeysetPaginatorTest extends Testcase
                 return null;
             }
 
-            public function withSort(?Sort $sort): SortableDataInterface
+            public function withSort(?Sort $sort): static
             {
                 return clone $this;
             }
