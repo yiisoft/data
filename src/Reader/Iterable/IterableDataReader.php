@@ -227,11 +227,11 @@ class IterableDataReader implements DataReaderInterface
             $items = $this->iterableToArray($items);
             uasort(
                 $items,
-                static function (mixed $itemA, mixed $itemB) use ($criteria) {
+                static function (array|object $itemA, array|object $itemB) use ($criteria) {
                     foreach ($criteria as $key => $order) {
-                        /** @psalm-suppress MixedArgument, MixedAssignment */
+                        /** @var mixed */
                         $valueA = ArrayHelper::getValue($itemA, $key);
-                        /** @psalm-suppress MixedArgument, MixedAssignment */
+                        /** @var mixed */
                         $valueB = ArrayHelper::getValue($itemB, $key);
 
                         if ($valueB === $valueA) {

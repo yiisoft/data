@@ -155,7 +155,6 @@ final class OffsetPaginator implements PaginatorInterface
 
     /**
      * @psalm-return Generator<TKey, TValue, mixed, null>
-     * @psalm-suppress MixedAssignment, MixedMethodCall, MixedReturnTypeCoercion
      */
     public function read(): iterable
     {
