@@ -490,13 +490,13 @@ final class IterableDataReaderTest extends TestCase
     public function testArrayOfObjects(): void
     {
         $data = [
-            'one' => new class() {
+            'one' => new class () {
                 public int $a = 1;
             },
-            'two' => new class() {
+            'two' => new class () {
                 public int $a = 2;
             },
-            'three' => new class() {
+            'three' => new class () {
                 public int $a = 3;
             },
         ];

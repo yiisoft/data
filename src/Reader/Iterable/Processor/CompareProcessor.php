@@ -9,7 +9,6 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
-use function array_key_exists;
 use function count;
 
 abstract class CompareProcessor implements IterableProcessorInterface, FilterProcessorInterface
