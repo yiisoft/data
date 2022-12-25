@@ -525,7 +525,7 @@ final class KeysetPaginatorTest extends Testcase
                 return [];
             }
 
-            public function readOne()
+            public function readOne(): array|object|null
             {
                 return null;
             }
@@ -555,7 +555,7 @@ final class KeysetPaginatorTest extends Testcase
                 return [];
             }
 
-            public function readOne()
+            public function readOne(): array|object|null
             {
                 return null;
             }

@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 /**
  * @template TKey as array-key
- * @template TValue
+ * @template TValue as array|object
  */
 interface ReadableDataInterface
 {
@@ -27,7 +27,7 @@ interface ReadableDataInterface
     public function read(): iterable;
 
     /**
-     * @psalm-return TValue
+     * @psalm-return TValue|null
      */
-    public function readOne();
+    public function readOne(): array|object|null;
 }

@@ -8,7 +8,7 @@ use Yiisoft\Data\Reader\Sort;
 
 /**
  * @template TKey as array-key
- * @template TValue
+ * @template TValue as array|object
  */
 interface PaginatorInterface
 {

@@ -18,7 +18,7 @@ use function sprintf;
 
 /**
  * @template TKey as array-key
- * @template TValue
+ * @template TValue as array|object
  *
  * @implements PaginatorInterface<TKey, TValue>
  */

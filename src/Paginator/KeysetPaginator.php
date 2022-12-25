@@ -36,7 +36,7 @@ use function sprintf;
  * @link https://use-the-index-luke.com/no-offset
  *
  * @template TKey as array-key
- * @template TValue
+ * @template TValue as array|object
  *
  * @implements PaginatorInterface<TKey, TValue>
  */
@@ -90,14 +90,13 @@ final class KeysetPaginator implements PaginatorInterface
             ));
         }
 
-        if ($dataReader->getSort() === null) {
+        $sort = $dataReader->getSort();
+
+        if ($sort === null) {
             throw new RuntimeException('Data sorting should be configured to work with keyset pagination.');
         }
 
-        /** @psalm-suppress PossiblyNullReference */
-        if ($dataReader
-                ->getSort()
-                ->getOrder() === []) {
+        if (empty($sort->getOrder())) {
             throw new RuntimeException('Data should be always sorted to work with keyset pagination.');
         }
 
@@ -144,8 +143,6 @@ final class KeysetPaginator implements PaginatorInterface
      * Reads items of the page.
      *
      * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetInternal()}.
-     *
-     * @psalm-suppress MixedMethodCall
      */
     public function read(): iterable
     {
@@ -289,10 +286,7 @@ final class KeysetPaginator implements PaginatorInterface
         return !empty($dataReader->withFilter($reverseFilter)->withLimit(1)->read());
     }
 
-    /**
-     * @return mixed
-     */
-    private function getValueFromItem(mixed $item, string $field)
+    private function getValueFromItem(array|object $item, string $field): mixed
     {
         $methodName = 'get' . (new Inflector())->toPascalCase($field);
 
@@ -300,7 +294,6 @@ final class KeysetPaginator implements PaginatorInterface
             return $item->$methodName();
         }
 
-        /** @psalm-suppress MixedArgument */
         return ArrayHelper::getValue($item, $field);
     }
 

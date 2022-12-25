@@ -57,7 +57,7 @@ final class OffsetPaginatorTest extends TestCase
                 return [];
             }
 
-            public function readOne()
+            public function readOne(): array|object|null
             {
                 return null;
             }
@@ -90,7 +90,7 @@ final class OffsetPaginatorTest extends TestCase
                 return [];
             }
 
-            public function readOne()
+            public function readOne(): array|object|null
             {
                 return null;
             }

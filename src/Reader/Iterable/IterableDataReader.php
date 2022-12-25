@@ -39,7 +39,7 @@ use function uasort;
 
 /**
  * @template TKey as array-key
- * @template TValue
+ * @template TValue as array|object
  *
  * @implements DataReaderInterface<TKey, TValue>
  */
@@ -125,7 +125,7 @@ class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return Generator<TValue>
+     * @psalm-return Generator<array-key, TValue, mixed, void>
      */
     public function getIterator(): Generator
     {
@@ -142,6 +142,9 @@ class IterableDataReader implements DataReaderInterface
         return count($this->read());
     }
 
+    /**
+     * @psalm-return array<TKey, TValue>
+     */
     public function read(): array
     {
         $data = [];
@@ -149,10 +152,6 @@ class IterableDataReader implements DataReaderInterface
         $filter = $this->filter?->toArray();
         $sortedData = $this->sort === null ? $this->data : $this->sortItems($this->data, $this->sort);
 
-        /**
-         * @var int|string $key
-         * @var array $item
-         */
         foreach ($sortedData as $key => $item) {
             // Do not return more than limit items.
             if ($this->limit > 0 && count($data) === $this->limit) {
@@ -174,10 +173,7 @@ class IterableDataReader implements DataReaderInterface
         return $data;
     }
 
-    /**
-     * @return mixed
-     */
-    public function readOne()
+    public function readOne(): array|object|null
     {
         return $this
             ->withLimit(1)
@@ -218,7 +214,10 @@ class IterableDataReader implements DataReaderInterface
      * @param iterable $items The items to be sorted.
      * @param Sort $sort The sort definition.
      *
-     * @return iterable The sorted items.
+     * @return array The sorted items.
+     *
+     * @psalm-param iterable<TKey, TValue> $items
+     * @psalm-return iterable<TKey, TValue>
      */
     private function sortItems(iterable $items, Sort $sort): iterable
     {
@@ -228,10 +227,6 @@ class IterableDataReader implements DataReaderInterface
             $items = $this->iterableToArray($items);
             uasort(
                 $items,
-                /**
-                 * @param mixed $itemA
-                 * @param mixed $itemB
-                 */
                 static function (mixed $itemA, mixed $itemB) use ($criteria) {
                     foreach ($criteria as $key => $order) {
                         /** @psalm-suppress MixedArgument, MixedAssignment */
@@ -254,6 +249,11 @@ class IterableDataReader implements DataReaderInterface
         return $items;
     }
 
+    /**
+     * @param iterable<TKey, TValue> $iterable
+     *
+     * @return array<TKey, TValue>
+     */
     private function iterableToArray(iterable $iterable): array
     {
         return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : $iterable;
