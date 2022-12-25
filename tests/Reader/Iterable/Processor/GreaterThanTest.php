@@ -19,7 +19,6 @@ final class GreaterThanTest extends TestCase
             [true, ['value', '44']],
             [false, ['value', 45]],
             [false, ['value', 46]],
-            [false, ['not-exist', 44]],
         ];
     }
 
@@ -44,7 +43,6 @@ final class GreaterThanTest extends TestCase
             [true, ['value', new DateTimeImmutable('2022-02-22 16:00:44')]],
             [false, ['value', new DateTimeImmutable('2022-02-22 16:00:45')]],
             [false, ['value', new DateTimeImmutable('2022-02-22 16:00:46')]],
-            [false, ['not-exist', new DateTimeImmutable('2022-02-22 16:00:44')]],
         ];
     }
 

@@ -22,7 +22,6 @@ final class EqualsNullTest extends TestCase
             [false, ['value' => 42]],
             [false, ['value' => '']],
             [false, ['value' => 'null']],
-            [false, ['not-exist' => null]],
         ];
     }
 

@@ -181,7 +181,7 @@ class IterableDataReader implements DataReaderInterface
             ->current();
     }
 
-    protected function matchFilter(array $item, array $filter): bool
+    protected function matchFilter(array|object $item, array $filter): bool
     {
         $operation = array_shift($filter);
         $arguments = $filter;

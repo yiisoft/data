@@ -17,7 +17,6 @@ final class InTest extends TestCase
             [true, ['value', [44, 45, 46]]],
             [true, ['value', [44, '45', 46]]],
             [false, ['value', [1, 2, 3]]],
-            [false, ['not-exist', [45]]],
         ];
     }
 

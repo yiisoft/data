@@ -18,7 +18,6 @@ final class LikeTest extends TestCase
             [true, ['value', 'Cat']],
             [false, ['id', 1]],
             [false, ['id', '1']],
-            [false, ['not-exist', 'Fighter42']],
         ];
     }
 

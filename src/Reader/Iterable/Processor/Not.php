@@ -21,7 +21,7 @@ final class Not implements IterableProcessorInterface, FilterProcessorInterface
         return \Yiisoft\Data\Reader\Filter\Not::getOperator();
     }
 
-    public function match(array $item, array $arguments, array $filterProcessors): bool
+    public function match(array|object $item, array $arguments, array $filterProcessors): bool
     {
         if (count($arguments) !== 1) {
             throw new InvalidArgumentException('$arguments should contain exactly one element.');

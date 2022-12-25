@@ -6,10 +6,10 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use DateTimeInterface;
 use InvalidArgumentException;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
-use function array_key_exists;
 use function count;
 
 final class Between implements IterableProcessorInterface, FilterProcessorInterface
@@ -19,7 +19,7 @@ final class Between implements IterableProcessorInterface, FilterProcessorInterf
         return \Yiisoft\Data\Reader\Filter\Between::getOperator();
     }
 
-    public function match(array $item, array $arguments, array $filterProcessors): bool
+    public function match(array|object $item, array $arguments, array $filterProcessors): bool
     {
         if (count($arguments) !== 3) {
             throw new InvalidArgumentException('$arguments should contain exactly three elements.');
@@ -29,17 +29,15 @@ final class Between implements IterableProcessorInterface, FilterProcessorInterf
         [$field, $firstValue, $secondValue] = $arguments;
         FilterDataValidationHelper::assertFieldIsString($field);
 
-        if (!array_key_exists($field, $item)) {
-            return false;
-        }
+        $value = ArrayHelper::getValue($item, $field);
 
-        if (!$item[$field] instanceof DateTimeInterface) {
-            return $item[$field] >= $firstValue && $item[$field] <= $secondValue;
+        if (!$value instanceof DateTimeInterface) {
+            return $value >= $firstValue && $value <= $secondValue;
         }
 
         return $firstValue instanceof DateTimeInterface
             && $secondValue instanceof DateTimeInterface
-            && $item[$field]->getTimestamp() >= $firstValue->getTimestamp()
-            && $item[$field]->getTimestamp() <= $secondValue->getTimestamp();
+            && $value->getTimestamp() >= $firstValue->getTimestamp()
+            && $value->getTimestamp() <= $secondValue->getTimestamp();
     }
 }

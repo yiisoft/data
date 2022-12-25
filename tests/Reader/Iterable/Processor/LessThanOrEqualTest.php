@@ -19,7 +19,6 @@ final class LessThanOrEqualTest extends TestCase
             [true, ['value', 45]],
             [true, ['value', '45']],
             [false, ['value', 44]],
-            [false, ['not-exist', 46]],
         ];
     }
 
@@ -44,7 +43,6 @@ final class LessThanOrEqualTest extends TestCase
             [true, ['value', new DateTimeImmutable('2022-02-22 16:00:46')]],
             [true, ['value', new DateTimeImmutable('2022-02-22 16:00:45')]],
             [false, ['value', new DateTimeImmutable('2022-02-22 16:00:44')]],
-            [false, ['not-exist', new DateTimeImmutable('2022-02-22 16:00:46')]],
         ];
     }
 
