@@ -16,6 +16,8 @@ interface ReadableDataInterface
      * @param int $limit A limit of 0 means "no limit".
      *
      * @throws InvalidArgumentException if limit less than 0.
+     *
+     * @return static
      */
     public function withLimit(int $limit): static;
 

@@ -17,8 +17,6 @@ use function max;
 use function sprintf;
 
 /**
- * @psalm-template DataReaderType = ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface
- *
  * @template TKey as array-key
  * @template TValue
  *
@@ -30,17 +28,18 @@ final class OffsetPaginator implements PaginatorInterface
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
 
     /**
-     * @psalm-var DataReaderType
+     * @psalm-var ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface
      */
     private ReadableDataInterface $dataReader;
 
     /**
-     * @psalm-var DataReaderType|null
+     * @psalm-var ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface|null
      */
     private ?ReadableDataInterface $cachedReader = null;
 
     /**
-     * @psalm-param DataReaderType $dataReader
+     * @psalm-param ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface $dataReader
+     * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
@@ -141,7 +140,6 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function getTotalItems(): int
     {
-        /** @psalm-var CountableDataInterface $this->dataReader */
         return $this->dataReader->count();
     }
 
@@ -156,7 +154,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-return Generator<TKey, TValue, mixed, void>
+     * @psalm-return Generator<TKey, TValue, mixed, null>
      * @psalm-suppress MixedAssignment, MixedMethodCall, MixedReturnTypeCoercion
      */
     public function read(): iterable
@@ -173,6 +171,7 @@ final class OffsetPaginator implements PaginatorInterface
         $this->cachedReader = $this->dataReader
             ->withLimit($this->pageSize)
             ->withOffset($this->getOffset());
+
         yield from $this->cachedReader->read();
     }
 
