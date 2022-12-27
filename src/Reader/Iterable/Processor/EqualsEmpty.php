@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\Iterable\IterableProcessorInterface;
 
 use function count;
 
-final class EqualsEmpty implements IterableProcessorInterface, FilterProcessorInterface
+final class EqualsEmpty implements IterableProcessorInterface
 {
     public function getOperator(): string
     {

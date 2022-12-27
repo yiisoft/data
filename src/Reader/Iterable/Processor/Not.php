@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\Iterable\IterableProcessorInterface;
 
 use function array_shift;
 use function count;
@@ -14,7 +14,7 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
-final class Not implements IterableProcessorInterface, FilterProcessorInterface
+final class Not implements IterableProcessorInterface
 {
     public function getOperator(): string
     {
