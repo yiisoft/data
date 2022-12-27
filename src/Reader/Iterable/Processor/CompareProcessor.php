@@ -9,7 +9,6 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
-use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 
 use function count;
 
