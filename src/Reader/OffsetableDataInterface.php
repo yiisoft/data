@@ -6,5 +6,8 @@ namespace Yiisoft\Data\Reader;
 
 interface OffsetableDataInterface
 {
-    public function withOffset(int $offset): self;
+    /**
+     * @psalm-return static
+     */
+    public function withOffset(int $offset): static;
 }

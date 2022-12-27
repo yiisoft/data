@@ -20,7 +20,6 @@ final class BetweenTest extends TestCase
             [true, ['value', 45, 46]],
             [false, ['value', 46, 47]],
             [false, ['value', 46, 45]],
-            [false, ['not-exist', 42, 47]],
         ];
     }
 
@@ -47,7 +46,6 @@ final class BetweenTest extends TestCase
             [true, ['value', new DateTimeImmutable('2022-02-22 16:00:45'), new DateTimeImmutable('2022-02-22 16:00:46')]],
             [false, ['value', new DateTimeImmutable('2022-02-22 16:00:46'), new DateTimeImmutable('2022-02-22 16:00:47')]],
             [false, ['value', new DateTimeImmutable('2022-02-22 16:00:46'), new DateTimeImmutable('2022-02-22 16:00:45')]],
-            [false, ['not-exist', new DateTimeImmutable('2022-02-22 16:00:42'), new DateTimeImmutable('2022-02-22 16:00:47')]],
         ];
     }
 

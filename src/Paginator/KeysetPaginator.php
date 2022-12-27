@@ -16,8 +16,8 @@ use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
-
 use Yiisoft\Strings\Inflector;
+
 use function array_reverse;
 use function count;
 use function is_callable;
@@ -35,17 +35,15 @@ use function sprintf;
  *
  * @link https://use-the-index-luke.com/no-offset
  *
- * @psalm-template DataReaderType = ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface
- *
  * @template TKey as array-key
- * @template TValue
+ * @template TValue as array|object
  *
  * @implements PaginatorInterface<TKey, TValue>
  */
 final class KeysetPaginator implements PaginatorInterface
 {
     /**
-     * @psalm-var DataReaderType
+     * @psalm-var ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface
      */
     private ReadableDataInterface $dataReader;
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
@@ -73,7 +71,8 @@ final class KeysetPaginator implements PaginatorInterface
     private ?array $readCache = null;
 
     /**
-     * @psalm-param DataReaderType $dataReader
+     * @psalm-param ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface $dataReader
+     * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
@@ -91,14 +90,13 @@ final class KeysetPaginator implements PaginatorInterface
             ));
         }
 
-        if ($dataReader->getSort() === null) {
+        $sort = $dataReader->getSort();
+
+        if ($sort === null) {
             throw new RuntimeException('Data sorting should be configured to work with keyset pagination.');
         }
 
-        /** @psalm-suppress PossiblyNullReference */
-        if ($dataReader
-                ->getSort()
-                ->getOrder() === []) {
+        if (empty($sort->getOrder())) {
             throw new RuntimeException('Data should be always sorted to work with keyset pagination.');
         }
 
@@ -145,8 +143,6 @@ final class KeysetPaginator implements PaginatorInterface
      * Reads items of the page.
      *
      * This method uses the read cache to prevent duplicate reads from the data source. See more {@see resetInternal()}.
-     *
-     * @psalm-suppress MixedMethodCall
      */
     public function read(): iterable
     {
@@ -156,30 +152,24 @@ final class KeysetPaginator implements PaginatorInterface
 
         /** @var Sort $sort */
         $sort = $this->dataReader->getSort();
-        /** @psalm-var DataReaderType $dataReader */
         $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
 
         if ($this->isGoingToPreviousPage()) {
             $sort = $this->reverseSort($sort);
-            /** @psalm-var DataReaderType $dataReader */
             $dataReader = $dataReader->withSort($sort);
         }
 
         if ($this->isGoingSomewhere()) {
-            /** @psalm-var FilterableDataInterface $dataReader */
             $dataReader = $dataReader->withFilter($this->getFilter($sort));
-            /** @psalm-var DataReaderType $dataReader */
             $this->hasPreviousPageItem = $this->previousPageExist($dataReader, $sort);
         }
 
-        /** @psalm-var ReadableDataInterface<TKey, TValue> $dataReader */
         $data = $this->readData($dataReader, $sort);
 
         if ($this->isGoingToPreviousPage()) {
             $data = $this->reverseData($data);
         }
 
-        /** @psalm-var array<TKey, TValue> $data */
         return $this->readCache = $data;
     }
 
@@ -287,24 +277,16 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-param DataReaderType $dataReader
-     * @psalm-suppress MixedAssignment, MixedMethodCall, UnusedForeachValue
+     * @psalm-param ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface $dataReader
      */
     private function previousPageExist(ReadableDataInterface $dataReader, Sort $sort): bool
     {
         $reverseFilter = $this->getReverseFilter($sort);
 
-        foreach ($dataReader->withFilter($reverseFilter)->withLimit(1)->read() as $void) {
-            return true;
-        }
-
-        return false;
+        return !empty($dataReader->withFilter($reverseFilter)->withLimit(1)->read());
     }
 
-    /**
-     * @return mixed
-     */
-    private function getValueFromItem(mixed $item, string $field)
+    private function getValueFromItem(array|object $item, string $field): mixed
     {
         $methodName = 'get' . (new Inflector())->toPascalCase($field);
 
@@ -312,7 +294,6 @@ final class KeysetPaginator implements PaginatorInterface
             return $item->$methodName();
         }
 
-        /** @psalm-suppress MixedArgument */
         return ArrayHelper::getValue($item, $field);
     }
 

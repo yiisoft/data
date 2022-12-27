@@ -376,7 +376,7 @@ final class IterableDataReaderTest extends TestCase
         };
 
         $reader = new class (self::DEFAULT_DATASET) extends IterableDataReader {
-            protected function matchFilter(array $item, array $filter): bool
+            protected function matchFilter(array|object $item, array $filter): bool
             {
                 [$operation, $field] = $filter;
 
@@ -416,7 +416,7 @@ final class IterableDataReaderTest extends TestCase
                         && $itemValue->getTimestamp() === $argumentValue->getTimestamp();
                 }
 
-                public function match(array $item, array $arguments, array $filterProcessors): bool
+                public function match(array|object $item, array $arguments, array $filterProcessors): bool
                 {
                     if (count($arguments) !== 2) {
                         throw new InvalidArgumentException('$arguments should contain exactly two elements.');
@@ -451,7 +451,7 @@ final class IterableDataReaderTest extends TestCase
                 parent::__construct($data);
             }
 
-            public function matchFilter(array $item, array $filter): bool
+            public function matchFilter(array|object $item, array $filter): bool
             {
                 return parent::matchFilter($item, $filter);
             }
@@ -485,6 +485,29 @@ final class IterableDataReaderTest extends TestCase
         $this->expectExceptionMessage('The operator string cannot be empty.');
 
         $dataReader->read();
+    }
+
+    public function testArrayOfObjects(): void
+    {
+        $data = [
+            'one' => new class () {
+                public int $a = 1;
+            },
+            'two' => new class () {
+                public int $a = 2;
+            },
+            'three' => new class () {
+                public int $a = 3;
+            },
+        ];
+
+        $reader = new IterableDataReader($data);
+
+        $rows = $reader->withFilter(new In('a', [2, 3]))->read();
+
+        $this->assertSame(['two', 'three'], array_keys($rows));
+        $this->assertSame(2, $rows['two']->a);
+        $this->assertSame(3, $rows['three']->a);
     }
 
     private function createFilterWithNotSupportedOperator(string $operator): FilterInterface

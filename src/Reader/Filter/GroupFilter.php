@@ -56,6 +56,8 @@ abstract class GroupFilter implements FilterInterface
      * @param array[]|FilterInterface[] $filtersArray
      *
      * @return static
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
     public function withFiltersArray(array $filtersArray): self
     {
@@ -64,7 +66,6 @@ abstract class GroupFilter implements FilterInterface
                 continue;
             }
 
-            /** @psalm-suppress DocblockTypeContradiction */
             if (!is_array($filter)) {
                 throw new InvalidArgumentException(sprintf('Invalid filter on "%s" key.', $key));
             }

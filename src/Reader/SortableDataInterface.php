@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader;
 
 interface SortableDataInterface
 {
-    public function withSort(?Sort $sort): self;
+    public function withSort(?Sort $sort): static;
 
     public function getSort(): ?Sort;
 }

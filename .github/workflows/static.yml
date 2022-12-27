@@ -28,4 +28,12 @@ jobs:
       os: >-
         ['ubuntu-latest']
       php: >-
-        ['8.0', '8.1']
+        ['8.1']
+  psalm-php80:
+    uses: yiisoft/actions/.github/workflows/psalm.yml@master
+    with:
+      psalm-config: psalm-php80.xml
+      os: >-
+        ['ubuntu-latest']
+      php: >-
+        ['8.0']

@@ -23,7 +23,6 @@ final class EqualsEmptyTest extends TestCase
             [false, ['value' => 42]],
             [false, ['value' => '1']],
             [false, ['value' => true]],
-            [true, ['not-exist' => 42]],
         ];
     }
 

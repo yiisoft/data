@@ -6,5 +6,5 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 interface IterableProcessorInterface
 {
-    public function match(array $item, array $arguments, array $filterProcessors): bool;
+    public function match(array|object $item, array $arguments, array $filterProcessors): bool;
 }
