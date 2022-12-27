@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Iterable;
+namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 

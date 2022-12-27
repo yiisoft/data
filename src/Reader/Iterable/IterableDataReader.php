@@ -22,7 +22,7 @@ use Yiisoft\Data\Reader\Iterable\Processor\EqualsNull;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThan;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Processor\In;
-use Yiisoft\Data\Reader\Iterable\IterableProcessorInterface;
+use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\LessThan;
 use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Processor\Like;

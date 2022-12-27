@@ -10,7 +10,7 @@ use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Reader\Iterable\Processor\All;
 use Yiisoft\Data\Reader\Iterable\Processor\Equals;
 use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\IterableProcessorInterface;
+use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
 use Yiisoft\Data\Tests\TestCase;
 

@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use stdClass;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Reader\Iterable\Processor\Equals;
-use Yiisoft\Data\Reader\Iterable\IterableProcessorInterface;
+use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\Not;
 use Yiisoft\Data\Tests\TestCase;
 
