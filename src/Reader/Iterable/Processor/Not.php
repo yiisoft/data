@@ -52,7 +52,6 @@ final class Not implements IterableProcessorInterface
             throw new InvalidArgumentException('The operator string cannot be empty.');
         }
 
-        /** @var IterableProcessorInterface|null $filterProcessor */
         $filterProcessor = $filterProcessors[$operator] ?? null;
 
         if ($filterProcessor === null) {
