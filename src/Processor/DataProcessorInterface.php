@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Processor;
 
 /**
  * @template TKey as array-key
- * @template TValue as mixed
+ * @template TValue as array|object
  */
 interface DataProcessorInterface
 {
