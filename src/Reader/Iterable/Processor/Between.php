@@ -7,12 +7,11 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function count;
 
-final class Between implements IterableProcessorInterface, FilterProcessorInterface
+final class Between implements IterableProcessorInterface
 {
     public function getOperator(): string
     {

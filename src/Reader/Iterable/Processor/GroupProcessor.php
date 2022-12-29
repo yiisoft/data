@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function array_shift;
@@ -14,7 +13,7 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
-abstract class GroupProcessor implements IterableProcessorInterface, FilterProcessorInterface
+abstract class GroupProcessor implements IterableProcessorInterface
 {
     abstract protected function checkResults(array $results): bool;
 
@@ -60,7 +59,6 @@ abstract class GroupProcessor implements IterableProcessorInterface, FilterProce
                 throw new InvalidArgumentException('The operator string cannot be empty.');
             }
 
-            /** @var IterableProcessorInterface|null $filterProcessor */
             $filterProcessor = $filterProcessors[$operator] ?? null;
 
             if ($filterProcessor === null) {

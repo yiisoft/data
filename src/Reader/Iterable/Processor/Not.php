@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function array_shift;
@@ -14,7 +13,7 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
-final class Not implements IterableProcessorInterface, FilterProcessorInterface
+final class Not implements IterableProcessorInterface
 {
     public function getOperator(): string
     {
@@ -53,7 +52,6 @@ final class Not implements IterableProcessorInterface, FilterProcessorInterface
             throw new InvalidArgumentException('The operator string cannot be empty.');
         }
 
-        /** @var IterableProcessorInterface|null $filterProcessor */
         $filterProcessor = $filterProcessors[$operator] ?? null;
 
         if ($filterProcessor === null) {

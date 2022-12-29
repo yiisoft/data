@@ -6,12 +6,11 @@ namespace Yiisoft\Data\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function count;
 
-abstract class CompareProcessor implements IterableProcessorInterface, FilterProcessorInterface
+abstract class CompareProcessor implements IterableProcessorInterface
 {
     /**
      * @param mixed $itemValue

@@ -51,7 +51,7 @@ class IterableDataReader implements DataReaderInterface
     private int $offset = 0;
 
     /**
-     * @psalm-var array<string, FilterProcessorInterface&IterableProcessorInterface>
+     * @psalm-var array<string, IterableProcessorInterface>
      */
     private array $filterProcessors = [];
 
