@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Processor;
 
-class DataProcessorException extends \RuntimeException
+use RuntimeException;
+
+class DataProcessorException extends RuntimeException
 {
 }

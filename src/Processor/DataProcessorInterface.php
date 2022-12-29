@@ -4,7 +4,16 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Processor;
 
+/**
+ * @template TKey as array-key
+ * @template TValue as mixed
+ */
 interface DataProcessorInterface
 {
-    public function process(array $items): array;
+    /**
+     * @param iterable<TKey, TValue> $items
+     *
+     * @return iterable<TKey, TValue>
+     */
+    public function process(iterable $items): iterable;
 }
