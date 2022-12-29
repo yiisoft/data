@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\Processor\All;
 use Yiisoft\Data\Reader\Iterable\Processor\Any;
 use Yiisoft\Data\Reader\Iterable\Processor\Between;

@@ -75,7 +75,7 @@ final class IterableDataProcessor implements DataProcessorInterface
 
         $result = array_filter(
             $items,
-            fn($item) => IterableHelper::matchFilter($item, $filter, $this->filterProcessors),
+            fn ($item) => IterableHelper::matchFilter($item, $filter, $this->filterProcessors),
         );
 
         return IterableHelper::sortItems($result, $this->sort);
