@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\IterableFilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterAssertHelper;
 use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 
 use function array_shift;
@@ -29,7 +29,7 @@ abstract class Group implements IterableFilterHandlerInterface
         if (!is_array($subFilters)) {
             throw new InvalidArgumentException(sprintf(
                 'The sub filters should be array. The %s is received.',
-                FilterDataValidationHelper::getValueType($subFilters),
+                get_debug_type($subFilters),
             ));
         }
 
@@ -39,7 +39,7 @@ abstract class Group implements IterableFilterHandlerInterface
             if (!is_array($subFilter)) {
                 throw new InvalidArgumentException(sprintf(
                     'The sub filter should be array. The %s is received.',
-                    FilterDataValidationHelper::getValueType($subFilter),
+                    get_debug_type($subFilter),
                 ));
             }
 
@@ -52,7 +52,7 @@ abstract class Group implements IterableFilterHandlerInterface
             if (!is_string($operator)) {
                 throw new InvalidArgumentException(sprintf(
                     'The operator should be string. The %s is received.',
-                    FilterDataValidationHelper::getValueType($operator),
+                    get_debug_type($operator),
                 ));
             }
 
@@ -66,7 +66,7 @@ abstract class Group implements IterableFilterHandlerInterface
                 throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
             }
 
-            FilterDataValidationHelper::assertFilterHandlerIsIterable($filterHandler);
+            FilterAssertHelper::assertFilterHandlerInterface($filterHandler);
             $results[] = $filterHandler->match($item, $subFilter, $iterableFilterHandlers);
         }
 

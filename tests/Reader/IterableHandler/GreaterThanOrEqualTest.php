@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Reader\IterableFilterHandler\GreaterThanOrEqual;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -87,7 +86,7 @@ final class GreaterThanOrEqualTest extends TestCase
      */
     public function testMatchFailForInvalidFieldValue($field): void
     {
-        $type = FilterDataValidationHelper::getValueType($field);
+        $type = get_debug_type($field);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The field should be string. The $type is received.");

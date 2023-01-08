@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader\IterableFilterHandler;
 
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterAssertHelper;
 use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 
 use function count;
@@ -25,7 +25,7 @@ final class EqualsNull implements IterableFilterHandlerInterface
         }
 
         [$field] = $arguments;
-        FilterDataValidationHelper::assertFieldIsString($field);
+        FilterAssertHelper::assertFieldIsString($field);
 
         /** @var string $field */
         return ArrayHelper::getValue($item, $field) === null;

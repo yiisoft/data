@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\IterableFilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterAssertHelper;
 use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 
 use function count;
@@ -24,7 +24,7 @@ final class EqualsEmpty implements IterableFilterHandlerInterface
         }
 
         [$field] = $arguments;
-        FilterDataValidationHelper::assertFieldIsString($field);
+        FilterAssertHelper::assertFieldIsString($field);
 
         /** @var string $field */
         return empty($item[$field]);

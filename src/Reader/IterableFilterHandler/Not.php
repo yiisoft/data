@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\IterableFilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterAssertHelper;
 use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 
 use function array_shift;
@@ -32,7 +32,7 @@ final class Not implements IterableFilterHandlerInterface
         if (!is_array($values)) {
             throw new InvalidArgumentException(sprintf(
                 'The values should be array. The %s is received.',
-                FilterDataValidationHelper::getValueType($values),
+                get_debug_type($values),
             ));
         }
 
@@ -45,7 +45,7 @@ final class Not implements IterableFilterHandlerInterface
         if (!is_string($operator)) {
             throw new InvalidArgumentException(sprintf(
                 'The operator should be string. The %s is received.',
-                FilterDataValidationHelper::getValueType($operator),
+                get_debug_type($operator),
             ));
         }
 
@@ -59,7 +59,7 @@ final class Not implements IterableFilterHandlerInterface
             throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
         }
 
-        FilterDataValidationHelper::assertFilterHandlerIsIterable($filterHandler);
+        FilterAssertHelper::assertFilterHandlerInterface($filterHandler);
         return !$filterHandler->match($item, $values, $iterableFilterHandlers);
     }
 }

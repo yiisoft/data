@@ -4,23 +4,27 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
 
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterAssertHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 
+/**
+ * In filter defines a criteria for ensuring field value matches one of the value provided.
+ */
 final class In implements FilterInterface
 {
     /**
-     * @var bool[]|float[]|int[]|string[]
+     * @var bool[]|float[]|int[]|string[] Values to check against.
      */
     private array $values;
 
     /**
-     * @param bool[]|float[]|int[]|string[] $values
+     * @param string $field Name of the field to compare.
+     * @param bool[]|float[]|int[]|string[] $values Values to check against.
      */
     public function __construct(private string $field, array $values)
     {
         foreach ($values as $value) {
-            FilterDataValidationHelper::assertIsScalar($value);
+            FilterAssertHelper::assertIsScalar($value);
         }
         $this->values = $values;
     }

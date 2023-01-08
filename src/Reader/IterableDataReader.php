@@ -184,7 +184,7 @@ class IterableDataReader implements DataReaderReaderInterface
             throw new RuntimeException(
                 sprintf(
                     'The operator should be string. The %s is received.',
-                    FilterDataValidationHelper::getValueType($operation),
+                    get_debug_type($operation),
                 )
             );
         }

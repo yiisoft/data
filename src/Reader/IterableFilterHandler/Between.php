@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\IterableFilterHandler;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterAssertHelper;
 use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 
 use function count;
@@ -27,7 +27,7 @@ final class Between implements IterableFilterHandlerInterface
 
         /** @var string $field */
         [$field, $firstValue, $secondValue] = $arguments;
-        FilterDataValidationHelper::assertFieldIsString($field);
+        FilterAssertHelper::assertFieldIsString($field);
 
         $value = ArrayHelper::getValue($item, $field);
 

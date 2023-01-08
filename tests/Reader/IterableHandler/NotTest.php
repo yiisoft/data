@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
 use stdClass;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Reader\IterableFilterHandler\Equals;
 use Yiisoft\Data\Reader\IterableFilterHandler\Not;
 use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
@@ -65,7 +64,7 @@ final class NotTest extends TestCase
      */
     public function testMatchFailIfArgumentValueIsNotArray($value): void
     {
-        $type = FilterDataValidationHelper::getValueType($value);
+        $type = get_debug_type($value);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The values should be array. The $type is received.");
@@ -93,7 +92,7 @@ final class NotTest extends TestCase
      */
     public function testMatchFailForInvalidFilterOperator(array $filter): void
     {
-        $type = FilterDataValidationHelper::getValueType($filter[0]);
+        $type = get_debug_type($filter[0]);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The operator should be string. The $type is received.");

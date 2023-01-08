@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Tests\Reader\Filter;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\In;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Tests\TestCase;
 
 final class InTest extends TestCase
@@ -23,7 +22,7 @@ final class InTest extends TestCase
      */
     public function testConstructorFailForInvalidScalarValue($value): void
     {
-        $type = FilterDataValidationHelper::getValueType($value);
+        $type = get_debug_type($value);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The value should be scalar. The $type is received.");

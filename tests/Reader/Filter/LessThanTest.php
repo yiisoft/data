@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Tests\Reader\Filter;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\LessThan;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Tests\TestCase;
 
 use function sprintf;
@@ -34,7 +33,7 @@ final class LessThanTest extends TestCase
         $this->expectExceptionMessage(sprintf(
             'The value should be scalar or %s instance. The %s is received.',
             DateTimeInterface::class,
-            FilterDataValidationHelper::getValueType($value),
+            get_debug_type($value),
         ));
 
         new LessThan('test', $value);

@@ -13,7 +13,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Group filter allows combining multiple criteria or sub-filters.
+ * Group filter is an abstract class that allows combining multiple criteria or sub-filters.
  */
 abstract class Group implements FilterInterface
 {
@@ -69,6 +69,7 @@ abstract class Group implements FilterInterface
      * Instances of FilterInterface are ignored.
      *
      * @return static New instance.
+     * @throws InvalidArgumentException If criteria arrays is not valid.
      *
      * @psalm-suppress DocblockTypeContradiction
      */

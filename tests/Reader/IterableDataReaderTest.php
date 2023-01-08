@@ -19,7 +19,7 @@ use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterAssertHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
@@ -423,7 +423,7 @@ final class IterableDataReaderTest extends TestCase
                     }
 
                     [$field, $value] = $arguments;
-                    FilterDataValidationHelper::assertFieldIsString($field);
+                    FilterAssertHelper::assertFieldIsString($field);
 
                     if ($item[$field] === 2) {
                         return true;
@@ -457,7 +457,7 @@ final class IterableDataReaderTest extends TestCase
             }
         };
 
-        $type = FilterDataValidationHelper::getValueType($operation);
+        $type = get_debug_type($operation);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("The operator should be string. The $type is received.");

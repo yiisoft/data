@@ -75,6 +75,8 @@ $total = count($reader);
 
 ### Filtering
 
+TODO: revise explainging concept of criteria and iterable filters
+
 In order to filter data in a data provider implementing `FilterableDataInterface` you need to supply filter to
 `withFilter()` method:
 

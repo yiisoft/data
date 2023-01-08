@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Reader\IterableFilterHandler\In;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -61,7 +60,7 @@ final class InTest extends TestCase
      */
     public function testMatchFailForInvalidFieldValue($field): void
     {
-        $type = FilterDataValidationHelper::getValueType($field);
+        $type = get_debug_type($field);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The field should be string. The $type is received.");
