@@ -11,7 +11,7 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
-abstract class GroupFilter implements FilterInterface
+abstract class Group implements FilterInterface
 {
     /**
      * @var array[]|FilterInterface[]

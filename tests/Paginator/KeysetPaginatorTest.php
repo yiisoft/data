@@ -10,7 +10,7 @@ use RuntimeException;
 use stdClass;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
+use Yiisoft\Data\Reader\Filter\FilterHandlerInterface;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
@@ -535,7 +535,7 @@ final class KeysetPaginatorTest extends Testcase
                 return clone $this;
             }
 
-            public function withFilterProcessors(FilterProcessorInterface ...$filterUnits): static
+            public function withFilterHandlers(FilterHandlerInterface ...$filterUnits): static
             {
                 return clone $this;
             }

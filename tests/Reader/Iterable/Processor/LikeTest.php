@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
-use Yiisoft\Data\Reader\Iterable\Processor\Like;
+use Yiisoft\Data\Reader\Iterable\Handler\Like;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LikeTest extends TestCase

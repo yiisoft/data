@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Iterable\Processor;
+namespace Yiisoft\Data\Reader\Iterable\Handler;
 
 use function in_array;
 
-final class All extends GroupProcessor
+final class All extends Group
 {
     public function getOperator(): string
     {

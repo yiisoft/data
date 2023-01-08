@@ -64,7 +64,7 @@ final class IterableDataReaderTest extends TestCase
     {
         $reader = new IterableDataReader([]);
 
-        $this->assertNotSame($reader, $reader->withFilterProcessors());
+        $this->assertNotSame($reader, $reader->withFilterHandlers());
         $this->assertNotSame($reader, $reader->withFilter(null));
         $this->assertNotSame($reader, $reader->withSort(null));
         $this->assertNotSame($reader, $reader->withOffset(1));
@@ -400,13 +400,13 @@ final class IterableDataReaderTest extends TestCase
 
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
-            ->withFilterProcessors(new class () extends \Yiisoft\Data\Reader\Iterable\Processor\CompareProcessor {
+            ->withFilterHandlers(new class () extends \Yiisoft\Data\Reader\Iterable\Handler\Compare {
                 public function getOperator(): string
                 {
                     return \Yiisoft\Data\Reader\Filter\Equals::getOperator();
                 }
 
-                protected function compare($itemValue, $argumentValue): bool
+                protected function compare(mixed $itemValue, mixed $argumentValue): bool
                 {
                     if (!$itemValue instanceof DateTimeInterface) {
                         return $itemValue == $argumentValue;
@@ -416,7 +416,7 @@ final class IterableDataReaderTest extends TestCase
                         && $itemValue->getTimestamp() === $argumentValue->getTimestamp();
                 }
 
-                public function match(array|object $item, array $arguments, array $filterProcessors): bool
+                public function match(array|object $item, array $arguments, array $filterHandlers): bool
                 {
                     if (count($arguments) !== 2) {
                         throw new InvalidArgumentException('$arguments should contain exactly two elements.');

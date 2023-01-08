@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Iterable\Processor;
+namespace Yiisoft\Data\Reader\Iterable\Handler;
 
 use DateTimeInterface;
 
-final class GreaterThanOrEqual extends CompareProcessor
+final class GreaterThanOrEqual extends Compare
 {
     public function getOperator(): string
     {
         return \Yiisoft\Data\Reader\Filter\GreaterThanOrEqual::getOperator();
     }
 
-    protected function compare($itemValue, $argumentValue): bool
+    protected function compare(mixed $itemValue, mixed $argumentValue): bool
     {
         if (!$itemValue instanceof DateTimeInterface) {
             return $itemValue >= $argumentValue;

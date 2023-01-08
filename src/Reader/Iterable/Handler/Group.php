@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Iterable\Processor;
+namespace Yiisoft\Data\Reader\Iterable\Handler;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
@@ -13,11 +13,11 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
-abstract class GroupProcessor implements IterableProcessorInterface
+abstract class Group implements IterableHandlerInterface
 {
     abstract protected function checkResults(array $results): bool;
 
-    public function match(array|object $item, array $arguments, array $filterProcessors): bool
+    public function match(array|object $item, array $arguments, array $filterHandlers): bool
     {
         if (count($arguments) !== 1) {
             throw new InvalidArgumentException('$arguments should contain exactly one element.');
@@ -59,14 +59,14 @@ abstract class GroupProcessor implements IterableProcessorInterface
                 throw new InvalidArgumentException('The operator string cannot be empty.');
             }
 
-            $filterProcessor = $filterProcessors[$operator] ?? null;
+            $filterHandler = $filterHandlers[$operator] ?? null;
 
-            if ($filterProcessor === null) {
+            if ($filterHandler === null) {
                 throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
             }
 
-            FilterDataValidationHelper::assertFilterProcessorIsIterable($filterProcessor);
-            $results[] = $filterProcessor->match($item, $subFilter, $filterProcessors);
+            FilterDataValidationHelper::assertFilterHandlerIsIterable($filterHandler);
+            $results[] = $filterHandler->match($item, $subFilter, $filterHandlers);
         }
 
         return $this->checkResults($results);

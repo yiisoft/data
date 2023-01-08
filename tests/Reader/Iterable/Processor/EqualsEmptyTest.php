@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\Processor;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
-use Yiisoft\Data\Reader\Iterable\Processor\EqualsEmpty;
+use Yiisoft\Data\Reader\Iterable\Handler\EqualsEmpty;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsEmptyTest extends TestCase
