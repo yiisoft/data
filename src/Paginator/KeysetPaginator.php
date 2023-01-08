@@ -29,9 +29,17 @@ use function sprintf;
 /**
  * Keyset paginator.
  *
- * - Equally fast for 1st and 1000th page
+ * Advantages:
+ *
+ * - Performance does not depend on page number
+ * - Consistent results regardless of insertions and deletions
+ *
+ * Disadvantages:
+ *
  * - Total number of pages is not available
- * - Cannot get to specific page, only "next" and "previous"
+ * - Can not get to specific page, only "previous" and "next"
+ * - Data cannot be unordered
+ *
  *
  * @link https://use-the-index-luke.com/no-offset
  *

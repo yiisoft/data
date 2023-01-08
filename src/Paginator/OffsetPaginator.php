@@ -19,9 +19,16 @@ use function sprintf;
 /**
  * Offset paginator.
  *
- * - Performance degrades with each page, but it is significant only when there are millions of records
+ * Advantages:
+ *
  * - Total number of pages is available
- * - Page could be accessed by its number
+ * - Can get to specific page
+ * - Data can be unordered
+ *
+ * Disadvantages:
+ *
+ * - Performance degrades with page number increase
+ * - Insertions or deletions in the middle of the data are making results inconsistent
  *
  * @template TKey as array-key
  * @template TValue as array|object
