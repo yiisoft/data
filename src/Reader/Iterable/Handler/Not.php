@@ -20,7 +20,7 @@ final class Not implements IterableHandlerInterface
         return \Yiisoft\Data\Reader\Filter\Not::getOperator();
     }
 
-    public function match(array|object $item, array $arguments, array $filterProcessors): bool
+    public function match(array|object $item, array $arguments, array $filterHandlers): bool
     {
         if (count($arguments) !== 1) {
             throw new InvalidArgumentException('$arguments should contain exactly one element.');
@@ -52,13 +52,13 @@ final class Not implements IterableHandlerInterface
             throw new InvalidArgumentException('The operator string cannot be empty.');
         }
 
-        $filterProcessor = $filterProcessors[$operator] ?? null;
+        $filterHandler = $filterHandlers[$operator] ?? null;
 
-        if ($filterProcessor === null) {
+        if ($filterHandler === null) {
             throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
         }
 
-        FilterDataValidationHelper::assertFilterProcessorIsIterable($filterProcessor);
-        return !$filterProcessor->match($item, $values, $filterProcessors);
+        FilterDataValidationHelper::assertFilterHandlerIsIterable($filterHandler);
+        return !$filterHandler->match($item, $values, $filterHandlers);
     }
 }

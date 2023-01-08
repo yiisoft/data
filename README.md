@@ -127,16 +127,16 @@ $dataReader->withFilter((new All())->withFiltersArray([
 
 In order to have your own filter:
 - Implement at least `FilterInterface`, which includes:
-  - `getOperator()` method that returns a string that represents a filter operation
+  - `getOperator()` method that returns a string that represents a filter operation.
   - `toArray()` method that returns an array with filtering parameters.
-- If you want to create a filter processor for a specific data reader type, then you need to implement at least 
-`FilterProcessorInterface`. It has a single `getOperator()` method that returns a string representing a filter operation.
-In addition, each data reader specifies an extended interface required for processing or building the operation.
-*For example, `IterableDataFilter` defines `IterableProcessorInterface`, which contains additional `match()` 
+- If you want to create a filter handler for a specific data reader type, then you need to implement at least 
+`FilterHandlerInterface`. It has a single `getOperator()` method that returns a string representing a filter operation.
+In addition, each data reader specifies an extended interface required for handling or building the operation.
+*For example, `IterableDataFilter` defines `IterableHandlerInterface`, which contains additional `match()` 
 method to execute a filter on PHP variables.*
 
-You can add your own filter processors to the data reader using the `withFilterProcessors()` method. You can add any filter
-processor to Reader. If reader is not able to use a filter, filter is ignored.
+You can add your own filter handlers to the data reader using the `withFilterHandlers()` method. You can add any filter
+handler to Reader. If reader is not able to use a filter, filter is ignored.
 
 ```php
 // own filter for filtering
@@ -158,15 +158,15 @@ class OwnNotTwoFilter implenents FilterInterface
     }
 }
 
-// own iterable filter processor for matching
-class OwnIterableNotTwoFilterProcessor implements 
+// own iterable filter handler for matching
+class OwnIterableNotTwoFilterHandler implements IterableHandlerInterface
 {
     public function getOperator(): string
     {
         return OwnNotTwoFilter::getOperator();
     }
 
-    public function match(array $item, array $arguments, array $filterProcessors): bool
+    public function match(array $item, array $arguments, array $filterHandlers): bool
     {
         [$field] = $arguments;
         return $item[$field] != 2;
@@ -181,9 +181,9 @@ $filter = new All(
 
 $reader = (new MyDataReader(...))
     ->withFilter($filter)
-    ->withFilterProcessors(
-        new OwnIterableNotTwoFilterProcessor()
-        new OwnSqlNotTwoFilterProcessor()    // for SQL
+    ->withFilterHandlers(
+        new OwnIterableNotTwoFilter()
+        new OwnSqlNotTwoFilter()    // for SQL
         // and for any supported readers...
     );
 

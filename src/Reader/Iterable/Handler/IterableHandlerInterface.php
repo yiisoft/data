@@ -8,5 +8,5 @@ use Yiisoft\Data\Reader\Filter\FilterHandlerInterface;
 
 interface IterableHandlerInterface extends FilterHandlerInterface
 {
-    public function match(array|object $item, array $arguments, array $filterProcessors): bool;
+    public function match(array|object $item, array $arguments, array $filterHandlers): bool;
 }

@@ -53,14 +53,14 @@ class IterableDataReader implements DataReaderInterface
     /**
      * @psalm-var array<string, IterableHandlerInterface>
      */
-    private array $filterProcessors = [];
+    private array $filterHandlers = [];
 
     /**
      * @psalm-param iterable<TKey, TValue> $data
      */
     public function __construct(protected iterable $data)
     {
-        $this->filterProcessors = $this->withFilterProcessors(
+        $this->filterHandlers = $this->withFilterHandlers(
             new All(),
             new Any(),
             new Between(),
@@ -74,21 +74,21 @@ class IterableDataReader implements DataReaderInterface
             new LessThanOrEqual(),
             new Like(),
             new Not()
-        )->filterProcessors;
+        )->filterHandlers;
     }
 
-    public function withFilterProcessors(FilterHandlerInterface ...$filterProcessors): static
+    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
         $new = clone $this;
         $processors = [];
 
-        foreach ($filterProcessors as $filterProcessor) {
-            if ($filterProcessor instanceof IterableHandlerInterface) {
-                $processors[$filterProcessor->getOperator()] = $filterProcessor;
+        foreach ($filterHandlers as $filterHandler) {
+            if ($filterHandler instanceof IterableHandlerInterface) {
+                $processors[$filterHandler->getOperator()] = $filterHandler;
             }
         }
 
-        $new->filterProcessors = array_merge($this->filterProcessors, $processors);
+        $new->filterHandlers = array_merge($this->filterHandlers, $processors);
         return $new;
     }
 
@@ -199,13 +199,13 @@ class IterableDataReader implements DataReaderInterface
             throw new RuntimeException('The operator string cannot be empty.');
         }
 
-        $processor = $this->filterProcessors[$operation] ?? null;
+        $processor = $this->filterHandlers[$operation] ?? null;
 
         if ($processor === null) {
             throw new RuntimeException(sprintf('Operation "%s" is not supported.', $operation));
         }
 
-        return $processor->match($item, $arguments, $this->filterProcessors);
+        return $processor->match($item, $arguments, $this->filterHandlers);
     }
 
     /**

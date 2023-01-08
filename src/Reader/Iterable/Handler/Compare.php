@@ -14,7 +14,7 @@ abstract class Compare implements IterableHandlerInterface
 {
     abstract protected function compare(mixed $itemValue, mixed $argumentValue): bool;
 
-    public function match(array|object $item, array $arguments, array $filterProcessors): bool
+    public function match(array|object $item, array $arguments, array $filterHandlers): bool
     {
         if (count($arguments) !== 2) {
             throw new InvalidArgumentException('$arguments should contain exactly two elements.');

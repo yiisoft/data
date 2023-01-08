@@ -60,16 +60,16 @@ final class AnyTest extends TestCase
     /**
      * @dataProvider matchDataProvider
      */
-    public function testMatch(bool $expected, array $arguments, array $filterProcessors): void
+    public function testMatch(bool $expected, array $arguments, array $filterHandlers): void
     {
-        $processor = new Any();
+        $handler = new Any();
 
         $item = [
             'id' => 1,
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $processor->match($item, $arguments, $filterProcessors));
+        $this->assertSame($expected, $handler->match($item, $arguments, $filterHandlers));
     }
 
     public function invalidCountArgumentsDataProvider(): array
@@ -163,11 +163,11 @@ final class AnyTest extends TestCase
         (new Any())->match(['id' => 1], [[['>']]], ['=' => new Equals()]);
     }
 
-    public function testMatchFailIfFilterProcessorIsNotIterable(): void
+    public function testMatchFailIfFilterHandlerIsNotIterable(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
-            'The filter processor should be an object and implement "%s". The %s is received.',
+            'The filter handler should be an object and implement "%s". The %s is received.',
             IterableHandlerInterface::class,
             stdClass::class,
         ));

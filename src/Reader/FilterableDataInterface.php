@@ -11,5 +11,5 @@ interface FilterableDataInterface
 {
     public function withFilter(FilterInterface $filter): static;
 
-    public function withFilterProcessors(FilterHandlerInterface ...$filterProcessors): static;
+    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static;
 }

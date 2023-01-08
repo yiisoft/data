@@ -16,7 +16,7 @@ final class EqualsEmpty implements IterableHandlerInterface
         return \Yiisoft\Data\Reader\Filter\EqualsEmpty::getOperator();
     }
 
-    public function match(array|object $item, array $arguments, array $filterProcessors): bool
+    public function match(array|object $item, array $arguments, array $filterHandlers): bool
     {
         if (count($arguments) !== 1) {
             throw new InvalidArgumentException('$arguments should contain exactly one element.');
