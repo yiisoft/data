@@ -43,6 +43,8 @@ interface PaginatorInterface
      *
      * @param int $pageSize Maximum number of items per page.
      * @return static New instance.
+     *
+     * @throws PaginatorException If page size is incorrect.
      */
     public function withPageSize(int $pageSize): static;
 
@@ -77,6 +79,8 @@ interface PaginatorInterface
      * @see getPageSize()
      *
      * @return int Current page size.
+     *
+     * @throws PaginatorException If page specified is not found.
      */
     public function getCurrentPageSize(): int;
 
@@ -90,7 +94,10 @@ interface PaginatorInterface
     /**
      * Get iterator that could be used to read currently active page items.
      *
+     * @return iterable Iterator with items for the current page.
      * @psalm-return iterable<TKey, TValue>
+     *
+     * @throws PaginatorException If page specified is not found.
      */
     public function read(): iterable;
 
@@ -98,6 +105,8 @@ interface PaginatorInterface
      * Get whether current page is the last one.
      *
      * @return bool Whether current page is the last one.
+     *
+     * @throws PaginatorException If page specified is not found.
      */
     public function isOnLastPage(): bool;
 
