@@ -21,7 +21,7 @@ final class EqualsTest extends TestCase
     {
         $filter = new Equals('test', $value);
 
-        $this->assertSame(['=', 'test', $value], $filter->toArray());
+        $this->assertSame(['=', 'test', $value], $filter->toCriteriaArray());
     }
 
     /**

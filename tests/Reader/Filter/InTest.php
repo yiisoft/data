@@ -15,7 +15,7 @@ final class InTest extends TestCase
     {
         $filter = new In('test', [1, 2]);
 
-        $this->assertSame(['in', 'test', [1, 2]], $filter->toArray());
+        $this->assertSame(['in', 'test', [1, 2]], $filter->toCriteriaArray());
     }
 
     /**

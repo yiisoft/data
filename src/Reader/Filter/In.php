@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterInterface;
 
 final class In implements FilterInterface
 {
@@ -24,7 +25,7 @@ final class In implements FilterInterface
         $this->values = $values;
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
         return [self::getOperator(), $this->field, $this->values];
     }

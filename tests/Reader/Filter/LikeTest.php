@@ -13,6 +13,6 @@ final class LikeTest extends TestCase
     {
         $filter = new Like('test', 'value');
 
-        $this->assertSame(['like', 'test', 'value'], $filter->toArray());
+        $this->assertSame(['like', 'test', 'value'], $filter->toCriteriaArray());
     }
 }

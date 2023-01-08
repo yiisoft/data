@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Reader;
 
 use DateTimeInterface;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Iterable\Handler\IterableHandlerInterface;
 
 use function is_scalar;
 use function is_string;
@@ -26,10 +25,10 @@ final class FilterDataValidationHelper
 
     public static function assertFilterHandlerIsIterable(mixed $filterHandler): void
     {
-        if (!$filterHandler instanceof IterableHandlerInterface) {
+        if (!$filterHandler instanceof IterableFilterHandlerInterface) {
             throw new InvalidArgumentException(sprintf(
                 'The filter handler should be an object and implement "%s". The %s is received.',
-                IterableHandlerInterface::class,
+                IterableFilterHandlerInterface::class,
                 self::getValueType($filterHandler),
             ));
         }

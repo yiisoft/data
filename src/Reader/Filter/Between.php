@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Reader\Filter;
 
 use DateTimeInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterInterface;
 
 final class Between implements FilterInterface
 {
@@ -26,7 +27,7 @@ final class Between implements FilterInterface
         $this->secondValue = $secondValue;
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
         return [self::getOperator(), $this->field, $this->firstValue, $this->secondValue];
     }

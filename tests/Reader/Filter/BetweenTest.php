@@ -21,7 +21,7 @@ final class BetweenTest extends TestCase
     {
         $filter = new Between('test', $value, $value);
 
-        $this->assertSame(['between', 'test', $value, $value], $filter->toArray());
+        $this->assertSame(['between', 'test', $value, $value], $filter->toCriteriaArray());
     }
 
     /**

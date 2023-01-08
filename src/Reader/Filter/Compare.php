@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Reader\Filter;
 
 use DateTimeInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
+use Yiisoft\Data\Reader\FilterInterface;
 
 abstract class Compare implements FilterInterface
 {
@@ -20,7 +21,7 @@ abstract class Compare implements FilterInterface
         $this->value = $value;
     }
 
-    public function toArray(): array
+    public function toCriteriaArray(): array
     {
         return [static::getOperator(), $this->field, $this->value];
     }

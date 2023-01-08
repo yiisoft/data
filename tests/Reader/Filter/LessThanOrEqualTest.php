@@ -21,7 +21,7 @@ final class LessThanOrEqualTest extends TestCase
     {
         $filter = new LessThanOrEqual('test', $value);
 
-        $this->assertSame(['<=', 'test', $value], $filter->toArray());
+        $this->assertSame(['<=', 'test', $value], $filter->toCriteriaArray());
     }
 
     /**

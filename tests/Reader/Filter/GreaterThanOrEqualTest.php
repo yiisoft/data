@@ -21,7 +21,7 @@ final class GreaterThanOrEqualTest extends TestCase
     {
         $filter = new GreaterThanOrEqual('test', $value);
 
-        $this->assertSame(['>=', 'test', $value], $filter->toArray());
+        $this->assertSame(['>=', 'test', $value], $filter->toCriteriaArray());
     }
 
     /**

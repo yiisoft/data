@@ -9,14 +9,14 @@ use InvalidArgumentException;
 use RuntimeException;
 use stdClass;
 use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\FilterHandlerInterface;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
-use Yiisoft\Data\Reader\FilterableDataInterface;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\FilterableDataReaderInterface;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\IterableDataReader;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -63,7 +63,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
             'Data reader should implement "%s" to be used with keyset paginator.',
-            FilterableDataInterface::class,
+            FilterableDataReaderInterface::class,
         ));
 
         new KeysetPaginator($this->getNonFilterableDataReader());
@@ -514,7 +514,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonSortableDataReader()
     {
-        return new class () implements ReadableDataInterface, FilterableDataInterface {
+        return new class () implements ReadableDataInterface, FilterableDataReaderInterface {
             public function withLimit(int $limit): static
             {
                 return clone $this;
@@ -535,7 +535,7 @@ final class KeysetPaginatorTest extends Testcase
                 return clone $this;
             }
 
-            public function withFilterHandlers(FilterHandlerInterface ...$filterUnits): static
+            public function withIterableFilterHandlers(IterableFilterHandlerInterface ...$iterableFilterUnits): static
             {
                 return clone $this;
             }
@@ -659,19 +659,19 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = $paginator->withPreviousPageToken('1');
         $paginator->read();
-        $this->assertTrue($this->getInaccessibleProperty($paginator, 'hasNextPageItem'));
+        $this->assertTrue($this->getInaccessibleProperty($paginator, 'hasNextPage'));
 
         $paginator = $paginator->withNextPageToken('3');
         $paginator->read();
-        $this->assertTrue($this->getInaccessibleProperty($paginator, 'hasPreviousPageItem'));
+        $this->assertTrue($this->getInaccessibleProperty($paginator, 'hasPreviousPage'));
 
         $paginator = clone $paginator;
 
         $this->assertNull($this->getInaccessibleProperty($paginator, 'readCache'));
         $this->assertNull($this->getInaccessibleProperty($paginator, 'currentFirstValue'));
         $this->assertNull($this->getInaccessibleProperty($paginator, 'currentLastValue'));
-        $this->assertFalse($this->getInaccessibleProperty($paginator, 'hasNextPageItem'));
-        $this->assertFalse($this->getInaccessibleProperty($paginator, 'hasPreviousPageItem'));
+        $this->assertFalse($this->getInaccessibleProperty($paginator, 'hasNextPage'));
+        $this->assertFalse($this->getInaccessibleProperty($paginator, 'hasPreviousPage'));
     }
 
     public function testImmutability(): void

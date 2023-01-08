@@ -29,7 +29,7 @@ final class AnyTest extends TestCase
                 ['<', 'test', 4],
                 ['>', 'test', 2],
             ],
-        ], $filter->toArray());
+        ], $filter->toCriteriaArray());
     }
 
     public function testToArrayAndWithFiltersArray(): void
@@ -39,7 +39,7 @@ final class AnyTest extends TestCase
             new GreaterThan('test', 2),
         );
 
-        $newFilter = $filter->withFiltersArray([
+        $newFilter = $filter->withCriteriaArray([
             new All(
                 new Between('test', 2, 4),
                 new In('test', [1, 2, 3, 4]),
@@ -61,7 +61,7 @@ final class AnyTest extends TestCase
                 ],
                 ['=', 'test', 3],
             ],
-        ], $newFilter->toArray());
+        ], $newFilter->toCriteriaArray());
     }
 
     /**
@@ -72,7 +72,7 @@ final class AnyTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid filter on "1" key.');
 
-        (new Any())->withFiltersArray([new Equals('test', 1), $filter]);
+        (new Any())->withCriteriaArray([new Equals('test', 1), $filter]);
     }
 
     /**
@@ -83,6 +83,6 @@ final class AnyTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid filter operator on "0" key.');
 
-        (new Any())->withFiltersArray([$filter]);
+        (new Any())->withCriteriaArray([$filter]);
     }
 }
