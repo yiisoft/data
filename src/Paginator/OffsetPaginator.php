@@ -17,6 +17,12 @@ use function max;
 use function sprintf;
 
 /**
+ * Offset paginator.
+ *
+ * - Performance degrades with each page, but it is significant only when there are millions of records
+ * - Total number of pages is available
+ * - Page could be accessed by its number
+ *
  * @template TKey as array-key
  * @template TValue as array|object
  *
@@ -24,10 +30,19 @@ use function sprintf;
  */
 final class OffsetPaginator implements PaginatorInterface
 {
+    /**
+     * @var int Current page number.
+     */
     private int $currentPage = 1;
+
+    /**
+     * @var int Maximum number of items per page.
+     */
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
 
     /**
+     * Data reader being paginated.
+     *
      * @psalm-var ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface
      */
     private ReadableDataInterface $dataReader;
@@ -38,6 +53,7 @@ final class OffsetPaginator implements PaginatorInterface
     private ?ReadableDataInterface $cachedReader = null;
 
     /**
+     * @param ReadableDataInterface $dataReader Data reader being paginated.
      * @psalm-param ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface $dataReader
      * @psalm-suppress DocblockTypeContradiction
      */
@@ -82,6 +98,12 @@ final class OffsetPaginator implements PaginatorInterface
         return $new;
     }
 
+    /**
+     * Get a new instance with the given current page number set.
+     *
+     * @param int $page Page number.
+     * @return self New instance.
+     */
     public function withCurrentPage(int $page): self
     {
         if ($page < 1) {
@@ -109,6 +131,11 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->pageSize;
     }
 
+    /**
+     * Get current page number.
+     *
+     * @return int Current page number.
+     */
     public function getCurrentPage(): int
     {
         return $this->currentPage;
@@ -133,16 +160,31 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->pageSize;
     }
 
+    /**
+     * Get offset for the current page i.e. the number of items to skip before the current page is reached.
+     *
+     * @return int Offset.
+     */
     public function getOffset(): int
     {
         return $this->pageSize * ($this->currentPage - 1);
     }
 
+    /**
+     * Get total number of items in the whole data reader being paginated.
+     *
+     * @return int Total items number.
+     */
     public function getTotalItems(): int
     {
         return $this->dataReader->count();
     }
 
+    /**
+     * Get total number of pages in a data reader being paginated.
+     *
+     * @return int Total pages number.
+     */
     public function getTotalPages(): int
     {
         return (int) ceil($this->getTotalItems() / $this->pageSize);
