@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Iterable\Processor;
+namespace Yiisoft\Data\Reader\Iterable\Handler;
 
 use function is_string;
 use function stripos;
 
-final class Like extends CompareProcessor
+final class Like extends Compare
 {
     public function getOperator(): string
     {
         return \Yiisoft\Data\Reader\Filter\Like::getOperator();
     }
 
-    protected function compare($itemValue, $argumentValue): bool
+    protected function compare(mixed $itemValue, mixed $argumentValue): bool
     {
         return is_string($itemValue) && is_string($argumentValue) && stripos($itemValue, $argumentValue) !== false;
     }

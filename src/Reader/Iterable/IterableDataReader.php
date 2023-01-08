@@ -11,22 +11,22 @@ use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\FilterProcessorInterface;
+use Yiisoft\Data\Reader\Filter\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
-use Yiisoft\Data\Reader\Iterable\Processor\All;
-use Yiisoft\Data\Reader\Iterable\Processor\Any;
-use Yiisoft\Data\Reader\Iterable\Processor\Between;
-use Yiisoft\Data\Reader\Iterable\Processor\Equals;
-use Yiisoft\Data\Reader\Iterable\Processor\EqualsEmpty;
-use Yiisoft\Data\Reader\Iterable\Processor\EqualsNull;
-use Yiisoft\Data\Reader\Iterable\Processor\GreaterThan;
-use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\Processor\In;
-use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
-use Yiisoft\Data\Reader\Iterable\Processor\LessThan;
-use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\Processor\Like;
-use Yiisoft\Data\Reader\Iterable\Processor\Not;
+use Yiisoft\Data\Reader\Iterable\Handler\All;
+use Yiisoft\Data\Reader\Iterable\Handler\Any;
+use Yiisoft\Data\Reader\Iterable\Handler\Between;
+use Yiisoft\Data\Reader\Iterable\Handler\Equals;
+use Yiisoft\Data\Reader\Iterable\Handler\EqualsEmpty;
+use Yiisoft\Data\Reader\Iterable\Handler\EqualsNull;
+use Yiisoft\Data\Reader\Iterable\Handler\GreaterThan;
+use Yiisoft\Data\Reader\Iterable\Handler\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Handler\In;
+use Yiisoft\Data\Reader\Iterable\Handler\IterableHandlerInterface;
+use Yiisoft\Data\Reader\Iterable\Handler\LessThan;
+use Yiisoft\Data\Reader\Iterable\Handler\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Handler\Like;
+use Yiisoft\Data\Reader\Iterable\Handler\Not;
 use Yiisoft\Data\Reader\Sort;
 
 use function array_merge;
@@ -51,7 +51,7 @@ class IterableDataReader implements DataReaderInterface
     private int $offset = 0;
 
     /**
-     * @psalm-var array<string, IterableProcessorInterface>
+     * @psalm-var array<string, IterableHandlerInterface>
      */
     private array $filterProcessors = [];
 
@@ -77,13 +77,13 @@ class IterableDataReader implements DataReaderInterface
         )->filterProcessors;
     }
 
-    public function withFilterProcessors(FilterProcessorInterface ...$filterProcessors): static
+    public function withFilterProcessors(FilterHandlerInterface ...$filterProcessors): static
     {
         $new = clone $this;
         $processors = [];
 
         foreach ($filterProcessors as $filterProcessor) {
-            if ($filterProcessor instanceof IterableProcessorInterface) {
+            if ($filterProcessor instanceof IterableHandlerInterface) {
                 $processors[$filterProcessor->getOperator()] = $filterProcessor;
             }
         }

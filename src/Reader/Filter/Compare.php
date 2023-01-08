@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Filter;
 use DateTimeInterface;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
-abstract class CompareFilter implements FilterInterface
+abstract class Compare implements FilterInterface
 {
     private bool|\DateTimeInterface|float|int|string $value;
 

@@ -7,11 +7,11 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\Processor;
 use InvalidArgumentException;
 use stdClass;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
-use Yiisoft\Data\Reader\Iterable\Processor\All;
-use Yiisoft\Data\Reader\Iterable\Processor\Equals;
-use Yiisoft\Data\Reader\Iterable\Processor\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\Processor\IterableProcessorInterface;
-use Yiisoft\Data\Reader\Iterable\Processor\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Handler\All;
+use Yiisoft\Data\Reader\Iterable\Handler\Equals;
+use Yiisoft\Data\Reader\Iterable\Handler\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Handler\IterableHandlerInterface;
+use Yiisoft\Data\Reader\Iterable\Handler\LessThanOrEqual;
 use Yiisoft\Data\Tests\TestCase;
 
 final class AllTest extends TestCase
@@ -163,7 +163,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
             'The filter processor should be an object and implement "%s". The %s is received.',
-            IterableProcessorInterface::class,
+            IterableHandlerInterface::class,
             stdClass::class,
         ));
 

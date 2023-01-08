@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Iterable\Processor;
+namespace Yiisoft\Data\Reader\Iterable\Handler;
 
 use InvalidArgumentException;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function count;
 
-final class EqualsNull implements IterableProcessorInterface
+final class EqualsEmpty implements IterableHandlerInterface
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\EqualsNull::getOperator();
+        return \Yiisoft\Data\Reader\Filter\EqualsEmpty::getOperator();
     }
 
     public function match(array|object $item, array $arguments, array $filterProcessors): bool
@@ -27,6 +26,6 @@ final class EqualsNull implements IterableProcessorInterface
         FilterDataValidationHelper::assertFieldIsString($field);
 
         /** @var string $field */
-        return ArrayHelper::getValue($item, $field) === null;
+        return empty($item[$field]);
     }
 }

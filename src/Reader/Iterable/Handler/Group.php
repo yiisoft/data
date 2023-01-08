@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Iterable\Processor;
+namespace Yiisoft\Data\Reader\Iterable\Handler;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
@@ -13,7 +13,7 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
-abstract class GroupProcessor implements IterableProcessorInterface
+abstract class Group implements IterableHandlerInterface
 {
     abstract protected function checkResults(array $results): bool;
 

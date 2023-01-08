@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\Iterable\Processor;
+namespace Yiisoft\Data\Reader\Iterable\Handler;
 
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
@@ -10,13 +10,9 @@ use Yiisoft\Data\Reader\FilterDataValidationHelper;
 
 use function count;
 
-abstract class CompareProcessor implements IterableProcessorInterface
+abstract class Compare implements IterableHandlerInterface
 {
-    /**
-     * @param mixed $itemValue
-     * @param mixed $argumentValue
-     */
-    abstract protected function compare($itemValue, $argumentValue): bool;
+    abstract protected function compare(mixed $itemValue, mixed $argumentValue): bool;
 
     public function match(array|object $item, array $arguments, array $filterProcessors): bool
     {

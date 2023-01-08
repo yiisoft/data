@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\Processor;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterDataValidationHelper;
-use Yiisoft\Data\Reader\Iterable\Processor\LessThan;
+use Yiisoft\Data\Reader\Iterable\Handler\LessThan;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LessThanTest extends TestCase

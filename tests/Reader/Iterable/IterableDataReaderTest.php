@@ -400,13 +400,13 @@ final class IterableDataReaderTest extends TestCase
 
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
-            ->withFilterProcessors(new class () extends \Yiisoft\Data\Reader\Iterable\Processor\CompareProcessor {
+            ->withFilterProcessors(new class () extends \Yiisoft\Data\Reader\Iterable\Handler\Compare {
                 public function getOperator(): string
                 {
                     return \Yiisoft\Data\Reader\Filter\Equals::getOperator();
                 }
 
-                protected function compare($itemValue, $argumentValue): bool
+                protected function compare(mixed $itemValue, mixed $argumentValue): bool
                 {
                     if (!$itemValue instanceof DateTimeInterface) {
                         return $itemValue == $argumentValue;

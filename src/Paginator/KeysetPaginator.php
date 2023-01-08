@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Paginator;
 use InvalidArgumentException;
 use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\CompareFilter;
+use Yiisoft\Data\Reader\Filter\Compare;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
@@ -297,7 +297,7 @@ final class KeysetPaginator implements PaginatorInterface
         return ArrayHelper::getValue($item, $field);
     }
 
-    private function getFilter(Sort $sort): CompareFilter
+    private function getFilter(Sort $sort): Compare
     {
         $value = $this->getValue();
         /** @var string $field */
@@ -305,7 +305,7 @@ final class KeysetPaginator implements PaginatorInterface
         return $sorting === 'asc' ? new GreaterThan($field, $value) : new LessThan($field, $value);
     }
 
-    private function getReverseFilter(Sort $sort): CompareFilter
+    private function getReverseFilter(Sort $sort): Compare
     {
         $value = $this->getValue();
         /** @var string $field */
