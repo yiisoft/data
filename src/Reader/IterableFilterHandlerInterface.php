@@ -29,6 +29,7 @@ interface IterableFilterHandlerInterface
      * @param array|object $item Item to check.
      * @param array $arguments Arguments to pass to iterable filter handlers.
      * @param array $iterableFilterHandlers Iterable filter handlers to use.
+     *
      * @return bool Whether item matches the filter.
      */
     public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool;

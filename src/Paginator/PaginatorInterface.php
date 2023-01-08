@@ -26,6 +26,7 @@ interface PaginatorInterface
      * Get a new instance with token for the next page set.
      *
      * @param string|null $token Token for the next page. Null if current page is last.
+     *
      * @return static New instance.
      */
     public function withNextPageToken(?string $token): static;
@@ -34,6 +35,7 @@ interface PaginatorInterface
      * Get a new instance with token for the previous page set.
      *
      * @param string|null $token Token for the previous page. Null if current page is first.
+     *
      * @return static New instance.
      */
     public function withPreviousPageToken(?string $token): static;
@@ -42,9 +44,10 @@ interface PaginatorInterface
      * Get a new instance with page size set.
      *
      * @param int $pageSize Maximum number of items per page.
-     * @return static New instance.
      *
      * @throws PaginatorException If page size is incorrect.
+     *
+     * @return static New instance.
      */
     public function withPageSize(int $pageSize): static;
 
@@ -66,6 +69,7 @@ interface PaginatorInterface
      * Get maximum number of items per page.
      *
      * Note that there could be less current page items.
+     *
      * @see getCurrentPageSize()
      *
      * @return int Page size.
@@ -76,11 +80,12 @@ interface PaginatorInterface
      * Get number of items at the current page.
      *
      * Note that it is actual number of items, not the limit.
+     *
      * @see getPageSize()
      *
-     * @return int Current page size.
-     *
      * @throws PaginatorException If page specified is not found.
+     *
+     * @return int Current page size.
      */
     public function getCurrentPageSize(): int;
 
@@ -94,19 +99,19 @@ interface PaginatorInterface
     /**
      * Get iterator that could be used to read currently active page items.
      *
+     * @throws PaginatorException If page specified is not found.
+     *
      * @return iterable Iterator with items for the current page.
      * @psalm-return iterable<TKey, TValue>
-     *
-     * @throws PaginatorException If page specified is not found.
      */
     public function read(): iterable;
 
     /**
      * Get whether current page is the last one.
      *
-     * @return bool Whether current page is the last one.
-     *
      * @throws PaginatorException If page specified is not found.
+     *
+     * @return bool Whether current page is the last one.
      */
     public function isOnLastPage(): bool;
 

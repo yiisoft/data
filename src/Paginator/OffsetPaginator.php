@@ -102,9 +102,10 @@ final class OffsetPaginator implements PaginatorInterface
      * Get a new instance with the given current page number set.
      *
      * @param int $page Page number.
-     * @return self New instance.
      *
      * @throws PaginatorException If current page is set incorrectly.
+     *
+     * @return self New instance.
      */
     public function withCurrentPage(int $page): self
     {

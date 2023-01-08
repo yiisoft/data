@@ -21,6 +21,7 @@ interface FilterableDataReaderInterface
      * Returns new instance with data reading criteria set.
      *
      * @param FilterInterface $filter Data reading criteria.
+     *
      * @return static New instance.
      */
     public function withFilter(FilterInterface $filter): static;
@@ -29,6 +30,7 @@ interface FilterableDataReaderInterface
      * Returns new instance with additional iterable handlers set.
      *
      * @param IterableFilterHandlerInterface ...$iterableFilterHandlers Additional iterable handlers.
+     *
      * @return static New instance.
      */
     public function withIterableFilterHandlers(IterableFilterHandlerInterface ...$iterableFilterHandlers): static;
