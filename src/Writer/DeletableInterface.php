@@ -13,6 +13,7 @@ interface DeletableInterface
      * Delete items specified.
      *
      * @param iterable $items Items to delete.
+     *
      * @throws DataWriterException If there is an error deleting items.
      */
     public function delete(iterable $items): void;
