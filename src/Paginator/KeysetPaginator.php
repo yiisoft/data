@@ -40,7 +40,6 @@ use function sprintf;
  * - Can not get to specific page, only "previous" and "next"
  * - Data cannot be unordered
  *
- *
  * @link https://use-the-index-luke.com/no-offset
  *
  * @template TKey as array-key

@@ -20,7 +20,7 @@ final class FilterAssertHelper
      * Asserts that field is a string.
      *
      * @param mixed $field Value to check.
-     * @return void
+     *
      * @throws InvalidArgumentException If value is not correct.
      */
     public static function assertFieldIsString(mixed $field): void
@@ -37,7 +37,7 @@ final class FilterAssertHelper
      * Asserts that the value is an instance of {@see IterableFilterHandlerInterface}.
      *
      * @param mixed $value Value to check.
-     * @return void
+     *
      * @throws InvalidArgumentException If value is not correct.
      */
     public static function assertFilterHandlerInterface(mixed $value): void
@@ -55,7 +55,7 @@ final class FilterAssertHelper
      * Asset that value is scalar.
      *
      * @param mixed $value Value to check.
-     * @return void
+     *
      * @throws InvalidArgumentException If value is not correct.
      */
     public static function assertIsScalar(mixed $value): void
@@ -72,7 +72,7 @@ final class FilterAssertHelper
      * Asserts that value is either a scalar or an instance of {@see DateTimeInterface}.
      *
      * @param mixed $value Value to check.
-     * @return void
+     *
      * @throws InvalidArgumentException If value is not correct.
      */
     public static function assertIsScalarOrInstanceOfDateTimeInterface(mixed $value): void

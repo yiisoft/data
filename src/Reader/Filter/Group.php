@@ -68,8 +68,9 @@ abstract class Group implements FilterInterface
      * @param array[]|FilterInterface[] $criteriaArray Criteria array to use.
      * Instances of FilterInterface are ignored.
      *
-     * @return static New instance.
      * @throws InvalidArgumentException If criteria arrays is not valid.
+     *
+     * @return static New instance.
      *
      * @psalm-suppress DocblockTypeContradiction
      */
