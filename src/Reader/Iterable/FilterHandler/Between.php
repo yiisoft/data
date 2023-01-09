@@ -30,18 +30,18 @@ final class Between implements IterableFilterHandlerInterface
         }
 
         /** @var string $field */
-        [$field, $minimalValue, $maximalValue] = $arguments;
+        [$field, $minValue, $maxValue] = $arguments;
         FilterAssert::fieldIsString($field);
 
         $value = ArrayHelper::getValue($item, $field);
 
         if (!$value instanceof DateTimeInterface) {
-            return $value >= $minimalValue && $value <= $maximalValue;
+            return $value >= $minValue && $value <= $maxValue;
         }
 
-        return $minimalValue instanceof DateTimeInterface
-            && $maximalValue instanceof DateTimeInterface
-            && $value->getTimestamp() >= $minimalValue->getTimestamp()
-            && $value->getTimestamp() <= $maximalValue->getTimestamp();
+        return $minValue instanceof DateTimeInterface
+            && $maxValue instanceof DateTimeInterface
+            && $value->getTimestamp() >= $minValue->getTimestamp()
+            && $value->getTimestamp() <= $maxValue->getTimestamp();
     }
 }
