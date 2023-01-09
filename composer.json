@@ -1,9 +1,14 @@
 {
     "name": "yiisoft/data",
     "type": "library",
-    "description": "Data providers",
+    "description": "Data providers, pagination and related abstractions",
     "keywords": [
-        "data provider"
+        "data provider",
+        "data reader",
+        "data writer",
+        "data processor",
+        "filter",
+        "pagination"
     ],
     "homepage": "https://www.yiiframework.com/",
     "license": "BSD-3-Clause",
@@ -25,8 +30,6 @@
             "url": "https://github.com/sponsors/yiisoft"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
         "php": "^8.0",
         "yiisoft/arrays": "^2.0",

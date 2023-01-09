@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Tests\Reader\Filter;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Tests\TestCase;
 
 use function sprintf;
@@ -21,7 +20,7 @@ final class GreaterThanTest extends TestCase
     {
         $filter = new GreaterThan('test', $value);
 
-        $this->assertSame(['>', 'test', $value], $filter->toArray());
+        $this->assertSame(['>', 'test', $value], $filter->toCriteriaArray());
     }
 
     /**
@@ -34,7 +33,7 @@ final class GreaterThanTest extends TestCase
         $this->expectExceptionMessage(sprintf(
             'The value should be scalar or %s instance. The %s is received.',
             DateTimeInterface::class,
-            FilterDataValidationHelper::getValueType($value),
+            get_debug_type($value),
         ));
 
         new GreaterThan('test', $value);

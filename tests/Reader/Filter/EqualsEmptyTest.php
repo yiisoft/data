@@ -13,6 +13,6 @@ final class EqualsEmptyTest extends TestCase
     {
         $filter = new EqualsEmpty('test');
 
-        $this->assertSame(['empty', 'test'], $filter->toArray());
+        $this->assertSame(['empty', 'test'], $filter->toCriteriaArray());
     }
 }

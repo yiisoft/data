@@ -10,23 +10,21 @@ use RuntimeException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderInterface;
-use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\FilterHandlerInterface;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
-use Yiisoft\Data\Reader\Iterable\Handler\All;
-use Yiisoft\Data\Reader\Iterable\Handler\Any;
-use Yiisoft\Data\Reader\Iterable\Handler\Between;
-use Yiisoft\Data\Reader\Iterable\Handler\Equals;
-use Yiisoft\Data\Reader\Iterable\Handler\EqualsEmpty;
-use Yiisoft\Data\Reader\Iterable\Handler\EqualsNull;
-use Yiisoft\Data\Reader\Iterable\Handler\GreaterThan;
-use Yiisoft\Data\Reader\Iterable\Handler\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\Handler\In;
-use Yiisoft\Data\Reader\Iterable\Handler\IterableHandlerInterface;
-use Yiisoft\Data\Reader\Iterable\Handler\LessThan;
-use Yiisoft\Data\Reader\Iterable\Handler\LessThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\Handler\Like;
-use Yiisoft\Data\Reader\Iterable\Handler\Not;
+use Yiisoft\Data\Reader\FilterHandlerInterface;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\All;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Any;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Between;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsEmpty;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNull;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThan;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\In;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThan;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Like;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Not;
 use Yiisoft\Data\Reader\Sort;
 
 use function array_merge;
@@ -38,6 +36,14 @@ use function sprintf;
 use function uasort;
 
 /**
+ * Iterable data reader takes an iterable data as a source and can:
+ *
+ * - Limit items read
+ * - Skip N items from the beginning
+ * - Sort items
+ * - Form a filter criteria with {@see FilterInterface}
+ * - Post-filter items with {@see IterableFilterHandlerInterface}
+ *
  * @template TKey as array-key
  * @template TValue as array|object
  *
@@ -51,16 +57,17 @@ class IterableDataReader implements DataReaderInterface
     private int $offset = 0;
 
     /**
-     * @psalm-var array<string, IterableHandlerInterface>
+     * @psalm-var array<string, IterableFilterHandlerInterface>
      */
-    private array $filterHandlers = [];
+    private array $iterableFilterHandlers = [];
 
     /**
+     * @param iterable $data Data to iterate.
      * @psalm-param iterable<TKey, TValue> $data
      */
     public function __construct(protected iterable $data)
     {
-        $this->filterHandlers = $this->withFilterHandlers(
+        $this->iterableFilterHandlers = $this->withFilterHandlers(
             new All(),
             new Any(),
             new Between(),
@@ -74,21 +81,21 @@ class IterableDataReader implements DataReaderInterface
             new LessThanOrEqual(),
             new Like(),
             new Not()
-        )->filterHandlers;
+        )->iterableFilterHandlers;
     }
 
-    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+    public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static
     {
         $new = clone $this;
-        $processors = [];
+        $handlers = [];
 
-        foreach ($filterHandlers as $filterHandler) {
-            if ($filterHandler instanceof IterableHandlerInterface) {
-                $processors[$filterHandler->getOperator()] = $filterHandler;
+        foreach ($iterableFilterHandlers as $iterableFilterHandler) {
+            if ($iterableFilterHandler instanceof IterableFilterHandlerInterface) {
+                $handlers[$iterableFilterHandler->getOperator()] = $iterableFilterHandler;
             }
         }
 
-        $new->filterHandlers = array_merge($this->filterHandlers, $processors);
+        $new->iterableFilterHandlers = array_merge($this->iterableFilterHandlers, $handlers);
         return $new;
     }
 
@@ -149,7 +156,7 @@ class IterableDataReader implements DataReaderInterface
     {
         $data = [];
         $skipped = 0;
-        $filter = $this->filter?->toArray();
+        $filter = $this->filter?->toCriteriaArray();
         $sortedData = $this->sort === null ? $this->data : $this->sortItems($this->data, $this->sort);
 
         foreach ($sortedData as $key => $item) {
@@ -181,6 +188,14 @@ class IterableDataReader implements DataReaderInterface
             ->current();
     }
 
+    /**
+     * Return whether an item matches iterable filter.
+     *
+     * @param array|object $item Item to check.
+     * @param array $filter Filter.
+     *
+     * @return bool Whether an item matches iterable filter.
+     */
     protected function matchFilter(array|object $item, array $filter): bool
     {
         $operation = array_shift($filter);
@@ -190,7 +205,7 @@ class IterableDataReader implements DataReaderInterface
             throw new RuntimeException(
                 sprintf(
                     'The operator should be string. The %s is received.',
-                    FilterDataValidationHelper::getValueType($operation),
+                    get_debug_type($operation),
                 )
             );
         }
@@ -199,13 +214,13 @@ class IterableDataReader implements DataReaderInterface
             throw new RuntimeException('The operator string cannot be empty.');
         }
 
-        $processor = $this->filterHandlers[$operation] ?? null;
+        $processor = $this->iterableFilterHandlers[$operation] ?? null;
 
         if ($processor === null) {
             throw new RuntimeException(sprintf('Operation "%s" is not supported.', $operation));
         }
 
-        return $processor->match($item, $arguments, $this->filterHandlers);
+        return $processor->match($item, $arguments, $this->iterableFilterHandlers);
     }
 
     /**
@@ -250,9 +265,13 @@ class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @param iterable<TKey, TValue> $iterable
+     * Convert iterable to array.
      *
-     * @return array<TKey, TValue>
+     * @param iterable $iterable Iterable to convert.
+     * @psalm-param iterable<TKey, TValue> $iterable
+     *
+     * @return array Resulting array.
+     * @psalm-return array<TKey, TValue>
      */
     private function iterableToArray(iterable $iterable): array
     {

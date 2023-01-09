@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
-class PaginatorException extends \RuntimeException
+use RuntimeException;
+
+/**
+ * Exception occurred during paginating data.
+ *
+ * @see PaginatorInterface
+ */
+class PaginatorException extends RuntimeException
 {
 }

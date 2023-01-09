@@ -64,9 +64,9 @@ final class Sort
     private array $currentOrder = [];
 
     /**
+     * @param array $config Logical fields config.
      * @psalm-param TUserConfig $config
      *
-     * @param array $config Logical fields config.
      * @param bool $ignoreExtraFields Whether to ignore logical fields not present in the config when forming criteria.
      */
     private function __construct(private bool $ignoreExtraFields, array $config)
@@ -101,9 +101,9 @@ final class Sort
     /**
      * Create a sort instance that ignores current order for extra logical fields that have no configuration.
      *
+     * @param array $config Logical fields config.
      * @psalm-param TUserConfig $config
      *
-     * @param array $config Logical fields config.
      * ```php
      * [
      *     'age', // means will be sorted as is
@@ -143,9 +143,9 @@ final class Sort
     /**
      * Create a sort instance that uses logical field itself and direction provided when there is no configuration.
      *
+     * @param array $config Logical fields config.
      * @psalm-param TUserConfig $config
      *
-     * @param array $config Logical fields config.
      * ```php
      * [
      *     'age', // means will be sorted as is
@@ -183,13 +183,15 @@ final class Sort
     }
 
     /**
-     * Change current logical fields order based on order string.
+     * Get a new instance with logical fields order set from an order string.
      *
      * The string consists of comma-separated field names.
      * If the name is prefixed with `-`, field order is descending.
      * Otherwise, the order is ascending.
      *
      * @param string $orderString Logical fields order as comma-separated string.
+     *
+     * @return self New instance.
      */
     public function withOrderString(string $orderString): self
     {
@@ -208,10 +210,12 @@ final class Sort
     }
 
     /**
-     * Change current logical fields order.
+     * Return a new instance with logical fields order set.
      *
      * @param array $order A map with logical field names to order by as keys, direction as values.
      * @psalm-param TOrder $order
+     *
+     * @return self New instance.
      */
     public function withOrder(array $order): self
     {
@@ -221,7 +225,9 @@ final class Sort
     }
 
     /**
-     * Formation of criteria without default sorting.
+     * Return a new instance without default sorting set.
+     *
+     * @return self New instance.
      */
     public function withoutDefaultSorting(): self
     {
@@ -231,6 +237,9 @@ final class Sort
     }
 
     /**
+     * Get current logical fields order.
+     *
+     * @return array Logical fields order.
      * @psalm-return TOrder
      */
     public function getOrder(): array
@@ -259,9 +268,10 @@ final class Sort
     }
 
     /**
-     * A sorting criteria to be applied to {@see SortableDataInterface}
+     * Get a sorting criteria to be applied to {@see SortableDataInterface}
      * when obtaining the data i.e. a list of real fields along with their order directions.
      *
+     * @return array Sorting criteria.
      * @psalm-return array<string, "asc"|"desc"|int>
      */
     public function getCriteria(): array

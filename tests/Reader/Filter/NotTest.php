@@ -14,6 +14,6 @@ final class NotTest extends TestCase
     {
         $filter = new Not(new Like('test', 'value'));
 
-        $this->assertSame(['not', ['like', 'test', 'value']], $filter->toArray());
+        $this->assertSame(['not', ['like', 'test', 'value']], $filter->toCriteriaArray());
     }
 }

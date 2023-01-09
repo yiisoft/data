@@ -18,6 +18,13 @@
 The package provides generic data abstractions. The aim is to hide storage aspect from the operations of reading,
 writing and processing data.
 
+Features are:
+
+- Data reader abstraction with counting, sorting, limiting and offsetting, reading criteria filter and post-filter.
+- Pagination abstraction along with offset and keyset implementations.
+- Data writer abstraction.
+- Data processor abstraction.
+
 ## Requirements
 
 - PHP 8.0 or higher.
@@ -32,13 +39,13 @@ composer require yiisoft/data --prefer-dist
 
 ## Concepts
 
-Each data consists of items. Each item has multiple named fields. All items in a data set have the same structure.
-
-The library provides interfaces for reading, writing and processing such data sets.
+- Each data set consists of items.
+- Each item has multiple named fields.
+- All items in a data set have the same structure.
 
 ## Reading data
 
-Data reader aim is to read data from a storage such as database, array or API and convert it to simple array of
+Data reader aim is to read data from a storage such as database, array or API and convert it to a simple iterator of
 field => value items.
 
 ```php
@@ -46,7 +53,7 @@ $reader = new MyDataReader(...);
 $result = $reader->read(); 
 ```
 
-Note that result is `iterable` so you can use `foreach` on it but need to prepare it if you need to use it as array:
+Result is `iterable` so you can use `foreach` on it. If you need an array, it could be achieved the following way:
 
 ```php
 // using is foreach
@@ -58,15 +65,20 @@ foreach ($result as $item) {
 $dataArray = $result instanceof \Traversable ? iterator_to_array($result, true) : (array)$result;
 ```
 
-Number of items returned can be limited:
+### Limiting number of items to read
+
+Number of items in an iterator can be limited:
 
 ```php
 $reader = (new MyDataReader(...))->withLimit(10);
+foreach ($reader->read() as $item) {
+    // ...
+}
 ```
 
 ### Counting total number of items
 
-In order to know total number of items in a data provider implementing `CountableDataInterface`:
+In order to know total number of items in a data reader implementing `CountableDataInterface`:
 
 ```php
 $reader = new MyDataReader(...);
@@ -75,7 +87,15 @@ $total = count($reader);
 
 ### Filtering
 
-In order to filter data in a data provider implementing `FilterableDataInterface` you need to supply filter to
+Filtering of data could be done in two steps:
+
+1. Forming a criteria for getting the data. That is done by "filter".
+2. Post-filtering data by iteration and checking each item. 
+   That is done by `IterableDataReader` with filters.
+
+Whenever possible it is best to stick to using criteria because usually it gives much better performance.
+
+In order to filter data in a data reader implementing `FilterableDataInterface` you need to supply filter to
 `withFilter()` method:
 
 ```php
@@ -132,7 +152,7 @@ In order to have your own filter:
 - If you want to create a filter handler for a specific data reader type, then you need to implement at least 
 `FilterHandlerInterface`. It has a single `getOperator()` method that returns a string representing a filter operation.
 In addition, each data reader specifies an extended interface required for handling or building the operation.
-*For example, `IterableDataFilter` defines `IterableHandlerInterface`, which contains additional `match()` 
+*For example, `IterableDataFilter` defines `IterableFilterHandlerInterface`, which contains additional `match()` 
 method to execute a filter on PHP variables.*
 
 You can add your own filter handlers to the data reader using the `withFilterHandlers()` method. You can add any filter
@@ -159,7 +179,7 @@ class OwnNotTwoFilter implenents FilterInterface
 }
 
 // own iterable filter handler for matching
-class OwnIterableNotTwoFilterHandler implements IterableHandlerInterface
+class OwnIterableNotTwoFilterHandler implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {
@@ -192,7 +212,7 @@ $data = $reader->read();
 
 ### Sorting
 
-In order to sort data in a data provider implementing `SortableDataInterface` you need to supply a sort object to
+In order to sort data in a data reader implementing `SortableDataInterface` you need to supply a sort object to
 `withSort()` method:
 
 ```php
@@ -243,7 +263,7 @@ method that returns iterable representing a set of items.
 
 Additional interfaces could be implemented in order to support different pagination types, ordering and filtering:
 
-- `CountableDataInterface` - allows getting total number of items in data provider.
+- `CountableDataInterface` - allows getting total number of items in data reader.
 - `FilterableDataInterface` - allows returning subset of items based on criteria.
 - `SortableDataInterface` - allows sorting by one or multiple fields.
 - `OffsetableDataInterface` - allows to skip first N items when reading data.

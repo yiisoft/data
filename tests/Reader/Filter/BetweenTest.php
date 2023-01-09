@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Tests\Reader\Filter;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\Between;
-use Yiisoft\Data\Reader\FilterDataValidationHelper;
 use Yiisoft\Data\Tests\TestCase;
 
 use function sprintf;
@@ -21,7 +20,7 @@ final class BetweenTest extends TestCase
     {
         $filter = new Between('test', $value, $value);
 
-        $this->assertSame(['between', 'test', $value, $value], $filter->toArray());
+        $this->assertSame(['between', 'test', $value, $value], $filter->toCriteriaArray());
     }
 
     /**
@@ -34,7 +33,7 @@ final class BetweenTest extends TestCase
         $this->expectExceptionMessage(sprintf(
             'The value should be scalar or %s instance. The %s is received.',
             DateTimeInterface::class,
-            FilterDataValidationHelper::getValueType($value),
+            get_debug_type($value),
         ));
 
         new Between('test', $value, 2);
@@ -50,7 +49,7 @@ final class BetweenTest extends TestCase
         $this->expectExceptionMessage(sprintf(
             'The value should be scalar or %s instance. The %s is received.',
             DateTimeInterface::class,
-            FilterDataValidationHelper::getValueType($value),
+            get_debug_type($value),
         ));
 
         new Between('test', 1, $value);

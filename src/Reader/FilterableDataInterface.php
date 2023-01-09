@@ -4,12 +4,34 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
-use Yiisoft\Data\Reader\Filter\FilterInterface;
-use Yiisoft\Data\Reader\Filter\FilterHandlerInterface;
-
+/**
+ * Data that could be filtered.
+ *
+ * Filtering is done in two steps:
+ *
+ * - Criteria of reading data is modified according to {@see FilterInterface}
+ * - Resulting items are iterated over and filter handler matching
+ *   {@see FilterInterface::getOperator()} is applied
+ *
+ * For performance reasons prefer filtering as many items as possible in the first step.
+ */
 interface FilterableDataInterface
 {
+    /**
+     * Returns new instance with data reading criteria set.
+     *
+     * @param FilterInterface $filter Data reading criteria.
+     *
+     * @return static New instance.
+     */
     public function withFilter(FilterInterface $filter): static;
 
-    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static;
+    /**
+     * Returns new instance with additional handlers set.
+     *
+     * @param FilterHandlerInterface ...$iterableFilterHandlers Additional iterable handlers.
+     *
+     * @return static New instance.
+     */
+    public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static;
 }

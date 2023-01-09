@@ -5,44 +5,56 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\FilterInterface;
 
 use function array_shift;
 use function is_array;
 use function is_string;
 use function sprintf;
 
+/**
+ * `Group` filter is an abstract class that allows combining multiple criteria or sub-filters.
+ */
 abstract class Group implements FilterInterface
 {
     /**
-     * @var array[]|FilterInterface[]
+     * @var array[]|FilterInterface[] Criteria and sub-filters to use.
      */
-    private array $filters;
+    private array $filtersAndCriteria;
 
+    /**
+     * @param FilterInterface ...$filters Sub-filters to use.
+     */
     public function __construct(FilterInterface ...$filters)
     {
-        $this->filters = $filters;
-    }
-
-    public function toArray(): array
-    {
-        $filtersArray = [];
-
-        foreach ($this->filters as $filter) {
-            if ($filter instanceof FilterInterface) {
-                $filter = $filter->toArray();
-            }
-
-            $filtersArray[] = $filter;
-        }
-
-        return [static::getOperator(), $filtersArray];
+        $this->filtersAndCriteria = $filters;
     }
 
     /**
-     * Building criteria with array.
+     * Get criteria array based on current filters and criteria.
+     *
+     * @return array Criteria array.
+     */
+    public function toCriteriaArray(): array
+    {
+        $criteriaArray = [];
+
+        foreach ($this->filtersAndCriteria as $filterOrCriteria) {
+            if ($filterOrCriteria instanceof FilterInterface) {
+                $filterOrCriteria = $filterOrCriteria->toCriteriaArray();
+            }
+
+            $criteriaArray[] = $filterOrCriteria;
+        }
+
+        return [static::getOperator(), $criteriaArray];
+    }
+
+    /**
+     * Get a new instance with filters set from criteria array provided.
      *
      * ```php
-     * $dataReader->withFilter((new All())->withFiltersArray(
+     * $dataReader->withFilter((new All())->withCriteriaArray(
      *   [
      *     ['>', 'id', 88],
      *     ['or', [
@@ -53,24 +65,27 @@ abstract class Group implements FilterInterface
      * ));
      * ```
      *
-     * @param array[]|FilterInterface[] $filtersArray
+     * @param array[]|FilterInterface[] $criteriaArray Criteria array to use.
+     * Instances of FilterInterface are ignored.
      *
-     * @return static
+     * @throws InvalidArgumentException If criteria arrays is not valid.
+     *
+     * @return static New instance.
      *
      * @psalm-suppress DocblockTypeContradiction
      */
-    public function withFiltersArray(array $filtersArray): self
+    public function withCriteriaArray(array $criteriaArray): static
     {
-        foreach ($filtersArray as $key => $filter) {
-            if ($filter instanceof FilterInterface) {
+        foreach ($criteriaArray as $key => $item) {
+            if ($item instanceof FilterInterface) {
                 continue;
             }
 
-            if (!is_array($filter)) {
+            if (!is_array($item)) {
                 throw new InvalidArgumentException(sprintf('Invalid filter on "%s" key.', $key));
             }
 
-            $operator = array_shift($filter);
+            $operator = array_shift($item);
 
             if (!is_string($operator) || $operator === '') {
                 throw new InvalidArgumentException(sprintf('Invalid filter operator on "%s" key.', $key));
@@ -78,7 +93,7 @@ abstract class Group implements FilterInterface
         }
 
         $new = clone $this;
-        $new->filters = $filtersArray;
+        $new->filtersAndCriteria = $criteriaArray;
         return $new;
     }
 }

@@ -13,6 +13,6 @@ final class EqualsNullTest extends TestCase
     {
         $filter = new EqualsNull('test');
 
-        $this->assertSame(['null', 'test'], $filter->toArray());
+        $this->assertSame(['null', 'test'], $filter->toCriteriaArray());
     }
 }
