@@ -13,7 +13,7 @@ use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
-use Yiisoft\Data\Reader\FilterableDataReaderInterface;
+use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
@@ -63,7 +63,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
             'Data reader should implement "%s" to be used with keyset paginator.',
-            FilterableDataReaderInterface::class,
+            FilterableDataInterface::class,
         ));
 
         new KeysetPaginator($this->getNonFilterableDataReader());
@@ -514,7 +514,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonSortableDataReader()
     {
-        return new class () implements ReadableDataInterface, FilterableDataReaderInterface {
+        return new class () implements ReadableDataInterface, FilterableDataInterface {
             public function withLimit(int $limit): static
             {
                 return clone $this;

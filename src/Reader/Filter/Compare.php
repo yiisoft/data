@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 use DateTimeInterface;
-use Yiisoft\Data\Reader\FilterAssertHelper;
+use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * Compare filter is a base class that defines a criteria for comparing field value with a given value.
+ * `Compare` filter is a base class that defines a criteria for comparing field value with a given value.
  * The operator is defined by child classes.
  */
 abstract class Compare implements FilterInterface
@@ -22,7 +22,7 @@ abstract class Compare implements FilterInterface
      */
     public function __construct(private string $field, mixed $value)
     {
-        FilterAssertHelper::assertIsScalarOrInstanceOfDateTimeInterface($value);
+        FilterAssert::isScalarOrInstanceOfDateTimeInterface($value);
         $this->value = $value;
     }
 

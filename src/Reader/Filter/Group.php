@@ -13,7 +13,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Group filter is an abstract class that allows combining multiple criteria or sub-filters.
+ * `Group` filter is an abstract class that allows combining multiple criteria or sub-filters.
  */
 abstract class Group implements FilterInterface
 {

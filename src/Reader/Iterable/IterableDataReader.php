@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\DataReaderReaderInterface;
+use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\All;
@@ -47,9 +47,9 @@ use function uasort;
  * @template TKey as array-key
  * @template TValue as array|object
  *
- * @implements DataReaderReaderInterface<TKey, TValue>
+ * @implements DataReaderInterface<TKey, TValue>
  */
-class IterableDataReader implements DataReaderReaderInterface
+class IterableDataReader implements DataReaderInterface
 {
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;

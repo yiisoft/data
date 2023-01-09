@@ -15,7 +15,7 @@ use function sprintf;
 /**
  * Filter-related assertions.
  */
-final class FilterAssertHelper
+final class FilterAssert
 {
     /**
      * Asserts that field is a string.
@@ -24,7 +24,7 @@ final class FilterAssertHelper
      *
      * @throws InvalidArgumentException If value is not correct.
      */
-    public static function assertFieldIsString(mixed $field): void
+    public static function fieldIsString(mixed $field): void
     {
         if (!is_string($field)) {
             throw new InvalidArgumentException(sprintf(
@@ -35,13 +35,13 @@ final class FilterAssertHelper
     }
 
     /**
-     * Asserts that the value is an instance of {@see FilterHandlerInterface}.
+     * Asserts that the value is an instance of {@see IterableFilterHandlerInterface}.
      *
      * @param mixed $value Value to check.
      *
      * @throws InvalidArgumentException If value is not correct.
      */
-    public static function assertIterableFilterHandlerInterface(mixed $value): void
+    public static function isIterableFilterHandlerInterface(mixed $value): void
     {
         if (!$value instanceof IterableFilterHandlerInterface) {
             throw new InvalidArgumentException(sprintf(
@@ -59,7 +59,7 @@ final class FilterAssertHelper
      *
      * @throws InvalidArgumentException If value is not correct.
      */
-    public static function assertIsScalar(mixed $value): void
+    public static function isScalar(mixed $value): void
     {
         if (!is_scalar($value)) {
             throw new InvalidArgumentException(sprintf(
@@ -76,7 +76,7 @@ final class FilterAssertHelper
      *
      * @throws InvalidArgumentException If value is not correct.
      */
-    public static function assertIsScalarOrInstanceOfDateTimeInterface(mixed $value): void
+    public static function isScalarOrInstanceOfDateTimeInterface(mixed $value): void
     {
         if (!$value instanceof DateTimeInterface && !is_scalar($value)) {
             throw new InvalidArgumentException(sprintf(

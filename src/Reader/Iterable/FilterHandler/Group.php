@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\FilterAssertHelper;
+use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function array_shift;
@@ -15,7 +15,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Abstract group iterable filter handler allows to combine runs of several iterable filters.
+ * Abstract `Group` iterable filter handler allows to combine runs of several iterable filters.
  * How to interpret results is determined by {@see checkResults()} implemented in child
  * classes.
  */
@@ -78,7 +78,7 @@ abstract class Group implements IterableFilterHandlerInterface
                 throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
             }
 
-            FilterAssertHelper::assertIterableFilterHandlerInterface($filterHandler);
+            FilterAssert::isIterableFilterHandlerInterface($filterHandler);
             $results[] = $filterHandler->match($item, $subFilter, $iterableFilterHandlers);
         }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\FilterAssertHelper;
+use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function array_shift;
@@ -15,7 +15,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * Not iterable filter handler negates another filter.
+ * `Not` iterable filter handler negates another filter.
  */
 final class Not implements IterableFilterHandlerInterface
 {
@@ -62,7 +62,7 @@ final class Not implements IterableFilterHandlerInterface
             throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
         }
 
-        FilterAssertHelper::assertIterableFilterHandlerInterface($filterHandler);
+        FilterAssert::isIterableFilterHandlerInterface($filterHandler);
         return !$filterHandler->match($item, $values, $iterableFilterHandlers);
     }
 }

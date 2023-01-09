@@ -90,8 +90,8 @@ $total = count($reader);
 Filtering of data could be done in two steps:
 
 1. Forming a criteria for getting the data. That is done by "filter".
-2. Post-filtering data by iteration and checking each item. That is done by "iterable filter handler"
-   that matches the current filter in case `IterableDataReader` is used.
+2. Post-filtering data by iteration and checking each item. 
+   That is done by `IterableDataReader` with filters.
 
 Whenever possible it is best to stick to using criteria because usually it gives much better performance.
 

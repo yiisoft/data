@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
 
-use Yiisoft\Data\Reader\FilterAssertHelper;
+use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * In filter defines a criteria for ensuring field value matches one of the value provided.
+ * `In` filter defines a criteria for ensuring field value matches one of the value provided.
  */
 final class In implements FilterInterface
 {
@@ -24,7 +24,7 @@ final class In implements FilterInterface
     public function __construct(private string $field, array $values)
     {
         foreach ($values as $value) {
-            FilterAssertHelper::assertIsScalar($value);
+            FilterAssert::isScalar($value);
         }
         $this->values = $values;
     }

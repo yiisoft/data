@@ -19,7 +19,7 @@ use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
-use Yiisoft\Data\Reader\FilterAssertHelper;
+use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
@@ -423,7 +423,7 @@ final class IterableDataReaderTest extends TestCase
                     }
 
                     [$field, $value] = $arguments;
-                    FilterAssertHelper::assertFieldIsString($field);
+                    FilterAssert::fieldIsString($field);
 
                     if ($item[$field] === 2) {
                         return true;

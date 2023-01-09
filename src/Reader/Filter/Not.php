@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Filter;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * Not filter negates another filter.
+ * `Not` filter negates another filter.
  */
 final class Not implements FilterInterface
 {

@@ -9,7 +9,7 @@ use RuntimeException;
 /**
  * Exception occurred during reading data.
  *
- * @see DataReaderReaderInterface
+ * @see DataReaderInterface
  */
 class DataReaderException extends RuntimeException
 {

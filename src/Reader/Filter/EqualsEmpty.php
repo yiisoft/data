@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Filter;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * EqualsEmpty filter defines a criteria for ensuring field value is empty.
+ * `EqualsEmpty` filter defines a criteria for ensuring field value is empty.
  */
 final class EqualsEmpty implements FilterInterface
 {

@@ -15,7 +15,7 @@ namespace Yiisoft\Data\Reader;
  *
  * For performance reasons prefer filtering as many items as possible in the first step.
  */
-interface FilterableDataReaderInterface
+interface FilterableDataInterface
 {
     /**
      * Returns new instance with data reading criteria set.

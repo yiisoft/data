@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 use function in_array;
 
 /**
- * Any iterable filter handler allows combining multiple sub-filters.
+ * `Any` iterable filter handler allows combining multiple sub-filters.
  * The filter matches if any of the sub-filters match.
  */
 final class Any extends Group

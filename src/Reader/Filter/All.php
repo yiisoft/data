@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 /**
- * All filter allows combining multiple criteria or sub-filters using "and" operator.
+ * `All` filter allows combining multiple criteria or sub-filters using "and" operator.
  *
  * ```php
  * $dataReader->withFilter((new All())->withCriteriaArray(

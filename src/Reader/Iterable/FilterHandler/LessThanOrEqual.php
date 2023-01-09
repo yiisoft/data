@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 use DateTimeInterface;
 
 /**
- * LessThanOrEqual iterable filter handler checks that the item's field value
+ * `LessThanOrEqual` iterable filter handler checks that the item's field value
  * is less than or equal to the given value.
  */
 final class LessThanOrEqual extends Compare

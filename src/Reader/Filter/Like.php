@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Filter;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * Like filter defines a criteria for ensuring field value is like-match to a given value.
+ * `Like` filter defines a criteria for ensuring field value is like-match to a given value.
  */
 final class Like implements FilterInterface
 {

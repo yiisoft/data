@@ -6,13 +6,13 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\FilterAssertHelper;
+use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function count;
 
 /**
- * Abstract compare iterable filter handler compares item's field value with a given value.
+ * Abstract `Compare` iterable filter handler compares item's field value with a given value.
  * The actual comparison is defined in {@see compare()} method implemented in child classes.
  */
 abstract class Compare implements IterableFilterHandlerInterface
@@ -34,7 +34,7 @@ abstract class Compare implements IterableFilterHandlerInterface
         }
 
         [$field, $value] = $arguments;
-        FilterAssertHelper::assertFieldIsString($field);
+        FilterAssert::fieldIsString($field);
 
         /** @var string $field */
         return $this->compare(ArrayHelper::getValue($item, $field), $value);

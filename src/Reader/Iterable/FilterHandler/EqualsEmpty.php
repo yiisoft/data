@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\FilterAssertHelper;
+use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function count;
 
 /**
- * EqualsEmpty iterable filter handler checks that the item's field value is empty.
+ * `EqualsEmpty` iterable filter handler checks that the item's field value is empty.
  */
 final class EqualsEmpty implements IterableFilterHandlerInterface
 {
@@ -27,7 +27,7 @@ final class EqualsEmpty implements IterableFilterHandlerInterface
         }
 
         [$field] = $arguments;
-        FilterAssertHelper::assertFieldIsString($field);
+        FilterAssert::fieldIsString($field);
 
         /** @var string $field */
         return empty($item[$field]);

@@ -7,13 +7,13 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\FilterAssertHelper;
+use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function count;
 
 /**
- * Between iterable filter handler checks that the item's field value
+ * `Between` iterable filter handler checks that the item's field value
  * is between minimal and maximal values.
  */
 final class Between implements IterableFilterHandlerInterface
@@ -31,7 +31,7 @@ final class Between implements IterableFilterHandlerInterface
 
         /** @var string $field */
         [$field, $minimalValue, $maximalValue] = $arguments;
-        FilterAssertHelper::assertFieldIsString($field);
+        FilterAssert::fieldIsString($field);
 
         $value = ArrayHelper::getValue($item, $field);
 

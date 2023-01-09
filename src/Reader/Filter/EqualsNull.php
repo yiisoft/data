@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Filter;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * EqualsNull filter defines a criteria for ensuring field value is null.
+ * `EqualsNull` filter defines a criteria for ensuring field value is null.
  */
 final class EqualsNull implements FilterInterface
 {

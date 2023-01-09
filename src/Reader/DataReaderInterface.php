@@ -22,12 +22,12 @@ use IteratorAggregate;
  * @extends ReadableDataInterface<TKey, TValue>
  * @extends IteratorAggregate<TKey, TValue>
  */
-interface DataReaderReaderInterface extends
+interface DataReaderInterface extends
     ReadableDataInterface,
     OffsetableDataInterface,
     CountableDataInterface,
     SortableDataInterface,
-    FilterableDataReaderInterface,
+    FilterableDataInterface,
     IteratorAggregate
 {
 }
