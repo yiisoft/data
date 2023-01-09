@@ -40,12 +40,12 @@ final class FilterAssertHelper
      *
      * @throws InvalidArgumentException If value is not correct.
      */
-    public static function assertFilterHandlerInterface(mixed $value): void
+    public static function assertIterableFilterHandlerInterface(mixed $value): void
     {
-        if (!$value instanceof FilterHandlerInterface) {
+        if (!$value instanceof IterableFilterHandlerInterface) {
             throw new InvalidArgumentException(sprintf(
                 'The filter handler should be an object and implement "%s". The %s is received.',
-                FilterHandlerInterface::class,
+                IterableFilterHandlerInterface::class,
                 get_debug_type($value),
             ));
         }
