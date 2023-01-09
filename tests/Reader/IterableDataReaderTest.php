@@ -9,6 +9,7 @@ use DateTimeInterface;
 use Generator;
 use InvalidArgumentException;
 use RuntimeException;
+use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Equals;
@@ -20,9 +21,11 @@ use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterAssert;
+use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\Compare;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -70,6 +73,27 @@ final class IterableDataReaderTest extends TestCase
         $this->assertNotSame($reader, $reader->withSort(null));
         $this->assertNotSame($reader, $reader->withOffset(1));
         $this->assertNotSame($reader, $reader->withLimit(1));
+    }
+
+    public function testExceptionOnPassingNonIterableFilters(): void
+    {
+        $nonIterableFilterHandler = new class implements FilterHandlerInterface {
+
+            public function getOperator(): string
+            {
+                return '?';
+            }
+        };
+
+        $this->expectException(DataReaderException::class);
+        $message = sprintf(
+            '%s::withFilterHandlers() accepts instances of %s only.',
+            IterableDataReader::class,
+            IterableFilterHandlerInterface::class
+        );
+        $this->expectExceptionMessage($message);
+
+        (new IterableDataReader([]))->withFilterHandlers($nonIterableFilterHandler);
     }
 
     public function testWithLimitFailForNegativeValues(): void
