@@ -11,7 +11,7 @@ use stdClass;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
+use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataReaderInterface;
@@ -535,7 +535,7 @@ final class KeysetPaginatorTest extends Testcase
                 return clone $this;
             }
 
-            public function withIterableFilterHandlers(IterableFilterHandlerInterface ...$iterableFilterUnits): static
+            public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterUnits): static
             {
                 return clone $this;
             }

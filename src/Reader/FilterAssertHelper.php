@@ -34,7 +34,7 @@ final class FilterAssertHelper
     }
 
     /**
-     * Asserts that the value is an instance of {@see IterableFilterHandlerInterface}.
+     * Asserts that the value is an instance of {@see FilterHandlerInterface}.
      *
      * @param mixed $value Value to check.
      *
@@ -42,10 +42,10 @@ final class FilterAssertHelper
      */
     public static function assertFilterHandlerInterface(mixed $value): void
     {
-        if (!$value instanceof IterableFilterHandlerInterface) {
+        if (!$value instanceof FilterHandlerInterface) {
             throw new InvalidArgumentException(sprintf(
                 'The filter handler should be an object and implement "%s". The %s is received.',
-                IterableFilterHandlerInterface::class,
+                FilterHandlerInterface::class,
                 get_debug_type($value),
             ));
         }

@@ -11,7 +11,7 @@ interface FilterInterface
 {
     /**
      * Get a filter operator to use in the filter criteria
-     * and to choose {@see IterableFilterHandlerInterface}.
+     * Also used to choose {@see FilterHandlerInterface}.
      *
      * @return string Operator.
      */

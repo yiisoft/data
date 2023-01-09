@@ -64,7 +64,7 @@ final class IterableDataReaderTest extends TestCase
     {
         $reader = new IterableDataReader([]);
 
-        $this->assertNotSame($reader, $reader->withIterableFilterHandlers());
+        $this->assertNotSame($reader, $reader->withFilterHandlers());
         $this->assertNotSame($reader, $reader->withFilter(null));
         $this->assertNotSame($reader, $reader->withSort(null));
         $this->assertNotSame($reader, $reader->withOffset(1));
@@ -400,7 +400,7 @@ final class IterableDataReaderTest extends TestCase
 
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
-            ->withIterableFilterHandlers(new class () extends \Yiisoft\Data\Reader\IterableFilterHandler\Compare {
+            ->withFilterHandlers(new class () extends \Yiisoft\Data\Reader\IterableFilterHandler\Compare {
                 public function getOperator(): string
                 {
                     return \Yiisoft\Data\Reader\Filter\Equals::getOperator();

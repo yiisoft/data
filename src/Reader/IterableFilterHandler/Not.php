@@ -62,7 +62,7 @@ final class Not implements IterableFilterHandlerInterface
             throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
         }
 
-        FilterAssertHelper::assertFilterHandlerInterface($filterHandler);
+        FilterAssertHelper::assertIterableFilterHandlerInterface($filterHandler);
         return !$filterHandler->match($item, $values, $iterableFilterHandlers);
     }
 }

@@ -78,7 +78,7 @@ abstract class Group implements IterableFilterHandlerInterface
                 throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
             }
 
-            FilterAssertHelper::assertFilterHandlerInterface($filterHandler);
+            FilterAssertHelper::assertIterableFilterHandlerInterface($filterHandler);
             $results[] = $filterHandler->match($item, $subFilter, $iterableFilterHandlers);
         }
 

@@ -63,7 +63,7 @@ class IterableDataReader implements DataReaderReaderInterface
      */
     public function __construct(protected iterable $data)
     {
-        $this->iterableFilterHandlers = $this->withIterableFilterHandlers(
+        $this->iterableFilterHandlers = $this->withFilterHandlers(
             new All(),
             new Any(),
             new Between(),
@@ -80,7 +80,7 @@ class IterableDataReader implements DataReaderReaderInterface
         )->iterableFilterHandlers;
     }
 
-    public function withIterableFilterHandlers(IterableFilterHandlerInterface ...$iterableFilterHandlers): static
+    public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static
     {
         $new = clone $this;
         $handlers = [];

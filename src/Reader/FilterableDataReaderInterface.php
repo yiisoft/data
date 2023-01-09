@@ -27,11 +27,11 @@ interface FilterableDataReaderInterface
     public function withFilter(FilterInterface $filter): static;
 
     /**
-     * Returns new instance with additional iterable handlers set.
+     * Returns new instance with additional handlers set.
      *
-     * @param IterableFilterHandlerInterface ...$iterableFilterHandlers Additional iterable handlers.
+     * @param FilterHandlerInterface ...$iterableFilterHandlers Additional iterable handlers.
      *
      * @return static New instance.
      */
-    public function withIterableFilterHandlers(IterableFilterHandlerInterface ...$iterableFilterHandlers): static;
+    public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static;
 }
