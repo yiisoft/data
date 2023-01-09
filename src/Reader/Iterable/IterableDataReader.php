@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -90,9 +91,15 @@ class IterableDataReader implements DataReaderInterface
         $handlers = [];
 
         foreach ($iterableFilterHandlers as $iterableFilterHandler) {
-            if ($iterableFilterHandler instanceof IterableFilterHandlerInterface) {
-                $handlers[$iterableFilterHandler->getOperator()] = $iterableFilterHandler;
+            if (!$iterableFilterHandler instanceof IterableFilterHandlerInterface) {
+                $message = sprintf(
+                    '%s::withFilterHandlers() accepts instances of %s only.',
+                    static::class,
+                    IterableFilterHandlerInterface::class
+                );
+                throw new DataReaderException($message);
             }
+            $handlers[$iterableFilterHandler->getOperator()] = $iterableFilterHandler;
         }
 
         $new->iterableFilterHandlers = array_merge($this->iterableFilterHandlers, $handlers);
