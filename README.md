@@ -72,7 +72,7 @@ Number of items in an iterator can be limited:
 ```php
 $reader = (new MyDataReader(...))->withLimit(10);
 foreach ($reader->read() as $item) {
-
+    // ...
 }
 ```
 
