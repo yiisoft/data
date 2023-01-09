@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader;
 
-class DataReaderException extends \RuntimeException
+use RuntimeException;
+
+/**
+ * Exception occurred during reading data.
+ *
+ * @see DataReaderReaderInterface
+ */
+class DataReaderException extends RuntimeException
 {
 }

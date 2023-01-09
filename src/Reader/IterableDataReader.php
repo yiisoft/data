@@ -32,6 +32,14 @@ use function sprintf;
 use function uasort;
 
 /**
+ * Iterable data reader takes an iterable data as a source and can:
+ *
+ * - Limit items read
+ * - Skip N items from the beginning
+ * - Sort items
+ * - Form a filter criteria with {@see FilterInterface}
+ * - Post-filter items with {@see IterableFilterHandlerInterface}
+ *
  * @template TKey as array-key
  * @template TValue as array|object
  *
@@ -45,16 +53,17 @@ class IterableDataReader implements DataReaderReaderInterface
     private int $offset = 0;
 
     /**
-     * @psalm-var array<string, \Yiisoft\Data\Reader\IterableFilterHandlerInterface>
+     * @psalm-var array<string, IterableFilterHandlerInterface>
      */
-    private array $filterHandlers = [];
+    private array $iterableFilterHandlers = [];
 
     /**
+     * @param iterable $data Data to iterate.
      * @psalm-param iterable<TKey, TValue> $data
      */
     public function __construct(protected iterable $data)
     {
-        $this->filterHandlers = $this->withIterableFilterHandlers(
+        $this->iterableFilterHandlers = $this->withIterableFilterHandlers(
             new All(),
             new Any(),
             new Between(),
@@ -68,21 +77,21 @@ class IterableDataReader implements DataReaderReaderInterface
             new LessThanOrEqual(),
             new Like(),
             new Not()
-        )->filterHandlers;
+        )->iterableFilterHandlers;
     }
 
     public function withIterableFilterHandlers(IterableFilterHandlerInterface ...$iterableFilterHandlers): static
     {
         $new = clone $this;
-        $processors = [];
+        $handlers = [];
 
-        foreach ($iterableFilterHandlers as $filterHandler) {
-            if ($filterHandler instanceof IterableFilterHandlerInterface) {
-                $processors[$filterHandler->getOperator()] = $filterHandler;
+        foreach ($iterableFilterHandlers as $iterableFilterHandler) {
+            if ($iterableFilterHandler instanceof IterableFilterHandlerInterface) {
+                $handlers[$iterableFilterHandler->getOperator()] = $iterableFilterHandler;
             }
         }
 
-        $new->filterHandlers = array_merge($this->filterHandlers, $processors);
+        $new->iterableFilterHandlers = array_merge($this->iterableFilterHandlers, $handlers);
         return $new;
     }
 
@@ -175,6 +184,13 @@ class IterableDataReader implements DataReaderReaderInterface
             ->current();
     }
 
+    /**
+     * Return whether an item matches iterable filter.
+     *
+     * @param array|object $item Item to check.
+     * @param array $filter Filter.
+     * @return bool Whether an item matches iterable filter.
+     */
     protected function matchFilter(array|object $item, array $filter): bool
     {
         $operation = array_shift($filter);
@@ -193,13 +209,13 @@ class IterableDataReader implements DataReaderReaderInterface
             throw new RuntimeException('The operator string cannot be empty.');
         }
 
-        $processor = $this->filterHandlers[$operation] ?? null;
+        $processor = $this->iterableFilterHandlers[$operation] ?? null;
 
         if ($processor === null) {
             throw new RuntimeException(sprintf('Operation "%s" is not supported.', $operation));
         }
 
-        return $processor->match($item, $arguments, $this->filterHandlers);
+        return $processor->match($item, $arguments, $this->iterableFilterHandlers);
     }
 
     /**
@@ -244,9 +260,13 @@ class IterableDataReader implements DataReaderReaderInterface
     }
 
     /**
-     * @param iterable<TKey, TValue> $iterable
+     * Convert iterable to array.
      *
-     * @return array<TKey, TValue>
+     * @param iterable $iterable Iterable to convert.
+     * @psalm-param iterable<TKey, TValue> $iterable
+     *
+     * @return array Resulting array.
+     * @psalm-return array<TKey, TValue>
      */
     private function iterableToArray(iterable $iterable): array
     {

@@ -7,26 +7,37 @@ namespace Yiisoft\Data\Reader;
 use InvalidArgumentException;
 
 /**
+ * Readable data is a data set that could be read up to number of items
+ * defined by limit either one by one or by getting an iterator.
+ *
  * @template TKey as array-key
  * @template TValue as array|object
  */
 interface ReadableDataInterface
 {
     /**
-     * @param int $limit A limit of 0 means "no limit".
+     * Get a new instance with limit set.
      *
-     * @throws InvalidArgumentException if limit less than 0.
+     * @param int $limit Limit. 0 means "no limit".
      *
-     * @return static
+     * @throws InvalidArgumentException If limit is less than 0.
+     *
+     * @return static New instance.
      */
     public function withLimit(int $limit): static;
 
     /**
+     * Get iterable for the data set.
+     *
+     * @return iterable Iterable for the data.
      * @psalm-return iterable<TKey, TValue>
      */
     public function read(): iterable;
 
     /**
+     * Get a next item from the data set.
+     *
+     * @return array|object|null An item or null if there is none.
      * @psalm-return TValue|null
      */
     public function readOne(): array|object|null;
