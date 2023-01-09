@@ -25,6 +25,7 @@ abstract class Group implements IterableFilterHandlerInterface
      * Return final decision for the match based on sub-filter match results.
      *
      * @param bool[] $results Sub-filter match results.
+     *
      * @return bool Final result.
      */
     abstract protected function checkResults(array $results): bool;

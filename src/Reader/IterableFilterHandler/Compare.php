@@ -22,6 +22,7 @@ abstract class Compare implements IterableFilterHandlerInterface
      *
      * @param mixed $itemValue Value of the item to compare.
      * @param mixed $argumentValue Value to compare with.
+     *
      * @return bool If the comparison is true.
      */
     abstract protected function compare(mixed $itemValue, mixed $argumentValue): bool;
