@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\IterableFilterHandler\Equals;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsTest extends TestCase

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\IterableFilterHandler\In;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\In;
 use Yiisoft\Data\Tests\TestCase;
 
 final class InTest extends TestCase

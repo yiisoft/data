@@ -2,26 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader;
+namespace Yiisoft\Data\Reader\Iterable;
 
 use Generator;
 use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\IterableFilterHandler\All;
-use Yiisoft\Data\Reader\IterableFilterHandler\Any;
-use Yiisoft\Data\Reader\IterableFilterHandler\Between;
-use Yiisoft\Data\Reader\IterableFilterHandler\Equals;
-use Yiisoft\Data\Reader\IterableFilterHandler\EqualsEmpty;
-use Yiisoft\Data\Reader\IterableFilterHandler\EqualsNull;
-use Yiisoft\Data\Reader\IterableFilterHandler\GreaterThan;
-use Yiisoft\Data\Reader\IterableFilterHandler\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\IterableFilterHandler\In;
-use Yiisoft\Data\Reader\IterableFilterHandler\LessThan;
-use Yiisoft\Data\Reader\IterableFilterHandler\LessThanOrEqual;
-use Yiisoft\Data\Reader\IterableFilterHandler\Like;
-use Yiisoft\Data\Reader\IterableFilterHandler\Not;
+use Yiisoft\Data\Reader\DataReaderReaderInterface;
+use Yiisoft\Data\Reader\FilterHandlerInterface;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\All;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Any;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Between;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsEmpty;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNull;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThan;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\In;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThan;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Like;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Not;
+use Yiisoft\Data\Reader\Sort;
 
 use function array_merge;
 use function array_shift;

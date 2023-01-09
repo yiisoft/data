@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader;
+namespace Yiisoft\Data\Reader\Iterable;
+
+use Yiisoft\Data\Reader\FilterHandlerInterface;
 
 /**
  * Iterable filter handler checks whether an item matches criteria defined

@@ -6,9 +6,9 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
 use stdClass;
-use Yiisoft\Data\Reader\IterableFilterHandler\Equals;
-use Yiisoft\Data\Reader\IterableFilterHandler\Not;
-use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Not;
+use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Tests\TestCase;
 
 final class NotTest extends TestCase

@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\IterableFilterHandler\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqual;
 use Yiisoft\Data\Tests\TestCase;
 
 final class GreaterThanOrEqualTest extends TestCase

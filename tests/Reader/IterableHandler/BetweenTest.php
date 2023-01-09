@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\IterableFilterHandler\Between;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Between;
 use Yiisoft\Data\Tests\TestCase;
 
 final class BetweenTest extends TestCase

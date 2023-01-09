@@ -6,11 +6,11 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
 use stdClass;
-use Yiisoft\Data\Reader\IterableFilterHandler\Any;
-use Yiisoft\Data\Reader\IterableFilterHandler\Equals;
-use Yiisoft\Data\Reader\IterableFilterHandler\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\IterableFilterHandler\LessThanOrEqual;
-use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Any;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Tests\TestCase;
 
 final class AnyTest extends TestCase

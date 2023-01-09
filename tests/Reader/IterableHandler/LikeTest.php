@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\IterableFilterHandler\Like;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\Like;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LikeTest extends TestCase

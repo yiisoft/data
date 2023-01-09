@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Reader\IterableFilterHandler;
+namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterAssertHelper;
-use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
+use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function count;
 
 /**
- * EqualsNull iterable filter handler checks that the item's field value is null.
+ * EqualsEmpty iterable filter handler checks that the item's field value is empty.
  */
-final class EqualsNull implements IterableFilterHandlerInterface
+final class EqualsEmpty implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\EqualsNull::getOperator();
+        return \Yiisoft\Data\Reader\Filter\EqualsEmpty::getOperator();
     }
 
     public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool
@@ -31,6 +30,6 @@ final class EqualsNull implements IterableFilterHandlerInterface
         FilterAssertHelper::assertFieldIsString($field);
 
         /** @var string $field */
-        return ArrayHelper::getValue($item, $field) === null;
+        return empty($item[$field]);
     }
 }

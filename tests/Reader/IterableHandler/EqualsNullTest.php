@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\IterableFilterHandler\EqualsNull;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNull;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsNullTest extends TestCase

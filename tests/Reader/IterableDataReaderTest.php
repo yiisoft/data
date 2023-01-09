@@ -21,7 +21,7 @@ use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterAssertHelper;
 use Yiisoft\Data\Reader\FilterInterface;
-use Yiisoft\Data\Reader\IterableDataReader;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -400,7 +400,7 @@ final class IterableDataReaderTest extends TestCase
 
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
-            ->withFilterHandlers(new class () extends \Yiisoft\Data\Reader\IterableFilterHandler\Compare {
+            ->withFilterHandlers(new class () extends \Yiisoft\Data\Reader\Iterable\FilterHandler\Compare {
                 public function getOperator(): string
                 {
                     return \Yiisoft\Data\Reader\Filter\Equals::getOperator();

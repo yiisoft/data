@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Reader;
 
 use DateTimeInterface;
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function is_scalar;
 use function is_string;
