@@ -51,7 +51,7 @@ abstract class Group implements FilterInterface
     }
 
     /**
-     * Get a new instance with filters added from criteria array provided.
+     * Get a new instance with filters set from criteria array provided.
      *
      * ```php
      * $dataReader->withFilter((new All())->withCriteriaArray(
