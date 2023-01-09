@@ -14,6 +14,7 @@ interface SortableDataInterface
      * Get a new instance with sorting set.
      *
      * @param Sort|null $sort Sorting criteria or null for no sorting.
+     *
      * @return static New instance.
      */
     public function withSort(?Sort $sort): static;

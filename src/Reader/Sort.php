@@ -66,6 +66,7 @@ final class Sort
     /**
      * @param array $config Logical fields config.
      * @psalm-param TUserConfig $config
+     *
      * @param bool $ignoreExtraFields Whether to ignore logical fields not present in the config when forming criteria.
      */
     private function __construct(private bool $ignoreExtraFields, array $config)
@@ -189,6 +190,7 @@ final class Sort
      * Otherwise, the order is ascending.
      *
      * @param string $orderString Logical fields order as comma-separated string.
+     *
      * @return self New instance.
      */
     public function withOrderString(string $orderString): self
@@ -212,6 +214,7 @@ final class Sort
      *
      * @param array $order A map with logical field names to order by as keys, direction as values.
      * @psalm-param TOrder $order
+     *
      * @return self New instance.
      */
     public function withOrder(array $order): self

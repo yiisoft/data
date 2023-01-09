@@ -13,6 +13,7 @@ interface OffsetableDataInterface
      * Get a new instance with offset set.
      *
      * @param int $offset Offset.
+     *
      * @return static New instance.
      */
     public function withOffset(int $offset): static;

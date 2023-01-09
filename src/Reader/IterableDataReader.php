@@ -189,6 +189,7 @@ class IterableDataReader implements DataReaderReaderInterface
      *
      * @param array|object $item Item to check.
      * @param array $filter Filter.
+     *
      * @return bool Whether an item matches iterable filter.
      */
     protected function matchFilter(array|object $item, array $filter): bool
