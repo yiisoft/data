@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterAssert;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function array_shift;
