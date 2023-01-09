@@ -77,8 +77,7 @@ final class IterableDataReaderTest extends TestCase
 
     public function testExceptionOnPassingNonIterableFilters(): void
     {
-        $nonIterableFilterHandler = new class implements FilterHandlerInterface {
-
+        $nonIterableFilterHandler = new class () implements FilterHandlerInterface {
             public function getOperator(): string
             {
                 return '?';
