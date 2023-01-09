@@ -32,7 +32,7 @@ final class AllTest extends TestCase
         ], $filter->toCriteriaArray());
     }
 
-    public function testToArrayAndWithFiltersArray(): void
+    public function testWithCriteriaArrayIsImmutable(): void
     {
         $filter = new All(
             new LessThan('test', 4),
@@ -40,45 +40,52 @@ final class AllTest extends TestCase
         );
 
         $newFilter = $filter->withCriteriaArray([
-            new Any(
-                new Between('test', 2, 4),
-                new In('test', [1, 2, 3, 4]),
-            ),
-            ['=', 'test', 3],
+            ['>', 'test', 1],
+            ['<', 'test', 5],
         ]);
 
         $this->assertNotSame($filter, $newFilter);
+    }
 
-        $this->assertSame([
-            'and',
+    public function testWithCriteriaArrayOverridesConstructor(): void
+    {
+        $filter = new All(
+            new LessThan('test', 4),
+            new GreaterThan('test', 2),
+        );
+
+        $newFilter = $filter->withCriteriaArray([
+            ['>', 'test', 1],
+            ['<', 'test', 5],
+        ]);
+
+        $this->assertEquals(
             [
+                'and',
                 [
-                    'or',
-                    [
-                        ['between', 'test', 2, 4],
-                        ['in', 'test', [1, 2, 3, 4]],
-                    ],
-                ],
-                ['=', 'test', 3],
+                    ['>', 'test', 1],
+                    ['<', 'test', 5],
+                ]
             ],
-        ], $newFilter->toCriteriaArray());
+            $newFilter->toCriteriaArray()
+        );
     }
 
     /**
      * @dataProvider invalidFilterDataProvider
      */
-    public function testWithFiltersArrayFailForInvalidFilter($filter): void
+    public function testWithCriteriaArrayFailForInvalidFilter($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid filter on "1" key.');
 
-        (new All())->withCriteriaArray([new Equals('test', 1), $filter]);
+        (new All())->withCriteriaArray([['=', 'test', 1], $filter]);
     }
 
     /**
      * @dataProvider invalidFilterOperatorDataProvider
      */
-    public function testWithFiltersArrayFailForInvalidFilterOperator(array $filter): void
+    public function testWithCriteriaArrayFailForInvalidFilterOperator(array $filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid filter operator on "0" key.');

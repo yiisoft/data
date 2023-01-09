@@ -128,18 +128,18 @@ Filter could be composed with:
 
 #### Filtering with arrays
 
-The `All` and `Any` filters have a `withFiltersArray()` method, which allows you to define filters with arrays.
+The `All` and `Any` filters have a `withCriteriaArray()` method, which allows you to define filters with arrays.
 
 ```php
-$dataReader->withFilter((new All())->withFiltersArray([
-  ['=', 'id', 88],
-  [
-    'or',
+$dataReader->withFilter((new All())->withCriteriaArray([
+    ['=', 'id', 88],
     [
-      ['=', 'color', 'red'],
-      ['=', 'state', 1],
+       'or',
+       [
+          ['=', 'color', 'red'],
+          ['=', 'state', 1],
+       ]
     ]
-  ]
 ]));
 ```
 
