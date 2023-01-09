@@ -56,6 +56,7 @@ final class Not implements IterableFilterHandlerInterface
             throw new InvalidArgumentException('The operator string cannot be empty.');
         }
 
+        /** @var mixed $filterHandler */
         $filterHandler = $iterableFilterHandlers[$operator] ?? null;
 
         if ($filterHandler === null) {
@@ -63,6 +64,8 @@ final class Not implements IterableFilterHandlerInterface
         }
 
         FilterAssert::isIterableFilterHandlerInterface($filterHandler);
+        /** @var IterableFilterHandlerInterface $filterHandler */
+
         return !$filterHandler->match($item, $values, $iterableFilterHandlers);
     }
 }

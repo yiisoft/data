@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterAssert;
+use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function array_shift;
@@ -72,6 +73,7 @@ abstract class Group implements IterableFilterHandlerInterface
                 throw new InvalidArgumentException('The operator string cannot be empty.');
             }
 
+            /** @var mixed $filterHandler */
             $filterHandler = $iterableFilterHandlers[$operator] ?? null;
 
             if ($filterHandler === null) {
@@ -79,6 +81,8 @@ abstract class Group implements IterableFilterHandlerInterface
             }
 
             FilterAssert::isIterableFilterHandlerInterface($filterHandler);
+            /** @var IterableFilterHandlerInterface $filterHandler */
+
             $results[] = $filterHandler->match($item, $subFilter, $iterableFilterHandlers);
         }
 
