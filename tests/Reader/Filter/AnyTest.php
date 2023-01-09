@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\Filter;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
-use Yiisoft\Data\Reader\Filter\Between;
-use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
-use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -65,7 +61,7 @@ final class AnyTest extends TestCase
                 [
                     ['>', 'test', 1],
                     ['<', 'test', 5],
-                ]
+                ],
             ],
             $newFilter->toCriteriaArray()
         );
@@ -81,7 +77,7 @@ final class AnyTest extends TestCase
 
         (new Any())->withCriteriaArray([
             ['=', 'test', 1],
-            $filter
+            $filter,
         ]);
     }
 
