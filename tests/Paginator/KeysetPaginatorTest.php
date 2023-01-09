@@ -441,7 +441,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = $paginator->withPreviousPageToken('1');
         try {
             $paginator->getNextPageToken();
-            $this->assertTrue(false);
+            $this->fail();
         } catch (RuntimeException) {
             $this->assertTrue(true);
         }
@@ -460,7 +460,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = $paginator->withNextPageToken('6');
         try {
             $paginator->getPreviousPageToken();
-            $this->assertTrue(false);
+            $this->fail();
         } catch (RuntimeException) {
             $this->assertTrue(true);
         }

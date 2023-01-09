@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Tests\Paginator;
 use InvalidArgumentException;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorException;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
@@ -50,6 +51,7 @@ final class OffsetPaginatorTest extends TestCase
             public function withLimit(int $limit): static
             {
                 // do nothing
+                return $this;
             }
 
             public function read(): iterable
@@ -83,6 +85,7 @@ final class OffsetPaginatorTest extends TestCase
             public function withLimit(int $limit): static
             {
                 // do nothing
+                return $this;
             }
 
             public function read(): iterable
@@ -103,6 +106,7 @@ final class OffsetPaginatorTest extends TestCase
             public function withOffset(int $offset): static
             {
                 // do nothing
+                return $this;
             }
         };
 
@@ -184,7 +188,7 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = new OffsetPaginator($dataReader);
         $newPaginator = $paginator->withPageSize(125);
 
-        $this->assertSame(OffsetPaginator::DEFAULT_PAGE_SIZE, $paginator->getPageSize());
+        $this->assertSame(PaginatorInterface::DEFAULT_PAGE_SIZE, $paginator->getPageSize());
         $this->assertSame(125, $newPaginator->getPageSize());
     }
 

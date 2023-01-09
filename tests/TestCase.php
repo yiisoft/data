@@ -95,7 +95,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return mixed
      */
-    protected function getInaccessibleProperty(object $object, string $propertyName)
+    protected function getInaccessibleProperty(object $object, string $propertyName): mixed
     {
         $class = new ReflectionObject($object);
 
@@ -118,7 +118,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return mixed
      */
-    protected function invokeMethod(object $object, string $method, array $args = [])
+    protected function invokeMethod(object $object, string $method, array $args = []): mixed
     {
         $reflection = new ReflectionObject($object);
         $method = $reflection->getMethod($method);
