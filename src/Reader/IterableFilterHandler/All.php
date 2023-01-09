@@ -6,6 +6,10 @@ namespace Yiisoft\Data\Reader\IterableFilterHandler;
 
 use function in_array;
 
+/**
+ * All iterable filter handler allows combining multiple sub-filters.
+ * The filter matches only if all the sub-filters match.
+ */
 final class All extends Group
 {
     public function getOperator(): string

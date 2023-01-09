@@ -7,6 +7,9 @@ namespace Yiisoft\Data\Reader\IterableFilterHandler;
 use function in_array;
 use function is_array;
 
+/**
+ * In iterable filter handler ensures that the field value matches one of the value provided.
+ */
 final class In extends Compare
 {
     public function getOperator(): string

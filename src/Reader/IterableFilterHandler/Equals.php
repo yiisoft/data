@@ -6,6 +6,9 @@ namespace Yiisoft\Data\Reader\IterableFilterHandler;
 
 use DateTimeInterface;
 
+/**
+ * Equals iterable filter handler checks that the item's field value matches given value.
+ */
 final class Equals extends Compare
 {
     public function getOperator(): string

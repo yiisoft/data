@@ -6,6 +6,10 @@ namespace Yiisoft\Data\Reader\IterableFilterHandler;
 
 use DateTimeInterface;
 
+/**
+ * GreaterThanOrEqual iterable filter handler checks that the item's field value
+ * is greater than or equal to the given value.
+ */
 final class GreaterThanOrEqual extends Compare
 {
     public function getOperator(): string

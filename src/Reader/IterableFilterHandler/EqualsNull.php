@@ -11,6 +11,9 @@ use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 
 use function count;
 
+/**
+ * EqualsNull iterable filter handler checks that the item's field value is null.
+ */
 final class EqualsNull implements IterableFilterHandlerInterface
 {
     public function getOperator(): string

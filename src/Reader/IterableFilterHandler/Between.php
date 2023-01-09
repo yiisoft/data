@@ -12,6 +12,10 @@ use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 
 use function count;
 
+/**
+ * Between iterable filter handler checks that the item's field value
+ * is between minimal and maximal values.
+ */
 final class Between implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
@@ -26,18 +30,18 @@ final class Between implements IterableFilterHandlerInterface
         }
 
         /** @var string $field */
-        [$field, $firstValue, $secondValue] = $arguments;
+        [$field, $minimalValue, $maximalValue] = $arguments;
         FilterAssertHelper::assertFieldIsString($field);
 
         $value = ArrayHelper::getValue($item, $field);
 
         if (!$value instanceof DateTimeInterface) {
-            return $value >= $firstValue && $value <= $secondValue;
+            return $value >= $minimalValue && $value <= $maximalValue;
         }
 
-        return $firstValue instanceof DateTimeInterface
-            && $secondValue instanceof DateTimeInterface
-            && $value->getTimestamp() >= $firstValue->getTimestamp()
-            && $value->getTimestamp() <= $secondValue->getTimestamp();
+        return $minimalValue instanceof DateTimeInterface
+            && $maximalValue instanceof DateTimeInterface
+            && $value->getTimestamp() >= $minimalValue->getTimestamp()
+            && $value->getTimestamp() <= $maximalValue->getTimestamp();
     }
 }

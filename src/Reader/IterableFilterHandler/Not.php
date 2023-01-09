@@ -14,6 +14,9 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
+/**
+ * Not iterable filter handler negates another filter.
+ */
 final class Not implements IterableFilterHandlerInterface
 {
     public function getOperator(): string

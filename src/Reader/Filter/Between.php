@@ -20,16 +20,16 @@ final class Between implements FilterInterface
 
     /**
      * @param string $field Name of the field to compare.
-     * @param bool|DateTimeInterface|float|int|string $minimumValue Minimal field value.
-     * @param bool|DateTimeInterface|float|int|string $maximumValue Maximal field value.
+     * @param bool|DateTimeInterface|float|int|string $minimalValue Minimal field value.
+     * @param bool|DateTimeInterface|float|int|string $maximalValue Maximal field value.
      */
-    public function __construct(private string $field, mixed $minimumValue, mixed $maximumValue)
+    public function __construct(private string $field, mixed $minimalValue, mixed $maximalValue)
     {
-        FilterAssertHelper::assertIsScalarOrInstanceOfDateTimeInterface($minimumValue);
-        FilterAssertHelper::assertIsScalarOrInstanceOfDateTimeInterface($maximumValue);
+        FilterAssertHelper::assertIsScalarOrInstanceOfDateTimeInterface($minimalValue);
+        FilterAssertHelper::assertIsScalarOrInstanceOfDateTimeInterface($maximalValue);
 
-        $this->minimalValue = $minimumValue;
-        $this->maximalValue = $maximumValue;
+        $this->minimalValue = $minimalValue;
+        $this->maximalValue = $maximalValue;
     }
 
     public function toCriteriaArray(): array

@@ -14,8 +14,19 @@ use function is_array;
 use function is_string;
 use function sprintf;
 
+/**
+ * Abstract group iterable filter handler allows to combine runs of several iterable filters.
+ * How to interpret results is determined by {@see checkResults()} implemented in child
+ * classes.
+ */
 abstract class Group implements IterableFilterHandlerInterface
 {
+    /**
+     * Return final decision for the match based on sub-filter match results.
+     *
+     * @param bool[] $results Sub-filter match results.
+     * @return bool Final result.
+     */
     abstract protected function checkResults(array $results): bool;
 
     public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool

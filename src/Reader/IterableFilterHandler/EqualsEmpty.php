@@ -10,6 +10,9 @@ use Yiisoft\Data\Reader\IterableFilterHandlerInterface;
 
 use function count;
 
+/**
+ * EqualsEmpty iterable filter handler checks that the item's field value is empty.
+ */
 final class EqualsEmpty implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
