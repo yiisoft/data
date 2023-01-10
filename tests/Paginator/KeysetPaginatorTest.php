@@ -23,7 +23,6 @@ use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Data\Tests\TestCase;
 
 use function array_values;
-use function count;
 use function end;
 use function reset;
 use function sprintf;

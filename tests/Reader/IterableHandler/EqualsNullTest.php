@@ -82,7 +82,7 @@ final class EqualsNullTest extends TestCase
             2 => $car2,
             3 => $car3,
             4 => $car4,
-            5 => $car5
+            5 => $car5,
         ]);
 
         $result = $reader->withFilter(new EqualsNullFilter('getNumber()'))->read();
