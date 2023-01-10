@@ -197,8 +197,8 @@ final class KeysetPaginatorTest extends Testcase
     public function readObjectsWithGettersDataProvider(): array
     {
         return [
-            'order by id field' => ['id', 'getId'],
-            'order by created_at field' => ['created_at', 'getCreatedAt'],
+            'order by id field' => ['getId()', 'getId'],
+            'order by created_at field' => ['getCreatedAt()', 'getCreatedAt'],
         ];
     }
 
@@ -207,16 +207,14 @@ final class KeysetPaginatorTest extends Testcase
      */
     public function testReadObjectsWithGetters(string $orderByField, string $getter): void
     {
-        $sort = Sort::only(['id', 'name', 'created_at'])->withOrderString($orderByField);
+        $sort = Sort::only(['getId()', 'getName()', 'getCreatedAt()'])->withOrderString($orderByField);
         $data = [
             $this->createObjectWithGetters(1, 'Codename Boris 1'),
             $this->createObjectWithGetters(2, 'Codename Boris 2'),
             $this->createObjectWithGetters(3, 'Codename Boris 3'),
         ];
 
-        $dataReader = $this
-            ->createObjectDataReader($data)
-            ->withSort($sort);
+        $dataReader = (new IterableDataReader($data))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         $this->assertSame([$data[0], $data[1]], $this->iterableToArray($paginator->read()));
@@ -604,26 +602,6 @@ final class KeysetPaginatorTest extends Testcase
             public function getCreatedAt(): int
             {
                 return $this->createdAt;
-            }
-        };
-    }
-
-    private function createObjectDataReader(array $data): IterableDataReader
-    {
-        return new class ($data) extends IterableDataReader {
-            public function read(): array
-            {
-                $data = [];
-
-                foreach ($this->data as $item) {
-                    if (count($data) === 3) {
-                        break;
-                    }
-
-                    $data[] = $item;
-                }
-
-                return $data;
             }
         };
     }

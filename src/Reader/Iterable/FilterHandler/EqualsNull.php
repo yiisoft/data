@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\DataHelper;
 use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
@@ -31,6 +31,6 @@ final class EqualsNull implements IterableFilterHandlerInterface
         FilterAssert::fieldIsString($field);
 
         /** @var string $field */
-        return ArrayHelper::getValue($item, $field) === null;
+        return DataHelper::getValue($item, $field) === null;
     }
 }

@@ -6,7 +6,10 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Filter\Equals as EqualsFilter;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsTest extends TestCase
@@ -92,5 +95,26 @@ final class EqualsTest extends TestCase
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
         (new Equals())->match(['id' => 1], [$field, 1], []);
+    }
+
+    public function testObjectWithGetters(): void
+    {
+        $car1 = new Car(1);
+        $car2 = new Car(2);
+        $car3 = new Car(1);
+        $car4 = new Car(3);
+        $car5 = new Car(5);
+
+        $reader = new IterableDataReader([
+            1 => $car1,
+            2 => $car2,
+            3 => $car3,
+            4 => $car4,
+            5 => $car5
+        ]);
+
+        $result = $reader->withFilter(new EqualsFilter('getNumber()', 1))->read();
+
+        $this->assertSame([1 => $car1, 3 => $car3], $result);
     }
 }

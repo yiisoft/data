@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Paginator;
 
 use InvalidArgumentException;
 use RuntimeException;
-use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\DataHelper;
 use Yiisoft\Data\Reader\Filter\Compare;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -16,12 +16,9 @@ use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
-use Yiisoft\Strings\Inflector;
 
 use function array_reverse;
 use function count;
-use function is_callable;
-use function is_object;
 use function key;
 use function reset;
 use function sprintf;
@@ -265,13 +262,13 @@ final class KeysetPaginator implements PaginatorInterface
 
         foreach ($dataReader->read() as $key => $item) {
             if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = (string) $this->getValueFromItem($item, $field);
+                $this->currentFirstValue = (string) DataHelper::getValue($item, $field);
             }
 
             if (count($data) === $this->pageSize) {
                 $this->hasNextPage = true;
             } else {
-                $this->currentLastValue = (string) $this->getValueFromItem($item, $field);
+                $this->currentLastValue = (string) DataHelper::getValue($item, $field);
                 $data[$key] = $item;
             }
         }
@@ -298,17 +295,6 @@ final class KeysetPaginator implements PaginatorInterface
         $reverseFilter = $this->getReverseFilter($sort);
 
         return !empty($dataReader->withFilter($reverseFilter)->withLimit(1)->read());
-    }
-
-    private function getValueFromItem(array|object $item, string $field): mixed
-    {
-        $methodName = 'get' . (new Inflector())->toPascalCase($field);
-
-        if (is_object($item) && is_callable([$item, $methodName])) {
-            return $item->$methodName();
-        }
-
-        return ArrayHelper::getValue($item, $field);
     }
 
     private function getFilter(Sort $sort): Compare
