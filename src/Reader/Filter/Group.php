@@ -65,10 +65,10 @@ abstract class Group implements FilterInterface
      * ));
      * ```
      *
-     * @param array[]|FilterInterface[] $criteriaArray Criteria array to use.
+     * @param array[] $criteriaArray Criteria array to use.
      * Instances of FilterInterface are ignored.
      *
-     * @throws InvalidArgumentException If criteria arrays is not valid.
+     * @throws InvalidArgumentException If criteria array is not valid.
      *
      * @return static New instance.
      *
@@ -77,10 +77,6 @@ abstract class Group implements FilterInterface
     public function withCriteriaArray(array $criteriaArray): static
     {
         foreach ($criteriaArray as $key => $item) {
-            if ($item instanceof FilterInterface) {
-                continue;
-            }
-
             if (!is_array($item)) {
                 throw new InvalidArgumentException(sprintf('Invalid filter on "%s" key.', $key));
             }
