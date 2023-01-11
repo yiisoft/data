@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsEmpty;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsEmptyHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsEmptyTest extends TestCase
@@ -30,7 +30,7 @@ final class EqualsEmptyTest extends TestCase
      */
     public function testMatch(bool $expected, array $item): void
     {
-        $this->assertSame($expected, (new EqualsEmpty())->match($item, ['value'], []));
+        $this->assertSame($expected, (new EqualsEmptyHandler())->match($item, ['value'], []));
     }
 
     public function invalidCountArgumentsDataProvider(): array
@@ -51,7 +51,7 @@ final class EqualsEmptyTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$arguments should contain exactly one element.');
 
-        (new EqualsEmpty())->match(['id' => 1], $arguments, []);
+        (new EqualsEmptyHandler())->match(['id' => 1], $arguments, []);
     }
 
     /**
@@ -64,6 +64,6 @@ final class EqualsEmptyTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
-        (new EqualsEmpty())->match(['id' => 1], [$field], []);
+        (new EqualsEmptyHandler())->match(['id' => 1], [$field], []);
     }
 }

@@ -13,19 +13,19 @@ use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\All;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Any;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Between;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsEmpty;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNull;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThan;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\In;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThan;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Like;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Not;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\AnyHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsEmptyHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\InHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
 use Yiisoft\Data\Reader\Sort;
 
 use function array_merge;
@@ -69,19 +69,19 @@ class IterableDataReader implements DataReaderInterface
     public function __construct(protected iterable $data)
     {
         $this->iterableFilterHandlers = $this->withFilterHandlers(
-            new All(),
-            new Any(),
-            new Between(),
-            new Equals(),
-            new EqualsEmpty(),
-            new EqualsNull(),
-            new GreaterThan(),
-            new GreaterThanOrEqual(),
-            new In(),
-            new LessThan(),
-            new LessThanOrEqual(),
-            new Like(),
-            new Not()
+            new AllHandler(),
+            new AnyHandler(),
+            new BetweenHandler(),
+            new EqualsHandler(),
+            new EqualsEmptyHandler(),
+            new EqualsNullHandler(),
+            new GreaterThanHandler(),
+            new GreaterThanOrEqualHandler(),
+            new InHandler(),
+            new LessThanHandler(),
+            new LessThanOrEqualHandler(),
+            new LikeHandler(),
+            new NotHandler()
         )->iterableFilterHandlers;
     }
 

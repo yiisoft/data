@@ -15,7 +15,7 @@ use function count;
  * Abstract `Compare` iterable filter handler compares item's field value with a given value.
  * The actual comparison is defined in {@see compare()} method implemented in child classes.
  */
-abstract class Compare implements IterableFilterHandlerInterface
+abstract class CompareHandler implements IterableFilterHandlerInterface
 {
     /**
      * Compare item's field value with a given value.

@@ -19,7 +19,7 @@ use function sprintf;
  * How to interpret results is determined by {@see checkResults()} implemented in child
  * classes.
  */
-abstract class Group implements IterableFilterHandlerInterface
+abstract class GroupHandler implements IterableFilterHandlerInterface
 {
     /**
      * Return final decision for the match based on sub-filter match results.
