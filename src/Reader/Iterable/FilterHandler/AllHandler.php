@@ -10,7 +10,7 @@ use function in_array;
  * `All` iterable filter handler allows combining multiple sub-filters.
  * The filter matches only if all the sub-filters match.
  */
-final class All extends Group
+final class AllHandler extends GroupHandler
 {
     public function getOperator(): string
     {

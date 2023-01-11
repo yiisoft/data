@@ -17,7 +17,7 @@ use function sprintf;
 /**
  * `Not` iterable filter handler negates another filter.
  */
-final class Not implements IterableFilterHandlerInterface
+final class NotHandler implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {

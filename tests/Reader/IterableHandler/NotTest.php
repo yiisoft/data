@@ -6,8 +6,8 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
 use stdClass;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Not;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -16,10 +16,10 @@ final class NotTest extends TestCase
     public function matchDataProvider(): array
     {
         return [
-            [true, [['=', 'value', 44]], ['=' => new Equals()]],
-            [true, [['=', 'value', 46]], ['=' => new Equals()]],
-            [false, [['=', 'value', 45]], ['=' => new Equals()]],
-            [false, [['=', 'value', '45']], ['=' => new Equals()]],
+            [true, [['=', 'value', 44]], ['=' => new EqualsHandler()]],
+            [true, [['=', 'value', 46]], ['=' => new EqualsHandler()]],
+            [false, [['=', 'value', 45]], ['=' => new EqualsHandler()]],
+            [false, [['=', 'value', '45']], ['=' => new EqualsHandler()]],
         ];
     }
 
@@ -28,7 +28,7 @@ final class NotTest extends TestCase
      */
     public function testMatch(bool $expected, array $arguments, array $filterHandlers): void
     {
-        $processor = new Not();
+        $processor = new NotHandler();
 
         $item = [
             'id' => 1,
@@ -56,7 +56,7 @@ final class NotTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$arguments should contain exactly one element.');
 
-        (new Not())->match(['id' => 1], $arguments, []);
+        (new NotHandler())->match(['id' => 1], $arguments, []);
     }
 
     /**
@@ -69,7 +69,7 @@ final class NotTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The values should be array. The $type is received.");
 
-        (new Not())->match(['id' => 1], [$value], []);
+        (new NotHandler())->match(['id' => 1], [$value], []);
     }
 
     public function testMatchFailIfArgumentValueIsEmptyArray(): void
@@ -77,7 +77,7 @@ final class NotTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('At least operator should be provided.');
 
-        (new Not())->match(['id' => 1], [[]], []);
+        (new NotHandler())->match(['id' => 1], [[]], []);
     }
 
     public function invalidFilterOperatorDataProvider(): array
@@ -97,7 +97,7 @@ final class NotTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The operator should be string. The $type is received.");
 
-        (new Not())->match(['id' => 1], [$filter], []);
+        (new NotHandler())->match(['id' => 1], [$filter], []);
     }
 
     public function testMatchFailForEmptyFilterOperator(): void
@@ -105,7 +105,7 @@ final class NotTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The operator string cannot be empty.');
 
-        (new Not())->match(['id' => 1], [['']], []);
+        (new NotHandler())->match(['id' => 1], [['']], []);
     }
 
     public function testMatchFailIfFilterOperatorIsNotSupported(): void
@@ -113,7 +113,7 @@ final class NotTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('">" operator is not supported.');
 
-        (new Not())->match(['id' => 1], [['>']], ['=' => new Equals()]);
+        (new NotHandler())->match(['id' => 1], [['>']], ['=' => new EqualsHandler()]);
     }
 
     public function testMatchFailIfFilterHandlerIsNotIterable(): void
@@ -125,6 +125,6 @@ final class NotTest extends TestCase
             stdClass::class,
         ));
 
-        (new Not())->match(['id' => 1], [['=']], ['=' => new stdClass()]);
+        (new NotHandler())->match(['id' => 1], [['=']], ['=' => new stdClass()]);
     }
 }

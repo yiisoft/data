@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThan;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class GreaterThanTest extends TestCase
@@ -26,7 +26,7 @@ final class GreaterThanTest extends TestCase
      */
     public function testMatchScalar(bool $expected, array $arguments): void
     {
-        $processor = new GreaterThan();
+        $processor = new GreaterThanHandler();
 
         $item = [
             'id' => 1,
@@ -50,7 +50,7 @@ final class GreaterThanTest extends TestCase
      */
     public function testMatchDateTimeInterface(bool $expected, array $arguments): void
     {
-        $processor = new GreaterThan();
+        $processor = new GreaterThanHandler();
 
         $item = [
             'id' => 1,
@@ -78,7 +78,7 @@ final class GreaterThanTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$arguments should contain exactly two elements.');
 
-        (new GreaterThan())->match(['id' => 1], $arguments, []);
+        (new GreaterThanHandler())->match(['id' => 1], $arguments, []);
     }
 
     /**
@@ -91,6 +91,6 @@ final class GreaterThanTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
-        (new GreaterThan())->match(['id' => 1], [$field, 1], []);
+        (new GreaterThanHandler())->match(['id' => 1], [$field, 1], []);
     }
 }

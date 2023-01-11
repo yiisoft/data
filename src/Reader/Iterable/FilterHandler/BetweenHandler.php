@@ -16,7 +16,7 @@ use function count;
  * `Between` iterable filter handler checks that the item's field value
  * is between minimal and maximal values.
  */
-final class Between implements IterableFilterHandlerInterface
+final class BetweenHandler implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {

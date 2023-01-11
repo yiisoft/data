@@ -6,10 +6,10 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
 use stdClass;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\All;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -21,32 +21,32 @@ final class AllTest extends TestCase
             [
                 true,
                 [[['=', 'value', 45], ['>=', 'value', 45], ['<=', 'value', 45]]],
-                ['=' => new Equals(), '>=' => new GreaterThanOrEqual(), '<=' => new LessThanOrEqual()],
+                ['=' => new EqualsHandler(), '>=' => new GreaterThanOrEqualHandler(), '<=' => new LessThanOrEqualHandler()],
             ],
             [
                 true,
                 [[['=', 'value', '45'], ['>=', 'value', 45], ['<=', 'value', 45]]],
-                ['=' => new Equals(), '>=' => new GreaterThanOrEqual(), '<=' => new LessThanOrEqual()],
+                ['=' => new EqualsHandler(), '>=' => new GreaterThanOrEqualHandler(), '<=' => new LessThanOrEqualHandler()],
             ],
             [
                 false,
                 [[['=', 'value', 44], ['>=', 'value', 45], ['<=', 'value', 45]]],
-                ['=' => new Equals(), '>=' => new GreaterThanOrEqual(), '<=' => new LessThanOrEqual()],
+                ['=' => new EqualsHandler(), '>=' => new GreaterThanOrEqualHandler(), '<=' => new LessThanOrEqualHandler()],
             ],
             [
                 false,
                 [[['=', 'value', 45], ['>=', 'value', 46], ['<=', 'value', 45]]],
-                ['=' => new Equals(), '>=' => new GreaterThanOrEqual(), '<=' => new LessThanOrEqual()],
+                ['=' => new EqualsHandler(), '>=' => new GreaterThanOrEqualHandler(), '<=' => new LessThanOrEqualHandler()],
             ],
             [
                 false,
                 [[['=', 'value', 45], ['>=', 'value', 45], ['<=', 'value', 44]]],
-                ['=' => new Equals(), '>=' => new GreaterThanOrEqual(), '<=' => new LessThanOrEqual()],
+                ['=' => new EqualsHandler(), '>=' => new GreaterThanOrEqualHandler(), '<=' => new LessThanOrEqualHandler()],
             ],
             [
                 false,
                 [[['=', 'value', 45], ['>=', 'value', 45], ['<=', 'value', 44]]],
-                ['=' => new Equals(), '>=' => new GreaterThanOrEqual(), '<=' => new LessThanOrEqual()],
+                ['=' => new EqualsHandler(), '>=' => new GreaterThanOrEqualHandler(), '<=' => new LessThanOrEqualHandler()],
             ],
         ];
     }
@@ -56,7 +56,7 @@ final class AllTest extends TestCase
      */
     public function testMatch(bool $expected, array $arguments, array $filterHandlers): void
     {
-        $processor = new All();
+        $processor = new AllHandler();
 
         $item = [
             'id' => 1,
@@ -84,7 +84,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$arguments should contain exactly one element.');
 
-        (new All())->match(['id' => 1], $arguments, []);
+        (new AllHandler())->match(['id' => 1], $arguments, []);
     }
 
     /**
@@ -97,7 +97,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The sub filters should be array. The $type is received.");
 
-        (new All())->match(['id' => 1], [$subFilters], []);
+        (new AllHandler())->match(['id' => 1], [$subFilters], []);
     }
 
     /**
@@ -110,7 +110,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The sub filter should be array. The $type is received.");
 
-        (new All())->match(['id' => 1], [[$subFilters]], []);
+        (new AllHandler())->match(['id' => 1], [[$subFilters]], []);
     }
 
     public function testMatchFailIfArgumentValueIsEmptyArray(): void
@@ -118,7 +118,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('At least operator should be provided.');
 
-        (new All())->match(['id' => 1], [[[]]], []);
+        (new AllHandler())->match(['id' => 1], [[[]]], []);
     }
 
     public function invalidFilterOperatorDataProvider(): array
@@ -138,7 +138,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The operator should be string. The $type is received.");
 
-        (new All())->match(['id' => 1], [[$filter]], []);
+        (new AllHandler())->match(['id' => 1], [[$filter]], []);
     }
 
     public function testMatchFailForEmptyFilterOperator(): void
@@ -146,7 +146,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The operator string cannot be empty.');
 
-        (new All())->match(['id' => 1], [[['']]], []);
+        (new AllHandler())->match(['id' => 1], [[['']]], []);
     }
 
     public function testMatchFailIfFilterOperatorIsNotSupported(): void
@@ -154,7 +154,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('">" operator is not supported.');
 
-        (new All())->match(['id' => 1], [[['>']]], ['=' => new Equals()]);
+        (new AllHandler())->match(['id' => 1], [[['>']]], ['=' => new EqualsHandler()]);
     }
 
     public function testMatchFailIfFilterHandlerIsNotIterable(): void
@@ -166,6 +166,6 @@ final class AllTest extends TestCase
             stdClass::class,
         ));
 
-        (new All())->match(['id' => 1], [[['=']]], ['=' => new stdClass()]);
+        (new AllHandler())->match(['id' => 1], [[['=']]], ['=' => new stdClass()]);
     }
 }

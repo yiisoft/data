@@ -7,23 +7,22 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 use DateTimeInterface;
 
 /**
- * `GreaterThanOrEqual` iterable filter handler checks that the item's field value
- * is greater than or equal to the given value.
+ * `GreaterThan` iterable filter handler checks that the item's field value is greater than the given value.
  */
-final class GreaterThanOrEqual extends Compare
+final class GreaterThanHandler extends CompareHandler
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\GreaterThanOrEqual::getOperator();
+        return \Yiisoft\Data\Reader\Filter\GreaterThan::getOperator();
     }
 
     protected function compare(mixed $itemValue, mixed $argumentValue): bool
     {
         if (!$itemValue instanceof DateTimeInterface) {
-            return $itemValue >= $argumentValue;
+            return $itemValue > $argumentValue;
         }
 
         return $argumentValue instanceof DateTimeInterface
-            && $itemValue->getTimestamp() >= $argumentValue->getTimestamp();
+            && $itemValue->getTimestamp() > $argumentValue->getTimestamp();
     }
 }

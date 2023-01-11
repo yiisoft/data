@@ -14,7 +14,7 @@ use function count;
 /**
  * `EqualsNull` iterable filter handler checks that the item's field value is null.
  */
-final class EqualsNull implements IterableFilterHandlerInterface
+final class EqualsNullHandler implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {
