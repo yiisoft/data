@@ -66,7 +66,7 @@ final class IterableDataReader implements DataReaderInterface
      * @param iterable $data Data to iterate.
      * @psalm-param iterable<TKey, TValue> $data
      */
-    public function __construct(protected iterable $data)
+    public function __construct(private iterable $data)
     {
         $this->iterableFilterHandlers = $this->withFilterHandlers(
             new AllHandler(),
@@ -203,7 +203,7 @@ final class IterableDataReader implements DataReaderInterface
      *
      * @return bool Whether an item matches iterable filter.
      */
-    protected function matchFilter(array|object $item, array $filter): bool
+    private function matchFilter(array|object $item, array $filter): bool
     {
         $operation = array_shift($filter);
         $arguments = $filter;
