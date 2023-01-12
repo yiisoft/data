@@ -85,6 +85,9 @@ final class IterableDataReader implements DataReaderInterface
         )->iterableFilterHandlers;
     }
 
+    /**
+     * @psalm-return static<TKey, TValue>
+     */
     public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static
     {
         $new = clone $this;
@@ -106,6 +109,9 @@ final class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-return static<TKey, TValue>
+     */
     public function withFilter(?FilterInterface $filter): static
     {
         $new = clone $this;
@@ -113,6 +119,9 @@ final class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-return static<TKey, TValue>
+     */
     public function withLimit(int $limit): static
     {
         if ($limit < 0) {
@@ -124,6 +133,9 @@ final class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-return static<TKey, TValue>
+     */
     public function withOffset(int $offset): static
     {
         $new = clone $this;
@@ -131,6 +143,9 @@ final class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-return static<TKey, TValue>
+     */
     public function withSort(?Sort $sort): static
     {
         $new = clone $this;
