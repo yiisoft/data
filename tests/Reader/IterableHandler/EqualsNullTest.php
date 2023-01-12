@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\EqualsNull as EqualsNullFilter;
+use Yiisoft\Data\Reader\Filter\EqualsNull;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsNullTest extends TestCase
@@ -85,7 +85,7 @@ final class EqualsNullTest extends TestCase
             5 => $car5,
         ]);
 
-        $result = $reader->withFilter(new EqualsNullFilter('getNumber()'))->read();
+        $result = $reader->withFilter(new EqualsNull('getNumber()'))->read();
 
         $this->assertSame([3 => $car3, 5 => $car5], $result);
     }

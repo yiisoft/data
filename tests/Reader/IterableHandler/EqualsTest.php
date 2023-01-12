@@ -6,10 +6,10 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Filter\Equals as EqualsFilter;
+use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsTest extends TestCase
@@ -113,7 +113,7 @@ final class EqualsTest extends TestCase
             5 => $car5,
         ]);
 
-        $result = $reader->withFilter(new EqualsFilter('getNumber()', 1))->read();
+        $result = $reader->withFilter(new Equals('getNumber()', 1))->read();
 
         $this->assertSame([1 => $car1, 3 => $car3], $result);
     }

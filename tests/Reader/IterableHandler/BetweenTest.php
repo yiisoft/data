@@ -6,8 +6,8 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
-use Yiisoft\Data\Reader\Filter\Between as BetweenFilter;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
@@ -116,7 +116,7 @@ final class BetweenTest extends TestCase
             5 => $car5,
         ]);
 
-        $result = $reader->withFilter(new BetweenFilter('getNumber()', 3, 5))->read();
+        $result = $reader->withFilter(new Between('getNumber()', 3, 5))->read();
 
         $this->assertSame([3 => $car3, 4 => $car4, 5 => $car5], $result);
     }
