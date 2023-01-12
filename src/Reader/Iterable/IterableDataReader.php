@@ -81,7 +81,7 @@ class IterableDataReader implements DataReaderInterface
             new LessThanHandler(),
             new LessThanOrEqualHandler(),
             new LikeHandler(),
-            new NotHandler()
+            new NotHandler(),
         ]);
     }
 
