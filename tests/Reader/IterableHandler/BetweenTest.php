@@ -6,7 +6,10 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
 final class BetweenTest extends TestCase
@@ -95,5 +98,26 @@ final class BetweenTest extends TestCase
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
         (new BetweenHandler())->match(['id' => 1], [$field, 1, 2], []);
+    }
+
+    public function testObjectWithGetters(): void
+    {
+        $car1 = new Car(1);
+        $car2 = new Car(2);
+        $car3 = new Car(3);
+        $car4 = new Car(4);
+        $car5 = new Car(5);
+
+        $reader = new IterableDataReader([
+            1 => $car1,
+            2 => $car2,
+            3 => $car3,
+            4 => $car4,
+            5 => $car5,
+        ]);
+
+        $result = $reader->withFilter(new Between('getNumber()', 3, 5))->read();
+
+        $this->assertSame([3 => $car3, 4 => $car4, 5 => $car5], $result);
     }
 }

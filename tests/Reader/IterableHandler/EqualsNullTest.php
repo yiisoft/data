@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsNullTest extends TestCase
@@ -64,5 +67,26 @@ final class EqualsNullTest extends TestCase
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
         (new EqualsNullHandler())->match(['id' => 1], [$field], []);
+    }
+
+    public function testObjectWithGetters(): void
+    {
+        $car1 = new Car(1);
+        $car2 = new Car(2);
+        $car3 = new Car(null);
+        $car4 = new Car(4);
+        $car5 = new Car(null);
+
+        $reader = new IterableDataReader([
+            1 => $car1,
+            2 => $car2,
+            3 => $car3,
+            4 => $car4,
+            5 => $car5,
+        ]);
+
+        $result = $reader->withFilter(new EqualsNull('getNumber()'))->read();
+
+        $this->assertSame([3 => $car3, 5 => $car5], $result);
     }
 }
