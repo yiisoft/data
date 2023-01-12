@@ -8,7 +8,7 @@ use Generator;
 use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
-use Yiisoft\Data\DataHelper;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
@@ -252,9 +252,9 @@ class IterableDataReader implements DataReaderInterface
                 static function (array|object $itemA, array|object $itemB) use ($criteria) {
                     foreach ($criteria as $key => $order) {
                         /** @psalm-var mixed $valueA */
-                        $valueA = DataHelper::getValue($itemA, $key);
+                        $valueA = ArrayHelper::getValue($itemA, $key);
                         /** @psalm-var mixed $valueB */
-                        $valueB = DataHelper::getValue($itemB, $key);
+                        $valueB = ArrayHelper::getValue($itemB, $key);
 
                         if ($valueB === $valueA) {
                             continue;

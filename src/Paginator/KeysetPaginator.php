@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Paginator;
 
 use InvalidArgumentException;
 use RuntimeException;
-use Yiisoft\Data\DataHelper;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\Compare;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -262,13 +262,13 @@ final class KeysetPaginator implements PaginatorInterface
 
         foreach ($dataReader->read() as $key => $item) {
             if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = (string) DataHelper::getValue($item, $field);
+                $this->currentFirstValue = (string) ArrayHelper::getValue($item, $field);
             }
 
             if (count($data) === $this->pageSize) {
                 $this->hasNextPage = true;
             } else {
-                $this->currentLastValue = (string) DataHelper::getValue($item, $field);
+                $this->currentLastValue = (string) ArrayHelper::getValue($item, $field);
                 $data[$key] = $item;
             }
         }

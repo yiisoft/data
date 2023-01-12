@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use DateTimeInterface;
 use InvalidArgumentException;
-use Yiisoft\Data\DataHelper;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
@@ -33,7 +33,7 @@ final class Between implements IterableFilterHandlerInterface
         [$field, $minValue, $maxValue] = $arguments;
         FilterAssert::fieldIsString($field);
 
-        $value = DataHelper::getValue($item, $field);
+        $value = ArrayHelper::getValue($item, $field);
 
         if (!$value instanceof DateTimeInterface) {
             return $value >= $minValue && $value <= $maxValue;

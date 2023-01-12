@@ -31,7 +31,8 @@
         }
     ],
     "require": {
-        "php": "^8.0"
+        "php": "^8.0",
+        "yiisoft/arrays": "^3.0"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^4.2",
