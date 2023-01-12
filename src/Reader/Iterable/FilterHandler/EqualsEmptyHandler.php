@@ -13,7 +13,7 @@ use function count;
 /**
  * `EqualsEmpty` iterable filter handler checks that the item's field value is empty.
  */
-final class EqualsEmpty implements IterableFilterHandlerInterface
+final class EqualsEmptyHandler implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {

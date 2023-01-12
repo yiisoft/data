@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Like;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LikeTest extends TestCase
@@ -25,7 +25,7 @@ final class LikeTest extends TestCase
      */
     public function testMatch(bool $expected, array $arguments): void
     {
-        $processor = new Like();
+        $processor = new LikeHandler();
 
         $item = [
             'id' => 1,
@@ -53,7 +53,7 @@ final class LikeTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$arguments should contain exactly two elements.');
 
-        (new Like())->match(['id' => 1], $arguments, []);
+        (new LikeHandler())->match(['id' => 1], $arguments, []);
     }
 
     /**
@@ -66,6 +66,6 @@ final class LikeTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
-        (new Like())->match(['id' => 1], [$field, 1], []);
+        (new LikeHandler())->match(['id' => 1], [$field, 1], []);
     }
 }

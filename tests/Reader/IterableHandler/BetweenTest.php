@@ -6,8 +6,8 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Reader\Filter\Between as BetweenFilter;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Between;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
@@ -30,7 +30,7 @@ final class BetweenTest extends TestCase
      */
     public function testMatchScalar(bool $expected, array $arguments): void
     {
-        $processor = new Between();
+        $processor = new BetweenHandler();
 
         $item = [
             'id' => 1,
@@ -56,7 +56,7 @@ final class BetweenTest extends TestCase
      */
     public function testMatchDateTimeInterface(bool $expected, array $arguments): void
     {
-        $processor = new Between();
+        $processor = new BetweenHandler();
 
         $item = [
             'id' => 1,
@@ -84,7 +84,7 @@ final class BetweenTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$arguments should contain exactly three elements.');
 
-        (new Between())->match(['id' => 1], $arguments, []);
+        (new BetweenHandler())->match(['id' => 1], $arguments, []);
     }
 
     /**
@@ -97,7 +97,7 @@ final class BetweenTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
-        (new Between())->match(['id' => 1], [$field, 1, 2], []);
+        (new BetweenHandler())->match(['id' => 1], [$field, 1, 2], []);
     }
 
     public function testObjectWithGetters(): void

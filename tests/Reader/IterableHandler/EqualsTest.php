@@ -7,9 +7,9 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\Filter\Equals as EqualsFilter;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\Equals;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsTest extends TestCase
@@ -29,7 +29,7 @@ final class EqualsTest extends TestCase
      */
     public function testMatchScalar(bool $expected, array $arguments): void
     {
-        $processor = new Equals();
+        $processor = new EqualsHandler();
 
         $item = [
             'id' => 1,
@@ -53,7 +53,7 @@ final class EqualsTest extends TestCase
      */
     public function testMatchDateTimeInterface(bool $expected, array $arguments): void
     {
-        $processor = new Equals();
+        $processor = new EqualsHandler();
 
         $item = [
             'id' => 1,
@@ -81,7 +81,7 @@ final class EqualsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$arguments should contain exactly two elements.');
 
-        (new Equals())->match(['id' => 1], $arguments, []);
+        (new EqualsHandler())->match(['id' => 1], $arguments, []);
     }
 
     /**
@@ -94,7 +94,7 @@ final class EqualsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
-        (new Equals())->match(['id' => 1], [$field, 1], []);
+        (new EqualsHandler())->match(['id' => 1], [$field, 1], []);
     }
 
     public function testObjectWithGetters(): void

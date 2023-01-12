@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LessThanOrEqualTest extends TestCase
@@ -26,7 +26,7 @@ final class LessThanOrEqualTest extends TestCase
      */
     public function testMatchScalar(bool $expected, array $arguments): void
     {
-        $processor = new LessThanOrEqual();
+        $processor = new LessThanOrEqualHandler();
 
         $item = [
             'id' => 1,
@@ -50,7 +50,7 @@ final class LessThanOrEqualTest extends TestCase
      */
     public function testMatchDateTimeInterface(bool $expected, array $arguments): void
     {
-        $processor = new LessThanOrEqual();
+        $processor = new LessThanOrEqualHandler();
 
         $item = [
             'id' => 1,
@@ -78,7 +78,7 @@ final class LessThanOrEqualTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('$arguments should contain exactly two elements.');
 
-        (new LessThanOrEqual())->match(['id' => 1], $arguments, []);
+        (new LessThanOrEqualHandler())->match(['id' => 1], $arguments, []);
     }
 
     /**
@@ -91,6 +91,6 @@ final class LessThanOrEqualTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("The field should be string. The $type is received.");
 
-        (new LessThanOrEqual())->match(['id' => 1], [$field, 1], []);
+        (new LessThanOrEqualHandler())->match(['id' => 1], [$field, 1], []);
     }
 }
