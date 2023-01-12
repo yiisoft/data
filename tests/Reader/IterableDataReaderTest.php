@@ -27,12 +27,12 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\CompareHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Tests\Support\CustomFilter\DigitalHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 use function array_slice;
 use function array_values;
 use function count;
-use function ctype_digit;
 
 final class IterableDataReaderTest extends TestCase
 {
@@ -399,20 +399,9 @@ final class IterableDataReaderTest extends TestCase
             }
         };
 
-        $reader = new class (self::DEFAULT_DATASET) extends IterableDataReader {
-            protected function matchFilter(array|object $item, array $filter): bool
-            {
-                [$operation, $field] = $filter;
-
-                if ($operation === 'digital' /*Digital::getOperator()*/) {
-                    return ctype_digit($item[$field]);
-                }
-
-                return parent::matchFilter($item, $filter);
-            }
-        };
-
-        $reader = $reader->withFilter($digitalFilter);
+        $reader = (new IterableDataReader(self::DEFAULT_DATASET))
+            ->withFilterHandlers(new DigitalHandler())
+            ->withFilter($digitalFilter);
 
         $filtered = $reader->read();
         $this->assertSame([4 => self::ITEM_5], $filtered);
@@ -467,26 +456,33 @@ final class IterableDataReaderTest extends TestCase
     /**
      * @dataProvider invalidStringValueDataProvider
      */
-    public function testMatchFilterFailIfOperatorIsNotString($operation): void
+    public function testMatchFilterFailIfOperatorIsNotString($operator): void
     {
-        $dataReader = new class (self::DEFAULT_DATASET) extends IterableDataReader {
-            public function __construct(iterable $data)
-            {
-                parent::__construct($data);
-            }
+        $reader = (new IterableDataReader(self::DEFAULT_DATASET))
+            ->withFilter(
+                new class ($operator) implements FilterInterface {
+                    public function __construct(
+                        private mixed $operator
+                    ) {
+                    }
 
-            public function matchFilter(array|object $item, array $filter): bool
-            {
-                return parent::matchFilter($item, $filter);
-            }
-        };
+                    public static function getOperator(): string
+                    {
+                        return 'custom-filter';
+                    }
 
-        $type = get_debug_type($operation);
+                    public function toCriteriaArray(): array
+                    {
+                        return [$this->operator, 'field', 'value'];
+                    }
+                }
+            );
+
+        $type = get_debug_type($operator);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("The operator should be string. The $type is received.");
-
-        $dataReader->matchFilter(['id' => 1], [$operation, 'field', 'value']);
+        $reader->read();
     }
 
     public function testNotSupportedOperator(): void

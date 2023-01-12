@@ -50,7 +50,7 @@ use function uasort;
  *
  * @implements DataReaderInterface<TKey, TValue>
  */
-class IterableDataReader implements DataReaderInterface
+final class IterableDataReader implements DataReaderInterface
 {
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
