@@ -94,7 +94,7 @@ final class IterableDataReader implements DataReaderInterface
             if (!$iterableFilterHandler instanceof IterableFilterHandlerInterface) {
                 $message = sprintf(
                     '%s::withFilterHandlers() accepts instances of %s only.',
-                    static::class,
+                    self::class,
                     IterableFilterHandlerInterface::class
                 );
                 throw new DataReaderException($message);
