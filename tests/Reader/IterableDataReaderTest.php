@@ -530,6 +530,31 @@ final class IterableDataReaderTest extends TestCase
         $this->assertSame(3, $rows['three']->a);
     }
 
+    public function testSortingWithSameValues(): void
+    {
+        $data = [
+            0 => ['value' => 1],
+            1 => ['value' => 2],
+            2 => ['value' => 3],
+            3 => ['value' => 2],
+        ];
+
+        $reader = (new IterableDataReader($data))
+            ->withSort(
+                Sort::any()->withOrder(['value' => 'asc'])
+            );
+
+        $this->assertSame(
+            [
+                0 => ['value' => 1],
+                1 => ['value' => 2],
+                3 => ['value' => 2],
+                2 => ['value' => 3],
+            ],
+            $reader->read()
+        );
+    }
+
     private function createFilterWithNotSupportedOperator(string $operator): FilterInterface
     {
         return new class ($operator) implements FilterInterface {
