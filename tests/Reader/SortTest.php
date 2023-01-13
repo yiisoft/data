@@ -77,16 +77,12 @@ final class SortTest extends TestCase
         $this->assertSame($expected, $this->getInaccessibleProperty($sortOnly, 'config'));
     }
 
-    public function testWithOrderStringIsImmutable(): void
+    public function testImmutability(): void
     {
         $sort = Sort::any();
         $this->assertNotSame($sort, $sort->withOrderString('a'));
-    }
-
-    public function testWithOrderIsImmutable(): void
-    {
-        $sort = Sort::any();
         $this->assertNotSame($sort, $sort->withOrder([]));
+        $this->assertNotSame($sort, $sort->withoutDefaultSorting());
     }
 
     public function testWithOrderString(): void
@@ -250,6 +246,21 @@ final class SortTest extends TestCase
         $this->assertSame(
             [
                 'bee' => SORT_DESC,
+            ],
+            $sort->getCriteria()
+        );
+    }
+
+    public function testIgnoreExtraFields(): void
+    {
+        $sort = Sort::only([
+            'a', 'b',
+        ])->withOrder(['a' => 'desc', 'c' => 'asc', 'b' => 'desc']);
+
+        $this->assertSame(
+            [
+                'a' => SORT_DESC,
+                'b' => SORT_DESC,
             ],
             $sort->getCriteria()
         );
