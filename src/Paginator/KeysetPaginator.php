@@ -163,6 +163,7 @@ final class KeysetPaginator implements PaginatorInterface
 
         /** @var Sort $sort */
         $sort = $this->dataReader->getSort();
+        /** @infection-ignore-all Any value more one in line below will be ignored into `readData()` method */
         $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
 
         if ($this->isGoingToPreviousPage()) {
@@ -294,7 +295,7 @@ final class KeysetPaginator implements PaginatorInterface
     {
         $reverseFilter = $this->getReverseFilter($sort);
 
-        return !empty($dataReader->withFilter($reverseFilter)->withLimit(1)->read());
+        return !empty($dataReader->withFilter($reverseFilter)->readOne());
     }
 
     private function getFilter(Sort $sort): Compare
