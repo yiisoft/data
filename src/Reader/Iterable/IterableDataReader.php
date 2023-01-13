@@ -68,7 +68,7 @@ final class IterableDataReader implements DataReaderInterface
      */
     public function __construct(private iterable $data)
     {
-        $this->iterableFilterHandlers = $this->withFilterHandlers(
+        $this->iterableFilterHandlers = $this->prepareFilterHandlers([
             new AllHandler(),
             new AnyHandler(),
             new BetweenHandler(),
@@ -81,8 +81,8 @@ final class IterableDataReader implements DataReaderInterface
             new LessThanHandler(),
             new LessThanOrEqualHandler(),
             new LikeHandler(),
-            new NotHandler()
-        )->iterableFilterHandlers;
+            new NotHandler(),
+        ]);
     }
 
     /**
@@ -91,21 +91,10 @@ final class IterableDataReader implements DataReaderInterface
     public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static
     {
         $new = clone $this;
-        $handlers = [];
-
-        foreach ($iterableFilterHandlers as $iterableFilterHandler) {
-            if (!$iterableFilterHandler instanceof IterableFilterHandlerInterface) {
-                $message = sprintf(
-                    '%s::withFilterHandlers() accepts instances of %s only.',
-                    self::class,
-                    IterableFilterHandlerInterface::class
-                );
-                throw new DataReaderException($message);
-            }
-            $handlers[$iterableFilterHandler->getOperator()] = $iterableFilterHandler;
-        }
-
-        $new->iterableFilterHandlers = array_merge($this->iterableFilterHandlers, $handlers);
+        $new->iterableFilterHandlers = array_merge(
+            $this->iterableFilterHandlers,
+            $this->prepareFilterHandlers($iterableFilterHandlers)
+        );
         return $new;
     }
 
@@ -287,9 +276,36 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
+     * @param FilterHandlerInterface[] $filterHandlers
+     *
+     * @return IterableFilterHandlerInterface[]
+     * @psalm-return array<string, IterableFilterHandlerInterface>
+     */
+    private function prepareFilterHandlers(array $filterHandlers): array
+    {
+        $result = [];
+
+        foreach ($filterHandlers as $filterHandler) {
+            if (!$filterHandler instanceof IterableFilterHandlerInterface) {
+                throw new DataReaderException(
+                    sprintf(
+                        '%s::withFilterHandlers() accepts instances of %s only.',
+                        static::class,
+                        IterableFilterHandlerInterface::class
+                    )
+                );
+            }
+            $result[$filterHandler->getOperator()] = $filterHandler;
+        }
+
+        return $result;
+    }
+
+    /**
      * Convert iterable to array.
      *
      * @param iterable $iterable Iterable to convert.
+     *
      * @psalm-param iterable<TKey, TValue> $iterable
      *
      * @return array Resulting array.
