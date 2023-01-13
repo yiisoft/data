@@ -152,15 +152,15 @@ final class OffsetPaginator implements PaginatorInterface
             return $this->getTotalItems();
         }
 
+        if ($this->currentPage < $pages) {
+            return $this->pageSize;
+        }
+
         if ($this->currentPage === $pages) {
             return $this->getTotalItems() - $this->getOffset();
         }
 
-        if ($this->currentPage > $pages) {
-            throw new PaginatorException('Page not found.');
-        }
-
-        return $this->pageSize;
+        throw new PaginatorException('Page not found.');
     }
 
     /**
