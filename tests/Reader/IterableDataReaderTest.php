@@ -555,6 +555,30 @@ final class IterableDataReaderTest extends TestCase
         );
     }
 
+    public function testWithLimitZero(): void
+    {
+        $data = [
+            0 => ['value' => 1],
+            1 => ['value' => 2],
+            2 => ['value' => 3],
+            3 => ['value' => 2],
+        ];
+
+        $reader = (new IterableDataReader($data))
+            ->withLimit(2)
+            ->withLimit(0);
+
+        $this->assertSame(
+            [
+                0 => ['value' => 1],
+                1 => ['value' => 2],
+                2 => ['value' => 3],
+                3 => ['value' => 2],
+            ],
+            $reader->read()
+        );
+    }
+
     private function createFilterWithNotSupportedOperator(string $operator): FilterInterface
     {
         return new class ($operator) implements FilterInterface {
