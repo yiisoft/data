@@ -86,7 +86,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return static<TKey, TValue>
+     * @psalm-return $this
      */
     public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static
     {
@@ -99,7 +99,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return static<TKey, TValue>
+     * @psalm-return $this
      */
     public function withFilter(?FilterInterface $filter): static
     {
@@ -109,7 +109,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return static<TKey, TValue>
+     * @psalm-return $this
      */
     public function withLimit(int $limit): static
     {
@@ -123,7 +123,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return static<TKey, TValue>
+     * @psalm-return $this
      */
     public function withOffset(int $offset): static
     {
@@ -133,7 +133,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return static<TKey, TValue>
+     * @psalm-return $this
      */
     public function withSort(?Sort $sort): static
     {

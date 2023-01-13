@@ -16,6 +16,7 @@ interface SortableDataInterface
      * @param Sort|null $sort Sorting criteria or null for no sorting.
      *
      * @return static New instance.
+     * @psalm-return $this
      */
     public function withSort(?Sort $sort): static;
 
