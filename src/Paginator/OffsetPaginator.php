@@ -57,7 +57,7 @@ final class OffsetPaginator implements PaginatorInterface
     /**
      * @param ReadableDataInterface $dataReader Data reader being paginated.
      * @psalm-param ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface $dataReader
-     * @psalm-suppress DocblockTypeContradiction
+     * @psalm-suppress DocblockTypeContradiction Need for allow to validate `$dataReader`
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
