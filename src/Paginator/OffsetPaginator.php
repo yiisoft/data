@@ -55,11 +55,6 @@ final class OffsetPaginator implements PaginatorInterface
     private ReadableDataInterface $dataReader;
 
     /**
-     * @psalm-var ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface|null
-     */
-    private ?ReadableDataInterface $cachedReader = null;
-
-    /**
      * @param ReadableDataInterface $dataReader Data reader being paginated.
      * @psalm-param ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface $dataReader
      * @psalm-suppress DocblockTypeContradiction
@@ -101,7 +96,6 @@ final class OffsetPaginator implements PaginatorInterface
 
         $new = clone $this;
         $new->pageSize = $pageSize;
-        $new->cachedReader = null;
         return $new;
     }
 
@@ -122,7 +116,6 @@ final class OffsetPaginator implements PaginatorInterface
 
         $new = clone $this;
         $new->currentPage = $page;
-        $new->cachedReader = null;
         return $new;
     }
 
@@ -210,20 +203,14 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function read(): iterable
     {
-        if ($this->cachedReader !== null) {
-            yield from $this->cachedReader->read();
-            return;
-        }
-
         if ($this->currentPage > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found.');
         }
 
-        $this->cachedReader = $this->dataReader
+        yield from $this->dataReader
             ->withLimit($this->pageSize)
-            ->withOffset($this->getOffset());
-
-        yield from $this->cachedReader->read();
+            ->withOffset($this->getOffset())
+            ->read();
     }
 
     public function isOnFirstPage(): bool
