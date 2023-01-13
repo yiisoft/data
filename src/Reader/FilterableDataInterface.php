@@ -23,6 +23,7 @@ interface FilterableDataInterface
      * @param FilterInterface $filter Data reading criteria.
      *
      * @return static New instance.
+     * @psalm-return $this
      */
     public function withFilter(FilterInterface $filter): static;
 
@@ -32,6 +33,7 @@ interface FilterableDataInterface
      * @param FilterHandlerInterface ...$iterableFilterHandlers Additional iterable handlers.
      *
      * @return static New instance.
+     * @psalm-return $this
      */
     public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static;
 }

@@ -50,7 +50,7 @@ use function uasort;
  *
  * @implements DataReaderInterface<TKey, TValue>
  */
-class IterableDataReader implements DataReaderInterface
+final class IterableDataReader implements DataReaderInterface
 {
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
@@ -66,7 +66,7 @@ class IterableDataReader implements DataReaderInterface
      * @param iterable $data Data to iterate.
      * @psalm-param iterable<TKey, TValue> $data
      */
-    public function __construct(protected iterable $data)
+    public function __construct(private iterable $data)
     {
         $this->iterableFilterHandlers = $this->prepareFilterHandlers([
             new AllHandler(),
@@ -85,6 +85,9 @@ class IterableDataReader implements DataReaderInterface
         ]);
     }
 
+    /**
+     * @psalm-return $this
+     */
     public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static
     {
         $new = clone $this;
@@ -95,6 +98,9 @@ class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-return $this
+     */
     public function withFilter(?FilterInterface $filter): static
     {
         $new = clone $this;
@@ -102,6 +108,9 @@ class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-return $this
+     */
     public function withLimit(int $limit): static
     {
         if ($limit < 0) {
@@ -113,6 +122,9 @@ class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-return $this
+     */
     public function withOffset(int $offset): static
     {
         $new = clone $this;
@@ -120,6 +132,9 @@ class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
+    /**
+     * @psalm-return $this
+     */
     public function withSort(?Sort $sort): static
     {
         $new = clone $this;
@@ -192,7 +207,7 @@ class IterableDataReader implements DataReaderInterface
      *
      * @return bool Whether an item matches iterable filter.
      */
-    protected function matchFilter(array|object $item, array $filter): bool
+    private function matchFilter(array|object $item, array $filter): bool
     {
         $operation = array_shift($filter);
         $arguments = $filter;

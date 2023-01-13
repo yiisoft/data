@@ -14,7 +14,8 @@ interface OffsetableDataInterface
      *
      * @param int $offset Offset.
      *
-     * @return static New instance.
+     * @return $this New instance.
+     * @psalm-return $this
      */
     public function withOffset(int $offset): static;
 }

@@ -23,6 +23,7 @@ interface ReadableDataInterface
      * @throws InvalidArgumentException If limit is less than 0.
      *
      * @return static New instance.
+     * @psalm-return $this
      */
     public function withLimit(int $limit): static;
 
