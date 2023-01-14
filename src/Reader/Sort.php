@@ -280,17 +280,14 @@ final class Sort
         $config = $this->config;
 
         foreach ($this->currentOrder as $field => $direction) {
-            $fieldExists = array_key_exists($field, $config);
-
-            if (!$fieldExists) {
+            if (array_key_exists($field, $config)) {
+                $criteria += $config[$field][$direction];
+                unset($config[$field]);
+            } else {
                 if ($this->ignoreExtraFields) {
                     continue;
                 }
-
                 $criteria += [$field => $direction];
-            } else {
-                $criteria += $config[$field][$direction];
-                unset($config[$field]);
             }
         }
 

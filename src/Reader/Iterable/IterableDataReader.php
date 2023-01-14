@@ -173,6 +173,7 @@ final class IterableDataReader implements DataReaderInterface
         foreach ($sortedData as $key => $item) {
             // Do not return more than limit items.
             if ($this->limit > 0 && count($data) === $this->limit) {
+                /** @infection-ignore-all Here continue === break */
                 break;
             }
 
@@ -193,6 +194,7 @@ final class IterableDataReader implements DataReaderInterface
 
     public function readOne(): array|object|null
     {
+        /** @infection-ignore-all Any value more one in `withLimit()` will be ignored because returned `current()` */
         return $this
             ->withLimit(1)
             ->getIterator()
@@ -251,6 +253,7 @@ final class IterableDataReader implements DataReaderInterface
 
         if ($criteria !== []) {
             $items = $this->iterableToArray($items);
+            /** @infection-ignore-all */
             uasort(
                 $items,
                 static function (array|object $itemA, array|object $itemB) use ($criteria) {

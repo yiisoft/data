@@ -27,6 +27,7 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\CompareHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Tests\Support\CustomFilter\Digital;
 use Yiisoft\Data\Tests\Support\CustomFilter\DigitalHandler;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -383,25 +384,11 @@ final class IterableDataReaderTest extends TestCase
 
     public function testCustomFilter(): void
     {
-        $digitalFilter = new class /*Digital*/ ('name') implements FilterInterface {
-            public function __construct(private string $field)
-            {
-            }
-
-            public function toCriteriaArray(): array
-            {
-                return [self::getOperator(), $this->field];
-            }
-
-            public static function getOperator(): string
-            {
-                return 'digital';
-            }
-        };
-
         $reader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withFilterHandlers(new DigitalHandler())
-            ->withFilter($digitalFilter);
+            ->withFilter(
+                new All(new GreaterThan('id', 0), new Digital('name'))
+            );
 
         $filtered = $reader->read();
         $this->assertSame([4 => self::ITEM_5], $filtered);
@@ -528,6 +515,55 @@ final class IterableDataReaderTest extends TestCase
         $this->assertSame(['two', 'three'], array_keys($rows));
         $this->assertSame(2, $rows['two']->a);
         $this->assertSame(3, $rows['three']->a);
+    }
+
+    public function testSortingWithSameValues(): void
+    {
+        $data = [
+            0 => ['value' => 1],
+            1 => ['value' => 2],
+            2 => ['value' => 3],
+            3 => ['value' => 2],
+        ];
+
+        $reader = (new IterableDataReader($data))
+            ->withSort(
+                Sort::any()->withOrder(['value' => 'asc'])
+            );
+
+        $this->assertSame(
+            [
+                0 => ['value' => 1],
+                1 => ['value' => 2],
+                3 => ['value' => 2],
+                2 => ['value' => 3],
+            ],
+            $reader->read()
+        );
+    }
+
+    public function testWithLimitZero(): void
+    {
+        $data = [
+            0 => ['value' => 1],
+            1 => ['value' => 2],
+            2 => ['value' => 3],
+            3 => ['value' => 2],
+        ];
+
+        $reader = (new IterableDataReader($data))
+            ->withLimit(2)
+            ->withLimit(0);
+
+        $this->assertSame(
+            [
+                0 => ['value' => 1],
+                1 => ['value' => 2],
+                2 => ['value' => 3],
+                3 => ['value' => 2],
+            ],
+            $reader->read()
+        );
     }
 
     private function createFilterWithNotSupportedOperator(string $operator): FilterInterface
