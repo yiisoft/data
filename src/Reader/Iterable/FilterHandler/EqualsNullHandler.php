@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
@@ -18,7 +19,7 @@ final class EqualsNullHandler implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\EqualsNull::getOperator();
+        return EqualsNull::getOperator();
     }
 
     public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool

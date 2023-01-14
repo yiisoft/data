@@ -293,7 +293,7 @@ final class IterableDataReader implements DataReaderInterface
                 throw new DataReaderException(
                     sprintf(
                         '%s::withFilterHandlers() accepts instances of %s only.',
-                        static::class,
+                        self::class,
                         IterableFilterHandlerInterface::class
                     )
                 );

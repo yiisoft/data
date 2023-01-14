@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
@@ -20,7 +21,7 @@ final class BetweenHandler implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\Between::getOperator();
+        return Between::getOperator();
     }
 
     public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool

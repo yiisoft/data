@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
+use Yiisoft\Data\Reader\Filter\In;
+
 use function in_array;
 use function is_array;
 
@@ -14,7 +16,7 @@ final class InHandler extends CompareHandler
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\In::getOperator();
+        return In::getOperator();
     }
 
     protected function compare(mixed $itemValue, mixed $argumentValue): bool

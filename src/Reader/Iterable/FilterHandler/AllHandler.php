@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
+use Yiisoft\Data\Reader\Filter\All;
+
 use function in_array;
 
 /**
@@ -14,7 +16,7 @@ final class AllHandler extends GroupHandler
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\All::getOperator();
+        return All::getOperator();
     }
 
     protected function checkResults(array $results): bool

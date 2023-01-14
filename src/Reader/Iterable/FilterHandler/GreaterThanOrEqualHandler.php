@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use DateTimeInterface;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 
 /**
  * `GreaterThanOrEqual` iterable filter handler checks that the item's field value
@@ -14,7 +15,7 @@ final class GreaterThanOrEqualHandler extends CompareHandler
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\GreaterThanOrEqual::getOperator();
+        return GreaterThanOrEqual::getOperator();
     }
 
     protected function compare(mixed $itemValue, mixed $argumentValue): bool
