@@ -72,7 +72,7 @@ abstract class Group implements FilterInterface
      *
      * @return static New instance.
      *
-     * @psalm-suppress DocblockTypeContradiction Need for allow to validate `$criteriaArray`
+     * @psalm-suppress DocblockTypeContradiction Needed to allow to validation of `$criteriaArray`
      */
     public function withCriteriaArray(array $criteriaArray): static
     {
