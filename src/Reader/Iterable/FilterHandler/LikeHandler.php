@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
+use Yiisoft\Data\Reader\Filter\Like;
+
 use function is_string;
 use function stripos;
 
@@ -14,7 +16,7 @@ final class LikeHandler extends CompareHandler
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\Like::getOperator();
+        return Like::getOperator();
     }
 
     protected function compare(mixed $itemValue, mixed $argumentValue): bool

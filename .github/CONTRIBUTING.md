@@ -19,5 +19,5 @@ Since Yii 3 consists of many packages, we have a [special development tool](http
 If you don't have any particular package in mind to start with:
 
 - [Check roadmap](https://github.com/yiisoft/docs/blob/master/003-roadmap.md).
-- Check package issues at github. Usually there are some.
+- Check package issues at GitHub. Usually there are some.
 - Ask @samdark.

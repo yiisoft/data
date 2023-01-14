@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
@@ -21,7 +22,7 @@ final class NotHandler implements IterableFilterHandlerInterface
 {
     public function getOperator(): string
     {
-        return \Yiisoft\Data\Reader\Filter\Not::getOperator();
+        return Not::getOperator();
     }
 
     public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool
