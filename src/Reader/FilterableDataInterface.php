@@ -30,10 +30,10 @@ interface FilterableDataInterface
     /**
      * Returns new instance with additional handlers set.
      *
-     * @param FilterHandlerInterface ...$iterableFilterHandlers Additional iterable handlers.
+     * @param FilterHandlerInterface ...$filterHandlers Additional filter handlers.
      *
      * @return static New instance.
      * @psalm-return $this
      */
-    public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterHandlers): static;
+    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static;
 }

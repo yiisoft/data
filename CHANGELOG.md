@@ -2,7 +2,8 @@
 
 ## 1.0.1 under development
 
-- no changes in this release.
+- Chg #137: In `FilterableDataInterface::withFilterHandlers()` rename parameter `$iterableFilterHandlers` to
+  `$filterHandlers` (@vjik)
 
 ## 1.0.0 January 14, 2023
 
