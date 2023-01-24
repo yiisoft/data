@@ -1,5 +1,5 @@
 {
-    "name": "yiisoft/data",
+    "name": "rossaddison/data",
     "type": "library",
     "description": "Data providers, pagination and related abstractions",
     "keywords": [
