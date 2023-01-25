@@ -532,7 +532,7 @@ final class KeysetPaginatorTest extends Testcase
                 return clone $this;
             }
 
-            public function withFilterHandlers(FilterHandlerInterface ...$iterableFilterUnits): static
+            public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
             {
                 return clone $this;
             }
