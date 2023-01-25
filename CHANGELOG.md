@@ -1,6 +1,6 @@
 # Yii Data Change Log
 
-## 1.0.1 under development
+## 1.0.1 January 25, 2023
 
 - Chg #137: In `FilterableDataInterface::withFilterHandlers()` rename parameter `$iterableFilterHandlers` to
   `$filterHandlers` (@vjik)
