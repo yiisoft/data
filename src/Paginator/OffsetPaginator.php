@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Paginator;
 
 use Generator;
 use InvalidArgumentException;
+use JsonSerializable;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
@@ -35,7 +36,7 @@ use function sprintf;
  *
  * @implements PaginatorInterface<TKey, TValue>
  */
-final class OffsetPaginator implements PaginatorInterface
+final class OffsetPaginator implements PaginatorInterface, JsonSerializable
 {
     /**
      * @var int Current page number.
@@ -235,5 +236,16 @@ final class OffsetPaginator implements PaginatorInterface
     private function getInternalTotalPages(): int
     {
         return max(1, $this->getTotalPages());
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'currentPage' => $this->currentPage,
+            'pageSize' => $this->pageSize,
+            'totalPages' => $this->getTotalPages(),
+            'totalItems' => $this->getTotalItems(),
+            'items' => $this->read(),
+        ];
     }
 }
