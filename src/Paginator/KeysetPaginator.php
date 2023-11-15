@@ -13,6 +13,7 @@ use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -49,7 +50,7 @@ final class KeysetPaginator implements PaginatorInterface
     /**
      * Data reader being paginated.
      *
-     * @psalm-var ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface
+     * @psalm-var ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface
      */
     private ReadableDataInterface $dataReader;
 
@@ -82,11 +83,18 @@ final class KeysetPaginator implements PaginatorInterface
 
     /**
      * @param ReadableDataInterface $dataReader Data reader being paginated.
-     * @psalm-param ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface $dataReader
+     * @psalm-param ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface $dataReader
      * @psalm-suppress DocblockTypeContradiction Needed to allow validating `$dataReader`
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
+        if (!$dataReader instanceof LimitableDataInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'Data reader should implement "%s" to be used with keyset paginator.',
+                LimitableDataInterface::class,
+            ));
+        }
+
         if (!$dataReader instanceof FilterableDataInterface) {
             throw new InvalidArgumentException(sprintf(
                 'Data reader should implement "%s" to be used with keyset paginator.',
@@ -289,7 +297,7 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-param ReadableDataInterface<TKey, TValue>&FilterableDataInterface&SortableDataInterface $dataReader
+     * @psalm-param ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface $dataReader
      */
     private function previousPageExist(ReadableDataInterface $dataReader, Sort $sort): bool
     {

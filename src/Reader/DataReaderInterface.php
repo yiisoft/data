@@ -20,10 +20,12 @@ use IteratorAggregate;
  * @template TValue as array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
+ * @extends LimitableDataInterface<TKey, TValue>
  * @extends IteratorAggregate<TKey, TValue>
  */
 interface DataReaderInterface extends
     ReadableDataInterface,
+    LimitableDataInterface,
     OffsetableDataInterface,
     CountableDataInterface,
     SortableDataInterface,
