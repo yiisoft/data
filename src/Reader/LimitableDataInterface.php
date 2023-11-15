@@ -12,7 +12,6 @@ use InvalidArgumentException;
  */
 interface LimitableDataInterface
 {
-
     /**
      * Get a new instance with limit set.
      *
