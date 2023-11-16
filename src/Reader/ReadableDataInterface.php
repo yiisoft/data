@@ -21,7 +21,7 @@ interface ReadableDataInterface
     public function read(): iterable;
 
     /**
-     * Get a next item from the data set.
+     * Get one item from the data set.
      *
      * @return array|object|null An item or null if there is none.
      * @psalm-return TValue|null
