@@ -6,6 +6,9 @@ namespace Yiisoft\Data\Reader;
 
 use InvalidArgumentException;
 
+/**
+ * Data that could be limited.
+ */
 interface LimitableDataInterface
 {
     /**
