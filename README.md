@@ -265,6 +265,7 @@ Additional interfaces could be implemented in order to support different paginat
 
 - `CountableDataInterface` - allows getting total number of items in data reader.
 - `FilterableDataInterface` - allows returning subset of items based on criteria.
+- `LimitableDataInterface` - allows returning limited subset of items.
 - `SortableDataInterface` - allows sorting by one or multiple fields.
 - `OffsetableDataInterface` - allows to skip first N items when reading data.
 
