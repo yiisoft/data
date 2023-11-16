@@ -17,6 +17,7 @@ use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -77,6 +78,17 @@ final class KeysetPaginatorTest extends Testcase
         ));
 
         new KeysetPaginator($this->getNonSortableDataReader());
+    }
+
+    public function testDataReaderWithoutLimitableInterface(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(sprintf(
+            'Data reader should implement "%s" to be used with keyset paginator.',
+            LimitableDataInterface::class,
+        ));
+
+        new KeysetPaginator($this->getNonLimitableDataReader());
     }
 
     public function testThrowsExceptionWhenReaderHasNoSort(): void
@@ -509,9 +521,44 @@ final class KeysetPaginatorTest extends Testcase
         return $result;
     }
 
+    private function getNonLimitableDataReader()
+    {
+        return new class () implements ReadableDataInterface, SortableDataInterface, FilterableDataInterface {
+            public function withSort(?Sort $sort): static
+            {
+                return clone $this;
+            }
+
+            public function getSort(): ?Sort
+            {
+                return Sort::only([]);
+            }
+
+            public function read(): iterable
+            {
+                return [];
+            }
+
+            public function readOne(): array|object|null
+            {
+                return null;
+            }
+
+            public function withFilter(FilterInterface $filter): static
+            {
+                return clone $this;
+            }
+
+            public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+            {
+                return clone $this;
+            }
+        };
+    }
+
     private function getNonSortableDataReader()
     {
-        return new class () implements ReadableDataInterface, FilterableDataInterface {
+        return new class () implements ReadableDataInterface, LimitableDataInterface, FilterableDataInterface {
             public function withLimit(int $limit): static
             {
                 return clone $this;
@@ -541,7 +588,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonFilterableDataReader()
     {
-        return new class () implements ReadableDataInterface, SortableDataInterface {
+        return new class () implements ReadableDataInterface, LimitableDataInterface, SortableDataInterface {
             public function withLimit(int $limit): static
             {
                 return clone $this;
