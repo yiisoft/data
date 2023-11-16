@@ -6,10 +6,6 @@ namespace Yiisoft\Data\Reader;
 
 use InvalidArgumentException;
 
-/**
- * @template TKey as array-key
- * @template TValue as array|object
- */
 interface LimitableDataInterface
 {
     /**
@@ -23,12 +19,4 @@ interface LimitableDataInterface
      * @psalm-return $this
      */
     public function withLimit(int $limit): static;
-
-    /**
-     * Get a next item from the data set.
-     *
-     * @return array|object|null An item or null if there is none.
-     * @psalm-return TValue|null
-     */
-    public function readOne(): array|object|null;
 }

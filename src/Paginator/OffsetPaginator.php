@@ -62,13 +62,6 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
-        if (!$dataReader instanceof LimitableDataInterface) {
-            throw new InvalidArgumentException(sprintf(
-                'Data reader should implement "%s" in order to be used with offset paginator.',
-                LimitableDataInterface::class,
-            ));
-        }
-
         if (!$dataReader instanceof OffsetableDataInterface) {
             throw new InvalidArgumentException(sprintf(
                 'Data reader should implement "%s" in order to be used with offset paginator.',
@@ -80,6 +73,13 @@ final class OffsetPaginator implements PaginatorInterface
             throw new InvalidArgumentException(sprintf(
                 'Data reader should implement "%s" in order to be used with offset paginator.',
                 CountableDataInterface::class,
+            ));
+        }
+
+        if (!$dataReader instanceof LimitableDataInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'Data reader should implement "%s" in order to be used with offset paginator.',
+                LimitableDataInterface::class,
             ));
         }
 
@@ -219,6 +219,14 @@ final class OffsetPaginator implements PaginatorInterface
             ->withLimit($this->pageSize)
             ->withOffset($this->getOffset())
             ->read();
+    }
+
+    public function readOne(): array|object|null
+    {
+        return $this->dataReader
+            ->withLimit(1)
+            ->withOffset($this->getOffset())
+            ->readOne();
     }
 
     public function isOnFirstPage(): bool

@@ -20,4 +20,12 @@ interface ReadableDataInterface
      * @psalm-return iterable<TKey, TValue>
      */
     public function read(): iterable;
+
+    /**
+     * Get a next item from the data set.
+     *
+     * @return array|object|null An item or null if there is none.
+     * @psalm-return TValue|null
+     */
+    public function readOne(): array|object|null;
 }

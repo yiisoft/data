@@ -88,13 +88,6 @@ final class KeysetPaginator implements PaginatorInterface
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
-        if (!$dataReader instanceof LimitableDataInterface) {
-            throw new InvalidArgumentException(sprintf(
-                'Data reader should implement "%s" to be used with keyset paginator.',
-                LimitableDataInterface::class,
-            ));
-        }
-
         if (!$dataReader instanceof FilterableDataInterface) {
             throw new InvalidArgumentException(sprintf(
                 'Data reader should implement "%s" to be used with keyset paginator.',
@@ -106,6 +99,13 @@ final class KeysetPaginator implements PaginatorInterface
             throw new InvalidArgumentException(sprintf(
                 'Data reader should implement "%s" to be used with keyset paginator.',
                 SortableDataInterface::class,
+            ));
+        }
+
+        if (!$dataReader instanceof LimitableDataInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'Data reader should implement "%s" to be used with keyset paginator.',
+                LimitableDataInterface::class,
             ));
         }
 
@@ -191,6 +191,15 @@ final class KeysetPaginator implements PaginatorInterface
         }
 
         return $this->readCache = $data;
+    }
+
+    public function readOne(): array|object|null
+    {
+        foreach ($this->read() as $item) {
+            return $item;
+        }
+
+        return null;
     }
 
     public function getPageSize(): int
