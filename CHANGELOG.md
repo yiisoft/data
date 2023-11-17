@@ -3,7 +3,7 @@
 ## 2.0.0 under development
 
 - New #150: Extract `withLimit()` from `ReadableDataInterface` to `LimitableDataInterface` (@vjik)
-- Enh #150: `PaginatorInterface` is extend `ReadableDataInterface` (@vjik)
+- Enh #150: `PaginatorInterface` now extends `ReadableDataInterface` (@vjik)
 
 ## 1.0.1 January 25, 2023
 
