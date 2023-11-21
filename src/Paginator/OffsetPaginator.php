@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Paginator;
 use Generator;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\CountableDataInterface;
+use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -50,13 +51,13 @@ final class OffsetPaginator implements PaginatorInterface
     /**
      * Data reader being paginated.
      *
-     * @psalm-var ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface
+     * @psalm-var ReadableDataInterface<TKey, TValue>&LimitableDataInterface&OffsetableDataInterface&CountableDataInterface
      */
     private ReadableDataInterface $dataReader;
 
     /**
      * @param ReadableDataInterface $dataReader Data reader being paginated.
-     * @psalm-param ReadableDataInterface<TKey, TValue>&OffsetableDataInterface&CountableDataInterface $dataReader
+     * @psalm-param ReadableDataInterface<TKey, TValue>&LimitableDataInterface&OffsetableDataInterface&CountableDataInterface $dataReader
      * @psalm-suppress DocblockTypeContradiction Needed to allow validating `$dataReader`
      */
     public function __construct(ReadableDataInterface $dataReader)
@@ -72,6 +73,13 @@ final class OffsetPaginator implements PaginatorInterface
             throw new InvalidArgumentException(sprintf(
                 'Data reader should implement "%s" in order to be used with offset paginator.',
                 CountableDataInterface::class,
+            ));
+        }
+
+        if (!$dataReader instanceof LimitableDataInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'Data reader should implement "%s" in order to be used with offset paginator.',
+                LimitableDataInterface::class,
             ));
         }
 
@@ -211,6 +219,14 @@ final class OffsetPaginator implements PaginatorInterface
             ->withLimit($this->pageSize)
             ->withOffset($this->getOffset())
             ->read();
+    }
+
+    public function readOne(): array|object|null
+    {
+        return $this->dataReader
+            ->withLimit(1)
+            ->withOffset($this->getOffset())
+            ->readOne();
     }
 
     public function isOnFirstPage(): bool

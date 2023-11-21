@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 
 /**
@@ -14,8 +15,10 @@ use Yiisoft\Data\Reader\Sort;
  *
  * @template TKey as array-key
  * @template TValue as array|object
+ *
+ * @extends ReadableDataInterface<TKey, TValue>
  */
-interface PaginatorInterface
+interface PaginatorInterface extends ReadableDataInterface
 {
     /**
      * Page size that is used in case it is not set explicitly.

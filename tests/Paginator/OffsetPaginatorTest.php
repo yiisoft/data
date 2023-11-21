@@ -10,6 +10,7 @@ use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -117,6 +118,45 @@ final class OffsetPaginatorTest extends TestCase
         ));
 
         new OffsetPaginator($nonCountableDataReader);
+    }
+
+    public function testDataReaderWithoutLimitableInterface(): void
+    {
+        $nonLimitableDataReader = new class () implements
+            ReadableDataInterface,
+            CountableDataInterface,
+            OffsetableDataInterface {
+            public function read(): iterable
+            {
+                return [];
+            }
+
+            public function readOne(): array|object|null
+            {
+                return null;
+            }
+
+            public function count(): int
+            {
+                return 0;
+            }
+
+            public function withOffset(int $offset): static
+            {
+                // do nothing
+                return $this;
+            }
+        };
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'Data reader should implement "%s" in order to be used with offset paginator.',
+                LimitableDataInterface::class,
+            )
+        );
+
+        new OffsetPaginator($nonLimitableDataReader);
     }
 
     public function testDefaultState(): void
@@ -251,6 +291,37 @@ final class OffsetPaginatorTest extends TestCase
         ];
 
         $this->assertSame($expected, array_values($this->iterableToArray($paginator->read())));
+    }
+
+    public function dataReadOne(): array
+    {
+        $data = [];
+
+        $data['empty'] = [
+            null,
+            new OffsetPaginator(new IterableDataReader([])),
+        ];
+
+        $data['base'] = [
+            ['id' => 2, 'name' => 'John'],
+            (new OffsetPaginator(
+                new IterableDataReader([
+                    ['id' => 1, 'name' => 'Mike'],
+                    ['id' => 2, 'name' => 'John'],
+                ])
+            ))->withPageSize(1)->withCurrentPage(2),
+        ];
+
+        return $data;
+    }
+
+    /**
+     * @dataProvider dataReadOne
+     */
+    public function testReadOne(mixed $expected, OffsetPaginator $paginator): void
+    {
+        $result = $paginator->readOne();
+        $this->assertSame($expected, $result);
     }
 
     public function testTotalPages(): void

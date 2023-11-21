@@ -17,6 +17,7 @@ use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -77,6 +78,49 @@ final class KeysetPaginatorTest extends Testcase
         ));
 
         new KeysetPaginator($this->getNonSortableDataReader());
+    }
+
+    public function testDataReaderWithoutLimitableInterface(): void
+    {
+        $dataReader = new class () implements ReadableDataInterface, SortableDataInterface, FilterableDataInterface {
+            public function withSort(?Sort $sort): static
+            {
+                return clone $this;
+            }
+
+            public function getSort(): ?Sort
+            {
+                return Sort::only([]);
+            }
+
+            public function read(): iterable
+            {
+                return [];
+            }
+
+            public function readOne(): array|object|null
+            {
+                return null;
+            }
+
+            public function withFilter(FilterInterface $filter): static
+            {
+                return clone $this;
+            }
+
+            public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+            {
+                return clone $this;
+            }
+        };
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(sprintf(
+            'Data reader should implement "%s" to be used with keyset paginator.',
+            LimitableDataInterface::class,
+        ));
+
+        new KeysetPaginator($dataReader);
     }
 
     public function testThrowsExceptionWhenReaderHasNoSort(): void
@@ -254,6 +298,40 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($expected, array_values($this->iterableToArray($paginator->read())));
         $last = end($expected);
         $this->assertSame((string)$last['name'], $paginator->getNextPageToken());
+    }
+
+    public function dataReadOne(): array
+    {
+        $data = [];
+
+        $data['empty'] = [
+            null,
+            new KeysetPaginator(
+                (new IterableDataReader([]))->withSort(Sort::only(['id'])->withOrderString('id'))
+            ),
+        ];
+
+        $data['base'] = [
+            ['id' => 2, 'name' => 'John'],
+            new KeysetPaginator(
+                (new IterableDataReader([
+                    ['id' => 1, 'name' => 'Mike'],
+                    ['id' => 2, 'name' => 'John'],
+                ]))
+                    ->withSort(Sort::only(['id'])->withOrderString('-id'))
+            ),
+        ];
+
+        return $data;
+    }
+
+    /**
+     * @dataProvider dataReadOne
+     */
+    public function testReadOne(mixed $expected, KeysetPaginator $paginator): void
+    {
+        $result = $paginator->readOne();
+        $this->assertSame($expected, $result);
     }
 
     public function testBackwardPagination(): void
@@ -511,7 +589,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonSortableDataReader()
     {
-        return new class () implements ReadableDataInterface, FilterableDataInterface {
+        return new class () implements ReadableDataInterface, LimitableDataInterface, FilterableDataInterface {
             public function withLimit(int $limit): static
             {
                 return clone $this;
@@ -541,7 +619,7 @@ final class KeysetPaginatorTest extends Testcase
 
     private function getNonFilterableDataReader()
     {
-        return new class () implements ReadableDataInterface, SortableDataInterface {
+        return new class () implements ReadableDataInterface, LimitableDataInterface, SortableDataInterface {
             public function withLimit(int $limit): static
             {
                 return clone $this;

@@ -1,8 +1,9 @@
 # Yii Data Change Log
 
-## 1.0.2 under development
+## 2.0.0 under development
 
-- no changes in this release.
+- New #150: Extract `withLimit()` from `ReadableDataInterface` into `LimitableDataInterface` (@vjik)
+- Enh #150: `PaginatorInterface` now extends `ReadableDataInterface` (@vjik)
 
 ## 1.0.1 January 25, 2023
 

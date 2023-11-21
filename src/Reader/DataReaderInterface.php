@@ -24,6 +24,7 @@ use IteratorAggregate;
  */
 interface DataReaderInterface extends
     ReadableDataInterface,
+    LimitableDataInterface,
     OffsetableDataInterface,
     CountableDataInterface,
     SortableDataInterface,
