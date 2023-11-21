@@ -21,7 +21,7 @@ interface ReadableDataInterface
     public function read(): iterable;
 
     /**
-     * Get the first item from the data set.
+     * Get one item from the data set. Which item is returned is up to implementation.
      * Note that invoking this method does not impact the data set or its pointer.
      *
      * @return array|object|null An item or null if there is none.
