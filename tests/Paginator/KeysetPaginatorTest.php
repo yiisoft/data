@@ -393,7 +393,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         $this->assertTrue($paginator->isOnFirstPage());
-        $this->assertTrue($paginator->isRequired());
+        $this->assertTrue($paginator->isPaginationRequired());
     }
 
     public function testIsOnLastPage(): void
@@ -416,20 +416,20 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = $paginator->withNextPageToken('2');
         $this->assertFalse($paginator->isOnLastPage());
-        $this->assertTrue($paginator->isRequired());
+        $this->assertTrue($paginator->isPaginationRequired());
     }
 
-    public function testIsRequired(): void
+    public function testIsPaginationRequired(): void
     {
         $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader($this->getDataSet()))->withSort($sort);
         $paginator = new KeysetPaginator($dataReader);
 
-        $this->assertFalse($paginator->isRequired());
+        $this->assertFalse($paginator->isPaginationRequired());
 
         $paginator = $paginator->withPageSize(2);
 
-        $this->assertTrue($paginator->isRequired());
+        $this->assertTrue($paginator->isPaginationRequired());
     }
 
     public function testCurrentPageSize(): void

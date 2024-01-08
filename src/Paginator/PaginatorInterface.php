@@ -130,5 +130,5 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @return bool Whether pagination is required.
      */
-    public function isRequired(): bool;
+    public function isPaginationRequired(): bool;
 }
