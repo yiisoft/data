@@ -167,15 +167,15 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertSame(0, $paginator->getOffset());
         $this->assertSame(1, $paginator->getCurrentPage());
         $this->assertTrue($paginator->isOnFirstPage());
-        $this->assertFalse($paginator->isRequired());
+        $this->assertFalse($paginator->isPaginationRequired());
     }
 
-    public function testIsRequired(): void
+    public function testIsPaginationRequired(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))->withPageSize(2);
 
-        $this->assertTrue($paginator->isRequired());
+        $this->assertTrue($paginator->isPaginationRequired());
     }
 
     public function testGetTotalItems(): void
@@ -463,7 +463,7 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertSame(1, $paginator->getCurrentPage());
         $this->assertTrue($paginator->isOnFirstPage());
         $this->assertTrue($paginator->isOnLastPage());
-        $this->assertFalse($paginator->isRequired());
+        $this->assertFalse($paginator->isPaginationRequired());
         $this->assertSame([], $this->iterableToArray($paginator->read()));
     }
 

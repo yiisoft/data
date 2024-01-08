@@ -4,6 +4,7 @@
 
 - New #150: Extract `withLimit()` from `ReadableDataInterface` into `LimitableDataInterface` (@vjik)
 - Enh #150: `PaginatorInterface` now extends `ReadableDataInterface` (@vjik)
+- Chg #151: Rename `isRequired()` method in `PaginatorInterface` to `isPaginationRequired()` (@vjik)
 
 ## 1.0.1 January 25, 2023
 
