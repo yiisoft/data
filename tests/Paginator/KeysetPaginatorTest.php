@@ -903,11 +903,10 @@ final class KeysetPaginatorTest extends Testcase
                         return $context->sorting === SORT_ASC
                             ? new LessThanOrEqual($context->field, $context->value)
                             : new GreaterThanOrEqual($context->field, $context->value);
-                    } else {
-                        return $context->sorting === SORT_ASC
-                            ? new GreaterThan($context->field, $context->value)
-                            : new LessThan($context->field, $context->value);
                     }
+                    return $context->sorting === SORT_ASC
+                        ? new GreaterThan($context->field, $context->value)
+                        : new LessThan($context->field, $context->value);
                 }
             );
 
