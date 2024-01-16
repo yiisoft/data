@@ -362,7 +362,7 @@ final class KeysetPaginator implements PaginatorInterface
             return $value;
         }
 
-        return call_user_func($this->valueCaster, $value);
+        return ($this->valueCaster)($value);
     }
 
     private function reverseSort(Sort $sort): Sort
