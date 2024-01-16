@@ -821,7 +821,7 @@ final class KeysetPaginatorTest extends Testcase
                 [
                     'id' => 4,
                     'name' => 'Agent J',
-                ]
+                ],
             ],
             array_values($paginator->read())
         );
