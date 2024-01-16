@@ -8,12 +8,12 @@ use Closure;
 use InvalidArgumentException;
 use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\Compare;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -46,7 +46,7 @@ use function sprintf;
  *
  * @implements PaginatorInterface<TKey, TValue>
  *
- * @psalm-type ValueCaster = Closure(string,string):string
+ * @psalm-type FilterCallback = Closure(GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual,KeysetFilterContext):FilterInterface
  */
 final class KeysetPaginator implements PaginatorInterface
 {
@@ -77,9 +77,9 @@ final class KeysetPaginator implements PaginatorInterface
     private bool $hasNextPage = false;
 
     /**
-     * @psalm-var ValueCaster|null
+     * @psalm-var FilterCallback|null
      */
-    private ?Closure $valueCaster = null;
+    private ?Closure $filterCallback = null;
 
     /**
      * Reader cache against repeated scans.
@@ -169,12 +169,12 @@ final class KeysetPaginator implements PaginatorInterface
     /**
      * Returns a new instance with defined closure for preparing the page value before use in data reader filters.
      *
-     * @psalm-param ValueCaster|null $closure
+     * @psalm-param FilterCallback|null $callback
      */
-    public function withValueCaster(?Closure $closure): self
+    public function withFilterCallback(?Closure $callback): self
     {
         $new = clone $this;
-        $new->valueCaster = $closure;
+        $new->filterCallback = $callback;
         return $new;
     }
 
@@ -334,32 +334,57 @@ final class KeysetPaginator implements PaginatorInterface
         return !empty($dataReader->withFilter($reverseFilter)->readOne());
     }
 
-    private function getFilter(Sort $sort): Compare
+    private function getFilter(Sort $sort): FilterInterface
     {
+        $value = $this->getValue();
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
-        $value = $this->getValue($field);
-        return $sorting === 'asc' ? new GreaterThan($field, $value) : new LessThan($field, $value);
+
+        $filter = $sorting === SORT_ASC ? new GreaterThan($field, $value) : new LessThan($field, $value);
+        if ($this->filterCallback === null) {
+            return $filter;
+        }
+
+        return call_user_func(
+            $this->filterCallback,
+            $filter,
+            new KeysetFilterContext(
+                $field,
+                $value,
+                $sorting,
+                false,
+            )
+        );
     }
 
-    private function getReverseFilter(Sort $sort): Compare
+    private function getReverseFilter(Sort $sort): FilterInterface
     {
+        $value = $this->getValue();
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
-        $value = $this->getValue($field);
-        return $sorting === 'asc' ? new LessThanOrEqual($field, $value) : new GreaterThanOrEqual($field, $value);
+
+        $filter = $sorting === SORT_ASC ? new LessThanOrEqual($field, $value) : new GreaterThanOrEqual($field, $value);
+        if ($this->filterCallback === null) {
+            return $filter;
+        }
+
+        return call_user_func(
+            $this->filterCallback,
+            $filter,
+            new KeysetFilterContext(
+                $field,
+                $value,
+                $sorting,
+                true,
+            )
+        );
     }
 
     /**
      * @psalm-suppress NullableReturnStatement, InvalidNullableReturnType, PossiblyNullArgument The code calling this
      * method must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
      */
-    private function getValue(string $field): string
+    private function getValue(): string
     {
-        $value = $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
-        if ($this->valueCaster === null) {
-            return $value;
-        }
-
-        return call_user_func($this->valueCaster, $value, $field);
+        return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
     }
 
     private function reverseSort(Sort $sort): Sort
@@ -374,7 +399,7 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @return string[]
+     * @psalm-return array{0: string, 1: int}
      */
     private function getFieldAndSortingFromSort(Sort $sort): array
     {
@@ -382,7 +407,7 @@ final class KeysetPaginator implements PaginatorInterface
 
         return [
             (string) key($order),
-            reset($order),
+            reset($order) === 'asc' ? SORT_ASC : SORT_DESC,
         ];
     }
 

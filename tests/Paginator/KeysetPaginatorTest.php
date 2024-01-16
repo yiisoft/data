@@ -8,6 +8,7 @@ use ArrayIterator;
 use InvalidArgumentException;
 use RuntimeException;
 use stdClass;
+use Yiisoft\Data\Paginator\KeysetFilterContext;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -739,7 +740,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertNotSame($paginator, $paginator->withNextPageToken('1'));
         $this->assertNotSame($paginator, $paginator->withPreviousPageToken('1'));
         $this->assertNotSame($paginator, $paginator->withPageSize(1));
-        $this->assertNotSame($paginator, $paginator->withValueCaster(null));
+        $this->assertNotSame($paginator, $paginator->withFilterCallback(null));
     }
 
     public function testGetPreviousPageExistForCoverage(): void
@@ -798,7 +799,7 @@ final class KeysetPaginatorTest extends Testcase
         );
     }
 
-    public function testValueCaster(): void
+    public function testFilterCallback(): void
     {
         $dataReader = (new MutationDataReader(
             new IterableDataReader(self::DEFAULT_DATASET),
@@ -810,7 +811,17 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
             ->withPreviousPageToken('5')
-            ->withValueCaster(fn($value, $field) => $field === 'id' ? (string)($value + 1) : $value);
+            ->withFilterCallback(
+                static function (
+                    GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
+                    KeysetFilterContext $context
+                ): FilterInterface {
+                    if ($context->field === 'id') {
+                        $filter = $filter->withValue((string)($context->value + 1));
+                    }
+                    return $filter;
+                }
+            );
 
         $this->assertSame(
             [
