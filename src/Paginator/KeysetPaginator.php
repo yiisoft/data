@@ -344,8 +344,7 @@ final class KeysetPaginator implements PaginatorInterface
             return $filter;
         }
 
-        return call_user_func(
-            $this->filterCallback,
+        return ($this->filterCallback)(
             $filter,
             new KeysetFilterContext(
                 $field,
@@ -366,8 +365,7 @@ final class KeysetPaginator implements PaginatorInterface
             return $filter;
         }
 
-        return call_user_func(
-            $this->filterCallback,
+        return ($this->filterCallback)(
             $filter,
             new KeysetFilterContext(
                 $field,
