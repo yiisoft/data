@@ -46,7 +46,7 @@ use function sprintf;
  *
  * @implements PaginatorInterface<TKey, TValue>
  *
- * @psalm-type ValueCaster = Closure(string):string
+ * @psalm-type ValueCaster = Closure(string,string):string
  */
 final class KeysetPaginator implements PaginatorInterface
 {
@@ -295,7 +295,6 @@ final class KeysetPaginator implements PaginatorInterface
     private function readData(ReadableDataInterface $dataReader, Sort $sort): array
     {
         $data = [];
-        /** @var string $field */
         [$field] = $this->getFieldAndSortingFromSort($sort);
 
         foreach ($dataReader->read() as $key => $item) {
@@ -337,17 +336,15 @@ final class KeysetPaginator implements PaginatorInterface
 
     private function getFilter(Sort $sort): Compare
     {
-        $value = $this->getValue();
-        /** @var string $field */
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
+        $value = $this->getValue($field);
         return $sorting === 'asc' ? new GreaterThan($field, $value) : new LessThan($field, $value);
     }
 
     private function getReverseFilter(Sort $sort): Compare
     {
-        $value = $this->getValue();
-        /** @var string $field */
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
+        $value = $this->getValue($field);
         return $sorting === 'asc' ? new LessThanOrEqual($field, $value) : new GreaterThanOrEqual($field, $value);
     }
 
@@ -355,14 +352,14 @@ final class KeysetPaginator implements PaginatorInterface
      * @psalm-suppress NullableReturnStatement, InvalidNullableReturnType, PossiblyNullArgument The code calling this
      * method must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
      */
-    private function getValue(): string
+    private function getValue(string $field): string
     {
         $value = $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
         if ($this->valueCaster === null) {
             return $value;
         }
 
-        return call_user_func($this->valueCaster, $value);
+        return call_user_func($this->valueCaster, $value, $field);
     }
 
     private function reverseSort(Sort $sort): Sort
@@ -376,6 +373,9 @@ final class KeysetPaginator implements PaginatorInterface
         return $sort->withOrder($order);
     }
 
+    /**
+     * @return string[]
+     */
     private function getFieldAndSortingFromSort(Sort $sort): array
     {
         $order = $sort->getOrder();

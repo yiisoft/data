@@ -810,7 +810,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
             ->withPreviousPageToken('5')
-            ->withValueCaster(fn($value) => (string)($value + 1));
+            ->withValueCaster(fn($value, $field) => $field === 'id' ? (string)($value + 1) : $value);
 
         $this->assertSame(
             [
