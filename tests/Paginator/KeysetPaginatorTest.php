@@ -21,6 +21,7 @@ use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
+use Yiisoft\Data\Tests\Support\MutationDataReader;
 use Yiisoft\Data\Tests\TestCase;
 
 use function array_values;
@@ -738,6 +739,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertNotSame($paginator, $paginator->withNextPageToken('1'));
         $this->assertNotSame($paginator, $paginator->withPreviousPageToken('1'));
         $this->assertNotSame($paginator, $paginator->withPageSize(1));
+        $this->assertNotSame($paginator, $paginator->withValueCaster(null));
     }
 
     public function testGetPreviousPageExistForCoverage(): void
@@ -793,6 +795,35 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertInstanceOf(
             GreaterThanOrEqual::class,
             $this->invokeMethod($paginator, 'getReverseFilter', [$sort]),
+        );
+    }
+
+    public function testValueCaster(): void
+    {
+        $dataReader = (new MutationDataReader(
+            new IterableDataReader(self::DEFAULT_DATASET),
+            static function ($item) {
+                $item['id']--;
+                return $item;
+            }
+        ))->withSort(Sort::only(['id'])->withOrderString('id'));
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withPreviousPageToken('5')
+            ->withValueCaster(fn($value) => (string)($value + 1));
+
+        $this->assertSame(
+            [
+                [
+                    'id' => 2,
+                    'name' => 'Agent K',
+                ],
+                [
+                    'id' => 4,
+                    'name' => 'Agent J',
+                ]
+            ],
+            array_values($paginator->read())
         );
     }
 }
