@@ -837,4 +837,81 @@ final class KeysetPaginatorTest extends Testcase
             array_values($paginator->read())
         );
     }
+
+    public function testFilterCallbackExtended(): void
+    {
+        $dataReader = (new MutationDataReader(
+            new IterableDataReader(self::DEFAULT_DATASET),
+            static function ($item) {
+                $item['id']--;
+                return $item;
+            }
+        ))->withSort(Sort::only(['id'])->withOrderString('id'));
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withPreviousPageToken('2')
+            ->withFilterCallback(
+                static function (
+                    GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
+                    KeysetFilterContext $context
+                ): FilterInterface {
+                    $value = $context->field === 'id'
+                        ? (string)($context->value + 1)
+                        : $context->value;
+
+                    if ($context->isReverse) {
+                        $filter = $context->sorting === SORT_ASC
+                            ? new LessThanOrEqual($context->field, $value)
+                            : new GreaterThanOrEqual($context->field, $value);
+                    } else {
+                        $filter = $context->sorting === SORT_ASC
+                            ? new GreaterThan($context->field, $value)
+                            : new LessThan($context->field, $value);
+                    }
+
+                    return $filter;
+                }
+            );
+
+        $this->assertSame(
+            [
+                [
+                    'id' => 0,
+                    'name' => 'Codename Boris',
+                ],
+                [
+                    'id' => 1,
+                    'name' => 'Codename Doris',
+                ],
+            ],
+            array_values($paginator->read())
+        );
+    }
+
+    public function testFilterCallbackWithReverse(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
+            ->withSort(Sort::only(['id'])->withOrderString('id'));
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPreviousPageToken('1')
+            ->withFilterCallback(
+                static function (
+                    GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
+                    KeysetFilterContext $context
+                ): FilterInterface {
+                    if ($context->isReverse) {
+                        return $context->sorting === SORT_ASC
+                            ? new LessThanOrEqual($context->field, $context->value)
+                            : new GreaterThanOrEqual($context->field, $context->value);
+                    } else {
+                        return $context->sorting === SORT_ASC
+                            ? new GreaterThan($context->field, $context->value)
+                            : new LessThan($context->field, $context->value);
+                    }
+                }
+            );
+
+        $this->assertTrue($paginator->isOnFirstPage());
+        $this->assertFalse($paginator->isOnLastPage());
+    }
 }
