@@ -5,6 +5,8 @@
 - New #150: Extract `withLimit()` from `ReadableDataInterface` into `LimitableDataInterface` (@vjik)
 - Enh #150: `PaginatorInterface` now extends `ReadableDataInterface` (@vjik)
 - Chg #151: Rename `isRequired()` method in `PaginatorInterface` to `isPaginationRequired()` (@vjik)
+- New #153: Add `KeysetPaginator::withValueCaster()` method that allows set closure for preparing the page value before
+  use in data reader filters (@vjik)
 
 ## 1.0.1 January 25, 2023
 

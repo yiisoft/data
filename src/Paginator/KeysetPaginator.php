@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use Closure;
 use InvalidArgumentException;
 use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
@@ -44,6 +45,8 @@ use function sprintf;
  * @template TValue as array|object
  *
  * @implements PaginatorInterface<TKey, TValue>
+ *
+ * @psalm-type ValueCaster = Closure(string):string
  */
 final class KeysetPaginator implements PaginatorInterface
 {
@@ -72,6 +75,11 @@ final class KeysetPaginator implements PaginatorInterface
      * @var bool Whether there is next page.
      */
     private bool $hasNextPage = false;
+
+    /**
+     * @psalm-var ValueCaster|null
+     */
+    private ?Closure $valueCaster = null;
 
     /**
      * Reader cache against repeated scans.
@@ -155,6 +163,18 @@ final class KeysetPaginator implements PaginatorInterface
 
         $new = clone $this;
         $new->pageSize = $pageSize;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with defined closure for preparing the page value before use in data reader filters.
+     *
+     * @psalm-param ValueCaster|null $closure
+     */
+    public function withValueCaster(?Closure $closure): self
+    {
+        $new = clone $this;
+        $new->valueCaster = $closure;
         return $new;
     }
 
@@ -332,12 +352,17 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-suppress NullableReturnStatement, InvalidNullableReturnType The code calling this method
-     * must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
+     * @psalm-suppress NullableReturnStatement, InvalidNullableReturnType, PossiblyNullArgument The code calling this
+     * method must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
      */
     private function getValue(): string
     {
-        return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
+        $value = $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
+        if ($this->valueCaster === null) {
+            return $value;
+        }
+
+        return call_user_func($this->valueCaster, $value);
     }
 
     private function reverseSort(Sort $sort): Sort
