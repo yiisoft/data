@@ -8,6 +8,7 @@ use ArrayIterator;
 use InvalidArgumentException;
 use RuntimeException;
 use stdClass;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\KeysetFilterContext;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
@@ -912,5 +913,135 @@ final class KeysetPaginatorTest extends Testcase
 
         $this->assertTrue($paginator->isOnFirstPage());
         $this->assertFalse($paginator->isOnLastPage());
+    }
+
+    public static function dataPageTypeWithPreviousPageToken(): array
+    {
+        return [
+            /**
+             * Straight order
+             * ['id' => 10]
+             * ['id' => 11]
+             * ['id' => 12]
+             * ['id' => 13]
+             */
+            [true, false, [], '8'],
+            [true, false, [], '9'],
+            [true, false, [], '10'],
+            [true, false, [10], '11'],
+            [true, false, [10, 11], '12'],
+            [false, false, [11, 12], '13'],
+            [false, true, [12, 13], '14'],
+            [false, true, [12, 13], '15'],
+
+            /**
+             * Reverse order
+             * ['id' => 13]
+             * ['id' => 12]
+             * ['id' => 11]
+             * ['id' => 10]
+             */
+            [false, true, [11, 10], '8', true],
+            [false, true, [11, 10], '9', true],
+            [false, false, [12, 11], '10', true],
+            [true, false, [13, 12], '11', true],
+            [true, false, [13], '12', true],
+            [true, false, [], '13', true],
+            [true, false, [], '14', true],
+            [true, false, [], '15', true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataPageTypeWithPreviousPageToken
+     */
+    public function testPageTypeWithPreviousPageToken(
+        bool $expectedIsOnFirstPage,
+        bool $expectedIsOnLastPage,
+        array $expectedIds,
+        string $token,
+        bool $isReverseOrder = false
+    ): void {
+        $data = [
+            ['id' => 10],
+            ['id' => 11],
+            ['id' => 12],
+            ['id' => 13],
+        ];
+        $sort = Sort::only(['id'])->withOrderString($isReverseOrder ? '-id' : 'id');
+        $reader = (new IterableDataReader($data))->withSort($sort);
+
+        $paginator = (new KeysetPaginator($reader))
+            ->withPageSize(2)
+            ->withPreviousPageToken($token);
+
+        $this->assertSame($expectedIsOnFirstPage, $paginator->isOnFirstPage());
+        $this->assertSame($expectedIsOnLastPage, $paginator->isOnLastPage());
+        $this->assertSame($expectedIds, ArrayHelper::getColumn($paginator->read(), 'id', keepKeys: false));
+    }
+
+    public static function dataPageTypeWithNextPageToken(): array
+    {
+        return [
+            /**
+             * Straight order
+             * ['id' => 10]
+             * ['id' => 11]
+             * ['id' => 12]
+             * ['id' => 13]
+             */
+            [true, false, [10, 11], '8'],
+            [true, false, [10, 11], '9'],
+            [false, false, [11, 12], '10'],
+            [false, true, [12, 13], '11'],
+            [false, true, [13], '12'],
+            [false, true, [], '13'],
+            [false, true, [], '14'],
+            [false, true, [], '15'],
+
+            /**
+             * Reverse order
+             * ['id' => 13]
+             * ['id' => 12]
+             * ['id' => 11]
+             * ['id' => 10]
+             */
+            [false, true, [], '8', true],
+            [false, true, [], '9', true],
+            [false, true, [], '10', true],
+            [false, true, [10], '11', true],
+            [false, true, [11, 10], '12', true],
+            [false, false, [12, 11], '13', true],
+            [true, false, [13, 12], '14', true],
+            [true, false, [13, 12], '15', true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataPageTypeWithNextPageToken
+     */
+    public function testPageTypeWithNextPageToken(
+        bool $expectedIsOnFirstPage,
+        bool $expectedIsOnLastPage,
+        array $expectedIds,
+        string $token,
+        bool $isReverseOrder = false
+    ): void {
+        $data = [
+            ['id' => 10],
+            ['id' => 11],
+            ['id' => 12],
+            ['id' => 13],
+        ];
+        $sort = Sort::only(['id'])->withOrderString($isReverseOrder ? '-id' : 'id');
+        $reader = (new IterableDataReader($data))->withSort($sort);
+
+        $paginator = (new KeysetPaginator($reader))
+            ->withPageSize(2)
+            ->withNextPageToken($token);
+
+        $this->assertSame($expectedIsOnFirstPage, $paginator->isOnFirstPage());
+        $this->assertSame($expectedIsOnLastPage, $paginator->isOnLastPage());
+        $this->assertSame($expectedIds, ArrayHelper::getColumn($paginator->read(), 'id', keepKeys: false));
     }
 }
