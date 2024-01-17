@@ -167,9 +167,16 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * Returns a new instance with defined closure for preparing the page value before use in data reader filters.
+     * Returns a new instance with defined closure for preparing data reader filters.
      *
-     * @psalm-param FilterCallback|null $callback
+     * @psalm-param FilterCallback|null $callback Closure with signature:
+     *
+     * ```php
+     * function(
+     *    GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
+     *    KeysetFilterContext $context
+     * ): FilterInterface
+     * ```
      */
     public function withFilterCallback(?Closure $callback): self
     {
