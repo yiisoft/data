@@ -6,12 +6,13 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LessThanTest extends TestCase
 {
-    public function matchScalarDataProvider(): array
+    public static function matchScalarDataProvider(): array
     {
         return [
             [true, ['value', 46]],
@@ -21,9 +22,7 @@ final class LessThanTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider matchScalarDataProvider
-     */
+    #[DataProvider('matchScalarDataProvider')]
     public function testMatchScalar(bool $expected, array $arguments): void
     {
         $processor = new LessThanHandler();
@@ -36,7 +35,7 @@ final class LessThanTest extends TestCase
         $this->assertSame($expected, $processor->match($item, $arguments, []));
     }
 
-    public function matchDateTimeInterfaceDataProvider(): array
+    public static function matchDateTimeInterfaceDataProvider(): array
     {
         return [
             [true, ['value', new DateTimeImmutable('2022-02-22 16:00:46')]],
@@ -45,9 +44,7 @@ final class LessThanTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider matchDateTimeInterfaceDataProvider
-     */
+    #[DataProvider('matchDateTimeInterfaceDataProvider')]
     public function testMatchDateTimeInterface(bool $expected, array $arguments): void
     {
         $processor = new LessThanHandler();
@@ -60,7 +57,7 @@ final class LessThanTest extends TestCase
         $this->assertSame($expected, $processor->match($item, $arguments, []));
     }
 
-    public function invalidCountArgumentsDataProvider(): array
+    public static function invalidCountArgumentsDataProvider(): array
     {
         return [
             'zero' => [[]],
@@ -70,9 +67,7 @@ final class LessThanTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidCountArgumentsDataProvider
-     */
+    #[DataProvider('invalidCountArgumentsDataProvider')]
     public function testMatchFailForInvalidCountArguments($arguments): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -81,9 +76,7 @@ final class LessThanTest extends TestCase
         (new LessThanHandler())->match(['id' => 1], $arguments, []);
     }
 
-    /**
-     * @dataProvider invalidStringValueDataProvider
-     */
+    #[DataProvider('invalidStringValueDataProvider')]
     public function testMatchFailForInvalidFieldValue($field): void
     {
         $type = get_debug_type($field);

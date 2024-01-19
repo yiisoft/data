@@ -7,10 +7,10 @@ namespace Yiisoft\Data\Paginator;
 final class KeysetFilterContext
 {
     public function __construct(
-        public string $field,
-        public string $value,
-        public int $sorting,
-        public bool $isReverse
+        public readonly string $field,
+        public readonly string $value,
+        public readonly int $sorting,
+        public readonly bool $isReverse
     ) {
     }
 }

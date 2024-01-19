@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Paginator;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
@@ -293,7 +294,7 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertSame($expected, array_values($this->iterableToArray($paginator->read())));
     }
 
-    public function dataReadOne(): array
+    public static function dataReadOne(): array
     {
         $data = [];
 
@@ -315,9 +316,7 @@ final class OffsetPaginatorTest extends TestCase
         return $data;
     }
 
-    /**
-     * @dataProvider dataReadOne
-     */
+    #[DataProvider('dataReadOne')]
     public function testReadOne(mixed $expected, OffsetPaginator $paginator): void
     {
         $result = $paginator->readOne();

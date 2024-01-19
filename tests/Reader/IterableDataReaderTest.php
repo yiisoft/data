@@ -8,6 +8,7 @@ use ArrayIterator;
 use DateTimeInterface;
 use Generator;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\Filter\All;
@@ -440,9 +441,7 @@ final class IterableDataReaderTest extends TestCase
         $this->assertSame($expected, array_values($this->iterableToArray($dataReader->read())));
     }
 
-    /**
-     * @dataProvider invalidStringValueDataProvider
-     */
+    #[DataProvider('invalidStringValueDataProvider')]
     public function testMatchFilterFailIfOperatorIsNotString($operator): void
     {
         $reader = (new IterableDataReader(self::DEFAULT_DATASET))
