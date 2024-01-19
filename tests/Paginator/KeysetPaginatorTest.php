@@ -8,6 +8,8 @@ use ArrayIterator;
 use InvalidArgumentException;
 use RuntimeException;
 use stdClass;
+use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Paginator\KeysetFilterContext;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -21,6 +23,7 @@ use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
+use Yiisoft\Data\Tests\Support\MutationDataReader;
 use Yiisoft\Data\Tests\TestCase;
 
 use function array_values;
@@ -738,6 +741,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertNotSame($paginator, $paginator->withNextPageToken('1'));
         $this->assertNotSame($paginator, $paginator->withPreviousPageToken('1'));
         $this->assertNotSame($paginator, $paginator->withPageSize(1));
+        $this->assertNotSame($paginator, $paginator->withFilterCallback(null));
     }
 
     public function testGetPreviousPageExistForCoverage(): void
@@ -794,5 +798,250 @@ final class KeysetPaginatorTest extends Testcase
             GreaterThanOrEqual::class,
             $this->invokeMethod($paginator, 'getReverseFilter', [$sort]),
         );
+    }
+
+    public function testFilterCallback(): void
+    {
+        $dataReader = (new MutationDataReader(
+            new IterableDataReader(self::DEFAULT_DATASET),
+            static function ($item) {
+                $item['id']--;
+                return $item;
+            }
+        ))->withSort(Sort::only(['id'])->withOrderString('id'));
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withPreviousPageToken('5')
+            ->withFilterCallback(
+                static function (
+                    GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
+                    KeysetFilterContext $context
+                ): FilterInterface {
+                    if ($context->field === 'id') {
+                        $filter = $filter->withValue((string)($context->value + 1));
+                    }
+                    return $filter;
+                }
+            );
+
+        $this->assertSame(
+            [
+                [
+                    'id' => 2,
+                    'name' => 'Agent K',
+                ],
+                [
+                    'id' => 4,
+                    'name' => 'Agent J',
+                ],
+            ],
+            array_values($paginator->read())
+        );
+    }
+
+    public function testFilterCallbackExtended(): void
+    {
+        $dataReader = (new MutationDataReader(
+            new IterableDataReader(self::DEFAULT_DATASET),
+            static function ($item) {
+                $item['id']--;
+                return $item;
+            }
+        ))->withSort(Sort::only(['id'])->withOrderString('id'));
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withPreviousPageToken('2')
+            ->withFilterCallback(
+                static function (
+                    GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
+                    KeysetFilterContext $context
+                ): FilterInterface {
+                    $value = $context->field === 'id'
+                        ? (string)($context->value + 1)
+                        : $context->value;
+
+                    if ($context->isReverse) {
+                        $filter = $context->sorting === SORT_ASC
+                            ? new LessThanOrEqual($context->field, $value)
+                            : new GreaterThanOrEqual($context->field, $value);
+                    } else {
+                        $filter = $context->sorting === SORT_ASC
+                            ? new GreaterThan($context->field, $value)
+                            : new LessThan($context->field, $value);
+                    }
+
+                    return $filter;
+                }
+            );
+
+        $this->assertSame(
+            [
+                [
+                    'id' => 0,
+                    'name' => 'Codename Boris',
+                ],
+                [
+                    'id' => 1,
+                    'name' => 'Codename Doris',
+                ],
+            ],
+            array_values($paginator->read())
+        );
+    }
+
+    public function testFilterCallbackWithReverse(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
+            ->withSort(Sort::only(['id'])->withOrderString('id'));
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withPreviousPageToken('1')
+            ->withFilterCallback(
+                static function (
+                    GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
+                    KeysetFilterContext $context
+                ): FilterInterface {
+                    if ($context->isReverse) {
+                        return $context->sorting === SORT_ASC
+                            ? new LessThanOrEqual($context->field, $context->value)
+                            : new GreaterThanOrEqual($context->field, $context->value);
+                    }
+                    return $context->sorting === SORT_ASC
+                        ? new GreaterThan($context->field, $context->value)
+                        : new LessThan($context->field, $context->value);
+                }
+            );
+
+        $this->assertTrue($paginator->isOnFirstPage());
+        $this->assertFalse($paginator->isOnLastPage());
+    }
+
+    public static function dataPageTypeWithPreviousPageToken(): array
+    {
+        return [
+            /**
+             * Straight order
+             * ['id' => 10]
+             * ['id' => 11]
+             * ['id' => 12]
+             * ['id' => 13]
+             */
+            [true, false, [], '8'],
+            [true, false, [], '9'],
+            [true, false, [], '10'],
+            [true, false, [10], '11'],
+            [true, false, [10, 11], '12'],
+            [false, false, [11, 12], '13'],
+            [false, true, [12, 13], '14'],
+            [false, true, [12, 13], '15'],
+
+            /**
+             * Reverse order
+             * ['id' => 13]
+             * ['id' => 12]
+             * ['id' => 11]
+             * ['id' => 10]
+             */
+            [false, true, [11, 10], '8', true],
+            [false, true, [11, 10], '9', true],
+            [false, false, [12, 11], '10', true],
+            [true, false, [13, 12], '11', true],
+            [true, false, [13], '12', true],
+            [true, false, [], '13', true],
+            [true, false, [], '14', true],
+            [true, false, [], '15', true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataPageTypeWithPreviousPageToken
+     */
+    public function testPageTypeWithPreviousPageToken(
+        bool $expectedIsOnFirstPage,
+        bool $expectedIsOnLastPage,
+        array $expectedIds,
+        string $token,
+        bool $isReverseOrder = false
+    ): void {
+        $data = [
+            ['id' => 10],
+            ['id' => 11],
+            ['id' => 12],
+            ['id' => 13],
+        ];
+        $sort = Sort::only(['id'])->withOrderString($isReverseOrder ? '-id' : 'id');
+        $reader = (new IterableDataReader($data))->withSort($sort);
+
+        $paginator = (new KeysetPaginator($reader))
+            ->withPageSize(2)
+            ->withPreviousPageToken($token);
+
+        $this->assertSame($expectedIsOnFirstPage, $paginator->isOnFirstPage());
+        $this->assertSame($expectedIsOnLastPage, $paginator->isOnLastPage());
+        $this->assertSame($expectedIds, ArrayHelper::getColumn($paginator->read(), 'id', keepKeys: false));
+    }
+
+    public static function dataPageTypeWithNextPageToken(): array
+    {
+        return [
+            /**
+             * Straight order
+             * ['id' => 10]
+             * ['id' => 11]
+             * ['id' => 12]
+             * ['id' => 13]
+             */
+            [true, false, [10, 11], '8'],
+            [true, false, [10, 11], '9'],
+            [false, false, [11, 12], '10'],
+            [false, true, [12, 13], '11'],
+            [false, true, [13], '12'],
+            [false, true, [], '13'],
+            [false, true, [], '14'],
+            [false, true, [], '15'],
+
+            /**
+             * Reverse order
+             * ['id' => 13]
+             * ['id' => 12]
+             * ['id' => 11]
+             * ['id' => 10]
+             */
+            [false, true, [], '8', true],
+            [false, true, [], '9', true],
+            [false, true, [], '10', true],
+            [false, true, [10], '11', true],
+            [false, true, [11, 10], '12', true],
+            [false, false, [12, 11], '13', true],
+            [true, false, [13, 12], '14', true],
+            [true, false, [13, 12], '15', true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataPageTypeWithNextPageToken
+     */
+    public function testPageTypeWithNextPageToken(
+        bool $expectedIsOnFirstPage,
+        bool $expectedIsOnLastPage,
+        array $expectedIds,
+        string $token,
+        bool $isReverseOrder = false
+    ): void {
+        $data = [
+            ['id' => 10],
+            ['id' => 11],
+            ['id' => 12],
+            ['id' => 13],
+        ];
+        $sort = Sort::only(['id'])->withOrderString($isReverseOrder ? '-id' : 'id');
+        $reader = (new IterableDataReader($data))->withSort($sort);
+
+        $paginator = (new KeysetPaginator($reader))
+            ->withPageSize(2)
+            ->withNextPageToken($token);
+
+        $this->assertSame($expectedIsOnFirstPage, $paginator->isOnFirstPage());
+        $this->assertSame($expectedIsOnLastPage, $paginator->isOnLastPage());
+        $this->assertSame($expectedIds, ArrayHelper::getColumn($paginator->read(), 'id', keepKeys: false));
     }
 }

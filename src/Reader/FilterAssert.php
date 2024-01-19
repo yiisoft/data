@@ -75,6 +75,8 @@ final class FilterAssert
      * @param mixed $value Value to check.
      *
      * @throws InvalidArgumentException If value is not correct.
+     *
+     * @psalm-assert DateTimeInterface|scalar $value
      */
     public static function isScalarOrInstanceOfDateTimeInterface(mixed $value): void
     {
