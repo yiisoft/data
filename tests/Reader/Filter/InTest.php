@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\Filter;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -17,9 +18,7 @@ final class InTest extends TestCase
         $this->assertSame(['in', 'test', [1, 2]], $filter->toCriteriaArray());
     }
 
-    /**
-     * @dataProvider invalidScalarValueDataProvider
-     */
+    #[DataProvider('invalidScalarValueDataProvider')]
     public function testConstructorFailForInvalidScalarValue($value): void
     {
         $type = get_debug_type($value);

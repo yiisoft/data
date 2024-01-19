@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\AnyHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
@@ -15,7 +16,7 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class AnyTest extends TestCase
 {
-    public function matchDataProvider(): array
+    public static function matchDataProvider(): array
     {
         return [
             [
@@ -56,9 +57,7 @@ final class AnyTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider matchDataProvider
-     */
+    #[DataProvider('matchDataProvider')]
     public function testMatch(bool $expected, array $arguments, array $filterHandlers): void
     {
         $handler = new AnyHandler();
@@ -71,7 +70,7 @@ final class AnyTest extends TestCase
         $this->assertSame($expected, $handler->match($item, $arguments, $filterHandlers));
     }
 
-    public function invalidCountArgumentsDataProvider(): array
+    public static function invalidCountArgumentsDataProvider(): array
     {
         return [
             'zero' => [[]],
@@ -81,9 +80,7 @@ final class AnyTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidCountArgumentsDataProvider
-     */
+    #[DataProvider('invalidCountArgumentsDataProvider')]
     public function testMatchFailForInvalidCountArguments($arguments): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -92,9 +89,7 @@ final class AnyTest extends TestCase
         (new AnyHandler())->match(['id' => 1], $arguments, []);
     }
 
-    /**
-     * @dataProvider invalidArrayValueDataProvider
-     */
+    #[DataProvider('invalidArrayValueDataProvider')]
     public function testMatchFailIfSubFiltersIsNotArray($subFilters): void
     {
         $type = get_debug_type($subFilters);
@@ -105,9 +100,7 @@ final class AnyTest extends TestCase
         (new AnyHandler())->match(['id' => 1], [$subFilters], []);
     }
 
-    /**
-     * @dataProvider invalidArrayValueDataProvider
-     */
+    #[DataProvider('invalidArrayValueDataProvider')]
     public function testMatchFailIfSubFilterIsNotArray($subFilters): void
     {
         $type = get_debug_type($subFilters);
@@ -126,16 +119,14 @@ final class AnyTest extends TestCase
         (new AnyHandler())->match(['id' => 1], [[[]]], []);
     }
 
-    public function invalidFilterOperatorDataProvider(): array
+    public static function invalidFilterOperatorDataProvider(): array
     {
         $data = parent::invalidFilterOperatorDataProvider();
         unset($data['array'], $data['empty-string']);
         return $data;
     }
 
-    /**
-     * @dataProvider invalidFilterOperatorDataProvider
-     */
+    #[DataProvider('invalidFilterOperatorDataProvider')]
     public function testMatchFailForInvalidFilterOperator(array $filter): void
     {
         $type = get_debug_type($filter[0]);

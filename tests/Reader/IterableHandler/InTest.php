@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\InHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class InTest extends TestCase
 {
-    public function matchDataProvider(): array
+    public static function matchDataProvider(): array
     {
         return [
             [true, ['value', [44, 45, 46]]],
@@ -19,9 +20,7 @@ final class InTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider matchDataProvider
-     */
+    #[DataProvider('matchDataProvider')]
     public function testMatch(bool $expected, array $arguments): void
     {
         $processor = new InHandler();
@@ -34,7 +33,7 @@ final class InTest extends TestCase
         $this->assertSame($expected, $processor->match($item, $arguments, []));
     }
 
-    public function invalidCountArgumentsDataProvider(): array
+    public static function invalidCountArgumentsDataProvider(): array
     {
         return [
             'zero' => [[]],
@@ -44,9 +43,7 @@ final class InTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidCountArgumentsDataProvider
-     */
+    #[DataProvider('invalidCountArgumentsDataProvider')]
     public function testMatchFailForInvalidCountArguments($arguments): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -55,9 +52,7 @@ final class InTest extends TestCase
         (new InHandler())->match(['id' => 1], $arguments, []);
     }
 
-    /**
-     * @dataProvider invalidStringValueDataProvider
-     */
+    #[DataProvider('invalidStringValueDataProvider')]
     public function testMatchFailForInvalidFieldValue($field): void
     {
         $type = get_debug_type($field);

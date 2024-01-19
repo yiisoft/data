@@ -15,7 +15,7 @@ use function iterator_to_array;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    public function invalidArrayValueDataProvider(): array
+    public static function invalidArrayValueDataProvider(): array
     {
         return [
             'bool-true' => [true],
@@ -29,7 +29,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function invalidStringValueDataProvider(): array
+    public static function invalidStringValueDataProvider(): array
     {
         return [
             'array' => [[]],
@@ -43,7 +43,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function invalidFilterDataProvider(): array
+    public static function invalidFilterDataProvider(): array
     {
         return [
             'callback' => [fn () => null],
@@ -55,7 +55,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function invalidFilterOperatorDataProvider(): array
+    public static function invalidFilterOperatorDataProvider(): array
     {
         return [
             'array' => [[[]]],
@@ -68,7 +68,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function invalidScalarValueDataProvider(): array
+    public static function invalidScalarValueDataProvider(): array
     {
         return [
             'array' => [[]],
@@ -78,7 +78,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function scalarAndDataTimeInterfaceValueDataProvider(): array
+    public static function scalarAndDataTimeInterfaceValueDataProvider(): array
     {
         return [
             'bool-true' => [true],
@@ -92,8 +92,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Gets an inaccessible object property.
-     *
-     * @return mixed
      */
     protected function getInaccessibleProperty(object $object, string $propertyName): mixed
     {
@@ -115,8 +113,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * Invokes an inaccessible method.
      *
      * @throws ReflectionException
-     *
-     * @return mixed
      */
     protected function invokeMethod(object $object, string $method, array $args = []): mixed
     {

@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\Filter;
 
 use DateTimeInterface;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -13,9 +14,7 @@ use function sprintf;
 
 final class GreaterThanOrEqualTest extends TestCase
 {
-    /**
-     * @dataProvider scalarAndDataTimeInterfaceValueDataProvider
-     */
+    #[DataProvider('scalarAndDataTimeInterfaceValueDataProvider')]
     public function testToArray($value): void
     {
         $filter = new GreaterThanOrEqual('test', $value);
@@ -23,9 +22,7 @@ final class GreaterThanOrEqualTest extends TestCase
         $this->assertSame(['>=', 'test', $value], $filter->toCriteriaArray());
     }
 
-    /**
-     * @dataProvider invalidScalarValueDataProvider
-     */
+    #[DataProvider('invalidScalarValueDataProvider')]
     public function testConstructorFailForInvalidScalarValue($value): void
     {
         $this->expectException(InvalidArgumentException::class);

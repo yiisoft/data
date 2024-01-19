@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Tests\Reader\Filter;
 
 use DateTimeInterface;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -13,9 +14,7 @@ use function sprintf;
 
 final class BetweenTest extends TestCase
 {
-    /**
-     * @dataProvider scalarAndDataTimeInterfaceValueDataProvider
-     */
+    #[DataProvider('scalarAndDataTimeInterfaceValueDataProvider')]
     public function testToArray($value): void
     {
         $filter = new Between('test', $value, $value);
@@ -23,9 +22,7 @@ final class BetweenTest extends TestCase
         $this->assertSame(['between', 'test', $value, $value], $filter->toCriteriaArray());
     }
 
-    /**
-     * @dataProvider invalidScalarValueDataProvider
-     */
+    #[DataProvider('invalidScalarValueDataProvider')]
     public function testConstructorFailForInvalidFirstValue($value): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -39,9 +36,7 @@ final class BetweenTest extends TestCase
         new Between('test', $value, 2);
     }
 
-    /**
-     * @dataProvider invalidScalarValueDataProvider
-     */
+    #[DataProvider('invalidScalarValueDataProvider')]
     public function testConstructorFailForInvalidSecondValue($value): void
     {
         $this->expectException(InvalidArgumentException::class);

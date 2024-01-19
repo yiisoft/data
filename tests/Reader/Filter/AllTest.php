@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\Filter;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\LessThan;
@@ -67,9 +68,7 @@ final class AllTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider invalidFilterDataProvider
-     */
+    #[DataProvider('invalidFilterDataProvider')]
     public function testWithCriteriaArrayFailForInvalidFilter($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -78,9 +77,7 @@ final class AllTest extends TestCase
         (new All())->withCriteriaArray([['=', 'test', 1], $filter]);
     }
 
-    /**
-     * @dataProvider invalidFilterOperatorDataProvider
-     */
+    #[DataProvider('invalidFilterOperatorDataProvider')]
     public function testWithCriteriaArrayFailForInvalidFilterOperator(array $filter): void
     {
         $this->expectException(InvalidArgumentException::class);
