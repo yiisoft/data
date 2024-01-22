@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -273,5 +274,63 @@ final class SortTest extends TestCase
             ],
             $sort->getCriteria()
         );
+    }
+
+    public static function dataPrepareConfig(): array
+    {
+        return [
+            [
+                [
+                    'a' => SORT_ASC,
+                    'b' => SORT_DESC,
+                ],
+                [
+                    'a',
+                    'b' => ['asc' => 'desc'],
+                ],
+            ],
+            [
+                [
+                    'a' => SORT_ASC
+                ],
+                [
+                    'a' => [
+                        'asc' => 'desc',
+                        'desc' => 'asc',
+                        'default' => 'desc',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'a' => SORT_ASC
+                ],
+                [
+                    'a' => [
+                        'asc' => SORT_DESC,
+                        'desc' => 'asc',
+                        'default' => 'desc',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'x' => SORT_ASC,
+                ],
+                [
+                    'a' => [
+                        'default' => 'desc',
+                        'desc' => ['x' => 'asc'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    #[DataProvider('dataPrepareConfig')]
+    public function testPrepareConfig(array $expected, array $config): void
+    {
+        $sort = Sort::only($config);
+        $this->assertSame($expected, $sort->getCriteria());
     }
 }
