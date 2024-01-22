@@ -9,6 +9,8 @@
   the data reader (@vjik)
 - New #153: Add `Compare::withValue()` method (@vjik)
 - Chg #154: Raise minimum required PHP version to 8.1 (@vjik)
+- Fix #155: Fix `Sort` configuration preparation (@vjik)
+- Chg #155: Same order fields in current order in `Sort` override previous now (@vjik)
 
 ## 1.0.1 January 25, 2023
 
