@@ -291,7 +291,7 @@ final class SortTest extends TestCase
             ],
             [
                 [
-                    'a' => SORT_ASC
+                    'a' => SORT_ASC,
                 ],
                 [
                     'a' => [
@@ -303,7 +303,7 @@ final class SortTest extends TestCase
             ],
             [
                 [
-                    'a' => SORT_ASC
+                    'a' => SORT_ASC,
                 ],
                 [
                     'a' => [
