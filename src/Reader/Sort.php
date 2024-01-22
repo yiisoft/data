@@ -41,7 +41,12 @@ use function trim;
  * @psalm-type TSortFieldItem = array<string, int>
  * @psalm-type TConfigItem = array{asc: TSortFieldItem, desc: TSortFieldItem, default: "asc"|"desc"}
  * @psalm-type TConfig = array<string, TConfigItem>
- * @psalm-type TUserConfig = array<int, string>|array<string, array<string, int|string>>
+ * @psalm-type TUserConfigItem = array{
+ *     asc?: int|"asc"|"desc"|array<string, int|"asc"|"desc">,
+ *     desc?: int|"asc"|"desc"|array<string, int|"asc"|"desc">,
+ *     default?: "asc"|"desc"
+ * }
+ * @psalm-type TUserConfig = array<int, string>|array<string, TUserConfigItem>
  */
 final class Sort
 {
@@ -81,17 +86,43 @@ final class Sort
                 throw new InvalidArgumentException('Invalid config format.');
             }
 
-            if (is_string($fieldConfig)) {
+            if (is_int($fieldName)) {
+                /** @var string $fieldConfig */
                 $fieldName = $fieldConfig;
                 $fieldConfig = [];
+            } else {
+                /** @psalm-var TUserConfigItem $fieldConfig */
+                foreach ($fieldConfig as $key => &$criteria) {
+                    // 'default' => 'asc' or 'desc'
+                    if ($key === 'default') {
+                        continue;
+                    }
+                    // 'asc'/'desc' => SORT_*
+                    if (is_int($criteria)) {
+                        continue;
+                    }
+                    // 'asc'/'desc' => 'asc' or 'asc'/'desc' => 'desc'
+                    if (is_string($criteria)) {
+                        $criteria = [$fieldName => $criteria === 'desc' ? SORT_DESC : SORT_ASC];
+                        continue;
+                    }
+                    // 'asc'/'desc' => ['field' => SORT_*|'asc'|'desc']
+                    foreach ($criteria as &$subCriteria) {
+                        if (is_string($subCriteria)) {
+                            $subCriteria = $subCriteria === 'desc' ? SORT_DESC : SORT_ASC;
+                        }
+                    }
+                }
             }
 
-            /** @psalm-var TConfig $fieldConfig */
-            $normalizedConfig[$fieldName] = array_merge([
-                'asc' => [$fieldName => SORT_ASC],
-                'desc' => [$fieldName => SORT_DESC],
-                'default' => 'asc',
-            ], $fieldConfig);
+            $normalizedConfig[$fieldName] = array_merge(
+                [
+                    'asc' => [$fieldName => SORT_ASC],
+                    'desc' => [$fieldName => SORT_DESC],
+                    'default' => 'asc',
+                ],
+                $fieldConfig,
+            );
         }
 
         /** @psalm-var TConfig $normalizedConfig */
@@ -272,7 +303,7 @@ final class Sort
      * when obtaining the data i.e. a list of real fields along with their order directions.
      *
      * @return array Sorting criteria.
-     * @psalm-return array<string, "asc"|"desc"|int>
+     * @psalm-return array<string, int>
      */
     public function getCriteria(): array
     {
@@ -281,13 +312,13 @@ final class Sort
 
         foreach ($this->currentOrder as $field => $direction) {
             if (array_key_exists($field, $config)) {
-                $criteria += $config[$field][$direction];
+                $criteria = array_merge($criteria, $config[$field][$direction]);
                 unset($config[$field]);
             } else {
                 if ($this->ignoreExtraFields) {
                     continue;
                 }
-                $criteria += [$field => $direction];
+                $criteria = array_merge($criteria, [$field => $direction === 'desc' ? SORT_DESC : SORT_ASC]);
             }
         }
 

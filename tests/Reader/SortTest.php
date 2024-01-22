@@ -117,12 +117,18 @@ final class SortTest extends TestCase
 
     public function testAnyModeGetCriteriaWithEmptyConfig(): void
     {
-        $sort = Sort::any([])->withOrder([
+        $sort = Sort::any()->withOrder([
             'a' => 'desc',
             'b' => 'asc',
         ]);
 
-        $this->assertSame(['a' => 'desc', 'b' => 'asc'], $sort->getCriteria());
+        $this->assertSame(
+            [
+                'a' => SORT_DESC,
+                'b' => SORT_ASC,
+            ],
+            $sort->getCriteria(),
+        );
     }
 
     public function testGetCriteria(): void
@@ -158,10 +164,13 @@ final class SortTest extends TestCase
             ],
         ])->withOrderString('-bee,b,a,-foo');
 
-        $this->assertSame([
-            'bee' => 'desc',
-            'foo' => 'asc',
-        ], $sort->getCriteria());
+        $this->assertSame(
+            [
+                'bee' => SORT_ASC,
+                'foo' => SORT_DESC,
+            ],
+            $sort->getCriteria(),
+        );
     }
 
     public function testGetCriteriaDefaults(): void
