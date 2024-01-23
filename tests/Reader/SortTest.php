@@ -333,4 +333,22 @@ final class SortTest extends TestCase
         $sort = Sort::only($config);
         $this->assertSame($expected, $sort->getCriteria());
     }
+
+    public function testDefaults(): void
+    {
+        $sort = Sort::only([
+            'a',
+            'b' => ['default' => 'desc'],
+            'c' => ['default' => 'asc'],
+        ]);
+
+        $this->assertSame(
+            [
+                'a' => 'asc',
+                'b' => 'desc',
+                'c' => 'asc',
+            ],
+            $sort->getDefaults(),
+        );
+    }
 }

@@ -11,6 +11,7 @@
 - Chg #154: Raise minimum required PHP version to 8.1 (@vjik)
 - Bug #155: Fix `Sort` configuration preparation (@vjik)
 - Bug #155: Fix same named order fields in `Sort` were not overriding previous ones (@vjik)
+- New #156: Add `Sort::getDefaults()` method that returns default order of logical fields' directions (@vjik)  
 
 ## 1.0.1 January 25, 2023
 
