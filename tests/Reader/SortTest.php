@@ -114,7 +114,7 @@ final class SortTest extends TestCase
                     'b' => 'asc',
                 ],
                 [
-                    'a' => 'asc'
+                    'a' => 'asc',
                 ],
             ],
             [
