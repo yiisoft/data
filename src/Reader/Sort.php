@@ -285,13 +285,19 @@ final class Sort
      * If the name is prefixed with `-`, field order is descending.
      * Otherwise, the order is ascending.
      *
+     * @param array $extend A map with logical field names to order by as keys, direction ("asc" or "desc") as values.
+     * This map will be merged with current order before make order string.
+     *
      * @return string An order string.
+     *
+     * @psalm-param TOrder $extend
      */
-    public function getOrderAsString(): string
+    public function getOrderAsString(array $extend = []): string
     {
         $parts = [];
 
-        foreach ($this->currentOrder as $field => $direction) {
+        $order = array_merge($this->currentOrder, $extend);
+        foreach ($order as $field => $direction) {
             $parts[] = ($direction === 'desc' ? '-' : '') . $field;
         }
 

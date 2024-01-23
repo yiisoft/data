@@ -11,6 +11,8 @@
 - Chg #154: Raise minimum required PHP version to 8.1 (@vjik)
 - Bug #155: Fix `Sort` configuration preparation (@vjik)
 - Bug #155: Fix same named order fields in `Sort` were not overriding previous ones (@vjik)
+- New #157: Add optional `$extend` parameter to `Sort::getOrderString()` method that allow define extra order that 
+  will merge with current order before make order string (@vjik)
 
 ## 1.0.1 January 25, 2023
 

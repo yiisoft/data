@@ -96,7 +96,50 @@ final class SortTest extends TestCase
         ], $sort->getOrder());
     }
 
-    public function testGetOrderAsString(): void
+    public static function dataGetOrderAsString(): array
+    {
+        return [
+            [
+                '-a,b',
+                [
+                    'a' => 'desc',
+                    'b' => 'asc',
+                ],
+                [],
+            ],
+            [
+                'a,b',
+                [
+                    'a' => 'desc',
+                    'b' => 'asc',
+                ],
+                [
+                    'a' => 'asc'
+                ],
+            ],
+            [
+                'a,b,-c',
+                [
+                    'a' => 'desc',
+                    'b' => 'asc',
+                ],
+                [
+                    'a' => 'asc',
+                    'c' => 'desc',
+                ],
+            ],
+        ];
+    }
+
+    #[DataProvider('dataGetOrderAsString')]
+    public function testGetOrderAsString(string $expected, array $order, array $extend): void
+    {
+        $sort = Sort::any()->withOrder($order);
+
+        $this->assertSame($expected, $sort->getOrderAsString($extend));
+    }
+
+    public function testGetOrderAsStringDefault(): void
     {
         $sort = Sort::any()->withOrder([
             'a' => 'desc',
