@@ -1035,4 +1035,27 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($expectedIsOnLastPage, $paginator->isOnLastPage());
         $this->assertSame($expectedIds, ArrayHelper::getColumn($paginator->read(), 'id', keepKeys: false));
     }
+
+    public function testIsSupportSorting(): void
+    {
+        $sort = Sort::only(['id'])->withOrderString('id');
+        $reader = (new IterableDataReader([]))->withSort($sort);
+        $paginator = new KeysetPaginator($reader);
+
+        $this->assertTrue($paginator->isSupportSorting());
+    }
+
+    public function testWithSort()
+    {
+        $sort1 = Sort::only(['id'])->withOrderString('id');
+        $reader = (new IterableDataReader([]))->withSort($sort1);
+        $paginator1 = new KeysetPaginator($reader);
+
+        $sort2 = $sort1->withOrderString('-id');
+        $paginator2 = $paginator1->withSort($sort2);
+
+        $this->assertNotSame($paginator1, $paginator2);
+        $this->assertSame($sort1, $paginator1->getSort());
+        $this->assertSame($sort2, $paginator2->getSort());
+    }
 }

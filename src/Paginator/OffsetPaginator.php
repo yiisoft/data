@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Paginator;
 
 use Generator;
 use InvalidArgumentException;
+use LogicException;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
@@ -199,6 +200,22 @@ final class OffsetPaginator implements PaginatorInterface
     public function getTotalPages(): int
     {
         return (int) ceil($this->getTotalItems() / $this->pageSize);
+    }
+
+    public function isSupportSorting(): bool
+    {
+        return $this->dataReader instanceof SortableDataInterface;
+    }
+
+    public function withSort(?Sort $sort): static
+    {
+        if (!$this->dataReader instanceof SortableDataInterface) {
+            throw new LogicException('Data reader does not support sorting.');
+        }
+
+        $new = clone $this;
+        $new->dataReader = $this->dataReader->withSort($sort);
+        return $new;
     }
 
     public function getSort(): ?Sort
