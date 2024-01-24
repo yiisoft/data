@@ -250,7 +250,7 @@ final class KeysetPaginator implements PaginatorInterface
         return $this->isOnLastPage() ? null : $this->currentLastValue;
     }
 
-    public function isSupportSorting(): bool
+    public function isSortable(): bool
     {
         return true;
     }

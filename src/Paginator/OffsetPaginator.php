@@ -202,7 +202,7 @@ final class OffsetPaginator implements PaginatorInterface
         return (int) ceil($this->getTotalItems() / $this->pageSize);
     }
 
-    public function isSupportSorting(): bool
+    public function isSortable(): bool
     {
         return $this->dataReader instanceof SortableDataInterface;
     }

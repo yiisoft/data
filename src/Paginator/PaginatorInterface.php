@@ -95,7 +95,7 @@ interface PaginatorInterface extends ReadableDataInterface
     /**
      * @return bool Whether sorting is supported.
      */
-    public function isSupportSorting(): bool;
+    public function isSortable(): bool;
 
     /**
      * Get a new instance with sorting set.

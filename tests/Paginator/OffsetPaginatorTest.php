@@ -527,11 +527,11 @@ final class OffsetPaginatorTest extends TestCase
     }
 
     #[DataProvider('dataIsSupportSorting')]
-    public function testIsSupportSorting(bool $expected, ReadableDataInterface $reader): void
+    public function testIsSortable(bool $expected, ReadableDataInterface $reader): void
     {
         $paginator = new OffsetPaginator($reader);
 
-        $this->assertSame($expected, $paginator->isSupportSorting());
+        $this->assertSame($expected, $paginator->isSortable());
     }
 
     public function testWithSort(): void

@@ -1036,13 +1036,13 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertSame($expectedIds, ArrayHelper::getColumn($paginator->read(), 'id', keepKeys: false));
     }
 
-    public function testIsSupportSorting(): void
+    public function testIsSortable(): void
     {
         $sort = Sort::only(['id'])->withOrderString('id');
         $reader = (new IterableDataReader([]))->withSort($sort);
         $paginator = new KeysetPaginator($reader);
 
-        $this->assertTrue($paginator->isSupportSorting());
+        $this->assertTrue($paginator->isSortable());
     }
 
     public function testWithSort()
