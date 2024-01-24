@@ -12,10 +12,10 @@
 - Bug #155: Fix `Sort` configuration preparation (@vjik)
 - Bug #155: Fix same named order fields in `Sort` were not overriding previous ones (@vjik)
 - New #158: Add methods `PaginatorInterface::isSortable()` and `PaginatorInterface::withSort()` (@vjik)
-- Chg #159: Rename `PaginatorInterface` methods: `getNextPageToken()` to `getNextPageTokenValue()` 
-  and `getPrevPageToken()` to `getPrevPageTokenValue()` (@vjik)
+- Chg #159: Rename `PaginatorInterface` methods: `getNextPageToken()` to `getNextTokenValue()` 
+  and `getPreviousPageToken()` to `getPreviousTokenValue()` (@vjik)
 - Chg #159: Replace `PaginatorInterface` methods `withNextPageToken()` and `withPreviousPageToken` to
-  single method `withPageToken()`, and add `getPageToken()` method. These methods are used new `PageToken` class (@vjik)   
+  single method `withToken()`, and add `getToken()` method. These methods are used new `PageToken` class (@vjik)   
 
 ## 1.0.1 January 25, 2023
 

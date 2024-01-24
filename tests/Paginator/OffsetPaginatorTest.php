@@ -487,32 +487,32 @@ final class OffsetPaginatorTest extends TestCase
     public function testNextPageToken(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
-        $paginator = (new OffsetPaginator($dataReader))->withPageToken(PageToken::next('1'));
+        $paginator = (new OffsetPaginator($dataReader))->withToken(PageToken::next('1'));
 
-        $this->assertNull($paginator->getNextPageTokenValue());
+        $this->assertNull($paginator->getNextTokenValue());
 
         $paginator = $paginator->withPageSize(2);
 
-        $this->assertSame('2', $paginator->getNextPageTokenValue());
+        $this->assertSame('2', $paginator->getNextTokenValue());
     }
 
     public function testPreviousPageToken(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
-        $paginator = (new OffsetPaginator($dataReader))->withPageToken(PageToken::previous('1'));
+        $paginator = (new OffsetPaginator($dataReader))->withToken(PageToken::previous('1'));
 
-        $this->assertNull($paginator->getPreviousPageTokenValue());
+        $this->assertNull($paginator->getPreviousTokenValue());
 
-        $paginator = $paginator->withPageToken(PageToken::previous('5'));
+        $paginator = $paginator->withToken(PageToken::previous('5'));
 
-        $this->assertSame('4', $paginator->getPreviousPageTokenValue());
+        $this->assertSame('4', $paginator->getPreviousTokenValue());
     }
 
     public function testImmutability(): void
     {
         $paginator = new OffsetPaginator(new IterableDataReader([]));
 
-        $this->assertNotSame($paginator, $paginator->withPageToken(PageToken::previous('1')));
+        $this->assertNotSame($paginator, $paginator->withToken(PageToken::previous('1')));
         $this->assertNotSame($paginator, $paginator->withPageSize(1));
         $this->assertNotSame($paginator, $paginator->withCurrentPage(1));
     }
@@ -558,9 +558,9 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testWithNulledPageToken(): void
     {
-        $paginator = (new OffsetPaginator(new StubOffsetData()))->withPageToken(null);
+        $paginator = (new OffsetPaginator(new StubOffsetData()))->withToken(null);
 
-        $token = $paginator->getPageToken();
+        $token = $paginator->getToken();
 
         $this->assertNotNull($token);
         $this->assertSame('1', $token->value);

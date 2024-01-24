@@ -28,13 +28,13 @@ interface PaginatorInterface extends ReadableDataInterface
     /**
      * Get a new instance with page token.
      *
-     * @param PageToken|null $pageToken Page token. `Null` if current page is first.
+     * @param PageToken|null $token Page token. `Null` if current page is first.
      *
      * @return static New instance.
      *
      * @see PageToken
      */
-    public function withPageToken(?PageToken $pageToken): static;
+    public function withToken(?PageToken $token): static;
 
     /**
      * Get a new instance with page size set.
@@ -50,21 +50,21 @@ interface PaginatorInterface extends ReadableDataInterface
     /**
      * @return PageToken|null Current page token or `null` if not set.
      */
-    public function getPageToken(): ?PageToken;
+    public function getToken(): ?PageToken;
 
     /**
      * Get token for the next page.
      *
      * @return string|null Token for the next page. `null` if current page is last.
      */
-    public function getNextPageTokenValue(): ?string;
+    public function getNextTokenValue(): ?string;
 
     /**
      * Get token for the previous page.
      *
      * @return string|null Token for the previous page. `null` if current page is first.
      */
-    public function getPreviousPageTokenValue(): ?string;
+    public function getPreviousTokenValue(): ?string;
 
     /**
      * Get maximum number of items per page.

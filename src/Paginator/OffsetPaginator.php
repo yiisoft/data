@@ -88,9 +88,9 @@ final class OffsetPaginator implements PaginatorInterface
         $this->pageToken = PageToken::next('1');
     }
 
-    public function withPageToken(?PageToken $pageToken): static
+    public function withToken(?PageToken $token): static
     {
-        return $this->withCurrentPage($pageToken === null ? 1 : (int)$pageToken->value);
+        return $this->withCurrentPage($token === null ? 1 : (int)$token->value);
     }
 
     public function withPageSize(int $pageSize): static
@@ -124,17 +124,17 @@ final class OffsetPaginator implements PaginatorInterface
         return $new;
     }
 
-    public function getPageToken(): PageToken
+    public function getToken(): PageToken
     {
         return $this->pageToken;
     }
 
-    public function getNextPageTokenValue(): ?string
+    public function getNextTokenValue(): ?string
     {
         return $this->isOnLastPage() ? null : (string) ($this->getCurrentPage() + 1);
     }
 
-    public function getPreviousPageTokenValue(): ?string
+    public function getPreviousTokenValue(): ?string
     {
         return $this->isOnFirstPage() ? null : (string) ($this->getCurrentPage() - 1);
     }

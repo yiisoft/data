@@ -138,14 +138,14 @@ final class KeysetPaginator implements PaginatorInterface
         $this->currentLastValue = null;
     }
 
-    public function withPageToken(?PageToken $pageToken): static
+    public function withToken(?PageToken $token): static
     {
         $new = clone $this;
-        $new->pageToken = $pageToken;
+        $new->pageToken = $token;
         return $new;
     }
 
-    public function getPageToken(): ?PageToken
+    public function getToken(): ?PageToken
     {
         return $this->pageToken;
     }
@@ -235,12 +235,12 @@ final class KeysetPaginator implements PaginatorInterface
         return count($this->readCache);
     }
 
-    public function getPreviousPageTokenValue(): ?string
+    public function getPreviousTokenValue(): ?string
     {
         return $this->isOnFirstPage() ? null : $this->currentFirstValue;
     }
 
-    public function getNextPageTokenValue(): ?string
+    public function getNextTokenValue(): ?string
     {
         return $this->isOnLastPage() ? null : $this->currentLastValue;
     }
