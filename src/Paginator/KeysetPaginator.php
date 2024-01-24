@@ -235,14 +235,18 @@ final class KeysetPaginator implements PaginatorInterface
         return count($this->readCache);
     }
 
-    public function getPreviousTokenValue(): ?string
+    public function getPreviousToken(): ?PageToken
     {
-        return $this->isOnFirstPage() ? null : $this->currentFirstValue;
+        return $this->isOnFirstPage()
+            ? null
+            : ($this->currentFirstValue === null ? null : PageToken::previous($this->currentFirstValue));
     }
 
-    public function getNextTokenValue(): ?string
+    public function getNextToken(): ?PageToken
     {
-        return $this->isOnLastPage() ? null : $this->currentLastValue;
+        return $this->isOnLastPage()
+            ? null
+            : ($this->currentLastValue === null ? null : PageToken::next($this->currentLastValue));
     }
 
     public function isSortable(): bool

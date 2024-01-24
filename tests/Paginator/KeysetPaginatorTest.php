@@ -35,6 +35,8 @@ use function sprintf;
 
 final class KeysetPaginatorTest extends Testcase
 {
+    use PageTokenAssertTrait;
+
     private const ITEM_1 = [
         'id' => 1,
         'name' => 'Codename Boris',
@@ -215,8 +217,7 @@ final class KeysetPaginatorTest extends Testcase
         $expected = self::getDataSet([0, 1]);
 
         $this->assertSame($expected, $this->iterableToArray($paginator->read()));
-        $last = end($expected);
-        $this->assertSame((string)$last['id'], $paginator->getNextTokenValue());
+        $this->assertPageToken((string) end($expected)['id'], false, $paginator->getNextToken());
         $this->assertTrue($paginator->isOnFirstPage());
     }
 
@@ -233,7 +234,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         $this->assertSame([$data[0], $data[1]], $this->iterableToArray($paginator->read()));
-        $this->assertSame((string)$data[1]->id, $paginator->getNextTokenValue());
+        $this->assertPageToken((string) $data[1]->id, false, $paginator->getNextToken());
         $this->assertTrue($paginator->isOnFirstPage());
     }
 
@@ -259,7 +260,7 @@ final class KeysetPaginatorTest extends Testcase
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         $this->assertSame([$data[0], $data[1]], $this->iterableToArray($paginator->read()));
-        $this->assertSame((string)$data[1]->$getter(), $paginator->getNextTokenValue());
+        $this->assertPageToken((string) $data[1]->$getter(), false, $paginator->getNextToken());
         $this->assertTrue($paginator->isOnFirstPage());
     }
 
@@ -277,8 +278,7 @@ final class KeysetPaginatorTest extends Testcase
         $expected = self::getDataSet([2, 3]);
 
         $this->assertSame($expected, array_values((array) $paginator->read()));
-        $last = end($expected);
-        $this->assertSame((string)$last['id'], $paginator->getNextTokenValue());
+        $this->assertPageToken((string) end($expected)['id'], false, $paginator->getNextToken());
     }
 
     public function testReadSecondPageOrderedByName(): void
@@ -293,8 +293,7 @@ final class KeysetPaginatorTest extends Testcase
         $expected = self::getDataSet([2, 0]);
 
         $this->assertSame($expected, array_values($this->iterableToArray($paginator->read())));
-        $last = end($expected);
-        $this->assertSame((string)$last['name'], $paginator->getNextTokenValue());
+        $this->assertPageToken((string) end($expected)['name'], false, $paginator->getNextToken());
     }
 
     public static function dataReadOne(): array
@@ -342,10 +341,18 @@ final class KeysetPaginatorTest extends Testcase
         $read = array_values($this->iterableToArray($paginator->read()));
 
         $this->assertSame($expected, $read);
-        $first = reset($expected);
-        $last = end($expected);
-        $this->assertSame((string)$last['id'], $paginator->getNextTokenValue(), 'Last value fail!');
-        $this->assertSame((string)$first['id'], $paginator->getPreviousTokenValue(), 'First value fail!');
+        $this->assertPageToken(
+            (string) end($expected)['id'],
+            false,
+            $paginator->getNextToken(),
+            'Last value fail!',
+        );
+        $this->assertPageToken(
+            (string) reset($expected)['id'],
+            true,
+            $paginator->getPreviousToken(),
+            'First value fail!',
+        );
     }
 
     public function testForwardAndBackwardPagination(): void
@@ -360,24 +367,19 @@ final class KeysetPaginatorTest extends Testcase
         $read = array_values($this->iterableToArray($paginator->read()));
 
         $this->assertSame($expected, $read);
-
-        $first = reset($expected);
-        $last = end($expected);
-
-        $this->assertSame((string)$last['id'], $paginator->getNextTokenValue(), 'Last value fail!');
-        $this->assertSame((string)$first['id'], $paginator->getPreviousTokenValue(), 'First value fail!');
+        $this->assertPageToken((string) end($expected)['id'], false, $paginator->getNextToken());
+        $this->assertPageToken((string) reset($expected)['id'], true, $paginator->getPreviousToken());
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
-            ->withToken(PageToken::previous($paginator->getPreviousTokenValue()));
+            ->withToken(PageToken::previous($paginator->getPreviousToken()->value));
 
         $expected = self::getDataSet([0, 1]);
         $read = array_values($this->iterableToArray($paginator->read()));
 
         $this->assertSame($expected, $read);
-        $last = end($expected);
-        $this->assertSame((string)$last['id'], $paginator->getNextTokenValue(), 'Last value fail!');
-        $this->assertNull($paginator->getPreviousTokenValue(), 'First value fail!');
+        $this->assertPageToken((string) end($expected)['id'], false, $paginator->getNextToken(), 'Last value fail!');
+        $this->assertNull($paginator->getPreviousToken(), 'First value fail!');
     }
 
     public function testIsOnFirstPage(): void
@@ -505,45 +507,41 @@ final class KeysetPaginatorTest extends Testcase
         $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
-        $this->assertNotNull($paginator->getNextTokenValue());
+        $this->assertNotNull($paginator->getNextToken());
 
         $paginator = $paginator->withToken(PageToken::previous('1'));
         try {
-            $paginator->getNextTokenValue();
+            $paginator->getNextToken();
             $this->fail();
         } catch (RuntimeException) {
             $this->assertTrue(true);
         }
-        $this->assertNull($paginator->getPreviousTokenValue());
+        $this->assertNull($paginator->getPreviousToken());
 
         $paginator = $paginator->withToken(PageToken::previous('2'));
-        $this->assertNotNull($paginator->getNextTokenValue());
-        $this->assertSame('1', $paginator->getNextTokenValue());
-        $this->assertNull($paginator->getPreviousTokenValue());
+        $this->assertPageToken('1', false, $paginator->getNextToken());
+        $this->assertNull($paginator->getPreviousToken());
 
         $paginator = $paginator->withToken(PageToken::previous('3'));
-        $this->assertNotNull($paginator->getNextTokenValue());
-        $this->assertSame('2', $paginator->getNextTokenValue());
-        $this->assertNull($paginator->getPreviousTokenValue());
+        $this->assertPageToken('2', false, $paginator->getNextToken());
+        $this->assertNull($paginator->getPreviousToken());
 
         $paginator = $paginator->withToken(PageToken::next('6'));
         try {
-            $paginator->getPreviousTokenValue();
+            $paginator->getPreviousToken();
             $this->fail();
         } catch (RuntimeException) {
             $this->assertTrue(true);
         }
-        $this->assertNull($paginator->getNextTokenValue());
+        $this->assertNull($paginator->getNextToken());
 
         $paginator = $paginator->withToken(PageToken::next('5'));
-        $this->assertNotNull($paginator->getPreviousTokenValue());
-        $this->assertSame('6', $paginator->getPreviousTokenValue());
-        $this->assertNull($paginator->getNextTokenValue());
+        $this->assertPageToken('6', true, $paginator->getPreviousToken());
+        $this->assertNull($paginator->getNextToken());
 
         $paginator = $paginator->withToken(PageToken::next('4'));
-        $this->assertNull($paginator->getNextTokenValue());
-        $this->assertNotNull($paginator->getPreviousTokenValue());
-        $this->assertSame('5', $paginator->getPreviousTokenValue());
+        $this->assertNull($paginator->getNextToken());
+        $this->assertPageToken('5', true, $paginator->getPreviousToken());
     }
 
     public function testDefaultPageSize(): void

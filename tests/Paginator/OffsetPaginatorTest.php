@@ -22,6 +22,8 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class OffsetPaginatorTest extends TestCase
 {
+    use PageTokenAssertTrait;
+
     private const ITEM_1 = [
         'id' => 1,
         'name' => 'Codename Boris',
@@ -489,11 +491,11 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))->withToken(PageToken::next('1'));
 
-        $this->assertNull($paginator->getNextTokenValue());
+        $this->assertNull($paginator->getNextToken());
 
         $paginator = $paginator->withPageSize(2);
 
-        $this->assertSame('2', $paginator->getNextTokenValue());
+        $this->assertPageToken('2', false, $paginator->getNextToken());
     }
 
     public function testPreviousPageToken(): void
@@ -501,11 +503,11 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))->withToken(PageToken::previous('1'));
 
-        $this->assertNull($paginator->getPreviousTokenValue());
+        $this->assertNull($paginator->getPreviousToken());
 
         $paginator = $paginator->withToken(PageToken::previous('5'));
 
-        $this->assertSame('4', $paginator->getPreviousTokenValue());
+        $this->assertPageToken('4', false, $paginator->getPreviousToken());
     }
 
     public function testImmutability(): void
