@@ -1041,7 +1041,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertTrue($paginator->isSortable());
     }
 
-    public function testWithSort()
+    public function testWithSort(): void
     {
         $sort1 = Sort::only(['id'])->withOrderString('id');
         $reader = (new IterableDataReader([]))->withSort($sort1);
@@ -1053,5 +1053,19 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertNotSame($paginator1, $paginator2);
         $this->assertSame($sort1, $paginator1->getSort());
         $this->assertSame($sort2, $paginator2->getSort());
+    }
+
+    public function testGetPageToken(): void
+    {
+        $sort = Sort::only(['id'])->withOrderString('id');
+        $reader = (new IterableDataReader([]))->withSort($sort);
+        $paginator = new KeysetPaginator($reader);
+
+        $this->assertNull($paginator->getPageToken());
+
+        $token = PageToken::next('1');
+        $paginator = $paginator->withPageToken($token);
+
+        $this->assertSame($token, $paginator->getPageToken());
     }
 }
