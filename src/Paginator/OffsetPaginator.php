@@ -42,7 +42,7 @@ final class OffsetPaginator implements PaginatorInterface
     /**
      * @var PageToken Current page token
      */
-    private PageToken $pageToken;
+    private PageToken $token;
 
     /**
      * @var int Maximum number of items per page.
@@ -85,7 +85,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $this->dataReader = $dataReader;
-        $this->pageToken = PageToken::next('1');
+        $this->token = PageToken::next('1');
     }
 
     public function withToken(?PageToken $token): static
@@ -120,13 +120,13 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $new = clone $this;
-        $new->pageToken = PageToken::next((string) $page);
+        $new->token = PageToken::next((string) $page);
         return $new;
     }
 
     public function getToken(): PageToken
     {
-        return $this->pageToken;
+        return $this->token;
     }
 
     public function getNextTokenValue(): ?string
@@ -151,7 +151,7 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function getCurrentPage(): int
     {
-        return (int) $this->pageToken->value;
+        return (int) $this->token->value;
     }
 
     public function getCurrentPageSize(): int
@@ -251,7 +251,7 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function isOnFirstPage(): bool
     {
-        return $this->pageToken->value === '1';
+        return $this->token->value === '1';
     }
 
     public function isOnLastPage(): bool
