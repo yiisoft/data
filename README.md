@@ -27,14 +27,14 @@ Features are:
 
 ## Requirements
 
-- PHP 8.0 or higher.
+- PHP 8.1 or higher.
 
 ## Installation
 
 The package could be installed with composer:
 
 ```shell
-composer require yiisoft/data --prefer-dist
+composer require yiisoft/data
 ```
 
 ## Concepts
@@ -334,7 +334,7 @@ $dataReader = (new MyDataReader(...))
 
 $paginator = (new KeysetPaginator($dataReader))
     ->withPageSize(10)
-    ->withNextPageToken('13');
+    ->withPageToken(PageToken::next('13'));
 ```
 
 When displaying first page ID (or another field name to paginate by) of the item displayed last is used with `withNextPageToken()`
