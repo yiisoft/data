@@ -268,28 +268,6 @@ final class Sort
     }
 
     /**
-     * Returns default order of logical fields' directions.
-     *
-     * Example of result:
-     *
-     * ```
-     * [
-     *   'id' => 'asc',
-     *   'name' => 'desc',
-     * ]
-     * ```
-     *
-     * @psalm-return TOrder
-     */
-    public function getDefaults(): array
-    {
-        return array_map(
-            static fn($fieldConfig) => $fieldConfig['default'],
-            $this->config,
-        );
-    }
-
-    /**
      * Get current logical fields order.
      *
      * @return array Logical fields order.
