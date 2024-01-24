@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Paginator;
 
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorException;
@@ -15,6 +16,7 @@ use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Tests\Support\StubOffsetData;
 use Yiisoft\Data\Tests\TestCase;
 
 final class OffsetPaginatorTest extends TestCase
@@ -513,5 +515,44 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertNotSame($paginator, $paginator->withPreviousPageToken('1'));
         $this->assertNotSame($paginator, $paginator->withPageSize(1));
         $this->assertNotSame($paginator, $paginator->withCurrentPage(1));
+    }
+
+    public static function dataIsSupportSorting(): array
+    {
+        return [
+            [true, new IterableDataReader([])],
+            [false, new StubOffsetData()],
+        ];
+    }
+
+    #[DataProvider('dataIsSupportSorting')]
+    public function testIsSortable(bool $expected, ReadableDataInterface $reader): void
+    {
+        $paginator = new OffsetPaginator($reader);
+
+        $this->assertSame($expected, $paginator->isSortable());
+    }
+
+    public function testWithSort(): void
+    {
+        $sort1 = Sort::only(['id'])->withOrderString('id');
+        $reader = (new IterableDataReader([]))->withSort($sort1);
+        $paginator1 = new OffsetPaginator($reader);
+
+        $sort2 = $sort1->withOrderString('-id');
+        $paginator2 = $paginator1->withSort($sort2);
+
+        $this->assertNotSame($paginator1, $paginator2);
+        $this->assertSame($sort1, $paginator1->getSort());
+        $this->assertSame($sort2, $paginator2->getSort());
+    }
+
+    public function testWithSortNonSortableData(): void
+    {
+        $paginator = new OffsetPaginator(new StubOffsetData());
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Data reader does not support sorting.');
+        $paginator->withSort(null);
     }
 }

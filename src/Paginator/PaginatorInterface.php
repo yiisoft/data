@@ -93,6 +93,22 @@ interface PaginatorInterface extends ReadableDataInterface
     public function getCurrentPageSize(): int;
 
     /**
+     * @return bool Whether sorting is supported.
+     */
+    public function isSortable(): bool;
+
+    /**
+     * Get a new instance with sorting set.
+     *
+     * @param Sort|null $sort Sorting criteria or null for no sorting.
+     *
+     * @return static New instance.
+     *
+     * @throw LogicException When sorting is not supported.
+     */
+    public function withSort(?Sort $sort): static;
+
+    /**
      * Get current sort object.
      *
      * @return Sort|null Current sort object or null if no sorting is used.
