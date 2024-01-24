@@ -40,9 +40,9 @@ use function sprintf;
 final class OffsetPaginator implements PaginatorInterface
 {
     /**
-     * @var int Current page number.
+     * @var PageToken Current page token
      */
-    private int $currentPage = 1;
+    private PageToken $pageToken;
 
     /**
      * @var int Maximum number of items per page.
@@ -85,16 +85,12 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $this->dataReader = $dataReader;
+        $this->pageToken = PageToken::next('1');
     }
 
-    public function withNextPageToken(?string $token): static
+    public function withPageToken(?PageToken $pageToken): static
     {
-        return $this->withCurrentPage((int) $token);
-    }
-
-    public function withPreviousPageToken(?string $token): static
-    {
-        return $this->withCurrentPage((int) $token);
+        return $this->withCurrentPage($pageToken === null ? 1 : (int)$pageToken->value);
     }
 
     public function withPageSize(int $pageSize): static
@@ -124,18 +120,23 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $new = clone $this;
-        $new->currentPage = $page;
+        $new->pageToken = PageToken::next((string) $page);
         return $new;
     }
 
-    public function getNextPageToken(): ?string
+    public function getPageToken(): PageToken
     {
-        return $this->isOnLastPage() ? null : (string) ($this->currentPage + 1);
+        return $this->pageToken;
     }
 
-    public function getPreviousPageToken(): ?string
+    public function getNextPageTokenValue(): ?string
     {
-        return $this->isOnFirstPage() ? null : (string) ($this->currentPage - 1);
+        return $this->isOnLastPage() ? null : (string) ($this->getCurrentPage() + 1);
+    }
+
+    public function getPreviousPageTokenValue(): ?string
+    {
+        return $this->isOnFirstPage() ? null : (string) ($this->getCurrentPage() - 1);
     }
 
     public function getPageSize(): int
@@ -150,7 +151,7 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function getCurrentPage(): int
     {
-        return $this->currentPage;
+        return (int) $this->pageToken->value;
     }
 
     public function getCurrentPageSize(): int
@@ -161,11 +162,13 @@ final class OffsetPaginator implements PaginatorInterface
             return $this->getTotalItems();
         }
 
-        if ($this->currentPage < $pages) {
+        $currentPage = $this->getCurrentPage();
+
+        if ($currentPage < $pages) {
             return $this->pageSize;
         }
 
-        if ($this->currentPage === $pages) {
+        if ($currentPage === $pages) {
             return $this->getTotalItems() - $this->getOffset();
         }
 
@@ -179,7 +182,7 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function getOffset(): int
     {
-        return $this->pageSize * ($this->currentPage - 1);
+        return $this->pageSize * ($this->getCurrentPage() - 1);
     }
 
     /**
@@ -228,7 +231,7 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function read(): iterable
     {
-        if ($this->currentPage > $this->getInternalTotalPages()) {
+        if ($this->getCurrentPage() > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found.');
         }
 
@@ -248,16 +251,16 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function isOnFirstPage(): bool
     {
-        return $this->currentPage === 1;
+        return $this->pageToken->value === '1';
     }
 
     public function isOnLastPage(): bool
     {
-        if ($this->currentPage > $this->getInternalTotalPages()) {
+        if ($this->getCurrentPage() > $this->getInternalTotalPages()) {
             throw new PaginatorException('Page not found.');
         }
 
-        return $this->currentPage === $this->getInternalTotalPages();
+        return $this->getCurrentPage() === $this->getInternalTotalPages();
     }
 
     public function isPaginationRequired(): bool

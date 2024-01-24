@@ -61,8 +61,7 @@ final class KeysetPaginator implements PaginatorInterface
      * @var int Maximum number of items per page.
      */
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
-    private ?string $firstValue = null;
-    private ?string $lastValue = null;
+    private ?PageToken $pageToken = null;
     private ?string $currentFirstValue = null;
     private ?string $currentLastValue = null;
 
@@ -139,20 +138,16 @@ final class KeysetPaginator implements PaginatorInterface
         $this->currentLastValue = null;
     }
 
-    public function withNextPageToken(?string $token): static
+    public function withPageToken(?PageToken $pageToken): static
     {
         $new = clone $this;
-        $new->firstValue = null;
-        $new->lastValue = $token;
+        $new->pageToken = $pageToken;
         return $new;
     }
 
-    public function withPreviousPageToken(?string $token): static
+    public function getPageToken(): ?PageToken
     {
-        $new = clone $this;
-        $new->firstValue = $token;
-        $new->lastValue = null;
-        return $new;
+        return $this->pageToken;
     }
 
     public function withPageSize(int $pageSize): static
@@ -201,19 +196,19 @@ final class KeysetPaginator implements PaginatorInterface
         /** @infection-ignore-all Any value more one in line below will be ignored into `readData()` method */
         $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
 
-        if ($this->isGoingToPreviousPage()) {
+        if ($this->pageToken?->isPrevious === true) {
             $sort = $this->reverseSort($sort);
             $dataReader = $dataReader->withSort($sort);
         }
 
-        if ($this->isGoingSomewhere()) {
+        if ($this->pageToken !== null) {
             $dataReader = $dataReader->withFilter($this->getFilter($sort));
             $this->hasPreviousPage = $this->previousPageExist($dataReader, $sort);
         }
 
         $data = $this->readData($dataReader, $sort);
 
-        if ($this->isGoingToPreviousPage()) {
+        if ($this->pageToken?->isPrevious === true) {
             $data = $this->reverseData($data);
         }
 
@@ -240,12 +235,12 @@ final class KeysetPaginator implements PaginatorInterface
         return count($this->readCache);
     }
 
-    public function getPreviousPageToken(): ?string
+    public function getPreviousPageTokenValue(): ?string
     {
         return $this->isOnFirstPage() ? null : $this->currentFirstValue;
     }
 
-    public function getNextPageToken(): ?string
+    public function getNextPageTokenValue(): ?string
     {
         return $this->isOnLastPage() ? null : $this->currentLastValue;
     }
@@ -269,7 +264,7 @@ final class KeysetPaginator implements PaginatorInterface
 
     public function isOnFirstPage(): bool
     {
-        if ($this->lastValue === null && $this->firstValue === null) {
+        if ($this->pageToken === null) {
             return true;
         }
 
@@ -354,7 +349,10 @@ final class KeysetPaginator implements PaginatorInterface
 
     private function getFilter(Sort $sort): FilterInterface
     {
-        $value = $this->getValue();
+        /**
+         * @psalm-var PageToken $this->pageToken The code calling this method must ensure that page token is not null.
+         */
+        $value = $this->pageToken->value;
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
 
         $filter = $sorting === SORT_ASC ? new GreaterThan($field, $value) : new LessThan($field, $value);
@@ -375,7 +373,10 @@ final class KeysetPaginator implements PaginatorInterface
 
     private function getReverseFilter(Sort $sort): FilterInterface
     {
-        $value = $this->getValue();
+        /**
+         * @psalm-var PageToken $this->pageToken The code calling this method must ensure that page token is not null.
+         */
+        $value = $this->pageToken->value;
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
 
         $filter = $sorting === SORT_ASC ? new LessThanOrEqual($field, $value) : new GreaterThanOrEqual($field, $value);
@@ -392,15 +393,6 @@ final class KeysetPaginator implements PaginatorInterface
                 true,
             )
         );
-    }
-
-    /**
-     * @psalm-suppress NullableReturnStatement, InvalidNullableReturnType, PossiblyNullArgument The code calling this
-     * method must ensure that at least one of the properties `$firstValue` or `$lastValue` is not `null`.
-     */
-    private function getValue(): string
-    {
-        return $this->isGoingToPreviousPage() ? $this->firstValue : $this->lastValue;
     }
 
     private function reverseSort(Sort $sort): Sort
@@ -425,15 +417,5 @@ final class KeysetPaginator implements PaginatorInterface
             (string) key($order),
             reset($order) === 'asc' ? SORT_ASC : SORT_DESC,
         ];
-    }
-
-    private function isGoingToPreviousPage(): bool
-    {
-        return $this->firstValue !== null && $this->lastValue === null;
-    }
-
-    private function isGoingSomewhere(): bool
-    {
-        return $this->firstValue !== null || $this->lastValue !== null;
     }
 }
