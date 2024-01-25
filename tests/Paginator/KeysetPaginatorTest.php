@@ -273,7 +273,7 @@ final class KeysetPaginatorTest extends Testcase
 
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
-            ->withToken(new PageToken('2', false));
+            ->withToken(PageToken::next('2'));
 
         $expected = self::getDataSet([2, 3]);
 
