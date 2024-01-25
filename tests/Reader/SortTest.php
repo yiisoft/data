@@ -333,4 +333,13 @@ final class SortTest extends TestCase
         $sort = Sort::only($config);
         $this->assertSame($expected, $sort->getCriteria());
     }
+
+    public function testHasFieldInConfig(): void
+    {
+        $sort = Sort::only(['a', 'b']);
+
+        $this->assertTrue($sort->hasFieldInConfig('a'));
+        $this->assertTrue($sort->hasFieldInConfig('b'));
+        $this->assertFalse($sort->hasFieldInConfig('c'));
+    }
 }

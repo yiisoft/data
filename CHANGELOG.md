@@ -12,6 +12,7 @@
 - Bug #155: Fix `Sort` configuration preparation (@vjik)
 - Bug #155: Fix same named order fields in `Sort` were not overriding previous ones (@vjik)
 - New #158: Add methods `PaginatorInterface::isSortable()` and `PaginatorInterface::withSort()` (@vjik)
+- New #158: Add `Sort::hasFieldInConfig()` method that check for the presence of a field in the sort config (@vjik)
 
 ## 1.0.1 January 25, 2023
 
