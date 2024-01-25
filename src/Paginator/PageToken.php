@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Paginator;
 
 final class PageToken
 {
-    public function __construct(
+    private function __construct(
         public readonly string $value,
         public readonly bool $isPrevious,
     ) {
