@@ -330,4 +330,14 @@ final class Sort
 
         return $criteria;
     }
+
+    /**
+     * @param string $name The field name.
+     *
+     * @return bool Whether the field is present in the config.
+     */
+    public function hasFieldInConfig(string $name): bool
+    {
+        return isset($this->config[$name]);
+    }
 }
