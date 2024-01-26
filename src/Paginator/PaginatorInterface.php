@@ -26,22 +26,15 @@ interface PaginatorInterface extends ReadableDataInterface
     public const DEFAULT_PAGE_SIZE = 10;
 
     /**
-     * Get a new instance with token for the next page set.
+     * Get a new instance with page token.
      *
-     * @param string|null $token Token for the next page. Null if current page is last.
-     *
-     * @return static New instance.
-     */
-    public function withNextPageToken(?string $token): static;
-
-    /**
-     * Get a new instance with token for the previous page set.
-     *
-     * @param string|null $token Token for the previous page. Null if current page is first.
+     * @param PageToken|null $token Page token. `Null` if current page is first.
      *
      * @return static New instance.
+     *
+     * @see PageToken
      */
-    public function withPreviousPageToken(?string $token): static;
+    public function withToken(?PageToken $token): static;
 
     /**
      * Get a new instance with page size set.
@@ -55,18 +48,23 @@ interface PaginatorInterface extends ReadableDataInterface
     public function withPageSize(int $pageSize): static;
 
     /**
+     * @return PageToken|null Current page token or `null` if not set.
+     */
+    public function getToken(): ?PageToken;
+
+    /**
      * Get token for the next page.
      *
-     * @return string|null Token for the next page. Null if current page is last.
+     * @return PageToken|null Page token for the next page. `null` if current page is last.
      */
-    public function getNextPageToken(): ?string;
+    public function getNextToken(): ?PageToken;
 
     /**
      * Get token for the previous page.
      *
-     * @return string|null Token for the previous page. Null if current page is first.
+     * @return PageToken|null Page token for the previous page. `null` if current page is first.
      */
-    public function getPreviousPageToken(): ?string;
+    public function getPreviousToken(): ?PageToken;
 
     /**
      * Get maximum number of items per page.
