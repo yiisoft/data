@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
@@ -21,6 +22,8 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class OffsetPaginatorTest extends TestCase
 {
+    use PageTokenAssertTrait;
+
     private const ITEM_1 = [
         'id' => 1,
         'name' => 'Codename Boris',
@@ -486,33 +489,32 @@ final class OffsetPaginatorTest extends TestCase
     public function testNextPageToken(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
-        $paginator = (new OffsetPaginator($dataReader))->withNextPageToken('1');
+        $paginator = (new OffsetPaginator($dataReader))->withToken(PageToken::next('1'));
 
-        $this->assertNull($paginator->getNextPageToken());
+        $this->assertNull($paginator->getNextToken());
 
         $paginator = $paginator->withPageSize(2);
 
-        $this->assertSame('2', $paginator->getNextPageToken());
+        $this->assertPageToken('2', false, $paginator->getNextToken());
     }
 
     public function testPreviousPageToken(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
-        $paginator = (new OffsetPaginator($dataReader))->withPreviousPageToken('1');
+        $paginator = (new OffsetPaginator($dataReader))->withToken(PageToken::previous('1'));
 
-        $this->assertNull($paginator->getPreviousPageToken());
+        $this->assertNull($paginator->getPreviousToken());
 
-        $paginator = $paginator->withPreviousPageToken('5');
+        $paginator = $paginator->withToken(PageToken::previous('5'));
 
-        $this->assertSame('4', $paginator->getPreviousPageToken());
+        $this->assertPageToken('4', false, $paginator->getPreviousToken());
     }
 
     public function testImmutability(): void
     {
         $paginator = new OffsetPaginator(new IterableDataReader([]));
 
-        $this->assertNotSame($paginator, $paginator->withNextPageToken('1'));
-        $this->assertNotSame($paginator, $paginator->withPreviousPageToken('1'));
+        $this->assertNotSame($paginator, $paginator->withToken(PageToken::previous('1')));
         $this->assertNotSame($paginator, $paginator->withPageSize(1));
         $this->assertNotSame($paginator, $paginator->withCurrentPage(1));
     }
@@ -554,5 +556,16 @@ final class OffsetPaginatorTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Data reader does not support sorting.');
         $paginator->withSort(null);
+    }
+
+    public function testWithNulledPageToken(): void
+    {
+        $paginator = (new OffsetPaginator(new StubOffsetData()))->withToken(null);
+
+        $token = $paginator->getToken();
+
+        $this->assertNotNull($token);
+        $this->assertSame('1', $token->value);
+        $this->assertFalse($token->isPrevious);
     }
 }
