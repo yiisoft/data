@@ -16,6 +16,11 @@
   `getNextPageToken()` with `getNextToken()`, `getPreviousPageToken()` with `getPreviousToken()`, and add `getToken()`.
   These methods use new `PageToken` class (@vjik)
 - New #160: Add `Sort::hasFieldInConfig()` method that checks for the presence of a field in the sort config (@vjik)
+- New #161: Add `PageNotFoundException` (@vjik)
+- Chg #161: `PaginatorInterface::getCurrentPageSize()` returns 0 instead throws exception if page specified is 
+  not found (@vjik)
+- Enh #161: Add more specified psalm annotations to `CountableDataInterface::count()`,
+  `PaginatorInterface::getCurrentPageSize()` and `OffsetPaginator::getTotalItems()` (@vjik)
 
 ## 1.0.1 January 25, 2023
 
