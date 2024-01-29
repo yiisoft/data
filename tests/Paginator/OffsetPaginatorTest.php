@@ -447,14 +447,10 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
-            ->withCurrentPage(4)
-        ;
+            ->withCurrentPage(4);
 
         $this->assertSame(5, $paginator->getTotalItems());
-        $this->expectException(PageNotFoundException::class);
-        $this->expectExceptionMessage('Page not found.');
-
-        $paginator->getCurrentPageSize();
+        $this->assertSame(0, $paginator->getCurrentPageSize());
     }
 
     public function testEmptyDataSet(): void

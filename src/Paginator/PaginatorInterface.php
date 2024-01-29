@@ -86,8 +86,6 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @see getPageSize()
      *
-     * @throws PageNotFoundException If page specified is not found.
-     *
      * @return int Current page size.
      *
      * @psalm-return non-negative-int

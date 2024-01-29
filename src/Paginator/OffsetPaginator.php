@@ -177,7 +177,7 @@ final class OffsetPaginator implements PaginatorInterface
             return $this->getTotalItems() - $this->getOffset();
         }
 
-        throw new PageNotFoundException();
+        return 0;
     }
 
     /**
