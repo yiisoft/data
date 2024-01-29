@@ -177,7 +177,7 @@ final class OffsetPaginator implements PaginatorInterface
             return $this->getTotalItems() - $this->getOffset();
         }
 
-        throw new PaginatorException('Page not found.');
+        throw new PageNotFoundException();
     }
 
     /**
@@ -239,7 +239,7 @@ final class OffsetPaginator implements PaginatorInterface
     public function read(): iterable
     {
         if ($this->getCurrentPage() > $this->getInternalTotalPages()) {
-            throw new PaginatorException('Page not found.');
+            throw new PageNotFoundException();
         }
 
         yield from $this->dataReader
@@ -264,7 +264,7 @@ final class OffsetPaginator implements PaginatorInterface
     public function isOnLastPage(): bool
     {
         if ($this->getCurrentPage() > $this->getInternalTotalPages()) {
-            throw new PaginatorException('Page not found.');
+            throw new PageNotFoundException();
         }
 
         return $this->getCurrentPage() === $this->getInternalTotalPages();
