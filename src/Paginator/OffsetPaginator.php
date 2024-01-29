@@ -46,6 +46,7 @@ final class OffsetPaginator implements PaginatorInterface
 
     /**
      * @var int Maximum number of items per page.
+     * @psalm-var positive-int
      */
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
 
@@ -95,6 +96,9 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withPageSize(int $pageSize): static
     {
+        /**
+         * @psalm-suppress DocblockTypeContradiction We don't believe in psalm annotations.
+         */
         if ($pageSize < 1) {
             throw new PaginatorException('Page size should be at least 1.');
         }
@@ -169,6 +173,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         if ($currentPage === $pages) {
+            /** @psalm-var positive-int Because total items is more than offset */
             return $this->getTotalItems() - $this->getOffset();
         }
 
@@ -189,6 +194,8 @@ final class OffsetPaginator implements PaginatorInterface
      * Get total number of items in the whole data reader being paginated.
      *
      * @return int Total items number.
+     *
+     * @psalm-return non-negative-int
      */
     public function getTotalItems(): int
     {
@@ -268,6 +275,9 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->getTotalPages() > 1;
     }
 
+    /**
+     * @psalm-return non-negative-int
+     */
     private function getInternalTotalPages(): int
     {
         return max(1, $this->getTotalPages());

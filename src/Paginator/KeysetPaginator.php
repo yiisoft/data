@@ -152,6 +152,9 @@ final class KeysetPaginator implements PaginatorInterface
 
     public function withPageSize(int $pageSize): static
     {
+        /**
+         * @psalm-suppress DocblockTypeContradiction We don't believe in psalm annotations.
+         */
         if ($pageSize < 1) {
             throw new InvalidArgumentException('Page size should be at least 1.');
         }

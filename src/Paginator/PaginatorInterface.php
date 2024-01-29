@@ -44,6 +44,8 @@ interface PaginatorInterface extends ReadableDataInterface
      * @throws PaginatorException If page size is incorrect.
      *
      * @return static New instance.
+     *
+     * @psalm-param positive-int $pageSize
      */
     public function withPageSize(int $pageSize): static;
 
@@ -87,6 +89,8 @@ interface PaginatorInterface extends ReadableDataInterface
      * @throws PaginatorException If page specified is not found.
      *
      * @return int Current page size.
+     *
+     * @psalm-return non-negative-int
      */
     public function getCurrentPageSize(): int;
 
