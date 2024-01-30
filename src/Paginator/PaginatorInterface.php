@@ -84,9 +84,9 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @see getPageSize()
      *
-     * @throws PaginatorException If page specified is not found.
-     *
      * @return int Current page size.
+     *
+     * @psalm-return non-negative-int
      */
     public function getCurrentPageSize(): int;
 
@@ -116,7 +116,7 @@ interface PaginatorInterface extends ReadableDataInterface
     /**
      * Get iterator that could be used to read currently active page items.
      *
-     * @throws PaginatorException If page specified is not found.
+     * @throws PageNotFoundException If page specified is not found.
      *
      * @return iterable Iterator with items for the current page.
      * @psalm-return iterable<TKey, TValue>
@@ -126,7 +126,7 @@ interface PaginatorInterface extends ReadableDataInterface
     /**
      * Get whether current page is the last one.
      *
-     * @throws PaginatorException If page specified is not found.
+     * @throws PageNotFoundException If page specified is not found.
      *
      * @return bool Whether current page is the last one.
      */

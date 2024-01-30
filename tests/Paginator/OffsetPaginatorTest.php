@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
@@ -222,7 +223,7 @@ final class OffsetPaginatorTest extends TestCase
         ;
 
         $this->assertSame(3, $paginator->getTotalPages());
-        $this->expectException(PaginatorException::class);
+        $this->expectException(PageNotFoundException::class);
         $this->expectExceptionMessage('Page not found.');
 
         $this->iterableToArray($paginator->read());
@@ -397,7 +398,7 @@ final class OffsetPaginatorTest extends TestCase
         ;
 
         $this->assertSame(3, $paginator->getTotalPages());
-        $this->expectException(PaginatorException::class);
+        $this->expectException(PageNotFoundException::class);
         $this->expectExceptionMessage('Page not found.');
 
         $paginator->isOnLastPage();
@@ -446,14 +447,10 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
-            ->withCurrentPage(4)
-        ;
+            ->withCurrentPage(4);
 
         $this->assertSame(5, $paginator->getTotalItems());
-        $this->expectException(PaginatorException::class);
-        $this->expectExceptionMessage('Page not found.');
-
-        $paginator->getCurrentPageSize();
+        $this->assertSame(0, $paginator->getCurrentPageSize());
     }
 
     public function testEmptyDataSet(): void
