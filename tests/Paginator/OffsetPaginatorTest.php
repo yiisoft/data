@@ -13,6 +13,7 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
+use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
@@ -553,6 +554,45 @@ final class OffsetPaginatorTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Data reader does not support sorting.');
         $paginator->withSort(null);
+    }
+
+    public static function dataIsFilterable(): array
+    {
+        return [
+            [true, new IterableDataReader([])],
+            [false, new StubOffsetData()],
+        ];
+    }
+
+    #[DataProvider('dataIsFilterable')]
+    public function testIsFilterable(bool $expected, ReadableDataInterface $reader): void
+    {
+        $paginator = new OffsetPaginator($reader);
+
+        $this->assertSame($expected, $paginator->isFilterable());
+    }
+
+    public function testWithFilter(): void
+    {
+        $reader = (new IterableDataReader([
+            'a' => ['id' => 1],
+            'b' => ['id' => 2],
+        ]));
+        $paginator = new OffsetPaginator($reader);
+
+        $paginatorWithFilter = $paginator->withFilter(new Equals('id', 2));
+
+        $this->assertNotSame($paginator, $paginatorWithFilter);
+        $this->assertSame(['b' => ['id' => 2]], iterator_to_array($paginatorWithFilter->read()));
+    }
+
+    public function testWithFilterNonFilterableData(): void
+    {
+        $paginator = new OffsetPaginator(new StubOffsetData());
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Data reader does not support filtering.');
+        $paginator->withFilter(new Equals('id', 2));
     }
 
     public function testWithNulledPageToken(): void
