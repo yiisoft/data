@@ -102,9 +102,8 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @param Sort|null $sort Sorting criteria or null for no sorting.
      *
-     * @return static New instance.
-     *
      * @throws LogicException When sorting is not supported.
+     * @return static New instance.
      */
     public function withSort(?Sort $sort): static;
 
@@ -125,9 +124,8 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @param FilterInterface $filter Data reading criteria.
      *
-     * @return static New instance.
-     *
      * @throws LogicException When filtering is not supported.
+     * @return static New instance.
      */
     public function withFilter(FilterInterface $filter): static;
 
