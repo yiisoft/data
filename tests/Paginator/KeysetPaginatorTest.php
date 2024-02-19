@@ -13,6 +13,7 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\KeysetFilterContext;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
@@ -1051,6 +1052,30 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertNotSame($paginator1, $paginator2);
         $this->assertSame($sort1, $paginator1->getSort());
         $this->assertSame($sort2, $paginator2->getSort());
+    }
+
+    public function testIsFilterable(): void
+    {
+        $sort = Sort::only(['id'])->withOrderString('id');
+        $reader = (new IterableDataReader([]))->withSort($sort);
+        $paginator = new KeysetPaginator($reader);
+
+        $this->assertTrue($paginator->isFilterable());
+    }
+
+    public function testWithFilter(): void
+    {
+        $sort = Sort::only(['id'])->withOrderString('id');
+        $reader = (new IterableDataReader([
+            'a' => ['id' => 1],
+            'b' => ['id' => 2],
+        ]))->withSort($sort);
+        $paginator = new KeysetPaginator($reader);
+
+        $paginatorWithFilter = $paginator->withFilter(new Equals('id', 2));
+
+        $this->assertNotSame($paginator, $paginatorWithFilter);
+        $this->assertSame(['b' => ['id' => 2]], $paginatorWithFilter->read());
     }
 
     public function testGetPageToken(): void
