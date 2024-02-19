@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Paginator;
 
 use Closure;
 use InvalidArgumentException;
+use LogicException;
 use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
@@ -264,6 +265,18 @@ final class KeysetPaginator implements PaginatorInterface
     public function getSort(): ?Sort
     {
         return $this->dataReader->getSort();
+    }
+
+    public function isFilterable(): bool
+    {
+        return true;
+    }
+
+    public function withFilter(FilterInterface $filter): static
+    {
+        $new = clone $this;
+        $new->dataReader = $this->dataReader->withFilter($filter);
+        return $new;
     }
 
     public function isOnFirstPage(): bool

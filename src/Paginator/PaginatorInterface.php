@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use LogicException;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 
@@ -102,7 +104,7 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @return static New instance.
      *
-     * @throw LogicException When sorting is not supported.
+     * @throws LogicException When sorting is not supported.
      */
     public function withSort(?Sort $sort): static;
 
@@ -112,6 +114,22 @@ interface PaginatorInterface extends ReadableDataInterface
      * @return Sort|null Current sort object or null if no sorting is used.
      */
     public function getSort(): ?Sort;
+
+    /**
+     * @return bool Whether filtering is supported.
+     */
+    public function isFilterable(): bool;
+
+    /**
+     * Returns new instance with data reading criteria set.
+     *
+     * @param FilterInterface $filter Data reading criteria.
+     *
+     * @return static New instance.
+     *
+     * @throws LogicException When filtering is not supported.
+     */
+    public function withFilter(FilterInterface $filter): static;
 
     /**
      * Get iterator that could be used to read currently active page items.
