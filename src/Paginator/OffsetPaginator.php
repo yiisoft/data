@@ -8,6 +8,8 @@ use Generator;
 use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Reader\CountableDataInterface;
+use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
@@ -228,6 +230,22 @@ final class OffsetPaginator implements PaginatorInterface
     public function getSort(): ?Sort
     {
         return $this->dataReader instanceof SortableDataInterface ? $this->dataReader->getSort() : null;
+    }
+
+    public function isFilterable(): bool
+    {
+        return $this->dataReader instanceof FilterableDataInterface;
+    }
+
+    public function withFilter(FilterInterface $filter): static
+    {
+        if (!$this->dataReader instanceof FilterableDataInterface) {
+            throw new LogicException('Data reader does not support filtering.');
+        }
+
+        $new = clone $this;
+        $new->dataReader = $this->dataReader->withFilter($filter);
+        return $new;
     }
 
     /**

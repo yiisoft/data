@@ -266,6 +266,18 @@ final class KeysetPaginator implements PaginatorInterface
         return $this->dataReader->getSort();
     }
 
+    public function isFilterable(): bool
+    {
+        return true;
+    }
+
+    public function withFilter(FilterInterface $filter): static
+    {
+        $new = clone $this;
+        $new->dataReader = $this->dataReader->withFilter($filter);
+        return $new;
+    }
+
     public function isOnFirstPage(): bool
     {
         if ($this->token === null) {
