@@ -24,9 +24,7 @@ final class InHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof In) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var In $filter */
 
         $itemValue = ArrayHelper::getValue($item, $filter->field);
         $argumentValue = $filter->getValues();

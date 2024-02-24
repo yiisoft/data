@@ -58,14 +58,4 @@ final class LessThanTest extends TestCase
 
         $this->assertSame($expected, $handler->match($item, new LessThan('value', $value), []));
     }
-
-    public function testInvalidFilter(): void
-    {
-        $handler = new LessThanHandler();
-        $filter = new EqualsEmpty('test');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Incorrect filter.');
-        $handler->match([], $filter, []);
-    }
 }

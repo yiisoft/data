@@ -24,9 +24,7 @@ final class LessThanOrEqualHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof LessThanOrEqual) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var LessThanOrEqual $filter */
 
         $itemValue = ArrayHelper::getValue($item, $filter->field);
         $argumentValue = $filter->getValue();

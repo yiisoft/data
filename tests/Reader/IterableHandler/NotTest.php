@@ -48,14 +48,4 @@ final class NotTest extends TestCase
 
         (new NotHandler())->match(['id' => 1], new Not(new FilterWithoutHandler()), []);
     }
-
-    public function testInvalidFilter(): void
-    {
-        $handler = new NotHandler();
-        $filter = new EqualsEmpty('test');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Incorrect filter.');
-        $handler->match([], $filter, []);
-    }
 }

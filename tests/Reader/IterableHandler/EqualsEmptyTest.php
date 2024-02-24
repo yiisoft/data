@@ -33,14 +33,4 @@ final class EqualsEmptyTest extends TestCase
     {
         $this->assertSame($expected, (new EqualsEmptyHandler())->match($item, new EqualsEmpty('value'), []));
     }
-
-    public function testInvalidFilter(): void
-    {
-        $handler = new EqualsEmptyHandler();
-        $filter = new EqualsNull('test');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Incorrect filter.');
-        $handler->match([], $filter, []);
-    }
 }

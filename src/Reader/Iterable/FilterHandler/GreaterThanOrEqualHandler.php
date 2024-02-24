@@ -24,9 +24,7 @@ final class GreaterThanOrEqualHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof GreaterThanOrEqual) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var GreaterThanOrEqual $filter */
 
         $itemValue = ArrayHelper::getValue($item, $filter->field);
         $argumentValue = $filter->getValue();

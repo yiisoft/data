@@ -55,14 +55,4 @@ final class EqualsNullTest extends TestCase
 
         $this->assertSame([3 => $car3, 5 => $car5], $result);
     }
-
-    public function testInvalidFilter(): void
-    {
-        $handler = new EqualsNullHandler();
-        $filter = new EqualsEmpty('test');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Incorrect filter.');
-        $handler->match([], $filter, []);
-    }
 }

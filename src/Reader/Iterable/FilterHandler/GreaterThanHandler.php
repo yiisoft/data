@@ -23,9 +23,7 @@ final class GreaterThanHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof GreaterThan) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var GreaterThan $filter */
 
         $itemValue = ArrayHelper::getValue($item, $filter->field);
         $argumentValue = $filter->getValue();

@@ -58,14 +58,4 @@ final class GreaterThanTest extends TestCase
 
         $this->assertSame($expected, $handler->match($item, new GreaterThan('value', $value), []));
     }
-
-    public function testInvalidFilter(): void
-    {
-        $handler = new GreaterThanHandler();
-        $filter = new EqualsEmpty('test');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Incorrect filter.');
-        $handler->match([], $filter, []);
-    }
 }

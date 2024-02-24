@@ -24,9 +24,7 @@ final class NotHandler implements IterableFilterHandlerInterface
 
     public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof Not) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Not $filter */
 
         $filterHandler = $iterableFilterHandlers[$filter->filter::class] ?? null;
         if ($filterHandler === null) {

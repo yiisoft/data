@@ -34,14 +34,4 @@ final class LikeTest extends TestCase
 
         $this->assertSame($expected, $processor->match($item, new Like($field, $value), []));
     }
-
-    public function testInvalidFilter(): void
-    {
-        $handler = new LikeHandler();
-        $filter = new EqualsEmpty('test');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Incorrect filter.');
-        $handler->match([], $filter, []);
-    }
 }

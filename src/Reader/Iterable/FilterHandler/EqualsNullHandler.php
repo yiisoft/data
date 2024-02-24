@@ -22,9 +22,7 @@ final class EqualsNullHandler implements IterableFilterHandlerInterface
 
     public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof EqualsNull) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var EqualsNull $filter */
 
         return ArrayHelper::getValue($item, $filter->field) === null;
     }

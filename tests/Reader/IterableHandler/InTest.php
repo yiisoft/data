@@ -34,14 +34,4 @@ final class InTest extends TestCase
 
         $this->assertSame($expected, $handler->match($item, new In('value', $value), []));
     }
-
-    public function testInvalidFilter(): void
-    {
-        $handler = new InHandler();
-        $filter = new EqualsEmpty('test');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Incorrect filter.');
-        $handler->match([], $filter, []);
-    }
 }

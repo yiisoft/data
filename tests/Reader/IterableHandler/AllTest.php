@@ -83,14 +83,4 @@ final class AllTest extends TestCase
 
         (new AllHandler())->match(['id' => 1], new All(new FilterWithoutHandler()), []);
     }
-
-    public function testInvalidFilter(): void
-    {
-        $handler = new AllHandler();
-        $filter = new EqualsEmpty('test');
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Incorrect filter.');
-        $handler->match([], $filter, []);
-    }
 }

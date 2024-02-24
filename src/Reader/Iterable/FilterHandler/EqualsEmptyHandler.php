@@ -22,9 +22,7 @@ final class EqualsEmptyHandler implements IterableFilterHandlerInterface
 
     public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof EqualsEmpty) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var EqualsEmpty $filter */
 
         $value = ArrayHelper::getValue($item, $filter->field);
 

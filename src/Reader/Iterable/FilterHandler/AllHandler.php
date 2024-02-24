@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Reader\Filter\All;
-
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
@@ -24,9 +23,7 @@ final class AllHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof All) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var All $filter */
 
         foreach ($filter->getFilters() as $subFilter) {
             $filterHandler = $iterableFilterHandlers[$subFilter::class] ?? null;

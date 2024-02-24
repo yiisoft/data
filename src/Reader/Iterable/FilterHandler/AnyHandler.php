@@ -23,9 +23,7 @@ final class AnyHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof Any) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Any $filter */
 
         foreach ($filter->getFilters() as $subFilter) {
             $filterHandler = $iterableFilterHandlers[$subFilter::class] ?? null;

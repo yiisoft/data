@@ -23,9 +23,7 @@ final class EqualsHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof Equals) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Equals $filter */
 
         $itemValue = ArrayHelper::getValue($item, $filter->field);
         $argumentValue = $filter->getValue();

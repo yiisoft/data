@@ -26,9 +26,7 @@ final class LikeHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (!$filter instanceof Like) {
-            throw new InvalidArgumentException('Incorrect filter.');
-        }
+        /** @var Like $filter */
 
         $itemValue = ArrayHelper::getValue($item, $filter->field);
         $argumentValue = $filter->value;
