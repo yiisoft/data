@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
-use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\FilterInterface;

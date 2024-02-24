@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
-use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Equals;
-use Yiisoft\Data\Reader\Filter\EqualsEmpty;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;

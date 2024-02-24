@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use DateTimeImmutable;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Yiisoft\Data\Reader\Filter\EqualsEmpty;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Tests\TestCase;
