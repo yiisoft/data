@@ -10,7 +10,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\EqualsEmpty;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanHandler;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LessThanTest extends TestCase

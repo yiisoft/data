@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\EqualsEmpty;
 use Yiisoft\Data\Reader\Filter\Like;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
 use Yiisoft\Data\Tests\TestCase;
 

@@ -29,9 +29,7 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
 use Yiisoft\Data\Reader\Sort;
 
 use function array_merge;
-use function array_shift;
 use function count;
-use function is_string;
 use function iterator_to_array;
 use function sprintf;
 use function uasort;

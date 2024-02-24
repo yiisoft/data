@@ -28,7 +28,7 @@ final class AllHandler implements IterableFilterHandlerInterface
             throw new InvalidArgumentException('Incorrect filter.');
         }
 
-        foreach($filter->getFilters() as $subFilter) {
+        foreach ($filter->getFilters() as $subFilter) {
             $filterHandler = $iterableFilterHandlers[$subFilter::class] ?? null;
             if ($filterHandler === null) {
                 throw new LogicException(sprintf('Filter "%s" is not supported.', $subFilter::class));

@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use stdClass;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\EqualsEmpty;
@@ -17,7 +16,6 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\AnyHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
-use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -34,32 +32,32 @@ final class AnyTest extends TestCase
             [
                 true,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 45)],
-                $handlers
+                $handlers,
             ],
             [
                 true,
                 [new Equals('value', '45'), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 45)],
-                $handlers
+                $handlers,
             ],
             [
                 true,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 45)],
-                $handlers
+                $handlers,
             ],
             [
                 true,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 46), new LessThanOrEqual('value', 45)],
-                $handlers
+                $handlers,
             ],
             [
                 true,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 44)],
-                $handlers
+                $handlers,
             ],
             [
                 false,
                 [new Equals('value', 44), new GreaterThanOrEqual('value', 46), new LessThanOrEqual('value', 44)],
-                $handlers
+                $handlers,
             ],
         ];
     }

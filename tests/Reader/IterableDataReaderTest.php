@@ -7,7 +7,6 @@ namespace Yiisoft\Data\Tests\Reader;
 use ArrayIterator;
 use Generator;
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\Filter\All;

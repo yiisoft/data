@@ -33,32 +33,32 @@ final class AllTest extends TestCase
             [
                 true,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 45)],
-                $handlers
+                $handlers,
             ],
             [
                 true,
                 [new Equals('value', '45'), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 45)],
-                $handlers
+                $handlers,
             ],
             [
                 false,
                 [new Equals('value', 44), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 45)],
-                $handlers
+                $handlers,
             ],
             [
                 false,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 46), new LessThanOrEqual('value', 45)],
-                $handlers
+                $handlers,
             ],
             [
                 false,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 44)],
-                $handlers
+                $handlers,
             ],
             [
                 false,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 44)],
-                $handlers
+                $handlers,
             ],
         ];
     }
