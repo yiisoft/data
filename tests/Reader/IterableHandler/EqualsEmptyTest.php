@@ -6,6 +6,8 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Yiisoft\Data\Reader\Filter\EqualsEmpty;
+use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsEmptyHandler;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -29,36 +31,16 @@ final class EqualsEmptyTest extends TestCase
     #[DataProvider('matchDataProvider')]
     public function testMatch(bool $expected, array $item): void
     {
-        $this->assertSame($expected, (new EqualsEmptyHandler())->match($item, ['value'], []));
+        $this->assertSame($expected, (new EqualsEmptyHandler())->match($item, new EqualsEmpty('value'), []));
     }
 
-    public static function invalidCountArgumentsDataProvider(): array
+    public function testInvalidFilter(): void
     {
-        return [
-            'zero' => [[]],
-            'two' => [[1, 2]],
-            'three' => [[1, 2, 3]],
-            'four' => [[1, 2, 3, 4]],
-        ];
-    }
-
-    #[DataProvider('invalidCountArgumentsDataProvider')]
-    public function testMatchFailForInvalidCountArguments($arguments): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$arguments should contain exactly one element.');
-
-        (new EqualsEmptyHandler())->match(['id' => 1], $arguments, []);
-    }
-
-    #[DataProvider('invalidStringValueDataProvider')]
-    public function testMatchFailForInvalidFieldValue($field): void
-    {
-        $type = get_debug_type($field);
+        $handler = new EqualsEmptyHandler();
+        $filter = new EqualsNull('test');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("The field should be string. The $type is received.");
-
-        (new EqualsEmptyHandler())->match(['id' => 1], [$field], []);
+        $this->expectExceptionMessage('Incorrect filter.');
+        $handler->match([], $filter, []);
     }
 }

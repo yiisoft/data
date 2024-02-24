@@ -14,17 +14,8 @@ final class Not implements FilterInterface
     /**
      * @param FilterInterface $filter Filter to negate.
      */
-    public function __construct(private FilterInterface $filter)
-    {
-    }
-
-    public function toCriteriaArray(): array
-    {
-        return [self::getOperator(), $this->filter->toCriteriaArray()];
-    }
-
-    public static function getOperator(): string
-    {
-        return 'not';
+    public function __construct(
+        public readonly FilterInterface $filter
+    ) {
     }
 }

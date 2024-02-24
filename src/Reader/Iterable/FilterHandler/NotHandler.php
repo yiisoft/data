@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
+use LogicException;
 use Yiisoft\Data\Reader\Filter\Not;
-use Yiisoft\Data\Reader\FilterAssert;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
-use function array_shift;
-use function count;
-use function is_array;
-use function is_string;
 use function sprintf;
 
 /**
@@ -20,53 +17,21 @@ use function sprintf;
  */
 final class NotHandler implements IterableFilterHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return Not::getOperator();
+        return Not::class;
     }
 
-    public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool
+    public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (count($arguments) !== 1) {
-            throw new InvalidArgumentException('$arguments should contain exactly one element.');
+        if (!$filter instanceof Not) {
+            throw new InvalidArgumentException('Incorrect filter.');
         }
 
-        [$values] = $arguments;
-
-        if (!is_array($values)) {
-            throw new InvalidArgumentException(sprintf(
-                'The values should be array. The %s is received.',
-                get_debug_type($values),
-            ));
-        }
-
-        if (empty($values)) {
-            throw new InvalidArgumentException('At least operator should be provided.');
-        }
-
-        $operator = array_shift($values);
-
-        if (!is_string($operator)) {
-            throw new InvalidArgumentException(sprintf(
-                'The operator should be string. The %s is received.',
-                get_debug_type($operator),
-            ));
-        }
-
-        if ($operator === '') {
-            throw new InvalidArgumentException('The operator string cannot be empty.');
-        }
-
-        /** @var mixed $filterHandler */
-        $filterHandler = $iterableFilterHandlers[$operator] ?? null;
-
+        $filterHandler = $iterableFilterHandlers[$filter->filter::class] ?? null;
         if ($filterHandler === null) {
-            throw new InvalidArgumentException(sprintf('"%s" operator is not supported.', $operator));
+            throw new LogicException(sprintf('Filter "%s" is not supported.', $filter->filter::class));
         }
-
-        FilterAssert::isIterableFilterHandlerInterface($filterHandler);
-        /** @var IterableFilterHandlerInterface $filterHandler */
-
-        return !$filterHandler->match($item, $values, $iterableFilterHandlers);
+        return !$filterHandler->match($item, $filter->filter, $iterableFilterHandlers);
     }
 }

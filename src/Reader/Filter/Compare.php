@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 use DateTimeInterface;
-use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
@@ -20,29 +19,25 @@ abstract class Compare implements FilterInterface
      * @param string $field Name of the field to compare.
      * @param bool|DateTimeInterface|float|int|string $value Value to compare to.
      */
-    public function __construct(private string $field, mixed $value)
+    public function __construct(
+        public readonly string $field,
+        bool|DateTimeInterface|float|int|string $value
+    ) {
+        $this->value = $value;
+    }
+
+    public function getValue(): float|DateTimeInterface|bool|int|string
     {
-        $this->setValue($value);
+        return $this->value;
     }
 
     /**
      * @param bool|DateTimeInterface|float|int|string $value Value to compare to.
      */
-    final public function withValue(mixed $value): static
+    final public function withValue(bool|DateTimeInterface|float|int|string $value): static
     {
         $new = clone $this;
-        $new->setValue($value);
+        $new->value = $value;
         return $new;
-    }
-
-    public function toCriteriaArray(): array
-    {
-        return [static::getOperator(), $this->field, $this->value];
-    }
-
-    private function setValue(mixed $value): void
-    {
-        FilterAssert::isScalarOrInstanceOfDateTimeInterface($value);
-        $this->value = $value;
     }
 }

@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader;
 
 /**
- * Filter handler checks whether an item matches criteria defined
- * in the filter with the same operator.
+ * Filter handler checks whether an item matches filter.
  */
 interface FilterHandlerInterface
 {
     /**
-     * Get matching filter operator.
+     * Get matching filter class name.
      *
-     * If the filter with such operator is active, a corresponding
-     * iterable filter handler will be used during matching.
+     * If filter is active, a corresponding handler will be used during matching.
      *
-     * @return string Operator.
+     * @return string The filter class name.
+     *
+     * @psalm-return class-string
      */
-    public function getOperator(): string;
+    public function getFilterClass(): string;
 }

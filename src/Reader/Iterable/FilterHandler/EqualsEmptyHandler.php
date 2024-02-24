@@ -5,32 +5,29 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use InvalidArgumentException;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\EqualsEmpty;
-use Yiisoft\Data\Reader\FilterAssert;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
-
-use function count;
 
 /**
  * `EqualsEmpty` iterable filter handler checks that the item's field value is empty.
  */
 final class EqualsEmptyHandler implements IterableFilterHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return EqualsEmpty::getOperator();
+        return EqualsEmpty::class;
     }
 
-    public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool
+    public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (count($arguments) !== 1) {
-            throw new InvalidArgumentException('$arguments should contain exactly one element.');
+        if (!$filter instanceof EqualsEmpty) {
+            throw new InvalidArgumentException('Incorrect filter.');
         }
 
-        [$field] = $arguments;
-        FilterAssert::fieldIsString($field);
+        $value = ArrayHelper::getValue($item, $filter->field);
 
-        /** @var string $field */
-        return empty($item[$field]);
+        return empty($value);
     }
 }

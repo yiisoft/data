@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Reader;
 
 use ArrayIterator;
-use DateTimeInterface;
 use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -21,15 +20,14 @@ use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
-use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\CompareHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Tests\Support\CustomFilter\Digital;
 use Yiisoft\Data\Tests\Support\CustomFilter\DigitalHandler;
+use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 use function array_slice;
@@ -80,7 +78,7 @@ final class IterableDataReaderTest extends TestCase
     public function testExceptionOnPassingNonIterableFilters(): void
     {
         $nonIterableFilterHandler = new class () implements FilterHandlerInterface {
-            public function getOperator(): string
+            public function getFilterClass(): string
             {
                 return '?';
             }
@@ -401,39 +399,23 @@ final class IterableDataReaderTest extends TestCase
 
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
-            ->withFilterHandlers(new class () extends CompareHandler {
-                public function getOperator(): string
-                {
-                    return Equals::getOperator();
-                }
-
-                protected function compare(mixed $itemValue, mixed $argumentValue): bool
-                {
-                    if (!$itemValue instanceof DateTimeInterface) {
-                        return $itemValue == $argumentValue;
+            ->withFilterHandlers(
+                new class () implements IterableFilterHandlerInterface {
+                    public function getFilterClass(): string
+                    {
+                        return Equals::class;
                     }
 
-                    return $argumentValue instanceof DateTimeInterface
-                        && $itemValue->getTimestamp() === $argumentValue->getTimestamp();
-                }
-
-                public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool
-                {
-                    if (count($arguments) !== 2) {
-                        throw new InvalidArgumentException('$arguments should contain exactly two elements.');
+                    public function match(
+                        array|object $item,
+                        FilterInterface $filter,
+                        array $iterableFilterHandlers
+                    ): bool {
+                        /** @var Equals $filter */
+                        return $item[$filter->field] === 2;
                     }
-
-                    [$field, $value] = $arguments;
-                    FilterAssert::fieldIsString($field);
-
-                    if ($item[$field] === 2) {
-                        return true;
-                    }
-
-                    /** @var string $field */
-                    return array_key_exists($field, $item) && $this->compare($item[$field], $value);
                 }
-            });
+            );
 
         $dataReader = $dataReader->withFilter(new Equals('id', 100));
         $expected = [self::ITEM_2];
@@ -441,54 +423,13 @@ final class IterableDataReaderTest extends TestCase
         $this->assertSame($expected, array_values($this->iterableToArray($dataReader->read())));
     }
 
-    #[DataProvider('invalidStringValueDataProvider')]
-    public function testMatchFilterFailIfOperatorIsNotString($operator): void
-    {
-        $reader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withFilter(
-                new class ($operator) implements FilterInterface {
-                    public function __construct(
-                        private mixed $operator
-                    ) {
-                    }
-
-                    public static function getOperator(): string
-                    {
-                        return 'custom-filter';
-                    }
-
-                    public function toCriteriaArray(): array
-                    {
-                        return [$this->operator, 'field', 'value'];
-                    }
-                }
-            );
-
-        $type = get_debug_type($operator);
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("The operator should be string. The $type is received.");
-        $reader->read();
-    }
-
-    public function testNotSupportedOperator(): void
+    public function testNotSupportedFilter(): void
     {
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withFilter($this->createFilterWithNotSupportedOperator('---'));
+            ->withFilter(new FilterWithoutHandler());
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Operation "---" is not supported.');
-
-        $dataReader->read();
-    }
-
-    public function testNotSupportedEmptyOperator(): void
-    {
-        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withFilter($this->createFilterWithNotSupportedOperator(''));
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The operator string cannot be empty.');
+        $this->expectExceptionMessage('Filter "' . FilterWithoutHandler::class . '" is not supported.');
 
         $dataReader->read();
     }
@@ -563,28 +504,6 @@ final class IterableDataReaderTest extends TestCase
             ],
             $reader->read()
         );
-    }
-
-    private function createFilterWithNotSupportedOperator(string $operator): FilterInterface
-    {
-        return new class ($operator) implements FilterInterface {
-            private static string $operator;
-
-            public function __construct(string $operator)
-            {
-                self::$operator = $operator;
-            }
-
-            public static function getOperator(): string
-            {
-                return self::$operator;
-            }
-
-            public function toCriteriaArray(): array
-            {
-                return [self::getOperator(), self::$operator];
-            }
-        };
     }
 
     private function getDataSetAsGenerator(): Generator

@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Between;
+use Yiisoft\Data\Reader\Filter\EqualsEmpty;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
@@ -18,40 +19,40 @@ final class BetweenTest extends TestCase
     public static function matchScalarDataProvider(): array
     {
         return [
-            [true, ['value', 42, 47]],
-            [true, ['value', 45, 45]],
-            [true, ['value', 45, 46]],
-            [false, ['value', 46, 47]],
-            [false, ['value', 46, 45]],
+            [true, new Between('value', 42, 47)],
+            [true, new Between('value', 45, 45)],
+            [true, new Between('value', 45, 46)],
+            [false, new Between('value', 46, 47)],
+            [false, new Between('value', 46, 45)],
         ];
     }
 
     #[DataProvider('matchScalarDataProvider')]
-    public function testMatchScalar(bool $expected, array $arguments): void
+    public function testMatchScalar(bool $expected, Between $filter): void
     {
-        $processor = new BetweenHandler();
+        $handler = new BetweenHandler();
 
         $item = [
             'id' => 1,
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $processor->match($item, $arguments, []));
+        $this->assertSame($expected, $handler->match($item, $filter, []));
     }
 
     public static function matchDateTimeInterfaceDataProvider(): array
     {
         return [
-            [true, ['value', new DateTimeImmutable('2022-02-22 16:00:42'), new DateTimeImmutable('2022-02-22 16:00:47')]],
-            [true, ['value', new DateTimeImmutable('2022-02-22 16:00:45'), new DateTimeImmutable('2022-02-22 16:00:45')]],
-            [true, ['value', new DateTimeImmutable('2022-02-22 16:00:45'), new DateTimeImmutable('2022-02-22 16:00:46')]],
-            [false, ['value', new DateTimeImmutable('2022-02-22 16:00:46'), new DateTimeImmutable('2022-02-22 16:00:47')]],
-            [false, ['value', new DateTimeImmutable('2022-02-22 16:00:46'), new DateTimeImmutable('2022-02-22 16:00:45')]],
+            [true, new DateTimeImmutable('2022-02-22 16:00:42'), new DateTimeImmutable('2022-02-22 16:00:47')],
+            [true, new DateTimeImmutable('2022-02-22 16:00:45'), new DateTimeImmutable('2022-02-22 16:00:45')],
+            [true, new DateTimeImmutable('2022-02-22 16:00:45'), new DateTimeImmutable('2022-02-22 16:00:46')],
+            [false, new DateTimeImmutable('2022-02-22 16:00:46'), new DateTimeImmutable('2022-02-22 16:00:47')],
+            [false, new DateTimeImmutable('2022-02-22 16:00:46'), new DateTimeImmutable('2022-02-22 16:00:45')],
         ];
     }
 
     #[DataProvider('matchDateTimeInterfaceDataProvider')]
-    public function testMatchDateTimeInterface(bool $expected, array $arguments): void
+    public function testMatchDateTimeInterface(bool $expected, DateTimeImmutable $from, DateTimeImmutable $to): void
     {
         $processor = new BetweenHandler();
 
@@ -60,37 +61,7 @@ final class BetweenTest extends TestCase
             'value' => new DateTimeImmutable('2022-02-22 16:00:45'),
         ];
 
-        $this->assertSame($expected, $processor->match($item, $arguments, []));
-    }
-
-    public static function invalidCountArgumentsDataProvider(): array
-    {
-        return [
-            'zero' => [[]],
-            'one' => [[1]],
-            'two' => [[1, 2]],
-            'four' => [[1, 2, 3, 4]],
-        ];
-    }
-
-    #[DataProvider('invalidCountArgumentsDataProvider')]
-    public function testMatchFailForInvalidCountArguments($arguments): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$arguments should contain exactly three elements.');
-
-        (new BetweenHandler())->match(['id' => 1], $arguments, []);
-    }
-
-    #[DataProvider('invalidStringValueDataProvider')]
-    public function testMatchFailForInvalidFieldValue($field): void
-    {
-        $type = get_debug_type($field);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("The field should be string. The $type is received.");
-
-        (new BetweenHandler())->match(['id' => 1], [$field, 1, 2], []);
+        $this->assertSame($expected, $processor->match($item, new Between('value', $from, $to), []));
     }
 
     public function testObjectWithGetters(): void
@@ -112,5 +83,15 @@ final class BetweenTest extends TestCase
         $result = $reader->withFilter(new Between('getNumber()', 3, 5))->read();
 
         $this->assertSame([3 => $car3, 4 => $car4, 5 => $car5], $result);
+    }
+
+    public function testInvalidFilter(): void
+    {
+        $handler = new BetweenHandler();
+        $filter = new EqualsEmpty('test');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Incorrect filter.');
+        $handler->match([], $filter, []);
     }
 }

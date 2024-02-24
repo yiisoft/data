@@ -4,23 +4,40 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
+use InvalidArgumentException;
+use LogicException;
 use Yiisoft\Data\Reader\Filter\All;
 
-use function in_array;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
  * `All` iterable filter handler allows combining multiple sub-filters.
  * The filter matches only if all the sub-filters match.
  */
-final class AllHandler extends GroupHandler
+final class AllHandler implements IterableFilterHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return All::getOperator();
+        return All::class;
     }
 
-    protected function checkResults(array $results): bool
+    public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        return !in_array(false, $results, true);
+        if (!$filter instanceof All) {
+            throw new InvalidArgumentException('Incorrect filter.');
+        }
+
+        foreach($filter->getFilters() as $subFilter) {
+            $filterHandler = $iterableFilterHandlers[$subFilter::class] ?? null;
+            if ($filterHandler === null) {
+                throw new LogicException(sprintf('Filter "%s" is not supported.', $subFilter::class));
+            }
+            if (!$filterHandler->match($item, $subFilter, $iterableFilterHandlers)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

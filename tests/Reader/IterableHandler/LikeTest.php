@@ -6,6 +6,9 @@ namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Yiisoft\Data\Reader\Filter\EqualsEmpty;
+use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -14,15 +17,14 @@ final class LikeTest extends TestCase
     public static function matchDataProvider(): array
     {
         return [
-            [true, ['value', 'Great Cat Fighter']],
-            [true, ['value', 'Cat']],
-            [false, ['id', 1]],
-            [false, ['id', '1']],
+            [true, 'value', 'Great Cat Fighter'],
+            [true, 'value', 'Cat'],
+            [false, 'id', '1'],
         ];
     }
 
     #[DataProvider('matchDataProvider')]
-    public function testMatch(bool $expected, array $arguments): void
+    public function testMatch(bool $expected, string $field, string $value): void
     {
         $processor = new LikeHandler();
 
@@ -31,36 +33,16 @@ final class LikeTest extends TestCase
             'value' => 'Great Cat Fighter',
         ];
 
-        $this->assertSame($expected, $processor->match($item, $arguments, []));
+        $this->assertSame($expected, $processor->match($item, new Like($field, $value), []));
     }
 
-    public static function invalidCountArgumentsDataProvider(): array
+    public function testInvalidFilter(): void
     {
-        return [
-            'zero' => [[]],
-            'one' => [[1]],
-            'three' => [[1, 2, 3]],
-            'four' => [[1, 2, 3, 4]],
-        ];
-    }
-
-    #[DataProvider('invalidCountArgumentsDataProvider')]
-    public function testMatchFailForInvalidCountArguments($arguments): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$arguments should contain exactly two elements.');
-
-        (new LikeHandler())->match(['id' => 1], $arguments, []);
-    }
-
-    #[DataProvider('invalidStringValueDataProvider')]
-    public function testMatchFailForInvalidFieldValue($field): void
-    {
-        $type = get_debug_type($field);
+        $handler = new LikeHandler();
+        $filter = new EqualsEmpty('test');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("The field should be string. The $type is received.");
-
-        (new LikeHandler())->match(['id' => 1], [$field, 1], []);
+        $this->expectExceptionMessage('Incorrect filter.');
+        $handler->match([], $filter, []);
     }
 }

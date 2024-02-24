@@ -8,10 +8,8 @@ use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\Between;
-use Yiisoft\Data\Reader\FilterAssert;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
-
-use function count;
 
 /**
  * `Between` iterable filter handler checks that the item's field value
@@ -19,30 +17,26 @@ use function count;
  */
 final class BetweenHandler implements IterableFilterHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return Between::getOperator();
+        return Between::class;
     }
 
-    public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool
+    public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (count($arguments) !== 3) {
-            throw new InvalidArgumentException('$arguments should contain exactly three elements.');
+        if (!$filter instanceof Between) {
+            throw new InvalidArgumentException('Incorrect filter.');
         }
 
-        /** @var string $field */
-        [$field, $minValue, $maxValue] = $arguments;
-        FilterAssert::fieldIsString($field);
-
-        $value = ArrayHelper::getValue($item, $field);
+        $value = ArrayHelper::getValue($item, $filter->field);
 
         if (!$value instanceof DateTimeInterface) {
-            return $value >= $minValue && $value <= $maxValue;
+            return $value >= $filter->minValue && $value <= $filter->maxValue;
         }
 
-        return $minValue instanceof DateTimeInterface
-            && $maxValue instanceof DateTimeInterface
-            && $value->getTimestamp() >= $minValue->getTimestamp()
-            && $value->getTimestamp() <= $maxValue->getTimestamp();
+        return $filter->minValue instanceof DateTimeInterface
+            && $filter->maxValue instanceof DateTimeInterface
+            && $value->getTimestamp() >= $filter->minValue->getTimestamp()
+            && $value->getTimestamp() <= $filter->maxValue->getTimestamp();
     }
 }

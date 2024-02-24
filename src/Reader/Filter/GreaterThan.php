@@ -10,8 +10,4 @@ namespace Yiisoft\Data\Reader\Filter;
  */
 final class GreaterThan extends Compare
 {
-    public static function getOperator(): string
-    {
-        return '>';
-    }
 }

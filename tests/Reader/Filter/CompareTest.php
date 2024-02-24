@@ -14,6 +14,6 @@ final class CompareTest extends TestCase
         $filter = new LessThan('field', 1);
 
         $this->assertNotSame($filter, $filter->withValue(1));
-        $this->assertSame(['<', 'field', 2], $filter->withValue(2)->toCriteriaArray());
+        $this->assertSame(2, $filter->withValue(2)->getValue());
     }
 }

@@ -8,7 +8,9 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Filter\EqualsEmpty;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
@@ -18,15 +20,15 @@ final class EqualsTest extends TestCase
     public static function matchScalarDataProvider(): array
     {
         return [
-            [true, ['value', 45]],
-            [true, ['value', '45']],
-            [false, ['value', 44]],
-            [false, ['value', 46]],
+            [true, 45],
+            [true, '45'],
+            [false, 44],
+            [false, 46],
         ];
     }
 
     #[DataProvider('matchScalarDataProvider')]
-    public function testMatchScalar(bool $expected, array $arguments): void
+    public function testMatchScalar(bool $expected, mixed $value): void
     {
         $processor = new EqualsHandler();
 
@@ -35,59 +37,29 @@ final class EqualsTest extends TestCase
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $processor->match($item, $arguments, []));
+        $this->assertSame($expected, $processor->match($item, new Equals('value', $value), []));
     }
 
     public static function matchDateTimeInterfaceDataProvider(): array
     {
         return [
-            [true, ['value', new DateTimeImmutable('2022-02-22 16:00:45')]],
-            [false, ['value', new DateTimeImmutable('2022-02-22 16:00:44')]],
-            [false, ['value', new DateTimeImmutable('2022-02-22 16:00:46')]],
+            [true, new DateTimeImmutable('2022-02-22 16:00:45')],
+            [false, new DateTimeImmutable('2022-02-22 16:00:44')],
+            [false, new DateTimeImmutable('2022-02-22 16:00:46')],
         ];
     }
 
     #[DataProvider('matchDateTimeInterfaceDataProvider')]
-    public function testMatchDateTimeInterface(bool $expected, array $arguments): void
+    public function testMatchDateTimeInterface(bool $expected, DateTimeImmutable $value): void
     {
-        $processor = new EqualsHandler();
+        $handler = new EqualsHandler();
 
         $item = [
             'id' => 1,
             'value' => new DateTimeImmutable('2022-02-22 16:00:45'),
         ];
 
-        $this->assertSame($expected, $processor->match($item, $arguments, []));
-    }
-
-    public static function invalidCountArgumentsDataProvider(): array
-    {
-        return [
-            'zero' => [[]],
-            'one' => [[1]],
-            'three' => [[1, 2, 3]],
-            'four' => [[1, 2, 3, 4]],
-        ];
-    }
-
-    #[DataProvider('invalidCountArgumentsDataProvider')]
-    public function testMatchFailForInvalidCountArguments($arguments): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$arguments should contain exactly two elements.');
-
-        (new EqualsHandler())->match(['id' => 1], $arguments, []);
-    }
-
-    #[DataProvider('invalidStringValueDataProvider')]
-    public function testMatchFailForInvalidFieldValue($field): void
-    {
-        $type = get_debug_type($field);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("The field should be string. The $type is received.");
-
-        (new EqualsHandler())->match(['id' => 1], [$field, 1], []);
+        $this->assertSame($expected, $handler->match($item, new Equals('value', $value), []));
     }
 
     public function testObjectWithGetters(): void
@@ -109,5 +81,15 @@ final class EqualsTest extends TestCase
         $result = $reader->withFilter(new Equals('getNumber()', 1))->read();
 
         $this->assertSame([1 => $car1, 3 => $car3], $result);
+    }
+
+    public function testInvalidFilter(): void
+    {
+        $handler = new EqualsHandler();
+        $filter = new EqualsEmpty('test');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Incorrect filter.');
+        $handler->match([], $filter, []);
     }
 }
