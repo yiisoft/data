@@ -13,17 +13,12 @@ use Yiisoft\Data\Reader\FilterInterface;
  */
 abstract class Compare implements FilterInterface
 {
-    private bool|DateTimeInterface|float|int|string $value;
-
     /**
      * @param string $field Name of the field to compare.
      * @param bool|DateTimeInterface|float|int|string $value Value to compare to.
      */
-    public function __construct(
-        public readonly string $field,
-        bool|DateTimeInterface|float|int|string $value
-    ) {
-        $this->value = $value;
+    public function __construct(public readonly string $field, private bool|DateTimeInterface|float|int|string $value)
+    {
     }
 
     public function getValue(): float|DateTimeInterface|bool|int|string
