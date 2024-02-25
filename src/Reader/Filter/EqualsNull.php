@@ -15,7 +15,12 @@ final class EqualsNull implements FilterInterface
      * @param string $field Name of the field to check.
      */
     public function __construct(
-        public readonly string $field
+        private readonly string $field,
     ) {
+    }
+
+    public function getField(): string
+    {
+        return $this->field;
     }
 }

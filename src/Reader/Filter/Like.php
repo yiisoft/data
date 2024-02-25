@@ -16,8 +16,18 @@ final class Like implements FilterInterface
      * @param string $value Value to like-compare with.
      */
     public function __construct(
-        public readonly string $field,
-        public readonly string $value,
+        private readonly string $field,
+        private readonly string $value,
     ) {
+    }
+
+    public function getField(): string
+    {
+        return $this->field;
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
     }
 }

@@ -19,9 +19,24 @@ final class Between implements FilterInterface
      * @param bool|DateTimeInterface|float|int|string $maxValue Maximal field value.
      */
     public function __construct(
-        public readonly string $field,
-        public readonly bool|DateTimeInterface|float|int|string $minValue,
-        public readonly bool|DateTimeInterface|float|int|string $maxValue
+        private readonly string $field,
+        private readonly bool|DateTimeInterface|float|int|string $minValue,
+        private readonly bool|DateTimeInterface|float|int|string $maxValue
     ) {
+    }
+
+    public function getField(): string
+    {
+        return $this->field;
+    }
+
+    public function getMinValue(): float|DateTimeInterface|bool|int|string
+    {
+        return $this->minValue;
+    }
+
+    public function getMaxValue(): float|DateTimeInterface|bool|int|string
+    {
+        return $this->maxValue;
     }
 }

@@ -24,7 +24,7 @@ final class EqualsHandler implements IterableFilterHandlerInterface
     {
         /** @var Equals $filter */
 
-        $itemValue = ArrayHelper::getValue($item, $filter->field);
+        $itemValue = ArrayHelper::getValue($item, $filter->getField());
         $argumentValue = $filter->getValue();
 
         if (!$itemValue instanceof DateTimeInterface) {

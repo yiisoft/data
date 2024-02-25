@@ -25,10 +25,12 @@ final class NotHandler implements IterableFilterHandlerInterface
     {
         /** @var Not $filter */
 
-        $filterHandler = $iterableFilterHandlers[$filter->filter::class] ?? null;
+        $subFilter = $filter->getFilter();
+
+        $filterHandler = $iterableFilterHandlers[$subFilter::class] ?? null;
         if ($filterHandler === null) {
-            throw new LogicException(sprintf('Filter "%s" is not supported.', $filter->filter::class));
+            throw new LogicException(sprintf('Filter "%s" is not supported.', $subFilter::class));
         }
-        return !$filterHandler->match($item, $filter->filter, $iterableFilterHandlers);
+        return !$filterHandler->match($item, $subFilter, $iterableFilterHandlers);
     }
 }

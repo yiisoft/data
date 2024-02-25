@@ -22,7 +22,7 @@ final class In implements FilterInterface
      * @param bool[]|float[]|int[]|string[] $values Values to check against.
      */
     public function __construct(
-        public readonly string $field,
+        private readonly string $field,
         array $values
     ) {
         foreach ($values as $value) {
@@ -37,6 +37,11 @@ final class In implements FilterInterface
             }
         }
         $this->values = $values;
+    }
+
+    public function getField(): string
+    {
+        return $this->field;
     }
 
     /**

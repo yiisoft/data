@@ -411,7 +411,7 @@ final class IterableDataReaderTest extends TestCase
                         array $iterableFilterHandlers
                     ): bool {
                         /** @var Equals $filter */
-                        return $item[$filter->field] === 2;
+                        return $item[$filter->getField()] === 2;
                     }
                 }
             );

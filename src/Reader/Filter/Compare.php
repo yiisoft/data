@@ -9,7 +9,6 @@ use Yiisoft\Data\Reader\FilterInterface;
 
 /**
  * `Compare` filter is a base class that defines a criteria for comparing field value with a given value.
- * The operator is defined by child classes.
  */
 abstract class Compare implements FilterInterface
 {
@@ -18,9 +17,14 @@ abstract class Compare implements FilterInterface
      * @param bool|DateTimeInterface|float|int|string $value Value to compare to.
      */
     public function __construct(
-        public readonly string $field,
+        private readonly string $field,
         private bool|DateTimeInterface|float|int|string $value,
     ) {
+    }
+
+    public function getField(): string
+    {
+        return $this->field;
     }
 
     public function getValue(): float|DateTimeInterface|bool|int|string

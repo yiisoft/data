@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader\Filter;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * `Group` filter is an abstract class that allows combining multiple criteria or sub-filters.
+ * `Group` filter is an abstract class that allows combining multiple sub-filters.
  */
 abstract class Group implements FilterInterface
 {

@@ -15,7 +15,12 @@ final class Not implements FilterInterface
      * @param FilterInterface $filter Filter to negate.
      */
     public function __construct(
-        public readonly FilterInterface $filter
+        private readonly FilterInterface $filter,
     ) {
+    }
+
+    public function getFilter(): FilterInterface
+    {
+        return $this->filter;
     }
 }

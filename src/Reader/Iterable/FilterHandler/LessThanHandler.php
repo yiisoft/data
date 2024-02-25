@@ -24,7 +24,7 @@ final class LessThanHandler implements IterableFilterHandlerInterface
     {
         /** @var LessThan $filter */
 
-        $itemValue = ArrayHelper::getValue($item, $filter->field);
+        $itemValue = ArrayHelper::getValue($item, $filter->getField());
         $argumentValue = $filter->getValue();
 
         if (!$itemValue instanceof DateTimeInterface) {
