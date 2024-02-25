@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\Like;
-
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 

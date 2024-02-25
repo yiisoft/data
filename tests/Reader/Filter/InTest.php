@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Reader\Filter;
+namespace Yiisoft\Data\Tests\Reader\Filter;
 
 use InvalidArgumentException;
 use stdClass;
