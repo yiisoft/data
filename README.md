@@ -116,7 +116,6 @@ Filter could be composed with:
 - `Any`
 - `Between`
 - `Equals`
-- `EqualsEmpty`
 - `EqualsNull`
 - `GreaterThan`
 - `GreaterThanOrEqual`
