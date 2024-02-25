@@ -23,6 +23,7 @@
 - Enh #161: Add more specified psalm annotations to `CountableDataInterface::count()`,
   `PaginatorInterface::getCurrentPageSize()` and `OffsetPaginator::getTotalItems()` (@vjik)
 - Chg #165: Simplify `FilterInterface` and `FilterHandlerInterface` (@vjik)
+- Chg #166: Remove `EqualsEmpty` filter (@vjik)
 
 ## 1.0.1 January 25, 2023
 

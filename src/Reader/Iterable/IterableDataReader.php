@@ -17,7 +17,6 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\AnyHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsEmptyHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
@@ -71,7 +70,6 @@ final class IterableDataReader implements DataReaderInterface
             new AnyHandler(),
             new BetweenHandler(),
             new EqualsHandler(),
-            new EqualsEmptyHandler(),
             new EqualsNullHandler(),
             new GreaterThanHandler(),
             new GreaterThanOrEqualHandler(),
