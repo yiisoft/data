@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use DateTimeInterface;
-use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\Between;
-use Yiisoft\Data\Reader\FilterAssert;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
-
-use function count;
 
 /**
  * `Between` iterable filter handler checks that the item's field value
@@ -19,30 +16,26 @@ use function count;
  */
 final class BetweenHandler implements IterableFilterHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return Between::getOperator();
+        return Between::class;
     }
 
-    public function match(array|object $item, array $arguments, array $iterableFilterHandlers): bool
+    public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        if (count($arguments) !== 3) {
-            throw new InvalidArgumentException('$arguments should contain exactly three elements.');
-        }
+        /** @var Between $filter */
 
-        /** @var string $field */
-        [$field, $minValue, $maxValue] = $arguments;
-        FilterAssert::fieldIsString($field);
-
-        $value = ArrayHelper::getValue($item, $field);
+        $value = ArrayHelper::getValue($item, $filter->getField());
+        $min = $filter->getMinValue();
+        $max = $filter->getMaxValue();
 
         if (!$value instanceof DateTimeInterface) {
-            return $value >= $minValue && $value <= $maxValue;
+            return $value >= $min && $value <= $max;
         }
 
-        return $minValue instanceof DateTimeInterface
-            && $maxValue instanceof DateTimeInterface
-            && $value->getTimestamp() >= $minValue->getTimestamp()
-            && $value->getTimestamp() <= $maxValue->getTimestamp();
+        return $min instanceof DateTimeInterface
+            && $max instanceof DateTimeInterface
+            && $value->getTimestamp() >= $min->getTimestamp()
+            && $value->getTimestamp() <= $max->getTimestamp();
     }
 }

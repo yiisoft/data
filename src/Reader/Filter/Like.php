@@ -15,17 +15,19 @@ final class Like implements FilterInterface
      * @param string $field Name of the field to compare.
      * @param string $value Value to like-compare with.
      */
-    public function __construct(private string $field, private string $value)
-    {
+    public function __construct(
+        private readonly string $field,
+        private readonly string $value,
+    ) {
     }
 
-    public function toCriteriaArray(): array
+    public function getField(): string
     {
-        return [self::getOperator(), $this->field, $this->value];
+        return $this->field;
     }
 
-    public static function getOperator(): string
+    public function getValue(): string
     {
-        return 'like';
+        return $this->value;
     }
 }

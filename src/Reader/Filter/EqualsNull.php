@@ -14,17 +14,13 @@ final class EqualsNull implements FilterInterface
     /**
      * @param string $field Name of the field to check.
      */
-    public function __construct(private string $field)
-    {
+    public function __construct(
+        private readonly string $field,
+    ) {
     }
 
-    public function toCriteriaArray(): array
+    public function getField(): string
     {
-        return [self::getOperator(), $this->field];
-    }
-
-    public static function getOperator(): string
-    {
-        return 'null';
+        return $this->field;
     }
 }

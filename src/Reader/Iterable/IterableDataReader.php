@@ -28,9 +28,7 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
 use Yiisoft\Data\Reader\Sort;
 
 use function array_merge;
-use function array_shift;
 use function count;
-use function is_string;
 use function iterator_to_array;
 use function sprintf;
 use function uasort;
@@ -165,7 +163,6 @@ final class IterableDataReader implements DataReaderInterface
     {
         $data = [];
         $skipped = 0;
-        $filter = $this->filter?->toCriteriaArray();
         $sortedData = $this->sort === null ? $this->data : $this->sortItems($this->data, $this->sort);
 
         foreach ($sortedData as $key => $item) {
@@ -182,7 +179,7 @@ final class IterableDataReader implements DataReaderInterface
             }
 
             // Filter items.
-            if ($filter === null || $this->matchFilter($item, $filter)) {
+            if ($this->filter === null || $this->matchFilter($item, $this->filter)) {
                 $data[$key] = $item;
             }
         }
@@ -203,35 +200,19 @@ final class IterableDataReader implements DataReaderInterface
      * Return whether an item matches iterable filter.
      *
      * @param array|object $item Item to check.
-     * @param array $filter Filter.
+     * @param FilterInterface $filter Filter.
      *
      * @return bool Whether an item matches iterable filter.
      */
-    private function matchFilter(array|object $item, array $filter): bool
+    private function matchFilter(array|object $item, FilterInterface $filter): bool
     {
-        $operation = array_shift($filter);
-        $arguments = $filter;
+        $handler = $this->iterableFilterHandlers[$filter::class] ?? null;
 
-        if (!is_string($operation)) {
-            throw new RuntimeException(
-                sprintf(
-                    'The operator should be string. The %s is received.',
-                    get_debug_type($operation),
-                )
-            );
+        if ($handler === null) {
+            throw new RuntimeException(sprintf('Filter "%s" is not supported.', $filter::class));
         }
 
-        if ($operation === '') {
-            throw new RuntimeException('The operator string cannot be empty.');
-        }
-
-        $processor = $this->iterableFilterHandlers[$operation] ?? null;
-
-        if ($processor === null) {
-            throw new RuntimeException(sprintf('Operation "%s" is not supported.', $operation));
-        }
-
-        return $processor->match($item, $arguments, $this->iterableFilterHandlers);
+        return $handler->match($item, $filter, $this->iterableFilterHandlers);
     }
 
     /**
@@ -296,7 +277,7 @@ final class IterableDataReader implements DataReaderInterface
                     )
                 );
             }
-            $result[$filterHandler->getOperator()] = $filterHandler;
+            $result[$filterHandler->getFilterClass()] = $filterHandler;
         }
 
         return $result;

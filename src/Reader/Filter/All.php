@@ -5,24 +5,18 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 /**
- * `All` filter allows combining multiple criteria or sub-filters using "and" operator.
+ * `All` filter allows combining multiple sub-filters using "and" operator.
  *
  * ```php
- * $dataReader->withFilter((new All())->withCriteriaArray(
- *   [
- *     ['>', 'id', 88],
- *     ['and', [
- *        ['=', 'state', 2],
- *        ['like', 'name', 'eva'],
- *     ],
- *   ]
- * ));
+ * $dataReader->withFilter(
+ *   new All(
+ *     new GreaterThan('id', 88),
+ *     new Equals('state', 2),
+ *     new Like('name', 'eva'),
+ *   )
+ * );
  * ```
  */
 final class All extends Group
 {
-    public static function getOperator(): string
-    {
-        return 'and';
-    }
 }

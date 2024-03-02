@@ -5,20 +5,28 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use DateTimeInterface;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
  * `Equals` iterable filter handler checks that the item's field value matches given value.
  */
-final class EqualsHandler extends CompareHandler
+final class EqualsHandler implements IterableFilterHandlerInterface
 {
-    public function getOperator(): string
+    public function getFilterClass(): string
     {
-        return Equals::getOperator();
+        return Equals::class;
     }
 
-    protected function compare(mixed $itemValue, mixed $argumentValue): bool
+    public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
+        /** @var Equals $filter */
+
+        $itemValue = ArrayHelper::getValue($item, $filter->getField());
+        $argumentValue = $filter->getValue();
+
         if (!$itemValue instanceof DateTimeInterface) {
             return $itemValue == $argumentValue;
         }

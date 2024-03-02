@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Filter;
 
-use Yiisoft\Data\Reader\FilterAssert;
+use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
@@ -21,21 +21,34 @@ final class In implements FilterInterface
      * @param string $field Name of the field to compare.
      * @param bool[]|float[]|int[]|string[] $values Values to check against.
      */
-    public function __construct(private string $field, array $values)
-    {
+    public function __construct(
+        private readonly string $field,
+        array $values
+    ) {
         foreach ($values as $value) {
-            FilterAssert::isScalar($value);
+            /** @psalm-suppress DocblockTypeContradiction */
+            if (!is_scalar($value)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'The value should be scalar. "%s" is received.',
+                        get_debug_type($value),
+                    )
+                );
+            }
         }
         $this->values = $values;
     }
 
-    public function toCriteriaArray(): array
+    public function getField(): string
     {
-        return [self::getOperator(), $this->field, $this->values];
+        return $this->field;
     }
 
-    public static function getOperator(): string
+    /**
+     * @return bool[]|float[]|int[]|string[]
+     */
+    public function getValues(): array
     {
-        return 'in';
+        return $this->values;
     }
 }

@@ -29,20 +29,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public static function invalidStringValueDataProvider(): array
-    {
-        return [
-            'array' => [[]],
-            'bool-true' => [true],
-            'bool-false' => [false],
-            'callback' => [fn () => null],
-            'float' => [1.0],
-            'int' => [1],
-            'null' => [null],
-            'object' => [new stdClass()],
-        ];
-    }
-
     public static function invalidFilterDataProvider(): array
     {
         return [

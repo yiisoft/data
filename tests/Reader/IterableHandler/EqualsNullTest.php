@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Reader\IterableHandler;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
@@ -31,37 +30,7 @@ final class EqualsNullTest extends TestCase
     #[DataProvider('matchDataProvider')]
     public function testMatch(bool $expected, array $item): void
     {
-        $this->assertSame($expected, (new EqualsNullHandler())->match($item, ['value'], []));
-    }
-
-    public static function invalidCountArgumentsDataProvider(): array
-    {
-        return [
-            'zero' => [[]],
-            'two' => [[1, 2]],
-            'three' => [[1, 2, 3]],
-            'four' => [[1, 2, 3, 4]],
-        ];
-    }
-
-    #[DataProvider('invalidCountArgumentsDataProvider')]
-    public function testMatchFailForInvalidCountArguments($arguments): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$arguments should contain exactly one element.');
-
-        (new EqualsNullHandler())->match(['id' => 1], $arguments, []);
-    }
-
-    #[DataProvider('invalidStringValueDataProvider')]
-    public function testMatchFailForInvalidFieldValue($field): void
-    {
-        $type = get_debug_type($field);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("The field should be string. The $type is received.");
-
-        (new EqualsNullHandler())->match(['id' => 1], [$field], []);
+        $this->assertSame($expected, (new EqualsNullHandler())->match($item, new EqualsNull('value'), []));
     }
 
     public function testObjectWithGetters(): void

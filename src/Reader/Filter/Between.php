@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 use DateTimeInterface;
-use Yiisoft\Data\Reader\FilterAssert;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
@@ -14,31 +13,30 @@ use Yiisoft\Data\Reader\FilterInterface;
  */
 final class Between implements FilterInterface
 {
-    private bool|DateTimeInterface|float|int|string $minValue;
-
-    private bool|DateTimeInterface|float|int|string $maxValue;
-
     /**
      * @param string $field Name of the field to compare.
      * @param bool|DateTimeInterface|float|int|string $minValue Minimal field value.
      * @param bool|DateTimeInterface|float|int|string $maxValue Maximal field value.
      */
-    public function __construct(private string $field, mixed $minValue, mixed $maxValue)
-    {
-        FilterAssert::isScalarOrInstanceOfDateTimeInterface($minValue);
-        FilterAssert::isScalarOrInstanceOfDateTimeInterface($maxValue);
-
-        $this->minValue = $minValue;
-        $this->maxValue = $maxValue;
+    public function __construct(
+        private readonly string $field,
+        private readonly bool|DateTimeInterface|float|int|string $minValue,
+        private readonly bool|DateTimeInterface|float|int|string $maxValue
+    ) {
     }
 
-    public function toCriteriaArray(): array
+    public function getField(): string
     {
-        return [self::getOperator(), $this->field, $this->minValue, $this->maxValue];
+        return $this->field;
     }
 
-    public static function getOperator(): string
+    public function getMinValue(): float|DateTimeInterface|bool|int|string
     {
-        return 'between';
+        return $this->minValue;
+    }
+
+    public function getMaxValue(): float|DateTimeInterface|bool|int|string
+    {
+        return $this->maxValue;
     }
 }
