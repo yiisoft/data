@@ -10,7 +10,6 @@ use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function is_string;
-use function stripos;
 
 /**
  * `Like` iterable filter handler ensures that the field value is like-match to a given value (case-sensitive).
