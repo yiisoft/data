@@ -7,9 +7,9 @@ namespace Yiisoft\Data\Reader\Filter;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * `Like` filter defines a criteria for ensuring field value is like-match to a given value (case-sensitive).
+ * `ILike` filter defines a criteria for ensuring field value is like-match to a given value (case-insensitive).
  */
-final class Like implements FilterInterface
+final class ILike implements FilterInterface
 {
     /**
      * @param string $field Name of the field to compare.

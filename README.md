@@ -119,6 +119,7 @@ Filter could be composed with:
 - `EqualsNull`
 - `GreaterThan`
 - `GreaterThanOrEqual`
+- `ILike`
 - `In`
 - `LessThan`
 - `LessThanOrEqual`

@@ -5,29 +5,29 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\ILike;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function is_string;
 
 /**
- * `Like` iterable filter handler ensures that the field value is like-match to a given value (case-sensitive).
+ * `ILike` iterable filter handler ensures that the field value is like-match to a given value (case-insensitive).
  */
-final class LikeHandler implements IterableFilterHandlerInterface
+final class ILikeHandler implements IterableFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return Like::class;
+        return ILike::class;
     }
 
     public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
     {
-        /** @var Like $filter */
+        /** @var ILike $filter */
 
         $itemValue = ArrayHelper::getValue($item, $filter->getField());
 
         /** @infection-ignore-all MBString No suitable test case was found yet. */
-        return is_string($itemValue) && mb_strpos($itemValue, $filter->getValue()) !== false;
+        return is_string($itemValue) && mb_stripos($itemValue, $filter->getValue()) !== false;
     }
 }
