@@ -27,6 +27,6 @@ final class LikeHandler implements IterableFilterHandlerInterface
 
         $itemValue = ArrayHelper::getValue($item, $filter->getField());
 
-        return is_string($itemValue) && str_contains($itemValue, $filter->getValue());
+        return is_string($itemValue) && mb_strpos($itemValue, $filter->getValue()) !== false;
     }
 }
