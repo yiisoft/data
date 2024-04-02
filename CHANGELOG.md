@@ -24,6 +24,8 @@
   `PaginatorInterface::getCurrentPageSize()` and `OffsetPaginator::getTotalItems()` (@vjik)
 - Chg #165: Simplify `FilterInterface` and `FilterHandlerInterface` (@vjik)
 - Chg #166: Remove `EqualsEmpty` filter (@vjik)
+- Bug #173: Make `Like` filter case-sensitive (@arogachev)
+- New #173: Add `ILike` filter (case-insensitive variation of `Like` filter) (@arogachev)
 
 ## 1.0.1 January 25, 2023
 
