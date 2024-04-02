@@ -19,6 +19,7 @@ final class ILikeTest extends TestCase
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'cat'],
             [false, ['id' => 1, 'value' => 'Great Cat Fighter'], 'id', '1'],
             [true, ['id' => 1, 'value' => '🙁🙂🙁'], 'value', '🙂'],
+            [true, ['id' => 1, 'value' => 'Привет мир'], 'value', ' '],
         ];
     }
 

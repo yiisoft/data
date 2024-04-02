@@ -27,6 +27,6 @@ final class ILikeHandler implements IterableFilterHandlerInterface
 
         $itemValue = ArrayHelper::getValue($item, $filter->getField());
 
-        return is_string($itemValue) && mb_stripos($itemValue, $filter->getValue()) !== false;
+        return is_string($itemValue) && stripos($itemValue, $filter->getValue()) !== false;
     }
 }
