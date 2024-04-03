@@ -63,25 +63,4 @@ final class OrderHelper
 
         return implode(',', $parts);
     }
-
-    /**
-     * Replace field name in logical fields order array.
-     *
-     * @param array $order Logical fields order as array.
-     * @param string $from Field name to replace.
-     * @param string $to Field name to replace with.
-     */
-    public static function replaceFieldName(array $order, string $from, string $to): array
-    {
-        if (!isset($order[$from])) {
-            return $order;
-        }
-
-        $result = [];
-        foreach ($order as $field => $direction) {
-            $result[$field === $from ? $to : $field] = $direction;
-        }
-
-        return $result;
-    }
 }
