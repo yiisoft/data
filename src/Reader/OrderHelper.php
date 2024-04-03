@@ -71,17 +71,17 @@ final class OrderHelper
      * @param string $from Field name to replace.
      * @param string $to Field name to replace with.
      */
-    public static function replaceFieldName(array &$order, string $from, string $to): void
+    public static function replaceFieldName(array $order, string $from, string $to): array
     {
-        if ($from === $to) {
-            return;
-        }
-
         if (!isset($order[$from])) {
-            return;
+            return $order;
         }
 
-        $order[$to] = $order[$from];
-        unset($order[$from]);
+        $result = [];
+        foreach ($order as $field => $direction) {
+            $result[$field === $from ? $to : $field] = $direction;
+        }
+
+        return $result;
     }
 }
