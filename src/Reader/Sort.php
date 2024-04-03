@@ -8,13 +8,9 @@ use InvalidArgumentException;
 
 use function array_key_exists;
 use function array_merge;
-use function implode;
 use function is_array;
 use function is_int;
 use function is_string;
-use function preg_split;
-use function substr;
-use function trim;
 
 /**
  * Sort represents data sorting settings:
@@ -226,18 +222,9 @@ final class Sort
      */
     public function withOrderString(string $orderString): self
     {
-        $order = [];
-        $parts = preg_split('/\s*,\s*/', trim($orderString), -1, PREG_SPLIT_NO_EMPTY);
-
-        foreach ($parts as $part) {
-            if (str_starts_with($part, '-')) {
-                $order[substr($part, 1)] = 'desc';
-            } else {
-                $order[$part] = 'asc';
-            }
-        }
-
-        return $this->withOrder($order);
+        return $this->withOrder(
+            OrderHelper::stringToArray($orderString)
+        );
     }
 
     /**
@@ -289,13 +276,7 @@ final class Sort
      */
     public function getOrderAsString(): string
     {
-        $parts = [];
-
-        foreach ($this->currentOrder as $field => $direction) {
-            $parts[] = ($direction === 'desc' ? '-' : '') . $field;
-        }
-
-        return implode(',', $parts);
+        return OrderHelper::arrayToString($this->currentOrder);
     }
 
     /**
