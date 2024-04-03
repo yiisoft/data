@@ -26,6 +26,7 @@
 - Chg #166: Remove `EqualsEmpty` filter (@vjik)
 - Bug #173: Make `Like` filter case-sensitive (@arogachev)
 - New #173: Add `ILike` filter (case-insensitive variation of `Like` filter) (@arogachev)
+- New #176: Add `OrderHelper` (@vjik)
 
 ## 1.0.1 January 25, 2023
 
