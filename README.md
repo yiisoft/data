@@ -90,7 +90,7 @@ $total = count($reader);
 Filtering of data could be done in two steps:
 
 1. Forming a criteria for getting the data. That is done by "filter".
-2. Post-filtering data by iteration and checking each item. 
+2. Post-filtering data by iteration and checking each item.
    That is done by `IterableDataReader` with filters.
 
 Whenever possible it is best to stick to using criteria because usually it gives much better performance.
@@ -146,13 +146,14 @@ $dataReader->withFilter((new All())->withCriteriaArray([
 #### Implementing your own filter
 
 In order to have your own filter:
+
 - Implement at least `FilterInterface`, which includes:
   - `getOperator()` method that returns a string that represents a filter operation.
   - `toArray()` method that returns an array with filtering parameters.
-- If you want to create a filter handler for a specific data reader type, then you need to implement at least 
+- If you want to create a filter handler for a specific data reader type, then you need to implement at least
 `FilterHandlerInterface`. It has a single `getOperator()` method that returns a string representing a filter operation.
 In addition, each data reader specifies an extended interface required for handling or building the operation.
-*For example, `IterableDataFilter` defines `IterableFilterHandlerInterface`, which contains additional `match()` 
+*For example, `IterableDataFilter` defines `IterableFilterHandlerInterface`, which contains additional `match()`
 method to execute a filter on PHP variables.*
 
 You can add your own filter handlers to the data reader using the `withFilterHandlers()` method. You can add any filter
@@ -311,7 +312,7 @@ $data = $paginator->read();
 ### Keyset pagination
 
 Keyset pagination is alternative pagination method that is good for infinite scrolling and "load more". It is selecting
-LIMIT items that have key field greater or lesser (depending on the sorting) than value specified. 
+LIMIT items that have key field greater or lesser (depending on the sorting) than value specified.
 
 Advantages:
 
@@ -338,7 +339,7 @@ $paginator = (new KeysetPaginator($dataReader))
 ```
 
 When displaying first page ID (or another field name to paginate by) of the item displayed last is used with `withNextPageToken()`
-to obtain next page.   
+to obtain next page.
 
 ## Writing data
 
@@ -354,48 +355,30 @@ $processor = new MyDataProcessor(...);
 $processor->process($arrayOfItems);
 ```
 
-## Testing
+## Documentation
 
-### Unit testing
+- More information can be found in the [Internals.](docs/internals.md)
 
-The package is tested with [PHPUnit](https://phpunit.de/). To run tests:
+## Support
 
-```shell
-./vendor/bin/phpunit
-```
+If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for that.
+You may also check out other [Yii Community Resources](https://www.yiiframework.com/community).
 
-### Mutation testing
-
-The package tests are checked with [Infection](https://infection.github.io/) mutation framework with
-[Infection Static Analysis Plugin](https://github.com/Roave/infection-static-analysis-plugin). To run it:
-
-```shell
-./vendor/bin/roave-infection-static-analysis-plugin
-```
-
-### Static analysis
-
-The code is statically analyzed with [Psalm](https://psalm.dev/). To run static analysis:
-
-```shell
-./vendor/bin/psalm
-```
-
-## License
-
-The Yii Data is free software. It is released under the terms of the BSD License.
-Please see [`LICENSE`](./LICENSE.md) for more information.
-
-Maintained by [Yii Software](https://www.yiiframework.com/).
-
-### Support the project
+## Support the project
 
 [![Open Collective](https://img.shields.io/badge/Open%20Collective-sponsor-7eadf1?logo=open%20collective&logoColor=7eadf1&labelColor=555555)](https://opencollective.com/yiisoft)
 
-### Follow updates
+## Follow updates
 
 [![Official website](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=flat)](https://www.yiiframework.com/)
 [![Twitter](https://img.shields.io/badge/twitter-follow-1DA1F2?logo=twitter&logoColor=1DA1F2&labelColor=555555?style=flat)](https://twitter.com/yiiframework)
 [![Telegram](https://img.shields.io/badge/telegram-join-1DA1F2?style=flat&logo=telegram)](https://t.me/yii3en)
 [![Facebook](https://img.shields.io/badge/facebook-join-1DA1F2?style=flat&logo=facebook&logoColor=ffffff)](https://www.facebook.com/groups/yiitalk)
 [![Slack](https://img.shields.io/badge/slack-join-1DA1F2?style=flat&logo=slack)](https://yiiframework.com/go/slack)
+
+## License
+
+The Yii Access is free software. It is released under the terms of the BSD License.
+Please see [`LICENSE`](./LICENSE.md) for more information.
+
+Maintained by [Yii Software](https://www.yiiframework.com/).
