@@ -31,7 +31,7 @@ Features are:
 
 ## Installation
 
-The package could be installed with composer:
+The package could be installed via [composer](https://getcomposer.org/download/)
 
 ```shell
 composer require yiisoft/data
