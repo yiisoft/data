@@ -1,25 +1,25 @@
 # Yii Data
 
-The package provides generic data abstractions. The aim is to hide storage aspect from the operations of reading,
-writing and processing data.
+O pacote fornece abstrações de dados genéricas. O objetivo é ocultar o aspecto de armazenamento das operações de leitura,
+escrever e processar dados.
 
-## Concepts
+## Conceitos
 
-- Each data set consists of items.
-- Each item has multiple named fields.
-- All items in a data set have the same structure.
+- Cada conjunto de dados consiste em itens.
+- Cada item possui vários campos nomeados.
+- Todos os itens de um conjunto de dados possuem a mesma estrutura.
 
-## Reading data
+## Lendo dados
 
-Data reader aim is to read data from a storage such as database, array or API and convert it to a simple iterator of
-field => value items.
+O objetivo do leitor de dados é ler dados de um armazenamento como banco de dados, array ou API e convertê-los em um simples iterador de
+campo => itens de valor.
 
 ```php
 $reader = new MyDataReader(...);
 $result = $reader->read(); 
 ```
 
-Result is `iterable` so you can use `foreach` on it. If you need an array, it could be achieved the following way:
+O resultado é `iterável` então você pode usar `foreach` nele. Se você precisar de um array, isso pode ser feito da seguinte maneira:
 
 ```php
 // using is foreach
@@ -31,9 +31,9 @@ foreach ($result as $item) {
 $dataArray = $result instanceof \Traversable ? iterator_to_array($result, true) : (array)$result;
 ```
 
-### Limiting number of items to read
+### Limitando o número de itens para ler
 
-Number of items in an iterator can be limited:
+O número de itens em um iterador pode ser limitado assim:
 
 ```php
 $reader = (new MyDataReader(...))->withLimit(10);
@@ -42,27 +42,27 @@ foreach ($reader->read() as $item) {
 }
 ```
 
-### Counting total number of items
+### Contando o número total de itens
 
-In order to know total number of items in a data reader implementing `CountableDataInterface`:
+Para saber o número total de itens em um leitor de dados implementando `CountableDataInterface`:
 
 ```php
 $reader = new MyDataReader(...);
 $total = count($reader);
 ```
 
-### Filtering
+### Filtragem
 
-Filtering of data could be done in two steps:
+A filtragem de dados pode ser feita em duas etapas:
 
-1. Forming a criteria for getting the data. That is done by "filter".
-2. Post-filtering data by iteration and checking each item.
-   That is done by `IterableDataReader` with filters.
+1. Formação de critérios para obtenção dos dados. Isso é feito por "filter".
+2. Pós-filtragem de dados por iteração e verificação de cada item.
+    Isso é feito por `IterableDataReader` com filtros.
 
-Whenever possible it is best to stick to using criteria because usually it gives much better performance.
+Sempre que possível, é melhor limitar-se ao uso de critérios porque geralmente proporciona um desempenho muito melhor.
 
-In order to filter data in a data reader implementing `FilterableDataInterface` you need to supply filter to
-`withFilter()` method:
+Para filtrar dados em um leitor de dados implementando `FilterableDataInterface` você precisa fornecer um filtro para o
+método `withFilter()`:
 
 ```php
 $filter = new All(
@@ -76,7 +76,7 @@ $reader = (new MyDataReader(...))
 $data = $reader->read();
 ```
 
-Filter could be composed with:
+O filtro pode ser composto por:
 
 - `All`
 - `Any`
@@ -92,9 +92,9 @@ Filter could be composed with:
 - `Like`
 - `Not`
 
-#### Filtering with arrays
+#### Filtrando com matrizes
 
-The `All` and `Any` filters have a `withCriteriaArray()` method, which allows you to define filters with arrays.
+Os filtros `All` e `Any` possuem um método `withCriteriaArray()`, que permite definir filtros com arrays.
 
 ```php
 $dataReader->withFilter((new All())->withCriteriaArray([
@@ -109,21 +109,21 @@ $dataReader->withFilter((new All())->withCriteriaArray([
 ]));
 ```
 
-#### Implementing your own filter
+#### Implementando seu próprio filtro
 
-In order to have your own filter:
+Para ter seu próprio filtro:
 
-- Implement at least `FilterInterface`, which includes:
-  - `getOperator()` method that returns a string that represents a filter operation.
-  - `toArray()` method that returns an array with filtering parameters.
-- If you want to create a filter handler for a specific data reader type, then you need to implement at least
-`FilterHandlerInterface`. It has a single `getOperator()` method that returns a string representing a filter operation.
-In addition, each data reader specifies an extended interface required for handling or building the operation.
-*For example, `IterableDataFilter` defines `IterableFilterHandlerInterface`, which contains additional `match()`
-method to execute a filter on PHP variables.*
+- Implementar pelo menos `FilterInterface`, que inclui:
+   - Método `getOperator()` que retorna uma string que representa uma operação de filtro.
+   - Método `toArray()` que retorna um array com parâmetros de filtragem.
+- Se você deseja criar um manipulador de filtro para um tipo específico de leitor de dados, será necessário implementar pelo menos
+`FilterHandlerInterface`. Possui um único método `getOperator()` que retorna uma string representando uma operação de filtro.
+Além disso, cada leitor de dados especifica uma interface estendida necessária para manipular ou construir a operação.
+*Por exemplo, `IterableDataFilter` define `IterableFilterHandlerInterface`, que contém o método adicional
+`match()` para executar um filtro em variáveis PHP.*
 
-You can add your own filter handlers to the data reader using the `withFilterHandlers()` method. You can add any filter
-handler to Reader. If reader is not able to use a filter, filter is ignored.
+Você pode adicionar seus próprios manipuladores de filtro ao leitor de dados usando o método `withFilterHandlers()`. Você pode adicionar qualquer filtro
+manipulador para o Reader. Se o leitor não conseguir usar um filtro, o filtro será ignorado.
 
 ```php
 // own filter for filtering
@@ -177,10 +177,10 @@ $reader = (new MyDataReader(...))
 $data = $reader->read();
 ```
 
-### Sorting
+### Ordenação
 
-In order to sort data in a data reader implementing `SortableDataInterface` you need to supply a sort object to
-`withSort()` method:
+Para classificar dados em um leitor de dados implementando `SortableDataInterface` você precisa fornecer um objeto de classificação para o
+método `withSort()`:
 
 ```php
 $sorting = Sort::only([
@@ -197,71 +197,71 @@ $reader = (new MyDataReader(...))
 $data = $reader->read();
 ```
 
-The goal of the `Sort` is to map logical fields sorting to real data set fields sorting and form a criteria for the data
-reader. Logical fields are the ones user operates with. Real fields are the ones actually present in a data set.
-Such a mapping helps when you need to sort by a single logical field that, in fact, consists of multiple fields
-in underlying the data set. For example, we provide a user with a username which consists of first name and last name
-fields in actual data set.
+O objetivo do `Sort` é mapear lógicamente os campos para classificação de campos de conjunto de dados reais e formar um critério para os dados do
+leitor. Os campos lógicos são aqueles com os quais o usuário opera. Campos reais são aqueles realmente presentes em um conjunto de dados.
+Esse mapeamento ajuda quando você precisa classificar por um único campo lógico que, na verdade, consiste em vários campos
+subjacente ao conjunto de dados. Por exemplo, fornecemos a um usuário um nome de usuário que consiste nos campos nome e sobrenome
+no conjunto de dados real.
 
-To get a `Sort` instance, you can use either `Sort::only()` or `Sort::any()`. `Sort::only()` ignores user-specified order
-for logical fields that have no configuration. `Sort::any()` uses user-specified logical field name and order directly
-for fields that have no configuration.
+Para obter uma instância `Sort`, você pode usar `Sort::only()` ou `Sort::any()`. `Sort::only()` ignora a ordem especificada pelo usuário
+para campos lógicos que não possuem configuração. `Sort::any()` usa o nome do campo lógico especificado pelo usuário e ordena diretamente
+para campos que não possuem configuração.
 
-Either way you pass a config array that specifies which logical fields should be order-able and, optionally, details on
-how these should map to real fields order.
+De qualquer forma, você passa um array de configuração que especifica quais campos lógicos devem ser ordenados e, opcionalmente, detalhes sobre
+como eles devem ser mapeados para a ordem real dos campos.
 
-The current order to apply is specified via `withOrder()` where you supply an array with keys corresponding to logical
-field names and values correspond to order (`asc` or `desc`). Alternatively `withOrderString()` can be used. In this case
-ordering is represented as a single string containing comma separate logical field names. If the name is prefixed by `-`,
-ordering direction is set to `desc`.
+A ordem atual a ser aplicada é especificada via `withOrder()` onde você fornece um array com chaves lógicas correspondentes
+aos nomes e valores dos campos correspondem à ordem (`asc` ou `desc`). Alternativamente `withOrderString()` pode ser usado. Nesse caso
+a ordenação é representada como uma única string contendo nomes de campos lógicos separados por vírgulas. Se o nome for prefixado por `-`,
+a direção do pedido está definida como `desc`.
 
-### Skipping some items
+### Pulando alguns itens
 
-In case you need to skip some items from the beginning of data reader implementing `OffsetableDataInterface`:
+Caso você precise pular alguns itens do início da implementação do leitor de dados `OffsetableDataInterface`:
 
 ```php
 $reader = (new MyDataReader(...))->withOffset(10);
 ```
 
-### Implementing your own data reader
+### Implementando seu próprio leitor de dados
 
-In order to have your own data reader you need to implement at least `DataReaderInteface`. It has a single `read()`
-method that returns iterable representing a set of items.
+Para ter seu próprio leitor de dados você precisa implementar pelo menos `DataReaderInteface`. Possui um único método `read()`
+que retorna iterável representando um conjunto de itens.
 
-Additional interfaces could be implemented in order to support different pagination types, ordering and filtering:
+Interfaces adicionais poderiam ser implementadas para suportar diferentes tipos de paginação, ordenação e filtragem:
 
-- `CountableDataInterface` - allows getting total number of items in data reader.
-- `FilterableDataInterface` - allows returning subset of items based on criteria.
-- `LimitableDataInterface` - allows returning limited subset of items.
-- `SortableDataInterface` - allows sorting by one or multiple fields.
-- `OffsetableDataInterface` - allows to skip first N items when reading data.
+- `CountableDataInterface` - permite obter o número total de itens no leitor de dados.
+- `FilterableDataInterface` - permite retornar subconjuntos de itens com base em critérios.
+- `LimitableDataInterface` - permite retornar um subconjunto limitado de itens.
+- `SortableDataInterface` - permite a classificação por um ou vários campos.
+- `OffsetableDataInterface` - permite pular os primeiros N itens ao ler dados.
 
-Note that when implementing these, methods, instead of modifying data, should only define criteria that is later used
-in `read()` to affect what data is returned.
+Observe que ao implementá-los, os métodos, em vez de modificar os dados, devem apenas definir critérios que serão utilizados posteriormente
+em `read()` para afetar quais dados serão retornados.
 
-## Pagination
+## Paginação
 
-Pagination allows to obtain a limited subset of data that is both handy for displaying items page by page and for getting
-acceptable performance on big data sets.
+A paginação permite obter um subconjunto limitado de dados que é útil para exibir itens página por página e para obter
+desempenho aceitável em conjuntos de big data.
 
-There are two types of pagination provided: traditional offset pagination and keyset pagination.
+Existem dois tipos de paginação fornecidos: paginação de deslocamento tradicional e paginação de conjunto de chaves.
 
-### Offset pagination
+### Paginação Offset (deslocada)
 
-Offset pagination is a common pagination method that selects OFFSET + LIMIT items and then skips OFFSET items.  
+A paginação offset é um método de paginação comum que seleciona itens OFFSET + LIMIT e depois ignora os itens OFFSET.
 
-Advantages:
+Vantagens:
 
-- Total number of pages is available
-- Can get to specific page
-- Data can be unordered
+- O número total de páginas está disponível
+- Pode chegar a uma página específica
+- Os dados podem ser desordenados
 
-Disadvantages:
+Desvantagens:
 
-- Performance degrades with page number increase
-- Insertions or deletions in the middle of the data are making results inconsistent
+- O desempenho diminui com o aumento do número de páginas
+- Inserções ou exclusões no meio dos dados estão tornando os resultados inconsistentes
 
-Usage is the following:
+O uso é o seguinte:
 
 ```php
 $reader = (new MyDataReader(...));
@@ -275,23 +275,23 @@ $total = $paginator->getTotalPages();
 $data = $paginator->read();
 ```
 
-### Keyset pagination
+### Paginação Keyset (conjunto de chaves)
 
-Keyset pagination is alternative pagination method that is good for infinite scrolling and "load more". It is selecting
-LIMIT items that have key field greater or lesser (depending on the sorting) than value specified.
+A paginação do conjunto de chaves é um método de paginação alternativo que é bom para rolagem infinita e "carregar mais". Ele seleciona os ítens 
+LIMIT que possuem campo-chave maior ou menor (dependendo da classificação) que o valor especificado.
 
-Advantages:
+Vantagens:
 
-- Performance does not depend on page number
-- Consistent results regardless of insertions and deletions
+- O desempenho não depende do número da página
+- Resultados consistentes independentemente de inserções e exclusões
 
-Disadvantages:
+Desvantagens:
 
-- Total number of pages is not available
-- Can not get to specific page, only "previous" and "next"
-- Data cannot be unordered
+- O número total de páginas não está disponível
+- Não é possível acessar a página específica, apenas "anterior" e "próximo"
+- Os dados não podem ser desordenados
 
-Usage is the following:
+O uso é o seguinte:
 
 ```php
 $sort = Sort::only(['id', 'name'])->withOrderString('id');
@@ -304,10 +304,10 @@ $paginator = (new KeysetPaginator($dataReader))
     ->withToken(PageToken::next('13'));
 ```
 
-When displaying first page ID (or another field name to paginate by) of the item displayed last is used with `withNextPageToken()`
-to obtain next page.
+Ao exibir o ID da primeira página (ou outro nome de campo para paginar) do item exibido por último é usado com `withNextPageToken()`
+para obter a próxima página.
 
-## Writing data
+## Escrevendo dados
 
 ```php
 $writer = new MyDataWriter(...);
