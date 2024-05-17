@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common;
+namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\ILike;
 
-trait LikeHandlerWithReaderTestTrait
+trait ILikeHandlerWithReaderTestTrait
 {
     public static function dataWithReader(): array
     {
         return [
             'case matches' => ['email', 'seed@', [2]],
-            'case does not match' => ['email', 'SEED@', []],
+            'case does not match' => ['email', 'SEED@', [2]],
         ];
     }
 
     #[DataProvider('dataWithReader')]
     public function testWithReader(string $field, string $value, array $expectedFixtureIndexes): void
     {
-        $reader = $this->getReader()->withFilter(new Like($field, $value));
+        $reader = $this->getReader()->withFilter(new ILike($field, $value));
         $this->assertFixtures($expectedFixtureIndexes, $reader->read());
     }
 }

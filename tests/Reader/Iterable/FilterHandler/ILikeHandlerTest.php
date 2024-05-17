@@ -7,8 +7,8 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\ILike;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\ILikeHandler;
-use Yiisoft\Data\Tests\Common\ILikeHandlerWithReaderTestTrait;
-use Yiisoft\Data\Tests\Common\ReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\ILikeHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTestTrait;
 use Yiisoft\Data\Tests\TestCase;
 
 final class ILikeHandlerTest extends TestCase

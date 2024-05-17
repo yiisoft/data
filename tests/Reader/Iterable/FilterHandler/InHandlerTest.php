@@ -7,8 +7,8 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\InHandler;
-use Yiisoft\Data\Tests\Common\InHandlerWithReaderTestTrait;
-use Yiisoft\Data\Tests\Common\ReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\InHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTestTrait;
 use Yiisoft\Data\Tests\TestCase;
 
 final class InHandlerTest extends TestCase

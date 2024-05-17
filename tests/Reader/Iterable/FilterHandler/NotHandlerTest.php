@@ -11,8 +11,8 @@ use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
-use Yiisoft\Data\Tests\Common\NotHandlerWithReaderTestTrait;
-use Yiisoft\Data\Tests\Common\ReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\NotHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTestTrait;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 

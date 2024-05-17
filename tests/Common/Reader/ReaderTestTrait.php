@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common;
+namespace Yiisoft\Data\Tests\Common\Reader;
 
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;

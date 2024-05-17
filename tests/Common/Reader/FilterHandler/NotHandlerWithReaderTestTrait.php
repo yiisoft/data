@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common;
+namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\All;
