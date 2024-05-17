@@ -6,54 +6,59 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
+use Yiisoft\Data\Tests\Common\GreaterThanOrEqualHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\ReaderTestTrait;
 use Yiisoft\Data\Tests\TestCase;
 
-final class LessThanOrEqualTest extends TestCase
+final class GreaterThanOrEqualHandlerTest extends TestCase
 {
+    use ReaderTestTrait;
+    use GreaterThanOrEqualHandlerWithReaderTestTrait;
+
     public static function matchScalarDataProvider(): array
     {
         return [
-            [true, 46],
+            [true, 44],
             [true, 45],
             [true, '45'],
-            [false, 44],
+            [false, 46],
         ];
     }
 
     #[DataProvider('matchScalarDataProvider')]
     public function testMatchScalar(bool $expected, mixed $value): void
     {
-        $handler = new LessThanOrEqualHandler();
+        $processor = new GreaterThanOrEqualHandler();
 
         $item = [
             'id' => 1,
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $handler->match($item, new LessThanOrEqual('value', $value), []));
+        $this->assertSame($expected, $processor->match($item, new GreaterThanOrEqual('value', $value), []));
     }
 
     public static function matchDateTimeInterfaceDataProvider(): array
     {
         return [
-            [true, new DateTimeImmutable('2022-02-22 16:00:46')],
+            [true, new DateTimeImmutable('2022-02-22 16:00:44')],
             [true, new DateTimeImmutable('2022-02-22 16:00:45')],
-            [false, new DateTimeImmutable('2022-02-22 16:00:44')],
+            [false, new DateTimeImmutable('2022-02-22 16:00:46')],
         ];
     }
 
     #[DataProvider('matchDateTimeInterfaceDataProvider')]
     public function testMatchDateTimeInterface(bool $expected, DateTimeImmutable $value): void
     {
-        $handler = new LessThanOrEqualHandler();
+        $processor = new GreaterThanOrEqualHandler();
 
         $item = [
             'id' => 1,
             'value' => new DateTimeImmutable('2022-02-22 16:00:45'),
         ];
 
-        $this->assertSame($expected, $handler->match($item, new LessThanOrEqual('value', $value), []));
+        $this->assertSame($expected, $processor->match($item, new GreaterThanOrEqual('value', $value), []));
     }
 }

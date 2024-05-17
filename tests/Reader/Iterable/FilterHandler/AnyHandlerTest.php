@@ -6,19 +6,24 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\AnyHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Tests\Common\AnyHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\ReaderTestTrait;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
-final class AllTest extends TestCase
+final class AnyHandlerTest extends TestCase
 {
+    use ReaderTestTrait;
+    use AnyHandlerWithReaderTestTrait;
+
     public static function matchDataProvider(): array
     {
         $handlers = [
@@ -26,7 +31,6 @@ final class AllTest extends TestCase
             GreaterThanOrEqual::class => new GreaterThanOrEqualHandler(),
             LessThanOrEqual::class => new LessThanOrEqualHandler(),
         ];
-
         return [
             [
                 true,
@@ -39,23 +43,23 @@ final class AllTest extends TestCase
                 $handlers,
             ],
             [
-                false,
-                [new Equals('value', 44), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 45)],
+                true,
+                [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 45)],
                 $handlers,
             ],
             [
-                false,
+                true,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 46), new LessThanOrEqual('value', 45)],
                 $handlers,
             ],
             [
-                false,
+                true,
                 [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 44)],
                 $handlers,
             ],
             [
                 false,
-                [new Equals('value', 45), new GreaterThanOrEqual('value', 45), new LessThanOrEqual('value', 44)],
+                [new Equals('value', 44), new GreaterThanOrEqual('value', 46), new LessThanOrEqual('value', 44)],
                 $handlers,
             ],
         ];
@@ -64,14 +68,14 @@ final class AllTest extends TestCase
     #[DataProvider('matchDataProvider')]
     public function testMatch(bool $expected, array $filters, array $filterHandlers): void
     {
-        $handler = new AllHandler();
+        $handler = new AnyHandler();
 
         $item = [
             'id' => 1,
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $handler->match($item, new All(...$filters), $filterHandlers));
+        $this->assertSame($expected, $handler->match($item, new Any(...$filters), $filterHandlers));
     }
 
     public function testMatchFailIfFilterOperatorIsNotSupported(): void
@@ -79,6 +83,6 @@ final class AllTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Filter "' . FilterWithoutHandler::class . '" is not supported.');
 
-        (new AllHandler())->match(['id' => 1], new All(new FilterWithoutHandler()), []);
+        (new AnyHandler())->match(['id' => 1], new Any(new FilterWithoutHandler()), []);
     }
 }

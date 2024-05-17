@@ -9,11 +9,16 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Tests\Common\EqualsHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\ReaderTestTrait;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
-final class EqualsTest extends TestCase
+final class EqualsHandlerTest extends TestCase
 {
+    use ReaderTestTrait;
+    use EqualsHandlerWithReaderTestTrait;
+
     public static function matchScalarDataProvider(): array
     {
         return [
