@@ -18,8 +18,8 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class NotHandlerTest extends TestCase
 {
-    use ReaderTestTrait;
     use NotHandlerWithReaderTestTrait;
+    use ReaderTestTrait;
 
     public static function matchDataProvider(): array
     {

@@ -21,8 +21,8 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class AnyHandlerTest extends TestCase
 {
-    use ReaderTestTrait;
     use AnyHandlerWithReaderTestTrait;
+    use ReaderTestTrait;
 
     public static function matchDataProvider(): array
     {
