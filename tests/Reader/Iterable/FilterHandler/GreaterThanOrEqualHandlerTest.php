@@ -14,8 +14,8 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class GreaterThanOrEqualHandlerTest extends TestCase
 {
-    use ReaderTestTrait;
     use GreaterThanOrEqualHandlerWithReaderTestTrait;
+    use ReaderTestTrait;
 
     public static function matchScalarDataProvider(): array
     {

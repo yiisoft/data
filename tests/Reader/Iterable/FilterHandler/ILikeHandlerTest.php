@@ -13,8 +13,8 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class ILikeHandlerTest extends TestCase
 {
-    use ReaderTestTrait;
     use ILikeHandlerWithReaderTestTrait;
+    use ReaderTestTrait;
 
     public static function matchDataProvider(): array
     {
