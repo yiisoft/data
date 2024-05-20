@@ -14,6 +14,7 @@ trait LikeHandlerWithReaderTestTrait
         return [
             'case matches' => ['email', 'seed@', [2]],
             'case does not match' => ['email', 'SEED@', []],
+            'wildcard is not supported' => ['email', '%st', []],
         ];
     }
 
