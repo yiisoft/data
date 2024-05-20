@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Common;
 
-use Yiisoft\Data\Reader\DataReaderInterface;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-
 trait FixtureTrait
 {
     protected static $fixtures = [
@@ -16,11 +13,6 @@ trait FixtureTrait
         ['number' => 4, 'email' => 'the@best', 'balance' => 500, 'born_at' => null],
         ['number' => 5, 'email' => 'test@test', 'balance' => 42, 'born_at' => '1990-01-01'],
     ];
-
-    protected function getReader(): DataReaderInterface
-    {
-        return new IterableDataReader(self::$fixtures);
-    }
 
     protected function assertFixtures(array $expectedFixtureIndexes, array $actualFixtures): void
     {

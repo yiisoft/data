@@ -16,13 +16,15 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
 use Yiisoft\Data\Tests\Common\Reader\FilterHandler\AnyHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
 final class AnyHandlerTest extends TestCase
 {
-    use AnyHandlerWithReaderTestTrait;
     use FixtureTrait;
+    use ReaderTrait;
+    use AnyHandlerWithReaderTestTrait;
 
     public static function matchDataProvider(): array
     {

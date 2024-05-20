@@ -10,11 +10,13 @@ use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanHandler;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
 use Yiisoft\Data\Tests\Common\Reader\FilterHandler\GreaterThanHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
 use Yiisoft\Data\Tests\TestCase;
 
 final class GreaterThanHandlerTest extends TestCase
 {
     use FixtureTrait;
+    use ReaderTrait;
     use GreaterThanHandlerWithReaderTestTrait;
 
     public static function matchScalarDataProvider(): array

@@ -9,11 +9,13 @@ use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\InHandler;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
 use Yiisoft\Data\Tests\Common\Reader\FilterHandler\InHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
 use Yiisoft\Data\Tests\TestCase;
 
 final class InHandlerTest extends TestCase
 {
     use FixtureTrait;
+    use ReaderTrait;
     use InHandlerWithReaderTestTrait;
 
     public static function matchDataProvider(): array

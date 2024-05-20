@@ -9,11 +9,13 @@ use Yiisoft\Data\Reader\Filter\ILike;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\ILikeHandler;
 use Yiisoft\Data\Tests\Common\FixtureTrait;
 use Yiisoft\Data\Tests\Common\Reader\FilterHandler\ILikeHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
 use Yiisoft\Data\Tests\TestCase;
 
 final class ILikeHandlerTest extends TestCase
 {
     use FixtureTrait;
+    use ReaderTrait;
     use ILikeHandlerWithReaderTestTrait;
 
     public static function matchDataProvider(): array
