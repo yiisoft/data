@@ -13,8 +13,8 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class InHandlerTest extends TestCase
 {
-    use InHandlerWithReaderTestTrait;
     use FixtureTrait;
+    use InHandlerWithReaderTestTrait;
 
     public static function matchDataProvider(): array
     {

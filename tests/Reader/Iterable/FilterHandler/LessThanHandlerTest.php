@@ -14,8 +14,8 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class LessThanHandlerTest extends TestCase
 {
-    use LessThanHandlerWithReaderTestTrait;
     use FixtureTrait;
+    use LessThanHandlerWithReaderTestTrait;
 
     public static function matchScalarDataProvider(): array
     {
