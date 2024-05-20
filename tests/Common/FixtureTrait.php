@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common\Reader;
+namespace Yiisoft\Data\Tests\Common;
 
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 
-trait ReaderTestTrait
+trait FixtureTrait
 {
     protected static $fixtures = [
         ['number' => 1, 'email' => 'foo@bar', 'balance' => 10.25, 'born_at' => null],
