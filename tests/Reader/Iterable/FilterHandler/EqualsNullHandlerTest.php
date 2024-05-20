@@ -16,9 +16,9 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsNullHandlerTest extends TestCase
 {
+    use EqualsNullHandlerWithReaderTestTrait;
     use FixtureTrait;
     use ReaderTrait;
-    use EqualsNullHandlerWithReaderTestTrait;
 
     public static function matchDataProvider(): array
     {

@@ -17,9 +17,9 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class BetweenHandlerTest extends TestCase
 {
+    use BetweenHandlerWithReaderTestTrait;
     use FixtureTrait;
     use ReaderTrait;
-    use BetweenHandlerWithReaderTestTrait;
 
     public static function matchScalarDataProvider(): array
     {
