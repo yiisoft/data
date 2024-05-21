@@ -15,8 +15,8 @@ use Yiisoft\Data\Tests\TestCase;
 final class InHandlerTest extends TestCase
 {
     use FixtureTrait;
-    use ReaderTrait;
     use InHandlerWithReaderTestTrait;
+    use ReaderTrait;
 
     public static function matchDataProvider(): array
     {

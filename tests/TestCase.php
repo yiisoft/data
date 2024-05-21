@@ -11,9 +11,6 @@ use ReflectionObject;
 use stdClass;
 use Traversable;
 
-use Yiisoft\Data\Reader\DataReaderInterface;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-
 use function iterator_to_array;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase

@@ -17,9 +17,9 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class EqualsHandlerTest extends TestCase
 {
+    use EqualsHandlerWithReaderTestTrait;
     use FixtureTrait;
     use ReaderTrait;
-    use EqualsHandlerWithReaderTestTrait;
 
     public static function matchScalarDataProvider(): array
     {

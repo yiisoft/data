@@ -22,9 +22,9 @@ use Yiisoft\Data\Tests\TestCase;
 
 final class AnyHandlerTest extends TestCase
 {
+    use AnyHandlerWithReaderTestTrait;
     use FixtureTrait;
     use ReaderTrait;
-    use AnyHandlerWithReaderTestTrait;
 
     public static function matchDataProvider(): array
     {

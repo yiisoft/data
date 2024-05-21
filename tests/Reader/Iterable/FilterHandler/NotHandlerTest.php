@@ -20,8 +20,8 @@ use Yiisoft\Data\Tests\TestCase;
 final class NotHandlerTest extends TestCase
 {
     use FixtureTrait;
-    use ReaderTrait;
     use NotHandlerWithReaderTestTrait;
+    use ReaderTrait;
 
     public static function matchDataProvider(): array
     {
