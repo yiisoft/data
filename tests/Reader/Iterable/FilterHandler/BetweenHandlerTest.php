@@ -2,18 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader\IterableHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Tests\Common\FixtureTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BetweenHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
-final class BetweenTest extends TestCase
+final class BetweenHandlerTest extends TestCase
 {
+    use BetweenHandlerWithReaderTestTrait;
+    use FixtureTrait;
+    use ReaderTrait;
+
     public static function matchScalarDataProvider(): array
     {
         return [

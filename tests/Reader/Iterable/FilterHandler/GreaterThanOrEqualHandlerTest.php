@@ -2,16 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader\IterableHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
+use Yiisoft\Data\Tests\Common\FixtureTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\GreaterThanOrEqualHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
 use Yiisoft\Data\Tests\TestCase;
 
-final class GreaterThanOrEqualTest extends TestCase
+final class GreaterThanOrEqualHandlerTest extends TestCase
 {
+    use FixtureTrait;
+    use GreaterThanOrEqualHandlerWithReaderTestTrait;
+    use ReaderTrait;
+
     public static function matchScalarDataProvider(): array
     {
         return [

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader\IterableHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -14,11 +14,18 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Tests\Common\FixtureTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\AllHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
-final class AllTest extends TestCase
+final class AllHandlerTest extends TestCase
 {
+    use AllHandlerWithReaderTestTrait;
+    use FixtureTrait;
+    use ReaderTrait;
+
     public static function matchDataProvider(): array
     {
         $handlers = [

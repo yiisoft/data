@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader\IterableHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -11,11 +11,18 @@ use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
+use Yiisoft\Data\Tests\Common\FixtureTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\NotHandlerWithReaderTestTrait;
+use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
-final class NotTest extends TestCase
+final class NotHandlerTest extends TestCase
 {
+    use FixtureTrait;
+    use NotHandlerWithReaderTestTrait;
+    use ReaderTrait;
+
     public static function matchDataProvider(): array
     {
         return [
