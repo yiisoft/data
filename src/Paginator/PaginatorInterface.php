@@ -24,6 +24,8 @@ interface PaginatorInterface extends ReadableDataInterface
 {
     /**
      * Page size that is used in case it is not set explicitly.
+     *
+     * @psalm-suppress MissingClassConstType
      */
     public const DEFAULT_PAGE_SIZE = 10;
 
