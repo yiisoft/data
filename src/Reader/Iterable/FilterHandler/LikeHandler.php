@@ -26,8 +26,13 @@ final class LikeHandler implements IterableFilterHandlerInterface
         /** @var Like $filter */
 
         $itemValue = ArrayHelper::getValue($item, $filter->getField());
+        if (!is_string($itemValue)) {
+            return false;
+        }
 
         /** @infection-ignore-all MBString No suitable test case was found yet. */
-        return is_string($itemValue) && mb_strpos($itemValue, $filter->getValue()) !== false;
+        return $filter->isCaseSensitive() === true
+            ? mb_stripos($itemValue, $filter->getValue()) !== false
+            : mb_strpos($itemValue, $filter->getValue()) !== false;
     }
 }

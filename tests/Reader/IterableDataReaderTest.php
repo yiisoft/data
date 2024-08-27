@@ -14,7 +14,6 @@ use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
-use Yiisoft\Data\Reader\Filter\ILike;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
@@ -266,18 +265,6 @@ final class IterableDataReaderTest extends TestCase
     public function testLikeFiltering(): void
     {
         $filter = new Like('name', 'Agent');
-        $reader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withFilter($filter);
-
-        $this->assertSame([
-            2 => self::ITEM_3,
-            3 => self::ITEM_4,
-        ], $reader->read());
-    }
-
-    public function testILikeFiltering(): void
-    {
-        $filter = new ILike('name', 'agent');
         $reader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withFilter($filter);
 
