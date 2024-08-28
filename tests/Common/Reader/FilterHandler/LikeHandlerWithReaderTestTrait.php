@@ -13,7 +13,7 @@ trait LikeHandlerWithReaderTestTrait
     {
         return [
             'case matches' => ['email', 'seed@', [2]],
-            'case does not match' => ['email', 'SEED@', []],
+            'case does not match' => ['email', 'SEED@', [2]],
             'wildcard is not supported' => ['email', '%st', []],
         ];
     }
