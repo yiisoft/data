@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\Between;
 
-trait BetweenHandlerWithReaderTestTrait
+abstract class BaseBetweenHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public function testWithReader(): void
     {

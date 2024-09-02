@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Equals;
 
-trait AllHandlerWithReaderTestTrait
+abstract class BaseAllHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public function testWithReader(): void
     {

@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
 
-trait LikeHandlerWithReaderTestTrait
+abstract class BaseLikeHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public static function dataWithReader(): array
     {

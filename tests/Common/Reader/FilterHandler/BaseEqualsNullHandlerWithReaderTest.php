@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\EqualsNull;
 
-trait EqualsNullHandlerWithReaderTestTrait
+abstract class BaseEqualsNullHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public function testWithReader(): void
     {

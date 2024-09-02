@@ -11,16 +11,11 @@ use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
-use Yiisoft\Data\Tests\Common\FixtureTrait;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\NotHandlerWithReaderTestTrait;
-use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseNotHandlerWithReaderTest;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
-use Yiisoft\Data\Tests\TestCase;
 
-final class NotHandlerTest extends TestCase
+final class NotHandlerTest extends BaseNotHandlerWithReaderTest
 {
-    use FixtureTrait;
-    use NotHandlerWithReaderTestTrait;
     use ReaderTrait;
 
     public static function matchDataProvider(): array

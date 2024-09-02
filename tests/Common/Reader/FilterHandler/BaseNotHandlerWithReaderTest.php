@@ -18,7 +18,7 @@ use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 
-trait NotHandlerWithReaderTestTrait
+abstract class BaseNotHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public static function dataWithReader(): array
     {

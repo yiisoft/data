@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\In;
 
-trait InHandlerWithReaderTestTrait
+abstract class BaseInHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public function testWithReader(): void
     {

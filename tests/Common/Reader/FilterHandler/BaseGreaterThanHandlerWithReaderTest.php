@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 
-trait GreaterThanHandlerWithReaderTestTrait
+abstract class BaseGreaterThanHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public function testWithReader(): void
     {

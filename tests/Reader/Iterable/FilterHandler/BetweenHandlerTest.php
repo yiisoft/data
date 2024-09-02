@@ -9,16 +9,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Tests\Common\FixtureTrait;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BetweenHandlerWithReaderTestTrait;
-use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseBetweenHandlerWithReaderTest;
 use Yiisoft\Data\Tests\Support\Car;
-use Yiisoft\Data\Tests\TestCase;
 
-final class BetweenHandlerTest extends TestCase
+final class BetweenHandlerTest extends BaseBetweenHandlerWithReaderTest
 {
-    use BetweenHandlerWithReaderTestTrait;
-    use FixtureTrait;
     use ReaderTrait;
 
     public static function matchScalarDataProvider(): array

@@ -11,7 +11,7 @@ use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\Like;
 
-trait AnyHandlerWithReaderTestTrait
+abstract class BaseAnyHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public function testWithReader(): void
     {

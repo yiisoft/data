@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 
-trait LessThanOrEqualHandlerWithReaderTestTrait
+abstract class BaseLessThanOrEqualHandlerWithReaderTest extends BaseFilterWithReaderTest
 {
     public function testWithReader(): void
     {

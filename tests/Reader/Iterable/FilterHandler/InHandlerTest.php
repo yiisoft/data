@@ -7,15 +7,10 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\InHandler;
-use Yiisoft\Data\Tests\Common\FixtureTrait;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\InHandlerWithReaderTestTrait;
-use Yiisoft\Data\Tests\Common\Reader\ReaderTrait;
-use Yiisoft\Data\Tests\TestCase;
+use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseInHandlerWithReaderTest;
 
-final class InHandlerTest extends TestCase
+final class InHandlerTest extends BaseInHandlerWithReaderTest
 {
-    use FixtureTrait;
-    use InHandlerWithReaderTestTrait;
     use ReaderTrait;
 
     public static function matchDataProvider(): array
