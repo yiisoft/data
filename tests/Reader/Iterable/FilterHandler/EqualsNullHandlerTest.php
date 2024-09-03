@@ -8,14 +8,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithEqualsNullTestCase;
-use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 use Yiisoft\Data\Tests\Support\Car;
+use Yiisoft\Data\Tests\TestCase;
 
-final class EqualsNullHandlerTest extends BaseReaderWithEqualsNullTestCase
+final class EqualsNullHandlerTest extends TestCase
 {
-    use ReaderTrait;
-
     public static function matchDataProvider(): array
     {
         return [

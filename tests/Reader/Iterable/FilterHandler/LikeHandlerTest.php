@@ -7,13 +7,10 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
-use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithLikeTestCase;
-use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
+use Yiisoft\Data\Tests\TestCase;
 
-final class LikeHandlerTest extends BaseReaderWithLikeTestCase
+final class LikeHandlerTest extends TestCase
 {
-    use ReaderTrait;
-
     public static function matchDataProvider(): array
     {
         return [

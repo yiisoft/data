@@ -8,13 +8,10 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanHandler;
-use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithLessThanTestCase;
-use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
+use Yiisoft\Data\Tests\TestCase;
 
-final class LessThanHandlerTest extends BaseReaderWithLessThanTestCase
+final class LessThanHandlerTest extends TestCase
 {
-    use ReaderTrait;
-
     public static function matchScalarDataProvider(): array
     {
         return [

@@ -14,14 +14,11 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\AnyHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
-use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithAnyTestCase;
-use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
+use Yiisoft\Data\Tests\TestCase;
 
-final class AnyHandlerTest extends BaseReaderWithAnyTestCase
+final class AnyHandlerTest extends TestCase
 {
-    use ReaderTrait;
-
     public static function matchDataProvider(): array
     {
         $handlers = [

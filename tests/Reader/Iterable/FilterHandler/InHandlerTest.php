@@ -7,13 +7,10 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\InHandler;
-use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithInTestCase;
-use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
+use Yiisoft\Data\Tests\TestCase;
 
-final class InHandlerTest extends BaseReaderWithInTestCase
+final class InHandlerTest extends TestCase
 {
-    use ReaderTrait;
-
     public static function matchDataProvider(): array
     {
         return [
