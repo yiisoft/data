@@ -7,9 +7,10 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\InHandler;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseInHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithInTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 
-final class InHandlerTest extends BaseInHandlerWithReaderTest
+final class InHandlerTest extends BaseReaderWithInTestCase
 {
     use ReaderTrait;
 

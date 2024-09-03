@@ -9,10 +9,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseEqualsHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithEqualsTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 use Yiisoft\Data\Tests\Support\Car;
 
-final class EqualsHandlerTest extends BaseEqualsHandlerWithReaderTest
+final class EqualsHandlerTest extends BaseReaderWithEqualsTestCase
 {
     use ReaderTrait;
 

@@ -8,9 +8,10 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseGreaterThanOrEqualHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithGreaterThanOrEqualTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 
-final class GreaterThanOrEqualHandlerTest extends BaseGreaterThanOrEqualHandlerWithReaderTest
+final class GreaterThanOrEqualHandlerTest extends BaseReaderWithGreaterThanOrEqualTestCase
 {
     use ReaderTrait;
 

@@ -8,10 +8,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\EqualsNull;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseEqualsNullHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithEqualsNullTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 use Yiisoft\Data\Tests\Support\Car;
 
-final class EqualsNullHandlerTest extends BaseEqualsNullHandlerWithReaderTest
+final class EqualsNullHandlerTest extends BaseReaderWithEqualsNullTestCase
 {
     use ReaderTrait;
 

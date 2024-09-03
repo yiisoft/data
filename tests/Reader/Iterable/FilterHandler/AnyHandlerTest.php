@@ -14,10 +14,11 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\AnyHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseAnyHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithAnyTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 
-final class AnyHandlerTest extends BaseAnyHandlerWithReaderTest
+final class AnyHandlerTest extends BaseReaderWithAnyTestCase
 {
     use ReaderTrait;
 

@@ -2,17 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter;
 
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Tests\Common\FixtureTrait;
-use Yiisoft\Data\Tests\TestCase;
 
-abstract class BaseFilterWithReaderTest extends TestCase
+trait ReaderTrait
 {
-    use FixtureTrait;
-
     protected function getReader(): DataReaderInterface
     {
         return new IterableDataReader(self::$fixtures);

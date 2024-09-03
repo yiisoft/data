@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
+namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\All;
@@ -18,7 +18,7 @@ use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 
-abstract class BaseNotHandlerWithReaderTest extends BaseFilterWithReaderTest
+abstract class BaseReaderWithNotTestCase extends BaseReaderWithFilterTestCase
 {
     public static function dataWithReader(): array
     {

@@ -7,9 +7,10 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseLikeHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithLikeTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 
-final class LikeHandlerTest extends BaseLikeHandlerWithReaderTest
+final class LikeHandlerTest extends BaseReaderWithLikeTestCase
 {
     use ReaderTrait;
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
+namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
 use Yiisoft\Data\Reader\Filter\In;
 
-abstract class BaseInHandlerWithReaderTest extends BaseFilterWithReaderTest
+abstract class BaseReaderWithInTestCase extends BaseReaderWithFilterTestCase
 {
     public function testWithReader(): void
     {

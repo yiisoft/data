@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
+namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
 
-abstract class BaseLikeHandlerWithReaderTest extends BaseFilterWithReaderTest
+abstract class BaseReaderWithLikeTestCase extends BaseReaderWithFilterTestCase
 {
     public static function dataWithReader(): array
     {

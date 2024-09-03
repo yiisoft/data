@@ -8,9 +8,10 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanHandler;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseLessThanHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithLessThanTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 
-final class LessThanHandlerTest extends BaseLessThanHandlerWithReaderTest
+final class LessThanHandlerTest extends BaseReaderWithLessThanTestCase
 {
     use ReaderTrait;
 

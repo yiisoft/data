@@ -9,10 +9,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseBetweenHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithBetweenTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 use Yiisoft\Data\Tests\Support\Car;
 
-final class BetweenHandlerTest extends BaseBetweenHandlerWithReaderTest
+final class BetweenHandlerTest extends BaseReaderWithBetweenTestCase
 {
     use ReaderTrait;
 

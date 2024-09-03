@@ -11,10 +11,11 @@ use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
-use Yiisoft\Data\Tests\Common\Reader\FilterHandler\BaseNotHandlerWithReaderTest;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithNotTestCase;
+use Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter\ReaderTrait;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 
-final class NotHandlerTest extends BaseNotHandlerWithReaderTest
+final class NotHandlerTest extends BaseReaderWithNotTestCase
 {
     use ReaderTrait;
 

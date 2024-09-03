@@ -2,24 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Common\Reader\FilterHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\ReaderWithFilter;
 
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
-use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithAnyTestCase;
 
-abstract class BaseAnyHandlerWithReaderTest extends BaseFilterWithReaderTest
+final class ReaderWithAnyTest extends BaseReaderWithAnyTestCase
 {
-    public function testWithReader(): void
-    {
-        $reader = $this
-            ->getReader()
-            ->withFilter(new Any(new Equals('number', 2), new Equals('number', 3)));
-        $this->assertFixtures([1, 2], $reader->read());
-    }
+    use ReaderTrait;
 
     public function testNested(): void
     {
