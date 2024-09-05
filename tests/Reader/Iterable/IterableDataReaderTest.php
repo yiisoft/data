@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader;
+namespace Yiisoft\Data\Tests\Reader\Iterable;
 
 use ArrayIterator;
 use Generator;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader\IterableHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -17,7 +17,7 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
-final class AnyTest extends TestCase
+final class AnyHandlerTest extends TestCase
 {
     public static function matchDataProvider(): array
     {

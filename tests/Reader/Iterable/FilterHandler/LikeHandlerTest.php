@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader\IterableHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
 use Yiisoft\Data\Tests\TestCase;
 
-final class LikeTest extends TestCase
+final class LikeHandlerTest extends TestCase
 {
     public static function matchDataProvider(): array
     {

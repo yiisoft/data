@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader\IterableHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\EqualsNull;
@@ -11,7 +11,7 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
-final class EqualsNullTest extends TestCase
+final class EqualsNullHandlerTest extends TestCase
 {
     public static function matchDataProvider(): array
     {

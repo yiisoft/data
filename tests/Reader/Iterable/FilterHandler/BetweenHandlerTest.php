@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Data\Tests\Reader\IterableHandler;
+namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -12,7 +12,7 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
-final class BetweenTest extends TestCase
+final class BetweenHandlerTest extends TestCase
 {
     public static function matchScalarDataProvider(): array
     {
