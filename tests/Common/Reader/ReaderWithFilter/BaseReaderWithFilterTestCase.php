@@ -21,16 +21,16 @@ abstract class BaseReaderWithFilterTestCase extends TestCase
 
     protected function assertFixtures(array $expectedFixtureIndexes, array $actualFixtures): void
     {
-        $this->assertSame($this->getFixturesByIndexes($expectedFixtureIndexes), $actualFixtures);
-    }
-
-    protected function getFixturesByIndexes(array $indexes)
-    {
-        $fixtures = [];
-        foreach ($indexes as $index) {
-            $fixtures[$index] = self::$fixtures[$index];
+        $expectedFixtures = [];
+        foreach ($expectedFixtureIndexes as $index) {
+            $expectedFixtures[$index] = $this->getFixture($index);
         }
 
-        return $fixtures;
+        $this->assertSame($expectedFixtures, $actualFixtures);
+    }
+
+    protected function getFixture(int $index): array
+    {
+        return self::$fixtures[$index];
     }
 }
