@@ -12,7 +12,7 @@ interface FilterHandlerInterface
     /**
      * Get matching filter class name.
      *
-     * If filter is active, a corresponding handler will be used during matching.
+     * If the filter is active, a corresponding handler will be used during matching.
      *
      * @return string The filter class name.
      *

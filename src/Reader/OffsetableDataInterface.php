@@ -10,7 +10,7 @@ namespace Yiisoft\Data\Reader;
 interface OffsetableDataInterface
 {
     /**
-     * Get a new instance with offset set.
+     * Get a new instance with an offset set.
      *
      * @param int $offset Offset.
      *

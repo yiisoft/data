@@ -11,7 +11,7 @@ use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
- * `Equals` iterable filter handler checks that the item's field value matches given value.
+ * `Equals` iterable filter handler checks that the item's field value matches the given value.
  */
 final class EqualsHandler implements IterableFilterHandlerInterface
 {

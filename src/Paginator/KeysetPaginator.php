@@ -30,14 +30,14 @@ use function sprintf;
  *
  * Advantages:
  *
- * - Performance does not depend on page number
+ * - Performance doesn't depend on page number
  * - Consistent results regardless of insertions and deletions
  *
  * Disadvantages:
  *
  * - Total number of pages is not available
- * - Can not get to specific page, only "previous" and "next"
- * - Data cannot be unordered
+ * - Can't get to specific page, only "previous" and "next"
+ * - Data can't be unordered
  *
  * @link https://use-the-index-luke.com/no-offset
  *
@@ -66,7 +66,7 @@ final class KeysetPaginator implements PaginatorInterface
     private ?string $currentLastValue = null;
 
     /**
-     * @var bool Whether there is previous page.
+     * @var bool Whether there is a previous page.
      */
     private bool $hasPreviousPage = false;
 
@@ -193,7 +193,7 @@ final class KeysetPaginator implements PaginatorInterface
 
         /** @var Sort $sort */
         $sort = $this->dataReader->getSort();
-        /** @infection-ignore-all Any value more one in line below will be ignored into `readData()` method */
+        /** @infection-ignore-all Any value more than one in the line below will be ignored in `readData()` method */
         $dataReader = $this->dataReader->withLimit($this->pageSize + 1);
 
         if ($this->token?->isPrevious === true) {

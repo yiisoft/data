@@ -14,7 +14,7 @@ interface WriteableInterface
      *
      * @param iterable $items Items to write.
      *
-     * @throws DataWriterException If there is an error writing items.
+     * @throws DataWriterException If there is an error while writing items.
      */
     public function write(iterable $items): void;
 }

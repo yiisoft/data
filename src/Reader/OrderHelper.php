@@ -15,7 +15,7 @@ use function trim;
 final class OrderHelper
 {
     /**
-     * Create fields order array from an order string.
+     * Create a field order array from an order string.
      *
      * The string consists of comma-separated field names.
      * If the name is prefixed with `-`, field order is descending.
@@ -23,7 +23,7 @@ final class OrderHelper
      *
      * @param string $orderString Logical fields order as comma-separated string.
      *
-     * @return array Logical fields order as array.
+     * @return array Logical fields order as an array.
      *
      * @psalm-return TOrder
      */
@@ -44,13 +44,13 @@ final class OrderHelper
     }
 
     /**
-     * Create an order string based on logical fields order array.
+     * Create an order string based on a logical field order array.
      *
      * The string consists of comma-separated field names.
      * If the name is prefixed with `-`, field order is descending.
      * Otherwise, the order is ascending.
      *
-     * @param array $order Logical fields order as array.
+     * @param array $order Logical fields order as an array.
      *
      * @return string An order string.
      */

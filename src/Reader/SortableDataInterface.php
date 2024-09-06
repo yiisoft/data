@@ -11,7 +11,7 @@ namespace Yiisoft\Data\Reader;
 interface SortableDataInterface
 {
     /**
-     * Get a new instance with sorting set.
+     * Get a new instance with a sorting set.
      *
      * @param Sort|null $sort Sorting criteria or null for no sorting.
      *

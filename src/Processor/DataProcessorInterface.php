@@ -18,7 +18,7 @@ interface DataProcessorInterface
      * @param iterable $items Source items iterator.
      * @psalm-param iterable<TKey, TValue> $items
      *
-     * @throws DataProcessorException In case there is an error processing items.
+     * @throws DataProcessorException If there is an error while processing items.
      *
      * @return iterable Processed items iterator.
      * @psalm-return iterable<TKey, TValue>

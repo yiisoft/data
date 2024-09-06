@@ -8,7 +8,7 @@
 - New #153, #154: Add `KeysetPaginator::withFilterCallback()` method that allows set closure for preparing filter passed to
   the data reader (@vjik)
 - New #153: Add `Compare::withValue()` method (@vjik)
-- Chg #154: Raise minimum required PHP version to 8.1 (@vjik)
+- Chg #154: Raise the minimum required PHP version to 8.1 (@vjik)
 - Bug #155: Fix `Sort` configuration preparation (@vjik)
 - Bug #155: Fix same named order fields in `Sort` were not overriding previous ones (@vjik)
 - New #158: Add methods `PaginatorInterface::isSortable()` and `PaginatorInterface::withSort()` (@vjik)
