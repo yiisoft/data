@@ -34,6 +34,8 @@ final class LikeHandlerTest extends TestCase
             [false, ['id' => 1, 'value' => 'Great Cat Fighter'], 'id', '1', true],
             [true, ['id' => 1, 'value' => '🙁🙂🙁'], 'value', '🙂', true],
             [true, ['id' => 1, 'value' => 'Привет мир'], 'value', ' ', true],
+
+            [true, ['id' => 1, 'value' => 'das Öl'], 'value', 'öl', false],
         ];
     }
 
