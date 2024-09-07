@@ -27,7 +27,7 @@
 - New #176: Add `OrderHelper` (@vjik)
 - New #173, #184: Add `$caseSensitive` parameter to `Like` filter to control whether the search must be case-sensitive
   or not (@arogachev)
-- Enh #187: Limit set in data reader is not taken into account by offset paginator. Keyset paginator throws an exception
+- Enh #187: Limit set in data reader is now taken into account by offset paginator. Keyset paginator throws an exception
   in this case (@samdark)
 - Chg #187: Add `FilterableDataInterface::getFilter()`, `LimitableDataInterface::getLimit()`,
   `OffsetableDataInterface::getOffset()` (@samdark)
