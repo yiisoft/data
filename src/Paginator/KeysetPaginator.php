@@ -38,7 +38,7 @@ use function sprintf;
  * - Total number of pages is not available
  * - Can't get to specific page, only "previous" and "next"
  * - Data can't be unordered
- * - The Limit set in the data reader is ignored
+ * - The limit set in the data reader is ignored
  *
  * @link https://use-the-index-luke.com/no-offset
  *
