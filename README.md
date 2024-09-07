@@ -159,7 +159,7 @@ Also, each data reader specifies an extended interface required for handling or 
 method to execute a filter on PHP variables.*
 
 You can add your own filter handlers to the data reader using the `withFilterHandlers()` method. You can add any filter
-handler to the Reader. If a reader is not able to use a filter, filter is ignored.
+handler to the reader. If a reader is not able to use a filter, filter is ignored.
 
 ```php
 // own filter for filtering
