@@ -116,6 +116,10 @@ final class KeysetPaginator implements PaginatorInterface
             ));
         }
 
+        if ($dataReader->getLimit() !== null) {
+            throw new InvalidArgumentException('Limited data readers are not supported by keyset pagination.');
+        }
+
         $sort = $dataReader->getSort();
 
         if ($sort === null) {

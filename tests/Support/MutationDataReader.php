@@ -40,7 +40,7 @@ final class MutationDataReader implements
         return $new;
     }
 
-    public function withLimit(int $limit): static
+    public function withLimit(?int $limit): static
     {
         $new = clone $this;
         $new->decorated = $this->decorated->withLimit($limit);
@@ -74,7 +74,7 @@ final class MutationDataReader implements
         return $this->decorated->getFilter();
     }
 
-    public function getLimit(): int
+    public function getLimit(): ?int
     {
         return $this->decorated->getLimit();
     }

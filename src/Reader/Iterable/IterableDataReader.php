@@ -51,7 +51,7 @@ final class IterableDataReader implements DataReaderInterface
 {
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
-    private int $limit = 0;
+    private ?int $limit = null;
     private int $offset = 0;
 
     /**
@@ -107,7 +107,7 @@ final class IterableDataReader implements DataReaderInterface
     /**
      * @psalm-return $this
      */
-    public function withLimit(int $limit): static
+    public function withLimit(?int $limit): static
     {
         if ($limit < 0) {
             throw new InvalidArgumentException('The limit must not be less than 0.');
@@ -303,7 +303,7 @@ final class IterableDataReader implements DataReaderInterface
         return $this->filter;
     }
 
-    public function getLimit(): int
+    public function getLimit(): ?int
     {
         return $this->limit;
     }

@@ -30,7 +30,7 @@ final class StubOffsetData implements
         return 0;
     }
 
-    public function withLimit(int $limit): static
+    public function withLimit(?int $limit): static
     {
         return $this;
     }

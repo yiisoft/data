@@ -588,7 +588,7 @@ final class KeysetPaginatorTest extends Testcase
     private function getNonSortableDataReader()
     {
         return new class () implements ReadableDataInterface, LimitableDataInterface, FilterableDataInterface {
-            public function withLimit(int $limit): static
+            public function withLimit(?int $limit): static
             {
                 return clone $this;
             }
@@ -628,7 +628,7 @@ final class KeysetPaginatorTest extends Testcase
     private function getNonFilterableDataReader()
     {
         return new class () implements ReadableDataInterface, LimitableDataInterface, SortableDataInterface {
-            public function withLimit(int $limit): static
+            public function withLimit(?int $limit): static
             {
                 return clone $this;
             }

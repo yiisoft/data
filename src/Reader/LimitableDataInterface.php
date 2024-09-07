@@ -14,19 +14,19 @@ interface LimitableDataInterface
     /**
      * Get a new instance with the limit set.
      *
-     * @param int $limit Limit. 0 means "no limit".
+     * @param ?int $limit Limit. `null` means no limit.
      *
-     * @throws InvalidArgumentException If the limit is less than 0.
+     * @throws InvalidArgumentException If the limit is less than zero.
      *
      * @return static New instance.
      * @psalm-return $this
      */
-    public function withLimit(int $limit): static;
+    public function withLimit(?int $limit): static;
 
     /**
      * Get current limit.
      *
-     * @return int Limit. 0 means "no limit".
+     * @return ?int Limit. `null` means no limit.
      */
-    public function getLimit(): int;
+    public function getLimit(): ?int;
 }
