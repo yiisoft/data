@@ -297,4 +297,19 @@ final class IterableDataReader implements DataReaderInterface
     {
         return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : $iterable;
     }
+
+    public function getFilter(): ?FilterInterface
+    {
+        return $this->filter;
+    }
+
+    public function getLimit(): int
+    {
+        return $this->limit;
+    }
+
+    public function getOffset(): int
+    {
+        return $this->offset;
+    }
 }

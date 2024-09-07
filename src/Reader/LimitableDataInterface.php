@@ -22,4 +22,11 @@ interface LimitableDataInterface
      * @psalm-return $this
      */
     public function withLimit(int $limit): static;
+
+    /**
+     * Get current limit.
+     *
+     * @return int Limit. 0 means "no limit".
+     */
+    public function getLimit(): int;
 }

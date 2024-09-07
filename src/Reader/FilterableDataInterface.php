@@ -28,6 +28,13 @@ interface FilterableDataInterface
     public function withFilter(FilterInterface $filter): static;
 
     /**
+     * Get current data reading criteria.
+     *
+     * @return FilterInterface|null Data reading criteria.
+     */
+    public function getFilter(): ?FilterInterface;
+
+    /**
      * Returns new instance with additional handlers set.
      *
      * @param FilterHandlerInterface ...$filterHandlers Additional filter handlers.

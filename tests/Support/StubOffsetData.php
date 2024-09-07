@@ -39,4 +39,14 @@ final class StubOffsetData implements
     {
         return $this;
     }
+
+    public function getLimit(): int
+    {
+        return 0;
+    }
+
+    public function getOffset(): int
+    {
+        return 0;
+    }
 }

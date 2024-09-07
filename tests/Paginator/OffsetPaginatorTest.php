@@ -117,6 +117,11 @@ final class OffsetPaginatorTest extends TestCase
                 // do nothing
                 return $this;
             }
+
+            public function getOffset(): int
+            {
+                return 0;
+            }
         };
 
         $this->expectException(InvalidArgumentException::class);
@@ -153,6 +158,11 @@ final class OffsetPaginatorTest extends TestCase
             {
                 // do nothing
                 return $this;
+            }
+
+            public function getOffset(): int
+            {
+                return 0;
             }
         };
 

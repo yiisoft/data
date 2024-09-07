@@ -68,4 +68,14 @@ final class MutationDataReader implements
     {
         return $this->decorated->getSort();
     }
+
+    public function getFilter(): ?FilterInterface
+    {
+        return $this->decorated->getFilter();
+    }
+
+    public function getLimit(): int
+    {
+        return $this->decorated->getLimit();
+    }
 }

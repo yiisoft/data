@@ -120,6 +120,11 @@ final class KeysetPaginatorTest extends Testcase
             {
                 return clone $this;
             }
+
+            public function getFilter(): ?FilterInterface
+            {
+                return null;
+            }
         };
 
         $this->expectException(InvalidArgumentException::class);
@@ -607,6 +612,16 @@ final class KeysetPaginatorTest extends Testcase
             {
                 return clone $this;
             }
+
+            public function getFilter(): ?FilterInterface
+            {
+                return null;
+            }
+
+            public function getLimit(): int
+            {
+                return 0;
+            }
         };
     }
 
@@ -636,6 +651,11 @@ final class KeysetPaginatorTest extends Testcase
             public function getSort(): ?Sort
             {
                 return Sort::only([]);
+            }
+
+            public function getLimit(): int
+            {
+                return 0;
             }
         };
     }
