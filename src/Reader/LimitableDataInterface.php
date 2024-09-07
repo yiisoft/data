@@ -12,11 +12,11 @@ use InvalidArgumentException;
 interface LimitableDataInterface
 {
     /**
-     * Get a new instance with limit set.
+     * Get a new instance with the limit set.
      *
      * @param int $limit Limit. 0 means "no limit".
      *
-     * @throws InvalidArgumentException If limit is less than 0.
+     * @throws InvalidArgumentException If the limit is less than 0.
      *
      * @return static New instance.
      * @psalm-return $this

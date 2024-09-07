@@ -112,7 +112,7 @@ final class OffsetPaginator implements PaginatorInterface
      *
      * @param int $page Page number.
      *
-     * @throws PaginatorException If current page is set incorrectly.
+     * @throws PaginatorException If the current page is incorrect.
      *
      * @return self New instance.
      */
@@ -148,7 +148,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * Get current page number.
+     * Get the current page number.
      *
      * @return int Current page number.
      */
@@ -172,7 +172,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         if ($currentPage === $pages) {
-            /** @psalm-var positive-int Because total items is more than offset */
+            /** @psalm-var positive-int Because the total items number is more than offset */
             return $this->getTotalItems() - $this->getOffset();
         }
 
@@ -180,7 +180,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * Get offset for the current page i.e. the number of items to skip before the current page is reached.
+     * Get offset for the current page, that is the number of items to skip before the current page is reached.
      *
      * @return int Offset.
      */

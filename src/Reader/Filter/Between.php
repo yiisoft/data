@@ -8,7 +8,7 @@ use DateTimeInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * `Between` filter defines a criteria so the value of the field with a given name
+ * `Between` filter defines a criteria, so the value of the field with a given name
  * is between the minimal value and the maximal value.
  */
 final class Between implements FilterInterface

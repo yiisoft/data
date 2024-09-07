@@ -13,7 +13,7 @@ namespace Yiisoft\Data\Reader;
  * - Resulting items are iterated over and filter handler matching
  *   {@see FilterInterface::getOperator()} is applied
  *
- * For performance reasons prefer filtering as many items as possible in the first step.
+ * For performance reasons, prefer filtering as many items as possible in the first step.
  */
 interface FilterableDataInterface
 {

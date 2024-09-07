@@ -15,18 +15,18 @@ use function is_string;
 /**
  * Sort represents data sorting settings:
  *
- * - A config with a map of logical field => real fields along with their order. The config also contains default
+ * - A config with a map of logical field => real fields along with their order. The config also contains the default
  *   order for each logical field.
  * - Currently specified logical fields order such as field1 => asc, field2 => desc. Usually it is passed directly
- *   from end user.
+ *   from the end user.
  *
  * Logical fields are the ones user operates with. Real fields are the ones actually present in a data set.
  * Such a mapping helps when you need to sort by a single logical field that, in fact, consists of multiple fields
- * in underlying the data set. For example, we provide a user with a username which consists of first name and last name
- * fields in actual data set.
+ * in the underlying data set. For example, you provide a user with a username which consists of first name and last name
+ * fields in the actual data set.
  *
  * Based on the settings, the class can produce a criteria to be applied to {@see SortableDataInterface}
- * when obtaining the data i.e. a list of real fields along with their order directions.
+ * when getting the data that is a list of real fields along with their order directions.
  *
  * There are two modes of forming a criteria available:
  *
@@ -126,7 +126,7 @@ final class Sort
     }
 
     /**
-     * Create a sort instance that ignores current order for extra logical fields that have no configuration.
+     * Create a sort instance that ignores the current order for extra logical fields that have no configuration.
      *
      * @param array $config Logical fields config.
      * @psalm-param TUserConfig $config
@@ -143,7 +143,7 @@ final class Sort
      * ```
      *
      * In the above, two fields are declared: `age` and `name`. The `age` field is
-     * a simple field which is equivalent to the following:
+     * a simple field that is equivalent to the following:
      *
      * ```php
      * 'age' => [
@@ -185,7 +185,7 @@ final class Sort
      * ```
      *
      * In the above, two fields are declared: `age` and `name`. The `age` field is
-     * a simple field which is equivalent to the following:
+     * a simple field that is equivalent to the following:
      *
      * ```php
      * 'age' => [
@@ -210,7 +210,7 @@ final class Sort
     }
 
     /**
-     * Get a new instance with logical fields order set from an order string.
+     * Get a new instance with a logical field order set from an order string.
      *
      * The string consists of comma-separated field names.
      * If the name is prefixed with `-`, field order is descending.
@@ -228,7 +228,7 @@ final class Sort
     }
 
     /**
-     * Return a new instance with logical fields order set.
+     * Return a new instance with a logical field order set.
      *
      * @param array $order A map with logical field names to order by as keys, direction as values.
      * @psalm-param TOrder $order
@@ -243,7 +243,7 @@ final class Sort
     }
 
     /**
-     * Return a new instance without default sorting set.
+     * Return a new instance without a default sorting set.
      *
      * @return self New instance.
      */
@@ -281,7 +281,7 @@ final class Sort
 
     /**
      * Get a sorting criteria to be applied to {@see SortableDataInterface}
-     * when obtaining the data i.e. a list of real fields along with their order directions.
+     * when getting the data that is a list of real fields along with their order directions.
      *
      * @return array Sorting criteria.
      * @psalm-return array<string, int>

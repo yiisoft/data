@@ -34,7 +34,7 @@ use function sprintf;
 use function uasort;
 
 /**
- * Iterable data reader takes an iterable data as a source and can:
+ * Iterable data reader takes iterable data as a source and can:
  *
  * - Limit items read
  * - Skip N items from the beginning
@@ -166,7 +166,7 @@ final class IterableDataReader implements DataReaderInterface
         $sortedData = $this->sort === null ? $this->data : $this->sortItems($this->data, $this->sort);
 
         foreach ($sortedData as $key => $item) {
-            // Do not return more than limit items.
+            // Don't return more than limit items.
             if ($this->limit > 0 && count($data) === $this->limit) {
                 /** @infection-ignore-all Here continue === break */
                 break;
