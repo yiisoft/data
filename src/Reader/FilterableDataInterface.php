@@ -35,5 +35,5 @@ interface FilterableDataInterface
      * @return static New instance.
      * @psalm-return $this
      */
-    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static;
+    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static;
 }
