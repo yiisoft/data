@@ -15,7 +15,7 @@ interface ReadableDataInterface
     /**
      * Get iterable for the data set.
      *
-     * @return iterable Iterable for the data.
+     * @return iterable Iterable for the data. Note that keys could be anything so you shouldn't rely on these.
      * @psalm-return iterable<TKey, TValue>
      */
     public function read(): iterable;
