@@ -116,7 +116,7 @@ final class KeysetPaginatorTest extends Testcase
                 return clone $this;
             }
 
-            public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+            public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
             {
                 return clone $this;
             }
@@ -608,7 +608,7 @@ final class KeysetPaginatorTest extends Testcase
                 return clone $this;
             }
 
-            public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+            public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
             {
                 return clone $this;
             }

@@ -33,10 +33,10 @@ final class MutationDataReader implements
         return $new;
     }
 
-    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
         $new = clone $this;
-        $new->decorated = $this->decorated->withFilterHandlers(...$filterHandlers);
+        $new->decorated = $this->decorated->withAddedFilterHandlers(...$filterHandlers);
         return $new;
     }
 

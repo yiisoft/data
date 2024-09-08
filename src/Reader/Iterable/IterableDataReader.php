@@ -84,7 +84,7 @@ final class IterableDataReader implements DataReaderInterface
     /**
      * @psalm-return $this
      */
-    public function withFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
         $new = clone $this;
         $new->iterableFilterHandlers = array_merge(

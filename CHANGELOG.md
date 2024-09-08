@@ -33,6 +33,7 @@
   `OffsetableDataInterface::getOffset()` (@samdark)
 - Chg #187: `LimitableDataInterface::withLimit()` now accepts `null` to indicate "no limit". `0` is now a valid limit
   value meaning `return nothing` (@samdark)
+- Chg #163: Rename `FilterableDataInterface::withFilterHandlers()` to `FilterableDataInterface::withAddedFilterHandlers()` (@samdark)
 
 ## 1.0.1 January 25, 2023
 
