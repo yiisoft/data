@@ -189,6 +189,10 @@ final class IterableDataReader implements DataReaderInterface
 
     public function readOne(): array|object|null
     {
+        if ($this->limit === 0) {
+            return null;
+        }
+
         /** @infection-ignore-all Any value more one in `withLimit()` will be ignored because returned `current()` */
         return $this
             ->withLimit(1)
