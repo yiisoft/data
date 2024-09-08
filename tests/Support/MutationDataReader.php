@@ -26,7 +26,7 @@ final class MutationDataReader implements
     ) {
     }
 
-    public function withFilter(FilterInterface $filter): static
+    public function withFilter(?FilterInterface $filter): static
     {
         $new = clone $this;
         $new->decorated = $this->decorated->withFilter($filter);

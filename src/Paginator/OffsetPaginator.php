@@ -274,8 +274,17 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function readOne(): array|object|null
     {
+        $limit = 1;
+
+        $dataReaderLimit = $this->dataReader->getLimit();
+
+        if ($dataReaderLimit !== null && ($this->getOffset() + 1) > $dataReaderLimit) {
+            // There is a hard limit in data reader. We must respect that.
+            $limit = $this->getOffset() + 1 - $dataReaderLimit;
+        }
+
         return $this->dataReader
-            ->withLimit(1)
+            ->withLimit($limit)
             ->withOffset($this->getOffset())
             ->readOne();
     }

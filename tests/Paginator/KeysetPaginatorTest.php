@@ -111,7 +111,7 @@ final class KeysetPaginatorTest extends Testcase
                 return null;
             }
 
-            public function withFilter(FilterInterface $filter): static
+            public function withFilter(?FilterInterface $filter): static
             {
                 return clone $this;
             }
@@ -603,7 +603,7 @@ final class KeysetPaginatorTest extends Testcase
                 return null;
             }
 
-            public function withFilter(FilterInterface $filter): static
+            public function withFilter(?FilterInterface $filter): static
             {
                 return clone $this;
             }
