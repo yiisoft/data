@@ -263,7 +263,7 @@ final class OffsetPaginator implements PaginatorInterface
 
         if ($dataReaderLimit !== null && ($this->getOffset() + $this->pageSize) > $dataReaderLimit) {
             // There is a hard limit in data reader. We must respect that.
-            $limit = $this->getOffset() + $this->pageSize - $dataReaderLimit;
+            $limit = $dataReaderLimit - $this->getOffset();
         }
 
         yield from $this->dataReader
