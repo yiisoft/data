@@ -67,7 +67,7 @@ final class IterableDataReaderTest extends TestCase
     {
         $reader = new IterableDataReader([]);
 
-        $this->assertNotSame($reader, $reader->withFilterHandlers());
+        $this->assertNotSame($reader, $reader->withAddedFilterHandlers());
         $this->assertNotSame($reader, $reader->withFilter(null));
         $this->assertNotSame($reader, $reader->withSort(null));
         $this->assertNotSame($reader, $reader->withOffset(1));
@@ -91,7 +91,7 @@ final class IterableDataReaderTest extends TestCase
         );
         $this->expectExceptionMessage($message);
 
-        (new IterableDataReader([]))->withFilterHandlers($nonIterableFilterHandler);
+        (new IterableDataReader([]))->withAddedFilterHandlers($nonIterableFilterHandler);
     }
 
     public function testWithLimitFailForNegativeValues(): void
@@ -383,7 +383,7 @@ final class IterableDataReaderTest extends TestCase
     public function testCustomFilter(): void
     {
         $reader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withFilterHandlers(new DigitalHandler())
+            ->withAddedFilterHandlers(new DigitalHandler())
             ->withFilter(
                 new All(new GreaterThan('id', 0), new Digital('name'))
             );
@@ -398,7 +398,7 @@ final class IterableDataReaderTest extends TestCase
 
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
-            ->withFilterHandlers(
+            ->withAddedFilterHandlers(
                 new class () implements IterableFilterHandlerInterface {
                     public function getFilterClass(): string
                     {

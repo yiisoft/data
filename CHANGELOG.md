@@ -27,7 +27,8 @@
 - New #176: Add `OrderHelper` (@vjik)
 - New #173, #184: Add `$caseSensitive` parameter to `Like` filter to control whether the search must be case-sensitive
   or not (@arogachev)
-- Enh #190: Use `str_contains` for case-sensitive match in `LikeHandler` (@samdark) 
+- Chg #163: Rename `FilterableDataInterface::withFilterHandlers()` to `FilterableDataInterface::withAddedFilterHandlers()` (@samdark)
+- Enh #190: Use `str_contains` for case-sensitive match in `LikeHandler` (@samdark)
 
 ## 1.0.1 January 25, 2023
 
