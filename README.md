@@ -327,7 +327,7 @@ Disadvantages:
 - The total number of pages is not available
 - Can't get to specific page, only "previous" and "next"
 - Data cannot be unordered
-- The limit set in the data reader is ignored
+- The limit set in the data reader leads to an exception
 
 Usage is the following:
 
