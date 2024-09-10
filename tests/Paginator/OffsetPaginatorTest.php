@@ -655,4 +655,14 @@ final class OffsetPaginatorTest extends TestCase
 
         $this->assertNull($paginator->readOne());
     }
+
+    public function testReadOneWithLimit1(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))->withLimit(1);
+        $paginator = new OffsetPaginator($dataReader);
+
+        $result = $paginator->readOne();
+
+        $this->assertSame(self::ITEM_1, $result);
+    }
 }
