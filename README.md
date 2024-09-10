@@ -291,6 +291,7 @@ Advantages:
 - The total number of pages is available
 - Can get to specific page
 - Data can be unordered
+- The limit set in the data reader is taken into account
 
 Disadvantages:
 
@@ -326,6 +327,7 @@ Disadvantages:
 - The total number of pages is not available
 - Can't get to specific page, only "previous" and "next"
 - Data cannot be unordered
+- The limit set in the data reader leads to an exception
 
 Usage is the following:
 

@@ -38,6 +38,7 @@ use function sprintf;
  * - Total number of pages is not available
  * - Can't get to specific page, only "previous" and "next"
  * - Data can't be unordered
+ * - The limit set in the data reader leads to an exception
  *
  * @link https://use-the-index-luke.com/no-offset
  *
@@ -114,6 +115,10 @@ final class KeysetPaginator implements PaginatorInterface
                 'Data reader should implement "%s" to be used with keyset paginator.',
                 LimitableDataInterface::class,
             ));
+        }
+
+        if ($dataReader->getLimit() !== null) {
+            throw new InvalidArgumentException('Limited data readers are not supported by keyset pagination.');
         }
 
         $sort = $dataReader->getSort();

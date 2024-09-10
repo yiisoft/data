@@ -117,6 +117,11 @@ final class OffsetPaginatorTest extends TestCase
                 // do nothing
                 return $this;
             }
+
+            public function getOffset(): int
+            {
+                return 0;
+            }
         };
 
         $this->expectException(InvalidArgumentException::class);
@@ -153,6 +158,11 @@ final class OffsetPaginatorTest extends TestCase
             {
                 // do nothing
                 return $this;
+            }
+
+            public function getOffset(): int
+            {
+                return 0;
             }
         };
 
@@ -604,5 +614,55 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertNotNull($token);
         $this->assertSame('1', $token->value);
         $this->assertFalse($token->isPrevious);
+    }
+
+    public function testLimitedDataReaderReducedPage(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))->withLimit(3);
+        $paginator = (new OffsetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withCurrentPage(2)
+        ;
+
+        $count = 0;
+        foreach ($paginator->read() as $_item) {
+            $count++;
+        }
+
+        $this->assertSame(1, $count);
+    }
+
+    public function testLimitedDataReaderEqualPage(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))->withLimit(4);
+        $paginator = (new OffsetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withCurrentPage(2)
+        ;
+
+        $count = 0;
+        foreach ($paginator->read() as $_item) {
+            $count++;
+        }
+
+        $this->assertSame(2, $count);
+    }
+
+    public function testReadOneWithLimit0(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))->withLimit(0);
+        $paginator = new OffsetPaginator($dataReader);
+
+        $this->assertNull($paginator->readOne());
+    }
+
+    public function testReadOneWithLimit1(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))->withLimit(1);
+        $paginator = new OffsetPaginator($dataReader);
+
+        $result = $paginator->readOne();
+
+        $this->assertSame(self::ITEM_1, $result);
     }
 }

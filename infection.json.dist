@@ -26,6 +26,11 @@
             "ignore": [
                 "Yiisoft\\Data\\Paginator\\OffsetPaginator::readOne"
             ]
+        },
+        "GreaterThan": {
+            "ignoreSourceCodeByRegex": [
+                ".*if \\(\\$dataReaderLimit !== null && \\$this->getOffset\\(\\) \\+ \\$this->pageSize > \\$dataReaderLimit\\) \\{.*"
+            ]
         }
     }
 }

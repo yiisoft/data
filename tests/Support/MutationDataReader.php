@@ -26,7 +26,7 @@ final class MutationDataReader implements
     ) {
     }
 
-    public function withFilter(FilterInterface $filter): static
+    public function withFilter(?FilterInterface $filter): static
     {
         $new = clone $this;
         $new->decorated = $this->decorated->withFilter($filter);
@@ -40,7 +40,7 @@ final class MutationDataReader implements
         return $new;
     }
 
-    public function withLimit(int $limit): static
+    public function withLimit(?int $limit): static
     {
         $new = clone $this;
         $new->decorated = $this->decorated->withLimit($limit);
@@ -67,5 +67,15 @@ final class MutationDataReader implements
     public function getSort(): ?Sort
     {
         return $this->decorated->getSort();
+    }
+
+    public function getFilter(): ?FilterInterface
+    {
+        return $this->decorated->getFilter();
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->decorated->getLimit();
     }
 }

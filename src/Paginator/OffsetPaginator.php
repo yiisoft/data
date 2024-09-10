@@ -28,6 +28,7 @@ use function sprintf;
  * - Total number of pages is available
  * - Can get to specific page
  * - Data can be unordered
+ * - The limit set in the data reader is taken into account
  *
  * Disadvantages:
  *
@@ -257,16 +258,30 @@ final class OffsetPaginator implements PaginatorInterface
             throw new PageNotFoundException();
         }
 
+        $limit = $this->pageSize;
+        $dataReaderLimit = $this->dataReader->getLimit();
+
+        if ($dataReaderLimit !== null && ($this->getOffset() + $this->pageSize) > $dataReaderLimit) {
+            $limit = $dataReaderLimit - $this->getOffset();
+        }
+
         yield from $this->dataReader
-            ->withLimit($this->pageSize)
+            ->withLimit($limit)
             ->withOffset($this->getOffset())
             ->read();
     }
 
     public function readOne(): array|object|null
     {
+        $limit = 1;
+
+        $dataReaderLimit = $this->dataReader->getLimit();
+        if ($dataReaderLimit !== null && ($this->getOffset() + 1) > $dataReaderLimit) {
+            $limit = 0;
+        }
+
         return $this->dataReader
-            ->withLimit(1)
+            ->withLimit($limit)
             ->withOffset($this->getOffset())
             ->readOne();
     }

@@ -111,7 +111,7 @@ final class KeysetPaginatorTest extends Testcase
                 return null;
             }
 
-            public function withFilter(FilterInterface $filter): static
+            public function withFilter(?FilterInterface $filter): static
             {
                 return clone $this;
             }
@@ -119,6 +119,11 @@ final class KeysetPaginatorTest extends Testcase
             public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
             {
                 return clone $this;
+            }
+
+            public function getFilter(): ?FilterInterface
+            {
+                return null;
             }
         };
 
@@ -583,7 +588,7 @@ final class KeysetPaginatorTest extends Testcase
     private function getNonSortableDataReader()
     {
         return new class () implements ReadableDataInterface, LimitableDataInterface, FilterableDataInterface {
-            public function withLimit(int $limit): static
+            public function withLimit(?int $limit): static
             {
                 return clone $this;
             }
@@ -598,7 +603,7 @@ final class KeysetPaginatorTest extends Testcase
                 return null;
             }
 
-            public function withFilter(FilterInterface $filter): static
+            public function withFilter(?FilterInterface $filter): static
             {
                 return clone $this;
             }
@@ -607,13 +612,23 @@ final class KeysetPaginatorTest extends Testcase
             {
                 return clone $this;
             }
+
+            public function getFilter(): ?FilterInterface
+            {
+                return null;
+            }
+
+            public function getLimit(): int
+            {
+                return 0;
+            }
         };
     }
 
     private function getNonFilterableDataReader()
     {
         return new class () implements ReadableDataInterface, LimitableDataInterface, SortableDataInterface {
-            public function withLimit(int $limit): static
+            public function withLimit(?int $limit): static
             {
                 return clone $this;
             }
@@ -636,6 +651,11 @@ final class KeysetPaginatorTest extends Testcase
             public function getSort(): ?Sort
             {
                 return Sort::only([]);
+            }
+
+            public function getLimit(): int
+            {
+                return 0;
             }
         };
     }

@@ -18,4 +18,11 @@ interface OffsetableDataInterface
      * @psalm-return $this
      */
     public function withOffset(int $offset): static;
+
+    /**
+     * Get current offset.
+     *
+     * @return int Offset.
+     */
+    public function getOffset(): int;
 }
