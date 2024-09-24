@@ -60,6 +60,7 @@ final class KeysetPaginator implements PaginatorInterface
 
     /**
      * @var int Maximum number of items per page.
+     * @psalm-var positive-int
      */
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
     private ?PageToken $token = null;
