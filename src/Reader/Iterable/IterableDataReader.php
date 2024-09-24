@@ -51,6 +51,10 @@ final class IterableDataReader implements DataReaderInterface
 {
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
+
+    /**
+     * @psalm-var non-negative-int|null
+     */
     private ?int $limit = null;
     private int $offset = 0;
 

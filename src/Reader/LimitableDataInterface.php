@@ -14,7 +14,7 @@ interface LimitableDataInterface
     /**
      * Get a new instance with the limit set.
      *
-     * @param ?int $limit Limit. `null` means no limit.
+     * @param non-negative-int|null $limit Limit. `null` means no limit.
      *
      * @throws InvalidArgumentException If the limit is less than zero.
      *
@@ -26,7 +26,9 @@ interface LimitableDataInterface
     /**
      * Get current limit.
      *
-     * @return ?int Limit. `null` means no limit.
+     * @return int|null Limit. `null` means no limit.
+     *
+     * @psalm-return non-negative-int|null
      */
     public function getLimit(): ?int;
 }
