@@ -170,7 +170,7 @@ final class IterableDataReader implements DataReaderInterface
             return null;
         }
 
-        /** @infection-ignore-all Any value more one in `withLimit()` will be ignored because returned `current()` */
+        /** @infection-ignore-all Any value more than one in `withLimit()` will be ignored because returned `current()` */
         return $this
             ->withLimit(1)
             ->getIterator()
