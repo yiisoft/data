@@ -169,6 +169,20 @@ final class IterableDataReaderTest extends TestCase
         $this->assertCount(5, $reader);
     }
 
+    public function testCountWithLimit(): void
+    {
+        $reader = (new IterableDataReader(self::DEFAULT_DATASET))->withLimit(2);
+        $this->assertSame(5, $reader->count());
+        $this->assertCount(5, $reader);
+    }
+
+    public function testCountWithOffset(): void
+    {
+        $reader = (new IterableDataReader(self::DEFAULT_DATASET))->withOffset(3);
+        $this->assertSame(5, $reader->count());
+        $this->assertCount(5, $reader);
+    }
+
     public function testReadOne(): void
     {
         $data = self::DEFAULT_DATASET;
