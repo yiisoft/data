@@ -6,8 +6,9 @@ namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Tests\Common\Reader\BaseReaderTestCase;
 
-abstract class BaseReaderWithLikeTestCase extends BaseReaderWithFilterTestCase
+abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
 {
     public static function dataWithReader(): array
     {

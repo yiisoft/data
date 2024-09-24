@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
 use Yiisoft\Data\Reader\Filter\GreaterThan;
+use Yiisoft\Data\Tests\Common\Reader\BaseReaderTestCase;
 
-abstract class BaseReaderWithGreaterThanTestCase extends BaseReaderWithFilterTestCase
+abstract class BaseReaderWithGreaterThanTestCase extends BaseReaderTestCase
 {
     public function testWithReader(): void
     {
