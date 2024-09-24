@@ -177,6 +177,9 @@ final class IterableDataReader implements DataReaderInterface
             ->current();
     }
 
+    /**
+     * @psalm-return array<TKey, TValue>
+     */
     private function internalRead(bool $useLimitAndOffset): array
     {
         $data = [];
