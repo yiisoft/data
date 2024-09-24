@@ -14,11 +14,13 @@ interface LimitableDataInterface
     /**
      * Get a new instance with the limit set.
      *
-     * @param non-negative-int|null $limit Limit. `null` means no limit.
+     * @param int|null $limit Limit. `null` means no limit.
      *
      * @throws InvalidArgumentException If the limit is less than zero.
      *
      * @return static New instance.
+     *
+     * @pslam-param non-negative-int|null $limit
      * @psalm-return $this
      */
     public function withLimit(?int $limit): static;
