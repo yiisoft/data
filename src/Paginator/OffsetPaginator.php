@@ -199,7 +199,14 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function getTotalItems(): int
     {
-        return $this->dataReader->count();
+        $count = $this->dataReader->count();
+
+        $dataReaderLimit = $this->dataReader->getLimit();
+        if ($dataReaderLimit !== null && $count > $dataReaderLimit) {
+            return $dataReaderLimit;
+        }
+
+        return $count;
     }
 
     /**
