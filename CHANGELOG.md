@@ -35,6 +35,7 @@
   value meaning `return nothing` (@samdark)
 - Chg #163: Rename `FilterableDataInterface::withFilterHandlers()` to `FilterableDataInterface::withAddedFilterHandlers()` (@samdark)
 - Enh #190: Use `str_contains` for case-sensitive match in `LikeHandler` (@samdark)
+- Enh #194: Improve psalm annotations in `LimitableDataInterface` (@vjik)
 
 ## 1.0.1 January 25, 2023
 
