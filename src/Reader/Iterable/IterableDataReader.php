@@ -57,7 +57,7 @@ final class IterableDataReader implements DataReaderInterface
     /**
      * @psalm-var array<string, IterableFilterHandlerInterface>
      */
-    private array $iterableFilterHandlers = [];
+    private array $iterableFilterHandlers;
 
     /**
      * @param iterable $data Data to iterate.
@@ -153,7 +153,7 @@ final class IterableDataReader implements DataReaderInterface
 
     public function count(): int
     {
-        return count($this->read());
+        return count($this->internalRead(useLimitAndOffset: false));
     }
 
     /**
@@ -161,30 +161,7 @@ final class IterableDataReader implements DataReaderInterface
      */
     public function read(): array
     {
-        $data = [];
-        $skipped = 0;
-        $sortedData = $this->sort === null ? $this->data : $this->sortItems($this->data, $this->sort);
-
-        foreach ($sortedData as $key => $item) {
-            // Don't return more than limit items.
-            if ($this->limit > 0 && count($data) === $this->limit) {
-                /** @infection-ignore-all Here continue === break */
-                break;
-            }
-
-            // Skip offset items.
-            if ($skipped < $this->offset) {
-                ++$skipped;
-                continue;
-            }
-
-            // Filter items.
-            if ($this->filter === null || $this->matchFilter($item, $this->filter)) {
-                $data[$key] = $item;
-            }
-        }
-
-        return $data;
+        return $this->internalRead(useLimitAndOffset: true);
     }
 
     public function readOne(): array|object|null
@@ -198,6 +175,34 @@ final class IterableDataReader implements DataReaderInterface
             ->withLimit(1)
             ->getIterator()
             ->current();
+    }
+
+    private function internalRead(bool $useLimitAndOffset): array
+    {
+        $data = [];
+        $skipped = 0;
+        $sortedData = $this->sort === null ? $this->data : $this->sortItems($this->data, $this->sort);
+
+        foreach ($sortedData as $key => $item) {
+            // Don't return more than limit items.
+            if ($useLimitAndOffset && $this->limit > 0 && count($data) === $this->limit) {
+                /** @infection-ignore-all Here continue === break */
+                break;
+            }
+
+            // Skip offset items.
+            if ($useLimitAndOffset && $skipped < $this->offset) {
+                ++$skipped;
+                continue;
+            }
+
+            // Filter items.
+            if ($this->filter === null || $this->matchFilter($item, $this->filter)) {
+                $data[$key] = $item;
+            }
+        }
+
+        return $data;
     }
 
     /**
