@@ -29,7 +29,8 @@
         },
         "GreaterThan": {
             "ignoreSourceCodeByRegex": [
-                ".*if \\(\\$dataReaderLimit !== null && \\$this->getOffset\\(\\) \\+ \\$this->pageSize > \\$dataReaderLimit\\) \\{.*"
+                ".*if \\(\\$dataReaderLimit !== null && \\$this->getOffset\\(\\) \\+ \\$this->pageSize > \\$dataReaderLimit\\) \\{.*",
+                ".*if \\(\\$dataReaderLimit !== null && \\$count > \\$dataReaderLimit\\) \\{.*"
             ]
         }
     }
