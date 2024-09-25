@@ -616,6 +616,15 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertFalse($token->isPrevious);
     }
 
+    public function testLimitedDataReaderTotalItems(): void
+    {
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))->withLimit(3);
+
+        $paginator = new OffsetPaginator($dataReader);
+
+        $this->assertSame(3, $paginator->getTotalItems());
+    }
+
     public function testLimitedDataReaderReducedPage(): void
     {
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))->withLimit(3);
@@ -630,6 +639,7 @@ final class OffsetPaginatorTest extends TestCase
         }
 
         $this->assertSame(1, $count);
+        $this->assertSame(3, $paginator->getTotalItems());
     }
 
     public function testLimitedDataReaderEqualPage(): void

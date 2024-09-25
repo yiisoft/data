@@ -51,13 +51,17 @@ final class IterableDataReader implements DataReaderInterface
 {
     private ?Sort $sort = null;
     private ?FilterInterface $filter = null;
+
+    /**
+     * @psalm-var non-negative-int|null
+     */
     private ?int $limit = null;
     private int $offset = 0;
 
     /**
      * @psalm-var array<string, IterableFilterHandlerInterface>
      */
-    private array $iterableFilterHandlers = [];
+    private array $iterableFilterHandlers;
 
     /**
      * @param iterable $data Data to iterate.
@@ -153,7 +157,7 @@ final class IterableDataReader implements DataReaderInterface
 
     public function count(): int
     {
-        return count($this->read());
+        return count($this->internalRead(useLimitAndOffset: false));
     }
 
     /**
@@ -161,19 +165,40 @@ final class IterableDataReader implements DataReaderInterface
      */
     public function read(): array
     {
+        return $this->internalRead(useLimitAndOffset: true);
+    }
+
+    public function readOne(): array|object|null
+    {
+        if ($this->limit === 0) {
+            return null;
+        }
+
+        /** @infection-ignore-all Any value more than one in `withLimit()` will be ignored because returned `current()` */
+        return $this
+            ->withLimit(1)
+            ->getIterator()
+            ->current();
+    }
+
+    /**
+     * @psalm-return array<TKey, TValue>
+     */
+    private function internalRead(bool $useLimitAndOffset): array
+    {
         $data = [];
         $skipped = 0;
         $sortedData = $this->sort === null ? $this->data : $this->sortItems($this->data, $this->sort);
 
         foreach ($sortedData as $key => $item) {
             // Don't return more than limit items.
-            if ($this->limit > 0 && count($data) === $this->limit) {
+            if ($useLimitAndOffset && $this->limit > 0 && count($data) === $this->limit) {
                 /** @infection-ignore-all Here continue === break */
                 break;
             }
 
             // Skip offset items.
-            if ($skipped < $this->offset) {
+            if ($useLimitAndOffset && $skipped < $this->offset) {
                 ++$skipped;
                 continue;
             }
@@ -185,19 +210,6 @@ final class IterableDataReader implements DataReaderInterface
         }
 
         return $data;
-    }
-
-    public function readOne(): array|object|null
-    {
-        if ($this->limit === 0) {
-            return null;
-        }
-
-        /** @infection-ignore-all Any value more one in `withLimit()` will be ignored because returned `current()` */
-        return $this
-            ->withLimit(1)
-            ->getIterator()
-            ->current();
     }
 
     /**
