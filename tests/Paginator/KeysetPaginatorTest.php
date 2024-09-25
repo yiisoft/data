@@ -88,6 +88,15 @@ final class KeysetPaginatorTest extends Testcase
         new KeysetPaginator($this->getNonSortableDataReader());
     }
 
+    public function testDataReaderWithLimit(): void
+    {
+        $dataReader = (new IterableDataReader([]))->withLimit(1);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Limited data readers are not supported by keyset pagination.');
+        new KeysetPaginator($dataReader);
+    }
+
     public function testDataReaderWithoutLimitableInterface(): void
     {
         $dataReader = new class () implements ReadableDataInterface, SortableDataInterface, FilterableDataInterface {
