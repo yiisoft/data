@@ -121,11 +121,15 @@ final class IterableDataReaderTest extends TestCase
         $data = $reader->read();
 
         $this->assertCount(3, $data);
-        $this->assertSame([
-            2 => self::ITEM_3,
-            3 => self::ITEM_4,
-            4 => self::ITEM_5,
-        ], $data);
+        $this->assertSame(
+            [
+                2 => self::ITEM_3,
+                3 => self::ITEM_4,
+                4 => self::ITEM_5,
+            ],
+            $data
+        );
+        $this->assertSame(2, $reader->getOffset());
     }
 
     public function testAscSorting(): void
@@ -396,14 +400,15 @@ final class IterableDataReaderTest extends TestCase
 
     public function testCustomFilter(): void
     {
+        $filter = new All(new GreaterThan('id', 0), new Digital('name'));
         $reader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withAddedFilterHandlers(new DigitalHandler())
-            ->withFilter(
-                new All(new GreaterThan('id', 0), new Digital('name'))
-            );
+            ->withFilter($filter);
 
         $filtered = $reader->read();
+
         $this->assertSame([4 => self::ITEM_5], $filtered);
+        $this->assertSame($filter, $reader->getFilter());
     }
 
     public function testCustomEqualsProcessor(): void
