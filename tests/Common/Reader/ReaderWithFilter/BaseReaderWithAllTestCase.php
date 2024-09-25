@@ -6,8 +6,9 @@ namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Tests\Common\Reader\BaseReaderTestCase;
 
-abstract class BaseReaderWithAllTestCase extends BaseReaderWithFilterTestCase
+abstract class BaseReaderWithAllTestCase extends BaseReaderTestCase
 {
     public function testWithReader(): void
     {

@@ -10,8 +10,9 @@ use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Tests\Common\Reader\BaseReaderTestCase;
 
-abstract class BaseReaderWithAnyTestCase extends BaseReaderWithFilterTestCase
+abstract class BaseReaderWithAnyTestCase extends BaseReaderTestCase
 {
     public function testWithReader(): void
     {

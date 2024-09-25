@@ -17,8 +17,9 @@ use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
+use Yiisoft\Data\Tests\Common\Reader\BaseReaderTestCase;
 
-abstract class BaseReaderWithNotTestCase extends BaseReaderWithFilterTestCase
+abstract class BaseReaderWithNotTestCase extends BaseReaderTestCase
 {
     public static function dataWithReader(): array
     {
