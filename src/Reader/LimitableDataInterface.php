@@ -20,7 +20,7 @@ interface LimitableDataInterface
      *
      * @return static New instance.
      *
-     * @pslam-param non-negative-int|null $limit
+     * @psalm-param non-negative-int|null $limit
      * @psalm-return $this
      */
     public function withLimit(?int $limit): static;
