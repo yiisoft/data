@@ -13,7 +13,9 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
     public static function dataWithReader(): array
     {
         return [
-            'case matches' => ['email', 'seed@', [2]],
+            'case matches, starts with search string' => ['email', 'seed@', [2]],
+            'case matches, ends with search string' => ['email', '@beat', [2]],
+            'case matches, contains search string' => ['email', 'ed@be', [2]],
             'case does not match' => ['email', 'SEED@', [2]],
             'wildcard is not supported' => ['email', '%st', []],
         ];
