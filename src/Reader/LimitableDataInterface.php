@@ -19,8 +19,6 @@ interface LimitableDataInterface
      * @throws InvalidArgumentException If the limit is less than zero.
      *
      * @return static New instance.
-     *
-     * @psalm-param non-negative-int|null $limit
      * @psalm-return $this
      */
     public function withLimit(?int $limit): static;
