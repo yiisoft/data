@@ -257,7 +257,11 @@ final class KeysetPaginator implements PaginatorInterface
 
     public function isSortable(): bool
     {
-        return true;
+        return !($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null)
+
+
+
+         ;
     }
 
     public function withSort(?Sort $sort): static
@@ -269,6 +273,10 @@ final class KeysetPaginator implements PaginatorInterface
 
     public function getSort(): ?Sort
     {
+        if ($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null) {
+            return null;
+        }
+
         return $this->dataReader->getSort();
     }
 
