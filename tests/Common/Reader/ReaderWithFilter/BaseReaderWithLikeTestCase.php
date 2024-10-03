@@ -31,8 +31,7 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
         string $value,
         bool|null $caseSensitive,
         array $expectedFixtureIndexes,
-    ): void
-    {
+    ): void {
         $reader = $this->getReader()->withFilter(new Like($field, $value, $caseSensitive));
         $this->assertFixtures($expectedFixtureIndexes, $reader->read());
     }
