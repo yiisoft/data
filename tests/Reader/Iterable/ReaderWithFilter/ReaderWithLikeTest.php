@@ -9,4 +9,12 @@ use Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter\BaseReaderWithLikeTestCase
 final class ReaderWithLikeTest extends BaseReaderWithLikeTestCase
 {
     use ReaderTrait;
+
+    public static function dataWithReader(): array
+    {
+        $data = parent::dataWithReader();
+        $data['search: contains, different case, case sensitive: null'] = ['email', 'SEED@', null, [2]];
+
+        return $data;
+    }
 }
