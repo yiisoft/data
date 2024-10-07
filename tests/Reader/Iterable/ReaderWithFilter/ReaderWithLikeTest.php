@@ -14,6 +14,7 @@ final class ReaderWithLikeTest extends BaseReaderWithLikeTestCase
     {
         $data = parent::dataWithReader();
         $data['search: contains, different case, case sensitive: null'] = ['email', 'SEED@', null, [2]];
+        $data['search: contains, different case, case sensitive: true'] = ['email', 'SEED@', true, []];
 
         return $data;
     }
