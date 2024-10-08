@@ -18,7 +18,9 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
             'search: contains, same case, case sensitive: null' => ['email', 'ed@be', null, [2]],
             'search: contains, same case, case sensitive: false' => ['email', 'ed@be', false, [2]],
             'search: contains, different case, case sensitive: false' => ['email', 'SEED@', false, [2]],
-            'wildcard is not supported' => ['email', '%st', null, []],
+            'wildcard is not supported, %' => ['email', '%st', null, []],
+            'wildcard is not supported, _' => ['email', '%be_t', null, []],
+            'wildcard is not supported, \\' => ['email', '%r\\b', null, []],
         ];
     }
 
