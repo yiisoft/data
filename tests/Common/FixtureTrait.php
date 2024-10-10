@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Tests\Common;
 trait FixtureTrait
 {
     protected static $fixtures = [
-        ['number' => 1, 'email' => 'foo@bar', 'balance' => 10.25, 'born_at' => null],
+        ['number' => 1, 'email' => 'foo@bar\\baz', 'balance' => 10.25, 'born_at' => null],
         ['number' => 2, 'email' => 'bar@foo', 'balance' => 1.0, 'born_at' => null],
         ['number' => 3, 'email' => 'seed@beat', 'balance' => 100.0, 'born_at' => null],
         ['number' => 4, 'email' => 'the@best', 'balance' => 500.0, 'born_at' => null],
