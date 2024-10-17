@@ -241,10 +241,6 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function getSort(): ?Sort
     {
-        if ($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null) {
-            return null;
-        }
-
         return $this->dataReader instanceof SortableDataInterface ? $this->dataReader->getSort() : null;
     }
 
