@@ -221,6 +221,10 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function isSortable(): bool
     {
+        if ($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null) {
+            return false;
+        }
+
         return $this->dataReader instanceof SortableDataInterface;
     }
 
