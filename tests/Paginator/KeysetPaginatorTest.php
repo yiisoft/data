@@ -149,10 +149,21 @@ final class KeysetPaginatorTest extends Testcase
     {
         $dataReader = new IterableDataReader(self::getDataSet());
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Data sorting should be configured to work with keyset pagination.');
 
         new KeysetPaginator($dataReader);
+    }
+
+    public function testThrowsExceptionForWithSortNull(): void
+    {
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
+        $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Data sorting should be configured to work with keyset pagination.');
+
+        (new KeysetPaginator($dataReader))->withSort(null);
     }
 
     public function testThrowsExceptionWhenNotSorted(): void
@@ -160,10 +171,21 @@ final class KeysetPaginatorTest extends Testcase
         $sort = Sort::only(['id', 'name']);
         $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Data should be always sorted to work with keyset pagination.');
 
         new KeysetPaginator($dataReader);
+    }
+
+    public function testThrowsExceptionForWithSortNotSorted(): void
+    {
+        $sort = Sort::only(['id', 'name'])->withOrderString('id');
+        $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Data should be always sorted to work with keyset pagination.');
+
+        (new KeysetPaginator($dataReader))->withSort(Sort::only(['id', 'name']));
     }
 
     public function testPageSizeCannotBeLessThanOne(): void

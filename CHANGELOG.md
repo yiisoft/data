@@ -36,7 +36,8 @@
 - Chg #163: Rename `FilterableDataInterface::withFilterHandlers()` to `FilterableDataInterface::withAddedFilterHandlers()` (@samdark)
 - Enh #190: Use `str_contains` for case-sensitive match in `LikeHandler` (@samdark)
 - Enh #194: Improve psalm annotations in `LimitableDataInterface` (@vjik)
-- Bug #195: Fix invalid count in `IterableDataReader` when limit or/and offset used (@vjik) 
+- Bug #195: Fix invalid count in `IterableDataReader` when limit or/and offset used (@vjik)
+- Enh #202: Check that correct sort is passed to `withSort()` of keyset paginator (@samdark)
 
 ## 1.0.1 January 25, 2023
 
