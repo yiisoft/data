@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Paginator;
 
 use Closure;
 use InvalidArgumentException;
-use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -125,11 +124,11 @@ final class KeysetPaginator implements PaginatorInterface
         $sort = $dataReader->getSort();
 
         if ($sort === null) {
-            throw new RuntimeException('Data sorting should be configured to work with keyset pagination.');
+            throw new InvalidArgumentException('Data sorting should be configured to work with keyset pagination.');
         }
 
         if (empty($sort->getOrder())) {
-            throw new RuntimeException('Data should be always sorted to work with keyset pagination.');
+            throw new InvalidArgumentException('Data should be always sorted to work with keyset pagination.');
         }
 
         $this->dataReader = $dataReader;
@@ -262,6 +261,14 @@ final class KeysetPaginator implements PaginatorInterface
 
     public function withSort(?Sort $sort): static
     {
+        if ($sort === null) {
+            throw new InvalidArgumentException('Data sorting should be configured to work with keyset pagination.');
+        }
+
+        if (empty($sort->getOrder())) {
+            throw new InvalidArgumentException('Data should be always sorted to work with keyset pagination.');
+        }
+
         $new = clone $this;
         $new->dataReader = $this->dataReader->withSort($sort);
         return $new;
