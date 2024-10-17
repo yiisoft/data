@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Paginator;
 
 use Closure;
 use InvalidArgumentException;
-use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
