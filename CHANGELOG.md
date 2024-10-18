@@ -39,6 +39,7 @@
 - Bug #195: Fix invalid count in `IterableDataReader` when limit or/and offset used (@vjik)
 - Enh #201: Disable sorting when limit is set explicitly in a paginator, use `InvalidArgumentException` when sorting
   is supplied in this case (@samdark)
+- Enh #207: More secific Psalm type for OffsetPaginator::withCurrentPage() (@samdark)
 
 ## 1.0.1 January 25, 2023
 

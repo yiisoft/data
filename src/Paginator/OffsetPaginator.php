@@ -93,6 +93,7 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withToken(?PageToken $token): static
     {
+        /** @psalm-suppress ArgumentTypeCoercion */
         return $this->withCurrentPage($token === null ? 1 : (int)$token->value);
     }
 
@@ -111,6 +112,7 @@ final class OffsetPaginator implements PaginatorInterface
      * Get a new instance with the given current page number set.
      *
      * @param int $page Page number.
+     * @psalm-param positive-int $page
      *
      * @throws PaginatorException If the current page is incorrect.
      *
@@ -118,6 +120,7 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function withCurrentPage(int $page): self
     {
+        /** @psalm-suppress DocblockTypeContradiction */
         if ($page < 1) {
             throw new PaginatorException('Current page should be at least 1.');
         }
@@ -151,9 +154,11 @@ final class OffsetPaginator implements PaginatorInterface
      * Get the current page number.
      *
      * @return int Current page number.
+     * @psalm-return positive-int
      */
     public function getCurrentPage(): int
     {
+        /** @var positive-int */
         return (int) $this->token->value;
     }
 
@@ -319,7 +324,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-return non-negative-int
+     * @psalm-return positive-int
      */
     private function getInternalTotalPages(): int
     {
