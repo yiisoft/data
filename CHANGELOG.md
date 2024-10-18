@@ -38,6 +38,7 @@
 - Enh #194: Improve psalm annotations in `LimitableDataInterface` (@vjik)
 - Bug #195: Fix invalid count in `IterableDataReader` when limit or/and offset used (@vjik)
 - Enh #202: Check that correct sort is passed to `withSort()` of keyset paginator (@samdark)
+- Enh #207: More secific Psalm type for OffsetPaginator::withCurrentPage() (@samdark)
 
 ## 1.0.1 January 25, 2023
 
