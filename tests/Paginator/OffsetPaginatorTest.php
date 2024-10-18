@@ -562,7 +562,7 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = new OffsetPaginator(new StubOffsetData());
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Sorting is not supported.');
+        $this->expectExceptionMessage('Data reader does not support sorting.');
         $paginator->withSort(null);
     }
 

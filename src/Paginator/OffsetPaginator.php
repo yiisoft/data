@@ -231,7 +231,7 @@ final class OffsetPaginator implements PaginatorInterface
     public function withSort(?Sort $sort): static
     {
         if (!$this->isSortable()) {
-            throw new InvalidArgumentException('Sorting is not supported.');
+            throw new InvalidArgumentException('Data reader does not support sorting.');
         }
 
         $new = clone $this;
@@ -251,7 +251,7 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withFilter(FilterInterface $filter): static
     {
-        if (!$this->dataReader instanceof FilterableDataInterface) {
+        if (!$this->isFilterable()) {
             throw new LogicException('Data reader does not support filtering.');
         }
 
