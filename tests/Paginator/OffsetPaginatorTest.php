@@ -529,8 +529,9 @@ final class OffsetPaginatorTest extends TestCase
     public static function dataIsSupportSorting(): array
     {
         return [
-            [true, new IterableDataReader([])],
-            [false, new StubOffsetData()],
+            'IterableDataReader' => [true, new IterableDataReader([])],
+            'StubOffsetData' => [false, new StubOffsetData()],
+            'StubOffsetDataWithLimit' => [false, (new StubOffsetData())->withLimit(10)],
         ];
     }
 

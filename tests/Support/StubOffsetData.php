@@ -15,6 +15,12 @@ final class StubOffsetData implements
     CountableDataInterface,
     LimitableDataInterface
 {
+    /**
+     * @var int|null
+     * @psalm-var non-negative-int
+     */
+    private ?int $limit = null;
+
     public function read(): iterable
     {
         return [];
@@ -32,7 +38,9 @@ final class StubOffsetData implements
 
     public function withLimit(?int $limit): static
     {
-        return $this;
+        $new = clone $this;
+        $new->limit = $limit;
+        return $new;
     }
 
     public function withOffset(int $offset): static
@@ -42,7 +50,7 @@ final class StubOffsetData implements
 
     public function getLimit(): ?int
     {
-        return 0;
+        return $this->limit;
     }
 
     public function getOffset(): int
