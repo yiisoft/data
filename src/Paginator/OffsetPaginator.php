@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Paginator;
 
 use Generator;
 use InvalidArgumentException;
-use LogicException;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -253,7 +252,7 @@ final class OffsetPaginator implements PaginatorInterface
     public function withFilter(FilterInterface $filter): static
     {
         if (!$this->isFilterable()) {
-            throw new LogicException('Data reader does not support filtering.');
+            throw new InvalidArgumentException('Data reader does not support filtering.');
         }
 
         $new = clone $this;

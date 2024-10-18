@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Paginator;
 
 use InvalidArgumentException;
-use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageNotFoundException;
@@ -561,7 +560,7 @@ final class OffsetPaginatorTest extends TestCase
     {
         $paginator = new OffsetPaginator(new StubOffsetData());
 
-        $this->expectException(LogicException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Data reader does not support sorting.');
         $paginator->withSort(null);
     }
@@ -600,7 +599,7 @@ final class OffsetPaginatorTest extends TestCase
     {
         $paginator = new OffsetPaginator(new StubOffsetData());
 
-        $this->expectException(LogicException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Data reader does not support filtering.');
         $paginator->withFilter(new Equals('id', 2));
     }

@@ -40,7 +40,7 @@ final class StubOffsetData implements
         return $this;
     }
 
-    public function getLimit(): int
+    public function getLimit(): ?int
     {
         return 0;
     }

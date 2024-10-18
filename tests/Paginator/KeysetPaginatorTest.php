@@ -6,12 +6,14 @@ namespace Yiisoft\Data\Tests\Paginator;
 
 use ArrayIterator;
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 use stdClass;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\KeysetFilterContext;
 use Yiisoft\Data\Paginator\KeysetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
@@ -27,6 +29,8 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Data\Tests\Support\MutationDataReader;
+use Yiisoft\Data\Tests\Support\StubKeysetData;
+use Yiisoft\Data\Tests\Support\StubOffsetData;
 use Yiisoft\Data\Tests\TestCase;
 
 use function array_values;
