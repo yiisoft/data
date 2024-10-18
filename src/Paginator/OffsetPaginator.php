@@ -235,6 +235,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $new = clone $this;
+        /** @psalm-suppress UndefinedInterfaceMethod */
         $new->dataReader = $this->dataReader->withSort($sort);
         return $new;
     }
@@ -256,6 +257,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         $new = clone $this;
+        /** @psalm-suppress UndefinedInterfaceMethod */
         $new->dataReader = $this->dataReader->withFilter($filter);
         return $new;
     }
