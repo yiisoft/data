@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Paginator;
 
 use Closure;
 use InvalidArgumentException;
+use LogicException;
 use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
@@ -257,11 +258,19 @@ final class KeysetPaginator implements PaginatorInterface
 
     public function isSortable(): bool
     {
-        return !($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null);
+        if ($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null) {
+            return false;
+        }
+
+        return $this->dataReader instanceof SortableDataInterface;
     }
 
     public function withSort(?Sort $sort): static
     {
+        if (!$this->isSortable()) {
+            throw new InvalidArgumentException('Sorting is not supported.');
+        }
+
         $new = clone $this;
         $new->dataReader = $this->dataReader->withSort($sort);
         return $new;

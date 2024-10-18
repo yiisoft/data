@@ -230,8 +230,8 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withSort(?Sort $sort): static
     {
-        if (!$this->dataReader instanceof SortableDataInterface) {
-            throw new LogicException('Data reader does not support sorting.');
+        if (!$this->isSortable()) {
+            throw new InvalidArgumentException('Sorting is not supported.');
         }
 
         $new = clone $this;
