@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Paginator;
 
 use Generator;
 use InvalidArgumentException;
-use LogicException;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -226,16 +225,21 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function isSortable(): bool
     {
+        if ($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null) {
+            return false;
+        }
+
         return $this->dataReader instanceof SortableDataInterface;
     }
 
     public function withSort(?Sort $sort): static
     {
-        if (!$this->dataReader instanceof SortableDataInterface) {
-            throw new LogicException('Data reader does not support sorting.');
+        if (!$this->isSortable()) {
+            throw new InvalidArgumentException('Data reader does not support sorting.');
         }
 
         $new = clone $this;
+        /** @psalm-suppress UndefinedInterfaceMethod */
         $new->dataReader = $this->dataReader->withSort($sort);
         return $new;
     }
@@ -252,11 +256,12 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withFilter(FilterInterface $filter): static
     {
-        if (!$this->dataReader instanceof FilterableDataInterface) {
-            throw new LogicException('Data reader does not support filtering.');
+        if (!$this->isFilterable()) {
+            throw new InvalidArgumentException('Data reader does not support filtering.');
         }
 
         $new = clone $this;
+        /** @psalm-suppress UndefinedInterfaceMethod */
         $new->dataReader = $this->dataReader->withFilter($filter);
         return $new;
     }
