@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Paginator;
 
 use Generator;
-use Hoa\Iterator\Filter;
 use InvalidArgumentException;
 use LogicException;
-use RuntimeException;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterInterface;
