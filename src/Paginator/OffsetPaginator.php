@@ -239,7 +239,7 @@ final class OffsetPaginator implements PaginatorInterface
     public function withSort(?Sort $sort): static
     {
         if (!$this->isSortable()) {
-            throw new LogicException('Data reader does not support sorting.');
+            throw new LogicException('Changing sorting is not supported.');
         }
 
         $new = clone $this;
@@ -263,7 +263,7 @@ final class OffsetPaginator implements PaginatorInterface
     public function withFilter(FilterInterface $filter): static
     {
         if (!$this->isFilterable()) {
-            throw new LogicException('Data reader does not support filtering.');
+            throw new LogicException('Changing filtering is not supported.');
         }
 
         $new = clone $this;
