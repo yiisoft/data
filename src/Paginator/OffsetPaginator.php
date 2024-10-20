@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Paginator;
 
 use Generator;
+use Hoa\Iterator\Filter;
 use InvalidArgumentException;
+use LogicException;
+use RuntimeException;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -223,6 +226,9 @@ final class OffsetPaginator implements PaginatorInterface
         return (int) ceil($this->getTotalItems() / $this->pageSize);
     }
 
+    /**
+     * @psalm-assert-if-true SortableDataInterface $this->dataReader
+     */
     public function isSortable(): bool
     {
         if ($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null) {
@@ -235,11 +241,10 @@ final class OffsetPaginator implements PaginatorInterface
     public function withSort(?Sort $sort): static
     {
         if (!$this->isSortable()) {
-            throw new InvalidArgumentException('Data reader does not support sorting.');
+            throw new LogicException('Data reader does not support sorting.');
         }
 
         $new = clone $this;
-        /** @psalm-suppress UndefinedInterfaceMethod */
         $new->dataReader = $this->dataReader->withSort($sort);
         return $new;
     }
@@ -249,6 +254,9 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->dataReader instanceof SortableDataInterface ? $this->dataReader->getSort() : null;
     }
 
+    /**
+     * @psalm-assert-if-true FilterableDataInterface $this->dataReader
+     */
     public function isFilterable(): bool
     {
         return $this->dataReader instanceof FilterableDataInterface;
@@ -257,11 +265,10 @@ final class OffsetPaginator implements PaginatorInterface
     public function withFilter(FilterInterface $filter): static
     {
         if (!$this->isFilterable()) {
-            throw new InvalidArgumentException('Data reader does not support filtering.');
+            throw new LogicException('Data reader does not support filtering.');
         }
 
         $new = clone $this;
-        /** @psalm-suppress UndefinedInterfaceMethod */
         $new->dataReader = $this->dataReader->withFilter($filter);
         return $new;
     }

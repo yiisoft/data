@@ -37,8 +37,7 @@
 - Enh #190: Use `str_contains` for case-sensitive match in `LikeHandler` (@samdark)
 - Enh #194: Improve psalm annotations in `LimitableDataInterface` (@vjik)
 - Bug #195: Fix invalid count in `IterableDataReader` when limit or/and offset used (@vjik)
-- Enh #201: Disable sorting when limit is set explicitly in a paginator, use `InvalidArgumentException` when sorting
-  is supplied in this case (@samdark)
+- Enh #201: Disable sorting when limit is set explicitly in a paginator (@samdark)
 - Enh #202: Check that correct sort is passed to `withSort()` of keyset paginator (@samdark)
 - Enh #207: More secific Psalm type for OffsetPaginator::withCurrentPage() (@samdark)
 
