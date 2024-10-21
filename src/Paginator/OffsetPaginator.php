@@ -224,15 +224,22 @@ final class OffsetPaginator implements PaginatorInterface
         return (int) ceil($this->getTotalItems() / $this->pageSize);
     }
 
+    /**
+     * @psalm-assert-if-true SortableDataInterface $this->dataReader
+     */
     public function isSortable(): bool
     {
+        if ($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null) {
+            return false;
+        }
+
         return $this->dataReader instanceof SortableDataInterface;
     }
 
     public function withSort(?Sort $sort): static
     {
-        if (!$this->dataReader instanceof SortableDataInterface) {
-            throw new LogicException('Data reader does not support sorting.');
+        if (!$this->isSortable()) {
+            throw new LogicException('Changing sorting is not supported.');
         }
 
         $new = clone $this;
@@ -245,6 +252,9 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->dataReader instanceof SortableDataInterface ? $this->dataReader->getSort() : null;
     }
 
+    /**
+     * @psalm-assert-if-true FilterableDataInterface $this->dataReader
+     */
     public function isFilterable(): bool
     {
         return $this->dataReader instanceof FilterableDataInterface;
@@ -252,8 +262,8 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withFilter(FilterInterface $filter): static
     {
-        if (!$this->dataReader instanceof FilterableDataInterface) {
-            throw new LogicException('Data reader does not support filtering.');
+        if (!$this->isFilterable()) {
+            throw new LogicException('Changing filtering is not supported.');
         }
 
         $new = clone $this;

@@ -95,7 +95,7 @@ interface PaginatorInterface extends ReadableDataInterface
     public function getCurrentPageSize(): int;
 
     /**
-     * @return bool Whether sorting is supported.
+     * @return bool Whether changing sorting via {@see withSorting()} is supported.
      */
     public function isSortable(): bool;
 
@@ -104,7 +104,7 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @param Sort|null $sort Sorting criteria or null for no sorting.
      *
-     * @throws LogicException When sorting isn't supported.
+     * @throws LogicException When changing sorting isn't supported.
      * @return static New instance.
      */
     public function withSort(?Sort $sort): static;
@@ -117,7 +117,7 @@ interface PaginatorInterface extends ReadableDataInterface
     public function getSort(): ?Sort;
 
     /**
-     * @return bool Whether filtering is supported.
+     * @return bool Whether changing filter via {@see withFilter()} is supported.
      */
     public function isFilterable(): bool;
 
@@ -126,7 +126,7 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @param FilterInterface $filter Data reading criteria.
      *
-     * @throws LogicException When filtering isn't supported.
+     * @throws LogicException When changing filter isn't supported.
      * @return static New instance.
      */
     public function withFilter(FilterInterface $filter): static;

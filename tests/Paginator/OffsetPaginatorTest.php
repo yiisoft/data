@@ -530,8 +530,9 @@ final class OffsetPaginatorTest extends TestCase
     public static function dataIsSupportSorting(): array
     {
         return [
-            [true, new IterableDataReader([])],
-            [false, new StubOffsetData()],
+            'IterableDataReader' => [true, new IterableDataReader([])],
+            'StubOffsetData' => [false, new StubOffsetData()],
+            'StubOffsetDataWithLimit' => [false, (new StubOffsetData())->withLimit(10)],
         ];
     }
 
@@ -562,7 +563,7 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = new OffsetPaginator(new StubOffsetData());
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Data reader does not support sorting.');
+        $this->expectExceptionMessage('Changing sorting is not supported.');
         $paginator->withSort(null);
     }
 
@@ -601,7 +602,7 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = new OffsetPaginator(new StubOffsetData());
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Data reader does not support filtering.');
+        $this->expectExceptionMessage('Changing filtering is not supported.');
         $paginator->withFilter(new Equals('id', 2));
     }
 
