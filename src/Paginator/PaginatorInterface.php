@@ -78,6 +78,8 @@ interface PaginatorInterface extends ReadableDataInterface
      * @see getCurrentPageSize()
      *
      * @return int Page size.
+     *
+     * @psalm-return positive-int
      */
     public function getPageSize(): int;
 
