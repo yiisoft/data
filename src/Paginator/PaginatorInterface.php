@@ -37,7 +37,7 @@ interface PaginatorInterface extends ReadableDataInterface
      * @throws PaginatorException If page token is incorrect.
      *
      * @return static New instance.
-     * 
+     *
      * @see PageToken
      */
     public function withToken(?PageToken $token): static;
