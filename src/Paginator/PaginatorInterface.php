@@ -34,6 +34,8 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @param PageToken|null $token Page token. `Null` if current page is first.
      *
+     * @throws PaginatorException If page token is incorrect.
+     *
      * @return static New instance.
      *
      * @see PageToken
