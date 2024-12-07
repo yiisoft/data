@@ -9,7 +9,7 @@ use InvalidArgumentException;
 /**
  * Data that could be limited.
  */
-interface LimitableDataInterface
+interface LimitableDataInterface extends ReadableDataInterface
 {
     /**
      * Get a new instance with the limit set.

@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Reader;
 /**
  * Data that could be read from Nth item by skipping items from the beginning.
  */
-interface OffsetableDataInterface
+interface OffsetableDataInterface extends ReadableDataInterface
 {
     /**
      * Get a new instance with an offset set.

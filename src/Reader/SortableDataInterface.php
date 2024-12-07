@@ -8,7 +8,7 @@ namespace Yiisoft\Data\Reader;
  * A data set that could be sorted.
  * The sorting set may be used by a data reader that supports sorting.
  */
-interface SortableDataInterface
+interface SortableDataInterface extends ReadableDataInterface
 {
     /**
      * Get a new instance with a sorting set.
