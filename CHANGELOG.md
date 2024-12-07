@@ -41,6 +41,8 @@
 - Enh #202: Check that correct sort is passed to `withSort()` of keyset paginator (@samdark)
 - Enh #207: More specific Psalm type for OffsetPaginator::withCurrentPage() (@samdark)
 - Enh #214: Improved interface hierarchy (@samdark)
+- Enh #207: More specific Psalm type for `OffsetPaginator::withCurrentPage()` parameter (@samdark)
+- Enh #210: More specific Psalm type for `PaginatorInterface::getPageSize()` result (@vjik)
 
 ## 1.0.1 January 25, 2023
 
