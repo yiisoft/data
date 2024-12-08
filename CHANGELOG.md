@@ -39,7 +39,7 @@
 - Bug #195: Fix invalid count in `IterableDataReader` when limit or/and offset used (@vjik)
 - Enh #201: Disable sorting when limit is set explicitly in a paginator (@samdark)
 - Enh #202: Check that correct sort is passed to `withSort()` of keyset paginator (@samdark)
-- Enh #207: More specific Psalm type for OffsetPaginator::withCurrentPage() (@samdark)
+- Enh #207: More specific Psalm type for `OffsetPaginator::withCurrentPage()` (@samdark)
 - Enh #214: Improved interface hierarchy (@samdark)
 - Enh #207: More specific Psalm type for `OffsetPaginator::withCurrentPage()` parameter (@samdark)
 - Enh #210: More specific Psalm type for `PaginatorInterface::getPageSize()` result (@vjik)
