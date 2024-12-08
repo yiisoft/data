@@ -8,8 +8,13 @@ use InvalidArgumentException;
 
 /**
  * Data that could be limited.
+ *
+ * @template TKey as array-key
+ * @template TValue as array|object
+ *
+ * @extends ReadableDataInterface<TKey, TValue>
  */
-interface LimitableDataInterface
+interface LimitableDataInterface extends ReadableDataInterface
 {
     /**
      * Get a new instance with the limit set.

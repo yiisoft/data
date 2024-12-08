@@ -56,7 +56,7 @@ final class OffsetPaginator implements PaginatorInterface
     /**
      * Data reader being paginated.
      *
-     * @psalm-var ReadableDataInterface<TKey, TValue>&LimitableDataInterface&OffsetableDataInterface&CountableDataInterface
+     * @psalm-var ReadableDataInterface<TKey, TValue>&LimitableDataInterface<TKey, TValue>&OffsetableDataInterface<TKey, TValue>&CountableDataInterface
      */
     private ReadableDataInterface $dataReader;
 
