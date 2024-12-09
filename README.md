@@ -163,7 +163,7 @@ handler to the reader. If a reader is not able to use a filter, filter is ignore
 
 ```php
 // own filter for filtering
-class OwnNotTwoFilter implenents FilterInterface
+class OwnNotTwoFilter implements FilterInterface
 {
     private $field;
 
