@@ -235,7 +235,7 @@ final class OffsetPaginatorTest extends TestCase
 
         $this->assertSame(3, $paginator->getTotalPages());
         $this->expectException(PageNotFoundException::class);
-        $this->expectExceptionMessage('Page not found.');
+        $this->expectExceptionMessage('Page 4 not found.');
 
         $this->iterableToArray($paginator->read());
     }
@@ -410,7 +410,7 @@ final class OffsetPaginatorTest extends TestCase
 
         $this->assertSame(3, $paginator->getTotalPages());
         $this->expectException(PageNotFoundException::class);
-        $this->expectExceptionMessage('Page not found.');
+        $this->expectExceptionMessage('Page 4 not found.');
 
         $paginator->isOnLastPage();
     }
