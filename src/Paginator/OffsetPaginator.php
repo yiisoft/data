@@ -94,14 +94,19 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withToken(?PageToken $token): static
     {
-        /** @psalm-suppress ArgumentTypeCoercion */
-        return $this->withCurrentPage($token === null ? 1 : (int)$token->value);
+        $page = $token === null ? 1 : (int) $token->value;
+        if ($page < 1) {
+            throw new PaginatorException('Current page should be at least 1.');
+        }
+
+        return $this->withCurrentPage($token === null ? 1 : $page);
     }
 
     public function withPageSize(int $pageSize): static
     {
+        /** @psalm-suppress DocblockTypeContradiction We don't believe in psalm types */
         if ($pageSize < 1) {
-            throw new PaginatorException('Page size should be at least 1.');
+            throw new InvalidArgumentException('Page size should be at least 1.');
         }
 
         $new = clone $this;
@@ -115,15 +120,13 @@ final class OffsetPaginator implements PaginatorInterface
      * @param int $page Page number.
      * @psalm-param positive-int $page
      *
-     * @throws PageNotFoundException If the current page is zero or less.
-     *
      * @return self New instance.
      */
     public function withCurrentPage(int $page): self
     {
         /** @psalm-suppress DocblockTypeContradiction */
         if ($page < 1) {
-            throw new PageNotFoundException('Current page should be at least 1.');
+            throw new InvalidArgumentException('Current page should be at least 1.');
         }
 
         $new = clone $this;
@@ -278,9 +281,7 @@ final class OffsetPaginator implements PaginatorInterface
     {
         $currentPage = $this->getCurrentPage();
         if ($currentPage > $this->getInternalTotalPages()) {
-            throw new PageNotFoundException(
-                sprintf('Page %d not found.', $currentPage)
-            );
+            throw new PageNotFoundException($currentPage);
         }
 
         $limit = $this->pageSize;
@@ -319,14 +320,7 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function isOnLastPage(): bool
     {
-        $currentPage = $this->getCurrentPage();
-        if ($currentPage > $this->getInternalTotalPages()) {
-            throw new PageNotFoundException(
-                sprintf('Page %d not found.', $currentPage)
-            );
-        }
-
-        return $currentPage === $this->getInternalTotalPages();
+        return $this->getCurrentPage() === $this->getInternalTotalPages();
     }
 
     public function isPaginationRequired(): bool
