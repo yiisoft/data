@@ -118,9 +118,12 @@ final class OffsetPaginator implements PaginatorInterface
      * Get a new instance with the given current page number set.
      *
      * @param int $page Page number.
-     * @psalm-param positive-int $page
+     *
+     * @throws InvalidArgumentException If page is not positive number.
      *
      * @return self New instance.
+     *
+     * @psalm-param positive-int $page
      */
     public function withCurrentPage(int $page): self
     {

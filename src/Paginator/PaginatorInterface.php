@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
+use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
@@ -48,6 +49,7 @@ interface PaginatorInterface extends ReadableDataInterface
      * @param int $pageSize Maximum number of items per page.
      *
      * @throws PaginatorException If page size is incorrect.
+     * @throws InvalidArgumentException If page size is not positive number.
      *
      * @return static New instance.
      *
