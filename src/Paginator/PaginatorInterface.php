@@ -152,8 +152,6 @@ interface PaginatorInterface extends ReadableDataInterface
     /**
      * Get whether the current page is the last one.
      *
-     * @throws PageNotFoundException If the page specified isn't found.
-     *
      * @return bool Whether the current page is the last one.
      */
     public function isOnLastPage(): bool;
