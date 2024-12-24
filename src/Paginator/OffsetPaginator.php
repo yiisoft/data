@@ -94,12 +94,16 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withToken(?PageToken $token): static
     {
-        $page = $token === null ? 1 : (int) $token->value;
-        if ($page < 1) {
-            throw new PaginatorException('Current page should be at least 1.');
+        if ($token === null) {
+            $page = 1;
+        } else {
+            $page = (int) $token->value;
+            if ($page < 1) {
+                throw new PaginatorException('Current page should be at least 1.');
+            }
         }
 
-        return $this->withCurrentPage($token === null ? 1 : $page);
+        return $this->withCurrentPage($page);
     }
 
     public function withPageSize(int $pageSize): static
