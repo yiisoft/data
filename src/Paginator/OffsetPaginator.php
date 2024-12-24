@@ -115,7 +115,7 @@ final class OffsetPaginator implements PaginatorInterface
      * @param int $page Page number.
      * @psalm-param positive-int $page
      *
-     * @throws PaginatorException If the current page is incorrect.
+     * @throws PageNotFoundException If the current page is zero or less.
      *
      * @return self New instance.
      */
@@ -123,7 +123,7 @@ final class OffsetPaginator implements PaginatorInterface
     {
         /** @psalm-suppress DocblockTypeContradiction */
         if ($page < 1) {
-            throw new PaginatorException('Current page should be at least 1.');
+            throw new PageNotFoundException('Current page should be at least 1.');
         }
 
         $new = clone $this;
@@ -276,8 +276,11 @@ final class OffsetPaginator implements PaginatorInterface
      */
     public function read(): iterable
     {
-        if ($this->getCurrentPage() > $this->getInternalTotalPages()) {
-            throw new PageNotFoundException();
+        $currentPage = $this->getCurrentPage();
+        if ($currentPage > $this->getInternalTotalPages()) {
+            throw new PageNotFoundException(
+                sprintf('Page %d not found.', $currentPage)
+            );
         }
 
         $limit = $this->pageSize;
@@ -316,11 +319,14 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function isOnLastPage(): bool
     {
-        if ($this->getCurrentPage() > $this->getInternalTotalPages()) {
-            throw new PageNotFoundException();
+        $currentPage = $this->getCurrentPage();
+        if ($currentPage > $this->getInternalTotalPages()) {
+            throw new PageNotFoundException(
+                sprintf('Page %d not found.', $currentPage)
+            );
         }
 
-        return $this->getCurrentPage() === $this->getInternalTotalPages();
+        return $currentPage === $this->getInternalTotalPages();
     }
 
     public function isPaginationRequired(): bool

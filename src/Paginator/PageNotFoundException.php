@@ -6,8 +6,8 @@ namespace Yiisoft\Data\Paginator;
 
 final class PageNotFoundException extends PaginatorException
 {
-    public function __construct()
+    public function __construct(string $message = 'Page not found.')
     {
-        parent::__construct('Page not found.');
+        parent::__construct($message);
     }
 }
