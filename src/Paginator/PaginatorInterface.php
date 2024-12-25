@@ -48,7 +48,6 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @param int $pageSize Maximum number of items per page.
      *
-     * @throws PaginatorException If page size is incorrect.
      * @throws InvalidArgumentException If page size is not a positive number.
      *
      * @return static New instance.
