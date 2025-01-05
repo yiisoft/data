@@ -6,7 +6,7 @@ namespace Yiisoft\Data\Paginator;
 
 use function sprintf;
 
-final class PageNotFoundException extends PaginatorException
+final class PageNotFoundException extends InvalidPageException
 {
     public function __construct(int $page)
     {

@@ -99,7 +99,7 @@ final class OffsetPaginator implements PaginatorInterface
         } else {
             $page = (int) $token->value;
             if ($page < 1) {
-                throw new PaginatorException('Current page should be at least 1.');
+                throw new InvalidPageException('Current page should be at least 1.');
             }
         }
 
