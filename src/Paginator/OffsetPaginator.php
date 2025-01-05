@@ -327,7 +327,7 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function isOnLastPage(): bool
     {
-        return $this->getCurrentPage() === $this->getInternalTotalPages();
+        return $this->getCurrentPage() >= $this->getInternalTotalPages();
     }
 
     public function isPaginationRequired(): bool
