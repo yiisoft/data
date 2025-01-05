@@ -49,6 +49,7 @@
 - Chg #219: Throw `InvalidArgumentException` instead of `PaginatorException` in `OffsetPaginator::withCurrentPage()`
   method when non-positive value is passed (@vjik)
 - Chg #219: Don't check correctness of current page in `PaginatorInterface::isOnLastPage()` method (@vjik)
+- Chg #219: Rename `PaginatorException` to `InvalidPageException` (@vjik)
 
 ## 1.0.1 January 25, 2023
 
