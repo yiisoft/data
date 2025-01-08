@@ -43,6 +43,13 @@
 - Enh #214: Improved interface hierarchy (@samdark)
 - Enh #207: More specific Psalm type for `OffsetPaginator::withCurrentPage()` parameter (@samdark)
 - Enh #210: More specific Psalm type for `PaginatorInterface::getPageSize()` result (@vjik)
+- Chg #219: Narrow type of page size in `PaginatorInterface::withPageSize()` method to positive int by psalm
+  annotation and throw `InvalidArgumentException` if non-positive value is passed (@vjik)
+- Enh #219: Add page to message of `PageNotFoundException` exception (@vjik)
+- Chg #219: Throw `InvalidArgumentException` instead of `PaginatorException` in `OffsetPaginator::withCurrentPage()`
+  method when non-positive value is passed (@vjik)
+- Chg #219: Don't check correctness of current page in `PaginatorInterface::isOnLastPage()` method (@vjik)
+- Chg #219: Rename `PaginatorException` to `InvalidPageException` (@vjik)
 
 ## 1.0.1 January 25, 2023
 

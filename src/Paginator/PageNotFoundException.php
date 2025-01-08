@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Paginator;
 
-final class PageNotFoundException extends PaginatorException
+use function sprintf;
+
+final class PageNotFoundException extends InvalidPageException
 {
-    public function __construct()
+    public function __construct(int $page)
     {
-        parent::__construct('Page not found.');
+        parent::__construct(
+            sprintf('Page %d not found.', $page)
+        );
     }
 }
