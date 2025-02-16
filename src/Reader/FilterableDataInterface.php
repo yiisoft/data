@@ -14,8 +14,13 @@ namespace Yiisoft\Data\Reader;
  *   {@see FilterInterface::getOperator()} is applied
  *
  * For performance reasons, prefer filtering as many items as possible in the first step.
+ *
+ * @template TKey as array-key
+ * @template TValue as array|object
+ *
+ * @extends ReadableDataInterface<TKey, TValue>
  */
-interface FilterableDataInterface
+interface FilterableDataInterface extends ReadableDataInterface
 {
     /**
      * Returns new instance with data reading criteria set.

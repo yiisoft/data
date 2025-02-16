@@ -10,7 +10,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\Filter\Equals;
@@ -219,7 +218,7 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = new OffsetPaginator($dataReader);
 
-        $this->expectException(PaginatorException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Current page should be at least 1.');
 
         $paginator->withCurrentPage(0);
@@ -235,7 +234,7 @@ final class OffsetPaginatorTest extends TestCase
 
         $this->assertSame(3, $paginator->getTotalPages());
         $this->expectException(PageNotFoundException::class);
-        $this->expectExceptionMessage('Page not found.');
+        $this->expectExceptionMessage('Page 4 not found.');
 
         $this->iterableToArray($paginator->read());
     }
@@ -255,7 +254,7 @@ final class OffsetPaginatorTest extends TestCase
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
         $paginator = new OffsetPaginator($dataReader);
 
-        $this->expectException(PaginatorException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Page size should be at least 1.');
 
         $paginator->withPageSize(0);
@@ -398,21 +397,6 @@ final class OffsetPaginatorTest extends TestCase
         ;
 
         $this->assertTrue($paginator->isOnLastPage());
-    }
-
-    public function testIsLastPageBeyondMaxPages(): void
-    {
-        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
-        $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withCurrentPage(4)
-        ;
-
-        $this->assertSame(3, $paginator->getTotalPages());
-        $this->expectException(PageNotFoundException::class);
-        $this->expectExceptionMessage('Page not found.');
-
-        $paginator->isOnLastPage();
     }
 
     public function testGetCurrentPageSizeFirstFullPage(): void
