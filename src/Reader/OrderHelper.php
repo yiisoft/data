@@ -30,6 +30,10 @@ final class OrderHelper
     public static function stringToArray(string $orderString): array
     {
         $order = [];
+
+        /**
+         * @var string[] $parts We use correct regexp here, so `preg_split` never returns false.
+         */
         $parts = preg_split('/\s*,\s*/', trim($orderString), -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($parts as $part) {
