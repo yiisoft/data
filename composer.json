@@ -31,7 +31,7 @@
         }
     ],
     "require": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+        "php": "8.1 - 8.4",
         "ext-mbstring": "*",
         "yiisoft/arrays": "^3.0"
     },
@@ -41,7 +41,7 @@
         "rector/rector": "^2.0.9",
         "roave/infection-static-analysis-plugin": "^1.35",
         "spatie/phpunit-watcher": "^1.24",
-        "vimeo/psalm": "^5.26.1 || ^6.6"
+        "vimeo/psalm": "^5.26.1 || ^6.9.1"
     },
     "autoload": {
         "psr-4": {
@@ -55,7 +55,6 @@
     },
     "config": {
         "sort-packages": true,
-        "bump-after-update": "dev",
         "allow-plugins": {
             "infection/extension-installer": true,
             "composer/package-versions-deprecated": true
