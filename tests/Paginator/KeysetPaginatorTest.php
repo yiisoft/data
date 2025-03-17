@@ -601,7 +601,7 @@ final class KeysetPaginatorTest extends Testcase
         $this->assertCount(2, $paginator->read());
     }
 
-    private static function getDataSet(array $keys = null): array
+    private static function getDataSet(?array $keys = null): array
     {
         if ($keys === null) {
             return self::DEFAULT_DATASET;
@@ -705,7 +705,7 @@ final class KeysetPaginatorTest extends Testcase
         return new class ($id, $name) {
             private int $createdAt;
 
-            public function __construct(private int $id, private string $name, int $createdAt = null)
+            public function __construct(private int $id, private string $name, ?int $createdAt = null)
             {
                 $this->createdAt = $createdAt ?: time();
             }
