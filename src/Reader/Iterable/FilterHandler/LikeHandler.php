@@ -30,7 +30,7 @@ final class LikeHandler implements IterableFilterHandlerInterface
             return false;
         }
 
-        return $filter->isCaseSensitive() === true
+        return $filter->getCaseSensitive() === true
             ? str_contains($itemValue, $filter->getValue())
             : mb_stripos($itemValue, $filter->getValue()) !== false;
     }
