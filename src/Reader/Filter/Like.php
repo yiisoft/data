@@ -37,7 +37,7 @@ final class Like implements FilterInterface
         return $this->value;
     }
 
-    public function isCaseSensitive(): ?bool
+    public function getCaseSensitive(): ?bool
     {
         return $this->caseSensitive;
     }
