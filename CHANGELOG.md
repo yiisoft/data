@@ -50,7 +50,7 @@
   method when non-positive value is passed (@vjik)
 - Chg #219: Don't check correctness of current page in `PaginatorInterface::isOnLastPage()` method (@vjik)
 - Chg #219: Rename `PaginatorException` to `InvalidPageException` (@vjik)
-- Chg #211: Change PHP constraint in `composer.json` to `~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0` (@vjik)
+- Chg #211, #221: Change PHP constraint in `composer.json` to `8.1 - 8.4` (@vjik)
 
 ## 1.0.1 January 25, 2023
 
