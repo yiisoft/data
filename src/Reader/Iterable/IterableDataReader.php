@@ -253,9 +253,7 @@ final class IterableDataReader implements DataReaderInterface
                 $items,
                 static function (array|object $itemA, array|object $itemB) use ($criteria) {
                     foreach ($criteria as $key => $order) {
-                        /** @psalm-var mixed $valueA */
                         $valueA = ArrayHelper::getValue($itemA, $key);
-                        /** @psalm-var mixed $valueB */
                         $valueB = ArrayHelper::getValue($itemB, $key);
 
                         if ($valueB === $valueA) {
