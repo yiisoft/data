@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Tests\Paginator;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Yiisoft\Data\Paginator\InvalidPageException;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
@@ -599,6 +600,16 @@ final class OffsetPaginatorTest extends TestCase
         $this->assertNotNull($token);
         $this->assertSame('1', $token->value);
         $this->assertFalse($token->isPrevious);
+    }
+
+    public function testWithNegativeToken(): void
+    {
+        $paginator = new OffsetPaginator(new IterableDataReader([]));
+        $token = PageToken::next('-1');
+
+        $this->expectException(InvalidPageException::class);
+        $this->expectExceptionMessage('Current page should be at least 1.');
+        $paginator->withToken($token);
     }
 
     public function testLimitedDataReaderTotalItems(): void
