@@ -34,7 +34,7 @@ use function end;
 use function reset;
 use function sprintf;
 
-final class KeysetPaginatorTest extends Testcase
+final class KeysetPaginatorTest extends TestCase
 {
     use PageTokenAssertTrait;
 

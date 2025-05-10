@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Tests;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use ReflectionException;
 use ReflectionObject;
 use stdClass;
 use Traversable;
