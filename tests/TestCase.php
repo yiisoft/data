@@ -87,28 +87,19 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $class = $class->getParentClass();
         }
 
-        $property = $class->getProperty($propertyName);
-        $property->setAccessible(true);
-        $result = $property->getValue($object);
-        $property->setAccessible(false);
-
-        return $result;
+        return $class
+            ->getProperty($propertyName)
+            ->getValue($object);
     }
 
     /**
      * Invokes an inaccessible method.
-     *
-     * @throws ReflectionException
      */
     protected function invokeMethod(object $object, string $method, array $args = []): mixed
     {
-        $reflection = new ReflectionObject($object);
-        $method = $reflection->getMethod($method);
-        $method->setAccessible(true);
-        $result = $method->invokeArgs($object, $args);
-        $method->setAccessible(false);
-
-        return $result;
+        return (new ReflectionObject($object))
+            ->getMethod($method)
+            ->invokeArgs($object, $args);
     }
 
     protected function iterableToArray(iterable $iterable): array
