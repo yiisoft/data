@@ -7,6 +7,9 @@ namespace Yiisoft\Data\Reader\Filter;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\FilterInterface;
 
+use function is_scalar;
+use function sprintf;
+
 /**
  * `In` filter defines a criteria for ensuring field value matches one of the value provided.
  */

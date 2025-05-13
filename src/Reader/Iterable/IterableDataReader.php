@@ -253,9 +253,7 @@ final class IterableDataReader implements DataReaderInterface
                 $items,
                 static function (array|object $itemA, array|object $itemB) use ($criteria) {
                     foreach ($criteria as $key => $order) {
-                        /** @psalm-var mixed $valueA */
                         $valueA = ArrayHelper::getValue($itemA, $key);
-                        /** @psalm-var mixed $valueB */
                         $valueB = ArrayHelper::getValue($itemB, $key);
 
                         if ($valueB === $valueA) {
@@ -311,7 +309,7 @@ final class IterableDataReader implements DataReaderInterface
      */
     private function iterableToArray(iterable $iterable): array
     {
-        return $iterable instanceof Traversable ? iterator_to_array($iterable, true) : $iterable;
+        return $iterable instanceof Traversable ? iterator_to_array($iterable) : $iterable;
     }
 
     public function getFilter(): ?FilterInterface
