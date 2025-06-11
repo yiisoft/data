@@ -19,6 +19,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
 use function array_reverse;
+use function array_slice;
 use function count;
 use function key;
 use function reset;
@@ -121,10 +122,7 @@ final class KeysetPaginator implements PaginatorInterface
             throw new InvalidArgumentException('Limited data readers are not supported by keyset pagination.');
         }
 
-        $sort = $dataReader->getSort();
-        $this->assertSort($sort);
-
-        $this->dataReader = $dataReader;
+        $this->dataReader = $this->prepareSortInDataReader($dataReader, $dataReader->getSort());
     }
 
     public function __clone()
@@ -255,10 +253,8 @@ final class KeysetPaginator implements PaginatorInterface
 
     public function withSort(?Sort $sort): static
     {
-        $this->assertSort($sort);
-
         $new = clone $this;
-        $new->dataReader = $this->dataReader->withSort($sort);
+        $new->dataReader = $this->prepareSortInDataReader($this->dataReader, $sort);
         return $new;
     }
 
@@ -436,14 +432,26 @@ final class KeysetPaginator implements PaginatorInterface
         ];
     }
 
-    private function assertSort(?Sort $sort): void
+    /**
+     * @param ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface $dataReader
+     * @return ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface
+     */
+    private function prepareSortInDataReader(ReadableDataInterface $dataReader, ?Sort $sort): ReadableDataInterface
     {
         if ($sort === null) {
             throw new InvalidArgumentException('Data sorting should be configured to work with keyset pagination.');
         }
 
         if (empty($sort->getOrder())) {
-            throw new InvalidArgumentException('Data should be always sorted to work with keyset pagination.');
+            $defaultOrder = $sort->getDefaultOrder();
+            if (empty($defaultOrder)) {
+                throw new InvalidArgumentException('Data should be always sorted to work with keyset pagination.');
+            }
+            $sort = $sort->withOrder(
+                array_slice($defaultOrder, 0, 1, true)
+            );
         }
+
+        return $dataReader->withSort($sort);
     }
 }
