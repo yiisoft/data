@@ -433,8 +433,8 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @param ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface $dataReader
-     * @return ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface
+     * @param FilterableDataInterface&LimitableDataInterface&ReadableDataInterface<TKey, TValue>&SortableDataInterface $dataReader
+     * @return FilterableDataInterface&LimitableDataInterface&ReadableDataInterface<TKey, TValue>&SortableDataInterface
      */
     private function prepareSortInDataReader(ReadableDataInterface $dataReader, ?Sort $sort): ReadableDataInterface
     {
