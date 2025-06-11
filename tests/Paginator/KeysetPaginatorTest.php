@@ -180,6 +180,29 @@ final class KeysetPaginatorTest extends TestCase
         );
     }
 
+    public function testDefaultOrderUsageInPrevious(): void
+    {
+        $sort = Sort::only(['name', 'id']);
+        $data = [
+            ['id' => 2, 'name' => 'A'],
+            ['id' => 1, 'name' => 'A'],
+            ['id' => 3, 'name' => 'B'],
+        ];
+        $dataReader = (new IterableDataReader($data))->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))
+            ->withToken(PageToken::previous('B'));
+
+        $result = $paginator->read();
+
+        $this->assertSame(
+            [
+                ['id' => 2, 'name' => 'A'],
+                ['id' => 1, 'name' => 'A'],
+            ],
+            array_values($this->iterableToArray($result)),
+        );
+    }
+
     public function testThrowsExceptionForWithSortNotSorted(): void
     {
         $sort = Sort::only(['id', 'name'])->withOrderString('id');
