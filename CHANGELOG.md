@@ -51,6 +51,8 @@
 - Chg #219: Don't check correctness of current page in `PaginatorInterface::isOnLastPage()` method (@vjik)
 - Chg #219: Rename `PaginatorException` to `InvalidPageException` (@vjik)
 - Chg #211, #221: Change PHP constraint in `composer.json` to `8.1 - 8.4` (@vjik)
+- New #223: Add `Sort::getDefaultOrder()` method (@vjik)
+- Enh #223: `KeysetPaginator` now uses default order from `Sort` when no sort is set (@vjik)
 
 ## 1.0.1 January 25, 2023
 

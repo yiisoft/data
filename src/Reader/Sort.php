@@ -59,7 +59,7 @@ final class Sort
     private bool $withDefaultSorting = true;
 
     /**
-     * @var array Logical fields to order by in form of [name => direction].
+     * @var array Logical fields to order by in form of `[name => direction]`.
      * @psalm-var TOrder
      */
     private array $currentOrder = [];
@@ -320,5 +320,18 @@ final class Sort
     public function hasFieldInConfig(string $name): bool
     {
         return isset($this->config[$name]);
+    }
+
+    /**
+     * Get a default order for logical fields.
+     *
+     * @return TOrder
+     */
+    public function getDefaultOrder(): array
+    {
+        return array_map(
+            static fn(array $item) => $item['default'],
+            $this->config
+        );
     }
 }
