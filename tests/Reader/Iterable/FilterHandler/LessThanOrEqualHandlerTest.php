@@ -7,7 +7,9 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LessThanOrEqualHandlerTest extends TestCase
@@ -32,7 +34,9 @@ final class LessThanOrEqualHandlerTest extends TestCase
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $handler->match($item, new LessThanOrEqual('value', $value), []));
+        $context = new Context([], new FlatValueReader());
+
+        $this->assertSame($expected, $handler->match($item, new LessThanOrEqual('value', $value), $context));
     }
 
     public static function matchDateTimeInterfaceDataProvider(): array
@@ -54,6 +58,8 @@ final class LessThanOrEqualHandlerTest extends TestCase
             'value' => new DateTimeImmutable('2022-02-22 16:00:45'),
         ];
 
-        $this->assertSame($expected, $handler->match($item, new LessThanOrEqual('value', $value), []));
+        $context = new Context([], new FlatValueReader());
+
+        $this->assertSame($expected, $handler->match($item, new LessThanOrEqual('value', $value), $context));
     }
 }

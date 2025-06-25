@@ -9,8 +9,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -36,14 +38,20 @@ final class NotHandlerTest extends TestCase
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $processor->match($item, new Not($filter), $filterHandlers));
+        $context = new Context($filterHandlers, new FlatValueReader());
+
+        $this->assertSame($expected, $processor->match($item, new Not($filter), $context));
     }
 
     public function testMatchFailIfFilterOperatorIsNotSupported(): void
     {
+        $handler = new NotHandler();
+        $item = ['id' => 1];
+        $filter = new Not(new FilterWithoutHandler());
+        $context = new Context([], new FlatValueReader());
+
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Filter "' . FilterWithoutHandler::class . '" is not supported.');
-
-        (new NotHandler())->match(['id' => 1], new Not(new FilterWithoutHandler()), []);
+        $handler->match($item, $filter, $context);
     }
 }

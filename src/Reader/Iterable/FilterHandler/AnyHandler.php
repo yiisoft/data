@@ -7,6 +7,7 @@ namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 use LogicException;
 use Yiisoft\Data\Reader\Filter\Any;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function sprintf;
@@ -22,18 +23,18 @@ final class AnyHandler implements IterableFilterHandlerInterface
         return Any::class;
     }
 
-    public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
+    public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
         /** @var Any $filter */
 
         foreach ($filter->getFilters() as $subFilter) {
-            $filterHandler = $iterableFilterHandlers[$subFilter::class] ?? null;
+            $filterHandler = $context->tryFindFilterHandler($subFilter::class);
             if ($filterHandler === null) {
                 throw new LogicException(
                     sprintf('Filter "%s" is not supported.', $subFilter::class),
                 );
             }
-            if ($filterHandler->match($item, $subFilter, $iterableFilterHandlers)) {
+            if ($filterHandler->match($item, $subFilter, $context)) {
                 return true;
             }
         }

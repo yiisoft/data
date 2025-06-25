@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function is_string;
@@ -21,11 +21,11 @@ final class LikeHandler implements IterableFilterHandlerInterface
         return Like::class;
     }
 
-    public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
+    public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
         /** @var Like $filter */
 
-        $itemValue = ArrayHelper::getValue($item, $filter->getField());
+        $itemValue = $context->readValue($item, $filter->getField());
         if (!is_string($itemValue)) {
             return false;
         }

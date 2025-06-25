@@ -19,10 +19,8 @@ interface IterableFilterHandlerInterface extends FilterHandlerInterface
      *
      * @param array|object $item Item to check.
      * @param FilterInterface $filter Matched filter.
-     * @param IterableFilterHandlerInterface[] $iterableFilterHandlers Iterable filter handlers to use in case it is
-     * a group filter.
      *
      * @return bool Whether item matches the filter.
      */
-    public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool;
+    public function match(array|object $item, FilterInterface $filter, Context $context): bool;
 }

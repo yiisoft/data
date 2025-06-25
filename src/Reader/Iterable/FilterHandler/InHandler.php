@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\In;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 use function in_array;
@@ -21,11 +21,11 @@ final class InHandler implements IterableFilterHandlerInterface
         return In::class;
     }
 
-    public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
+    public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
         /** @var In $filter */
 
-        $itemValue = ArrayHelper::getValue($item, $filter->getField());
+        $itemValue = $context->readValue($item, $filter->getField());
         $argumentValue = $filter->getValues();
 
         return in_array($itemValue, $argumentValue);

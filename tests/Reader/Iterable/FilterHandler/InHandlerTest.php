@@ -6,7 +6,9 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\In;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\InHandler;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\TestCase;
 
 final class InHandlerTest extends TestCase
@@ -30,6 +32,8 @@ final class InHandlerTest extends TestCase
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $handler->match($item, new In('value', $value), []));
+        $context = new Context([], new FlatValueReader());
+
+        $this->assertSame($expected, $handler->match($item, new In('value', $value), $context));
     }
 }
