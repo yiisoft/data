@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
-use LogicException;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
-
-use function sprintf;
 
 /**
  * `Not` iterable filter handler negates another filter.
@@ -28,10 +25,7 @@ final class NotHandler implements IterableFilterHandlerInterface
 
         $subFilter = $filter->getFilter();
 
-        $filterHandler = $context->tryFindFilterHandler($subFilter::class);
-        if ($filterHandler === null) {
-            throw new LogicException(sprintf('Filter "%s" is not supported.', $subFilter::class));
-        }
+        $filterHandler = $context->getFilterHandler($subFilter::class);
         return !$filterHandler->match($item, $subFilter, $context);
     }
 }

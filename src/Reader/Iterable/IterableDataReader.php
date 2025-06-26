@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Reader\Iterable;
 
 use Generator;
 use InvalidArgumentException;
-use RuntimeException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderException;
@@ -232,12 +231,7 @@ final class IterableDataReader implements DataReaderInterface
      */
     private function matchFilter(array|object $item, FilterInterface $filter): bool
     {
-        $handler = $this->context->tryFindFilterHandler($filter::class);
-
-        if ($handler === null) {
-            throw new RuntimeException(sprintf('Filter "%s" is not supported.', $filter::class));
-        }
-
+        $handler = $this->context->getFilterHandler($filter::class);
         return $handler->match($item, $filter, $this->context);
     }
 

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable;
 
+use LogicException;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\ValueReader\ValueReaderInterface;
+
+use function sprintf;
 
 final class Context
 {
@@ -21,9 +24,12 @@ final class Context
     /**
      * @psalm-param class-string<FilterInterface> $class
      */
-    public function tryFindFilterHandler(string $class): ?IterableFilterHandlerInterface
+    public function getFilterHandler(string $class): IterableFilterHandlerInterface
     {
-        return $this->iterableFilterHandlers[$class] ?? null;
+        return $this->iterableFilterHandlers[$class]
+            ?? throw new LogicException(
+                sprintf('Filter "%s" is not supported.', $class),
+            );
     }
 
     public function readValue(array|object $item, string $field): mixed
