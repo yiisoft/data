@@ -8,7 +8,6 @@ use ArrayIterator;
 use Generator;
 use InvalidArgumentException;
 use LogicException;
-use RuntimeException;
 use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
