@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Support\CustomFilter;
 
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
