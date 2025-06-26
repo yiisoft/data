@@ -189,7 +189,7 @@ class OwnIterableNotTwoFilterHandler implements IterableFilterHandlerInterface
         return OwnNotTwoFilter::getOperator();
     }
 
-    public function match(array $item, array $arguments, array $filterHandlers): bool
+    public function match(array $item, array $arguments, Context $context): bool
     {
         [$field] = $arguments;
         return $item[$field] != 2;

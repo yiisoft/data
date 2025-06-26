@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use DateTimeInterface;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
@@ -21,11 +21,11 @@ final class BetweenHandler implements IterableFilterHandlerInterface
         return Between::class;
     }
 
-    public function match(array|object $item, FilterInterface $filter, array $iterableFilterHandlers): bool
+    public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
         /** @var Between $filter */
 
-        $value = ArrayHelper::getValue($item, $filter->getField());
+        $value = $context->readValue($item, $filter->getField());
         $min = $filter->getMinValue();
         $max = $filter->getMaxValue();
 

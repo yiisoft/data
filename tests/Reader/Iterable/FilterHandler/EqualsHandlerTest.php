@@ -7,8 +7,10 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Equals;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -34,7 +36,9 @@ final class EqualsHandlerTest extends TestCase
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $processor->match($item, new Equals('value', $value), []));
+        $context = new Context([], new FlatValueReader());
+
+        $this->assertSame($expected, $processor->match($item, new Equals('value', $value), $context));
     }
 
     public static function matchDateTimeInterfaceDataProvider(): array
@@ -56,7 +60,9 @@ final class EqualsHandlerTest extends TestCase
             'value' => new DateTimeImmutable('2022-02-22 16:00:45'),
         ];
 
-        $this->assertSame($expected, $handler->match($item, new Equals('value', $value), []));
+        $context = new Context([], new FlatValueReader());
+
+        $this->assertSame($expected, $handler->match($item, new Equals('value', $value), $context));
     }
 
     public function testObjectWithGetters(): void

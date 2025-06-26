@@ -53,6 +53,8 @@
 - Chg #211, #221: Change PHP constraint in `composer.json` to `8.1 - 8.4` (@vjik)
 - New #223: Add `Sort::getDefaultOrder()` method (@vjik)
 - Enh #223: `KeysetPaginator` now uses default order from `Sort` when no sort is set (@vjik)
+- Chg #224: Change `$iterableFilterHandlers` to context object in `IterableFilterHandlerInterface::match()` (@vjik)
+- New #224: Add filtering by nested values support in `IterableDataReader` (@vjik)
 
 ## 1.0.1 January 25, 2023
 

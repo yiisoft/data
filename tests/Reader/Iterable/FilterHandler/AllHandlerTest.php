@@ -10,10 +10,12 @@ use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -71,14 +73,20 @@ final class AllHandlerTest extends TestCase
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $handler->match($item, new All(...$filters), $filterHandlers));
+        $context = new Context($filterHandlers, new FlatValueReader());
+
+        $this->assertSame($expected, $handler->match($item, new All(...$filters), $context));
     }
 
     public function testMatchFailIfFilterOperatorIsNotSupported(): void
     {
+        $handler = new AllHandler();
+        $item = ['id' => 1];
+        $filter = new All(new FilterWithoutHandler());
+        $context = new Context([], new FlatValueReader());
+
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Filter "' . FilterWithoutHandler::class . '" is not supported.');
-
-        (new AllHandler())->match(['id' => 1], new All(new FilterWithoutHandler()), []);
+        $handler->match($item, $filter, $context);
     }
 }

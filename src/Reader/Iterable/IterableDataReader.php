@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Reader\Iterable;
 
 use Generator;
 use InvalidArgumentException;
-use RuntimeException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderException;
@@ -25,6 +24,8 @@ use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\NotHandler;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
+use Yiisoft\Data\Reader\Iterable\ValueReader\ValueReaderInterface;
 use Yiisoft\Data\Reader\Sort;
 
 use function array_merge;
@@ -61,15 +62,19 @@ final class IterableDataReader implements DataReaderInterface
     /**
      * @psalm-var array<string, IterableFilterHandlerInterface>
      */
-    private array $iterableFilterHandlers;
+    private array $coreFilterHandlers;
+
+    private Context $context;
 
     /**
      * @param iterable $data Data to iterate.
      * @psalm-param iterable<TKey, TValue> $data
      */
-    public function __construct(private iterable $data)
-    {
-        $this->iterableFilterHandlers = $this->prepareFilterHandlers([
+    public function __construct(
+        private readonly iterable $data,
+        private readonly ValueReaderInterface $valueReader = new FlatValueReader(),
+    ) {
+        $this->coreFilterHandlers = $this->prepareFilterHandlers([
             new AllHandler(),
             new AnyHandler(),
             new BetweenHandler(),
@@ -83,6 +88,7 @@ final class IterableDataReader implements DataReaderInterface
             new LikeHandler(),
             new NotHandler(),
         ]);
+        $this->context = new Context($this->coreFilterHandlers, $this->valueReader);
     }
 
     /**
@@ -91,9 +97,12 @@ final class IterableDataReader implements DataReaderInterface
     public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
     {
         $new = clone $this;
-        $new->iterableFilterHandlers = array_merge(
-            $this->iterableFilterHandlers,
-            $this->prepareFilterHandlers($filterHandlers)
+        $new->context = new Context(
+            array_merge(
+                $this->coreFilterHandlers,
+                $this->prepareFilterHandlers($filterHandlers),
+            ),
+            $this->valueReader,
         );
         return $new;
     }
@@ -222,13 +231,8 @@ final class IterableDataReader implements DataReaderInterface
      */
     private function matchFilter(array|object $item, FilterInterface $filter): bool
     {
-        $handler = $this->iterableFilterHandlers[$filter::class] ?? null;
-
-        if ($handler === null) {
-            throw new RuntimeException(sprintf('Filter "%s" is not supported.', $filter::class));
-        }
-
-        return $handler->match($item, $filter, $this->iterableFilterHandlers);
+        $handler = $this->context->getFilterHandler($filter::class);
+        return $handler->match($item, $filter, $this->context);
     }
 
     /**

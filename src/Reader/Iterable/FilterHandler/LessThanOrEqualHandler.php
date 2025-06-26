@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use DateTimeInterface;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
@@ -21,11 +21,11 @@ final class LessThanOrEqualHandler implements IterableFilterHandlerInterface
         return LessThanOrEqual::class;
     }
 
-    public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
+    public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
         /** @var LessThanOrEqual $filter */
 
-        $itemValue = ArrayHelper::getValue($item, $filter->getField());
+        $itemValue = $context->readValue($item, $filter->getField());
         $argumentValue = $filter->getValue();
 
         if (!$itemValue instanceof DateTimeInterface) {

@@ -6,8 +6,10 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\EqualsNull;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsNullHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -30,7 +32,8 @@ final class EqualsNullHandlerTest extends TestCase
     #[DataProvider('matchDataProvider')]
     public function testMatch(bool $expected, array $item): void
     {
-        $this->assertSame($expected, (new EqualsNullHandler())->match($item, new EqualsNull('value'), []));
+        $context = new Context([], new FlatValueReader());
+        $this->assertSame($expected, (new EqualsNullHandler())->match($item, new EqualsNull('value'), $context));
     }
 
     public function testObjectWithGetters(): void

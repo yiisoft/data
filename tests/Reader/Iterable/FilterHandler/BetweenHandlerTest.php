@@ -7,8 +7,10 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Between;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\Support\Car;
 use Yiisoft\Data\Tests\TestCase;
 
@@ -35,7 +37,9 @@ final class BetweenHandlerTest extends TestCase
             'value' => 45,
         ];
 
-        $this->assertSame($expected, $handler->match($item, $filter, []));
+        $context = new Context([], new FlatValueReader());
+
+        $this->assertSame($expected, $handler->match($item, $filter, $context));
     }
 
     public static function matchDateTimeInterfaceDataProvider(): array
@@ -59,7 +63,9 @@ final class BetweenHandlerTest extends TestCase
             'value' => new DateTimeImmutable('2022-02-22 16:00:45'),
         ];
 
-        $this->assertSame($expected, $processor->match($item, new Between('value', $from, $to), []));
+        $context = new Context([], new FlatValueReader());
+
+        $this->assertSame($expected, $processor->match($item, new Between('value', $from, $to), $context));
     }
 
     public function testObjectWithGetters(): void
