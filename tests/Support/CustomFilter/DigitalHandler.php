@@ -19,6 +19,6 @@ final class DigitalHandler implements IterableFilterHandlerInterface
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
         /** @var Digital $filter */
-        return ctype_digit((string) ArrayHelper::getValue($item, $filter->field));
+        return ctype_digit((string) $context->readValue($item, $filter->field));
     }
 }
