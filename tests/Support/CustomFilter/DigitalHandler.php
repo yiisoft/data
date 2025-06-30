@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Support\CustomFilter;
 
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 final class DigitalHandler implements IterableFilterHandlerInterface
@@ -15,9 +15,9 @@ final class DigitalHandler implements IterableFilterHandlerInterface
         return Digital::class;
     }
 
-    public function match(object|array $item, FilterInterface $filter, array $iterableFilterHandlers): bool
+    public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
         /** @var Digital $filter */
-        return ctype_digit((string) ArrayHelper::getValue($item, $filter->field));
+        return ctype_digit((string) $context->readValue($item, $filter->field));
     }
 }

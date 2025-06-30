@@ -6,7 +6,9 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LikeHandler;
+use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\TestCase;
 
 final class LikeHandlerTest extends TestCase
@@ -42,7 +44,8 @@ final class LikeHandlerTest extends TestCase
     #[DataProvider('matchDataProvider')]
     public function testMatch(bool $expected, array $item, string $field, string $value, ?bool $caseSensitive): void
     {
-        $processor = new LikeHandler();
-        $this->assertSame($expected, $processor->match($item, new Like($field, $value, $caseSensitive), []));
+        $filterHandler = new LikeHandler();
+        $context = new Context([], new FlatValueReader());
+        $this->assertSame($expected, $filterHandler->match($item, new Like($field, $value, $caseSensitive), $context));
     }
 }

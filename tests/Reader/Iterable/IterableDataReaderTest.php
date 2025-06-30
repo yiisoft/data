@@ -7,7 +7,7 @@ namespace Yiisoft\Data\Tests\Reader\Iterable;
 use ArrayIterator;
 use Generator;
 use InvalidArgumentException;
-use RuntimeException;
+use LogicException;
 use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Any;
@@ -21,6 +21,7 @@ use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\Not;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -427,7 +428,7 @@ final class IterableDataReaderTest extends TestCase
                     public function match(
                         array|object $item,
                         FilterInterface $filter,
-                        array $iterableFilterHandlers
+                        Context $context,
                     ): bool {
                         /** @var Equals $filter */
                         return $item[$filter->getField()] === 2;
@@ -446,7 +447,7 @@ final class IterableDataReaderTest extends TestCase
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withFilter(new FilterWithoutHandler());
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Filter "' . FilterWithoutHandler::class . '" is not supported.');
 
         $dataReader->read();
