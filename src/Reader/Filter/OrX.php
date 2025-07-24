@@ -7,14 +7,23 @@ namespace Yiisoft\Data\Reader\Filter;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
- * `Group` filter is an abstract class that allows combining multiple sub-filters.
+ * `OrX` filter allows combining multiple sub-filters using "OR" operator.
+ *
+ * ```php
+ * $dataReader->withFilter(
+ *   new OrX(
+ *     new GreaterThan('id', 88),
+ *     new Equals('state', 2),
+ *   )
+ * );
+ * ```
  */
-abstract class Group implements FilterInterface
+final class OrX implements FilterInterface
 {
     /**
      * @var FilterInterface[] Sub-filters to use.
      */
-    private array $filters;
+    public readonly array $filters;
 
     /**
      * @param FilterInterface ...$filters Sub-filters to use.
@@ -22,13 +31,5 @@ abstract class Group implements FilterInterface
     public function __construct(FilterInterface ...$filters)
     {
         $this->filters = $filters;
-    }
-
-    /**
-     * @return FilterInterface[]
-     */
-    public function getFilters(): array
-    {
-        return $this->filters;
     }
 }

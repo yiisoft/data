@@ -6,12 +6,12 @@ namespace Yiisoft\Data\Tests\Reader\Iterable\FilterHandler;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\Iterable\Context;
-use Yiisoft\Data\Reader\Iterable\FilterHandler\AnyHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\OrXHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\GreaterThanOrEqualHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\LessThanOrEqualHandler;
@@ -19,7 +19,7 @@ use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
-final class AnyHandlerTest extends TestCase
+final class OrXHandlerTest extends TestCase
 {
     public static function matchDataProvider(): array
     {
@@ -65,7 +65,7 @@ final class AnyHandlerTest extends TestCase
     #[DataProvider('matchDataProvider')]
     public function testMatch(bool $expected, array $filters, array $filterHandlers): void
     {
-        $handler = new AnyHandler();
+        $handler = new OrXHandler();
 
         $item = [
             'id' => 1,
@@ -74,14 +74,14 @@ final class AnyHandlerTest extends TestCase
 
         $context = new Context($filterHandlers, new FlatValueReader());
 
-        $this->assertSame($expected, $handler->match($item, new Any(...$filters), $context));
+        $this->assertSame($expected, $handler->match($item, new OrX(...$filters), $context));
     }
 
     public function testMatchFailIfFilterOperatorIsNotSupported(): void
     {
-        $handler = new AnyHandler();
+        $handler = new OrXHandler();
         $item = ['id' => 1];
-        $filter = new Any(new FilterWithoutHandler());
+        $filter = new OrX(new FilterWithoutHandler());
         $context = new Context([], new FlatValueReader());
 
         $this->expectException(LogicException::class);

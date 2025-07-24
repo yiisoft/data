@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Yiisoft\Data\Reader\Filter\All;
-use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\Filter\AndX;
+use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\EqualsNull;
@@ -24,8 +24,8 @@ abstract class BaseReaderWithNotTestCase extends BaseReaderTestCase
     public static function dataWithReader(): array
     {
         return [
-            'all' => [new Not(new All(new Equals('number', 1), new Equals('number', 2))), range(1, 5)],
-            'any' => [new Not(new Any(new Equals('number', 1), new Equals('number', 2))), range(3, 5)],
+            'all' => [new Not(new AndX(new Equals('number', 1), new Equals('number', 2))), range(1, 5)],
+            'any' => [new Not(new OrX(new Equals('number', 1), new Equals('number', 2))), range(3, 5)],
             'between' => [new Not(new Between('balance', 10.25, 100.0)), [2, 4]],
             'equals' => [new Not(new Equals('number', 1)), range(2, 5)],
             'equals null' => [new Not(new EqualsNull('born_at')), [5]],

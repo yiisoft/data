@@ -4,33 +4,33 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
-use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
- * `All` iterable filter handler allows combining multiple sub-filters.
- * The filter matches only if all the sub-filters match.
+ * `OrX` iterable filter handler allows combining multiple sub-filters.
+ * The filter matches if any of the sub-filters match.
  */
-final class AllHandler implements IterableFilterHandlerInterface
+final class OrXHandler implements IterableFilterHandlerInterface
 {
     public function getFilterClass(): string
     {
-        return All::class;
+        return OrX::class;
     }
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var All $filter */
+        /** @var OrX $filter */
 
-        foreach ($filter->getFilters() as $subFilter) {
+        foreach ($filter->filters as $subFilter) {
             $filterHandler = $context->getFilterHandler($subFilter::class);
-            if (!$filterHandler->match($item, $subFilter, $context)) {
-                return false;
+            if ($filterHandler->match($item, $subFilter, $context)) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 }
