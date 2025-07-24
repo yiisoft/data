@@ -19,7 +19,7 @@ use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Tests\Support\CustomFilter\FilterWithoutHandler;
 use Yiisoft\Data\Tests\TestCase;
 
-final class OrXHandlerTest extends TestCase
+final class AnyHandlerTest extends TestCase
 {
     public static function matchDataProvider(): array
     {
