@@ -65,7 +65,7 @@ Para filtrar dados em um leitor de dados implementando `FilterableDataInterface`
 método `withFilter()`:
 
 ```php
-$filter = new All(
+$filter = new AndX(
     new GreaterThan('id', 3),
     new Like('name', 'agent')
 );
@@ -78,8 +78,7 @@ $data = $reader->read();
 
 O filtro pode ser composto por:
 
-- `All`
-- `Any`
+- `AndX`
 - `Between`
 - `Equals`
 - `EqualsNull`
@@ -91,13 +90,14 @@ O filtro pode ser composto por:
 - `LessThanOrEqual`
 - `Like`
 - `Not`
+- `OrX`
 
 #### Filtrando com matrizes
 
-Os filtros `All` e `Any` possuem um método `withCriteriaArray()`, que permite definir filtros com arrays.
+Os filtros `AndX` e `OrX` possuem um método `withCriteriaArray()`, que permite definir filtros com arrays.
 
 ```php
-$dataReader->withFilter((new All())->withCriteriaArray([
+$dataReader->withFilter((new AndX())->withCriteriaArray([
     ['=', 'id', 88],
     [
        'or',
@@ -161,7 +161,7 @@ class OwnIterableNotTwoFilterHandler implements IterableFilterHandlerInterface
 }
 
 // and using it on a data reader
-$filter = new All(
+$filter = new AndX(
     new LessThan('id', 8),
     new OwnNotTwoFilter('id'),
 );

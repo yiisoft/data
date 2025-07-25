@@ -55,6 +55,7 @@
 - Enh #223: `KeysetPaginator` now uses default order from `Sort` when no sort is set (@vjik)
 - Chg #224: Change `$iterableFilterHandlers` to context object in `IterableFilterHandlerInterface::match()` (@vjik)
 - New #224: Add filtering by nested values support in `IterableDataReader` (@vjik)
+- Chg #225: Rename classes: `All` to `AndX`, `Any` to `OrX`. Remove `Group` class (@vjik)
 
 ## 1.0.1 January 25, 2023
 

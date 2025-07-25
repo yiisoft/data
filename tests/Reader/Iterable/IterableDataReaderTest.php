@@ -9,8 +9,8 @@ use Generator;
 use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Reader\DataReaderException;
-use Yiisoft\Data\Reader\Filter\All;
-use Yiisoft\Data\Reader\Filter\Any;
+use Yiisoft\Data\Reader\Filter\AndX;
+use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -307,9 +307,9 @@ final class IterableDataReaderTest extends TestCase
         ], $reader->read());
     }
 
-    public function testAnyFiltering(): void
+    public function testOrXFiltering(): void
     {
-        $filter = new Any(
+        $filter = new OrX(
             new Equals('id', 1),
             new Equals('id', 2)
         );
@@ -322,9 +322,9 @@ final class IterableDataReaderTest extends TestCase
         ], $reader->read());
     }
 
-    public function testAllFiltering(): void
+    public function testAndXFiltering(): void
     {
-        $filter = new All(
+        $filter = new AndX(
             new GreaterThan('id', 3),
             new Like('name', 'Agent')
         );
@@ -401,7 +401,7 @@ final class IterableDataReaderTest extends TestCase
 
     public function testCustomFilter(): void
     {
-        $filter = new All(new GreaterThan('id', 0), new Digital('name'));
+        $filter = new AndX(new GreaterThan('id', 0), new Digital('name'));
         $reader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withAddedFilterHandlers(new DigitalHandler())
             ->withFilter($filter);
