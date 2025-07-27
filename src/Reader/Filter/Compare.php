@@ -17,19 +17,9 @@ abstract class Compare implements FilterInterface
      * @param bool|DateTimeInterface|float|int|string $value Value to compare to.
      */
     public function __construct(
-        private readonly string $field,
-        private bool|DateTimeInterface|float|int|string $value,
+        public readonly string $field,
+        public readonly bool|DateTimeInterface|float|int|string $value,
     ) {
-    }
-
-    public function getField(): string
-    {
-        return $this->field;
-    }
-
-    public function getValue(): float|DateTimeInterface|bool|int|string
-    {
-        return $this->value;
     }
 
     /**
@@ -37,8 +27,6 @@ abstract class Compare implements FilterInterface
      */
     final public function withValue(bool|DateTimeInterface|float|int|string $value): static
     {
-        $new = clone $this;
-        $new->value = $value;
-        return $new;
+        return new static($this->field, $value);
     }
 }
