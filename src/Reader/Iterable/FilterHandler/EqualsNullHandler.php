@@ -23,6 +23,6 @@ final class EqualsNullHandler implements IterableFilterHandlerInterface
     {
         /** @var EqualsNull $filter */
 
-        return $context->readValue($item, $filter->getField()) === null;
+        return $context->readValue($item, $filter->field) === null;
     }
 }

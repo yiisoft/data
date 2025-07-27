@@ -25,8 +25,8 @@ final class GreaterThanOrEqualHandler implements IterableFilterHandlerInterface
     {
         /** @var GreaterThanOrEqual $filter */
 
-        $itemValue = $context->readValue($item, $filter->getField());
-        $argumentValue = $filter->getValue();
+        $itemValue = $context->readValue($item, $filter->field);
+        $argumentValue = $filter->value;
 
         if (!$itemValue instanceof DateTimeInterface) {
             return $itemValue >= $argumentValue;

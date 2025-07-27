@@ -16,7 +16,7 @@ abstract class Compare implements FilterInterface
      * @param string $field Name of the field to compare.
      * @param bool|DateTimeInterface|float|int|string $value Value to compare to.
      */
-    public function __construct(
+    final public function __construct(
         public readonly string $field,
         public readonly bool|DateTimeInterface|float|int|string $value,
     ) {
