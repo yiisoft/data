@@ -7,13 +7,19 @@ namespace Yiisoft\Data\Tests\Reader\Filter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Filter\LessThan;
 
+use function PHPUnit\Framework\assertNotSame;
+use function PHPUnit\Framework\assertSame;
+
 final class CompareTest extends TestCase
 {
-    public function testWithValue()
+    public function testWithValue(): void
     {
-        $filter = new LessThan('field', 1);
+        $sourceFilter = new LessThan('field', 1);
 
-        $this->assertNotSame($filter, $filter->withValue(1));
-        $this->assertSame(2, $filter->withValue(2)->getValue());
+        $filter = $sourceFilter->withValue(2);
+
+        assertNotSame($sourceFilter, $filter);
+        assertSame('field', $filter->field);
+        assertSame(2, $filter->value);
     }
 }

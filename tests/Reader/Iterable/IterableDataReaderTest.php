@@ -431,7 +431,7 @@ final class IterableDataReaderTest extends TestCase
                         Context $context,
                     ): bool {
                         /** @var Equals $filter */
-                        return $item[$filter->getField()] === 2;
+                        return $item[$filter->field] === 2;
                     }
                 }
             );
