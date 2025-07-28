@@ -1178,7 +1178,7 @@ final class KeysetPaginatorTest extends TestCase
         // Test first page has next page
         $nextPageReader = $paginator->nextPage();
         $this->assertInstanceOf(KeysetPaginator::class, $nextPageReader);
-        
+
         // Verify the next page returns correct data
         $nextPageData = array_values($this->iterableToArray($nextPageReader->read()));
         $expectedNextPageData = self::getDataSet([2, 3]);
@@ -1192,7 +1192,7 @@ final class KeysetPaginatorTest extends TestCase
     {
         $sort = Sort::only(['id', 'name'])->withOrderString('id');
         $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
-        
+
         // Create paginator that starts on the last page
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)

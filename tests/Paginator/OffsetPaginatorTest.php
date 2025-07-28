@@ -680,8 +680,8 @@ final class OffsetPaginatorTest extends TestCase
         // Test first page has next page
         $nextPageReader = $paginator->nextPage();
         $this->assertInstanceOf(OffsetPaginator::class, $nextPageReader);
-        
-        // Verify the next page returns correct data 
+
+        // Verify the next page returns correct data
         $nextPageData = array_values($this->iterableToArray($nextPageReader->read()));
         $expectedNextPageData = [self::ITEM_3, self::ITEM_4];
         $this->assertSame($expectedNextPageData, $nextPageData);
@@ -693,7 +693,7 @@ final class OffsetPaginatorTest extends TestCase
     public function testNextPageReturnsNullOnLastPage(): void
     {
         $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
-        
+
         // Create paginator that starts on the last page
         $paginator = (new OffsetPaginator($dataReader))
             ->withPageSize(2)
