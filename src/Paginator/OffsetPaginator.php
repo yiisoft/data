@@ -169,6 +169,7 @@ final class OffsetPaginator implements PaginatorInterface
             return null;
         }
 
+        /** @var ReadableDataInterface<TKey, TValue> */
         return $this->withToken($nextToken);
     }
 

@@ -259,6 +259,7 @@ final class KeysetPaginator implements PaginatorInterface
             return null;
         }
 
+        /** @var ReadableDataInterface<TKey, TValue> */
         return $this->withToken($nextToken);
     }
 
