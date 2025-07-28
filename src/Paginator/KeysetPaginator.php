@@ -246,6 +246,22 @@ final class KeysetPaginator implements PaginatorInterface
             : ($this->currentLastValue === null ? null : PageToken::next($this->currentLastValue));
     }
 
+    /**
+     * Get a data reader for the next page.
+     *
+     * @return ReadableDataInterface|null Data reader for the next page or null if on last page.
+     * @psalm-return ReadableDataInterface<TKey, TValue>|null
+     */
+    public function nextPage(): ?ReadableDataInterface
+    {
+        $nextToken = $this->getNextToken();
+        if ($nextToken === null) {
+            return null;
+        }
+
+        return $this->withToken($nextToken);
+    }
+
     public function isSortable(): bool
     {
         return true;

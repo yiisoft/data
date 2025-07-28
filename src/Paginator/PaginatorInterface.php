@@ -76,6 +76,14 @@ interface PaginatorInterface extends ReadableDataInterface
     public function getPreviousToken(): ?PageToken;
 
     /**
+     * Get a data reader for the next page.
+     *
+     * @return ReadableDataInterface|null Data reader for the next page or `null` if on last page.
+     * @psalm-return ReadableDataInterface<TKey, TValue>|null
+     */
+    public function nextPage(): ?ReadableDataInterface;
+
+    /**
      * Get the maximum number of items per page.
      *
      * Note that there could be less current page items.

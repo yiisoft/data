@@ -671,4 +671,54 @@ final class OffsetPaginatorTest extends TestCase
 
         $this->assertSame(self::ITEM_1, $result);
     }
+
+    public function testNextPage(): void
+    {
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
+        $paginator = (new OffsetPaginator($dataReader))->withPageSize(2);
+
+        // Test first page has next page
+        $nextPageReader = $paginator->nextPage();
+        $this->assertInstanceOf(OffsetPaginator::class, $nextPageReader);
+        
+        // Verify the next page returns correct data 
+        $nextPageData = array_values($this->iterableToArray($nextPageReader->read()));
+        $expectedNextPageData = [self::ITEM_3, self::ITEM_4];
+        $this->assertSame($expectedNextPageData, $nextPageData);
+
+        // Test that the returned page reader has correct token
+        $this->assertPageToken('2', false, $nextPageReader->getToken());
+    }
+
+    public function testNextPageReturnsNullOnLastPage(): void
+    {
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
+        
+        // Create paginator that starts on the last page
+        $paginator = (new OffsetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withToken(PageToken::next('3')); // This should be the last page
+
+        $nextPageReader = $paginator->nextPage();
+        $this->assertNull($nextPageReader);
+    }
+
+    public function testNextPageIterativeReading(): void
+    {
+        $dataReader = new IterableDataReader(self::DEFAULT_DATASET);
+        $paginator = (new OffsetPaginator($dataReader))->withPageSize(2);
+
+        $allData = [];
+        $currentPaginator = $paginator;
+
+        // Read all pages iteratively
+        while ($currentPaginator !== null) {
+            $pageData = array_values($this->iterableToArray($currentPaginator->read()));
+            $allData = array_merge($allData, $pageData);
+            $currentPaginator = $currentPaginator->nextPage();
+        }
+
+        // Verify we got all the data
+        $this->assertSame(self::DEFAULT_DATASET, $allData);
+    }
 }
