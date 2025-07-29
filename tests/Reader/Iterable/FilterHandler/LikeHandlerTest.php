@@ -109,7 +109,7 @@ final class LikeHandlerTest extends TestCase
         );
     }
 
-    public function testBackwardCompatibility(): void
+    public function testConstructorDefaultMode(): void
     {
         $filterHandler = new LikeHandler();
         $context = new Context([], new FlatValueReader());
