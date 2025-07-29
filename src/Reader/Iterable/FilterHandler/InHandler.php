@@ -25,8 +25,8 @@ final class InHandler implements IterableFilterHandlerInterface
     {
         /** @var In $filter */
 
-        $itemValue = $context->readValue($item, $filter->getField());
-        $argumentValue = $filter->getValues();
+        $itemValue = $context->readValue($item, $filter->field);
+        $argumentValue = $filter->values;
 
         return in_array($itemValue, $argumentValue);
     }

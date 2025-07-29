@@ -23,7 +23,7 @@ final class NotHandler implements IterableFilterHandlerInterface
     {
         /** @var Not $filter */
 
-        $subFilter = $filter->getFilter();
+        $subFilter = $filter->filter;
 
         $filterHandler = $context->getFilterHandler($subFilter::class);
         return !$filterHandler->match($item, $subFilter, $context);

@@ -21,24 +21,9 @@ final class Like implements FilterInterface
      * - `false` - case-insensitive.
      */
     public function __construct(
-        private readonly string $field,
-        private readonly string $value,
-        private readonly ?bool $caseSensitive = null,
+        public readonly string $field,
+        public readonly string $value,
+        public readonly ?bool $caseSensitive = null,
     ) {
-    }
-
-    public function getField(): string
-    {
-        return $this->field;
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
-
-    public function getCaseSensitive(): ?bool
-    {
-        return $this->caseSensitive;
     }
 }

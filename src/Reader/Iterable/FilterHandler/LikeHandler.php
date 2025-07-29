@@ -25,13 +25,13 @@ final class LikeHandler implements IterableFilterHandlerInterface
     {
         /** @var Like $filter */
 
-        $itemValue = $context->readValue($item, $filter->getField());
+        $itemValue = $context->readValue($item, $filter->field);
         if (!is_string($itemValue)) {
             return false;
         }
 
-        return $filter->getCaseSensitive() === true
-            ? str_contains($itemValue, $filter->getValue())
-            : mb_stripos($itemValue, $filter->getValue()) !== false;
+        return $filter->caseSensitive === true
+            ? str_contains($itemValue, $filter->value)
+            : mb_stripos($itemValue, $filter->value) !== false;
     }
 }
