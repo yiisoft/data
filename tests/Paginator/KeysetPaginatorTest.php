@@ -1172,7 +1172,7 @@ final class KeysetPaginatorTest extends TestCase
     public function testNextPage(): void
     {
         $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
-        $sort = Sort::only(['id'])->withOrderString('id');
+        $sort = Sort::only(['id']);
         $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
@@ -1191,18 +1191,20 @@ final class KeysetPaginatorTest extends TestCase
     public function testNextPageIterativeReading(): void
     {
         $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
-        $sort = Sort::only(['id'])->withOrderString('id');
+        $sort = Sort::only(['id']);
         $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         $allData = [];
-        $currentPaginator = $paginator;
 
         // Read all pages iteratively
-        while ($currentPaginator !== null) {
+        for (
+            $currentPaginator = $paginator;
+            $currentPaginator !== null;
+            $currentPaginator = $currentPaginator->nextPage()
+        ) {
             $pageData = array_values($this->iterableToArray($currentPaginator->read()));
             $allData = array_merge($allData, $pageData);
-            $currentPaginator = $currentPaginator->nextPage();
         }
 
         // Verify we got all the data
@@ -1212,7 +1214,7 @@ final class KeysetPaginatorTest extends TestCase
     public function testPreviousPage(): void
     {
         $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
-        $sort = Sort::only(['id'])->withOrderString('id');
+        $sort = Sort::only(['id']);
         $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2)->withToken(PageToken::next('2'));
 
@@ -1231,7 +1233,7 @@ final class KeysetPaginatorTest extends TestCase
     public function testPreviousPageIterativeReading(): void
     {
         $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
-        $sort = Sort::only(['id'])->withOrderString('id');
+        $sort = Sort::only(['id']);
         $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2)->withToken(PageToken::next('2'));
 

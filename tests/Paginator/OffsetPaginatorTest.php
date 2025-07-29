@@ -693,7 +693,7 @@ final class OffsetPaginatorTest extends TestCase
     public function testNextPageIterativeReading(): void
     {
         $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
-        $sort = Sort::only(['id'])->withOrderString('id');
+        $sort = Sort::only(['id']);
         $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new OffsetPaginator($dataReader))->withPageSize(2);
 
@@ -714,7 +714,7 @@ final class OffsetPaginatorTest extends TestCase
     public function testPreviousPage(): void
     {
         $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
-        $sort = Sort::only(['id'])->withOrderString('id');
+        $sort = Sort::only(['id']);
         $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new OffsetPaginator($dataReader))->withPageSize(2)->withCurrentPage(2);
 
@@ -733,7 +733,7 @@ final class OffsetPaginatorTest extends TestCase
     public function testPreviousPageIterativeReading(): void
     {
         $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
-        $sort = Sort::only(['id'])->withOrderString('id');
+        $sort = Sort::only(['id']);
         $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new OffsetPaginator($dataReader))->withPageSize(2)->withCurrentPage(2);
 
