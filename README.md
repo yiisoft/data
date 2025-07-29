@@ -332,10 +332,9 @@ Disadvantages:
 Usage is the following:
 
 ```php
-$sort = Sort::only(['id', 'name'])->withOrderString('id');
+$sort = Sort::only(['id', 'name']);
 
-$dataReader = (new MyDataReader(...))
-    ->withSort($sort);
+$dataReader = (new MyDataReader(...))->withSort($sort);
 
 $paginator = (new KeysetPaginator($dataReader))
     ->withPageSize(10)
@@ -345,27 +344,26 @@ $paginator = (new KeysetPaginator($dataReader))
 When displaying first page ID (or another field name to paginate by) of the item displayed last is used with `withNextPageToken()`
 to get next page.
 
-#### Page-by-page navigation
+#### Iterate through all pages
 
 Both `OffsetPaginator` and `KeysetPaginator` provide `nextPage()` and `previousPage()` methods for easy page-by-page data reading:
 
 ```php
 $dataReader = (new QueryDataReader($query))->withSort(Sort::only(['id']));
-$paginator = (new KeysetPaginator($dataReader))->withPageSize(1000);
 
-// Iterate through all pages
 for (
-    $currentPaginator = $paginator;
-    $currentPaginator !== null;
-    $currentPaginator = $currentPaginator->nextPage()
+    $paginator = (new KeysetPaginator($dataReader))->withPageSize(1000);
+    $paginator !== null;
+    $paginator = $paginator->nextPage()
 ) {
-    foreach ($currentPaginator->read() as $data) {
+    foreach ($paginator->read() as $data) {
         // Process each item
     }
 }
 ```
 
-The `nextPage()` method returns a new paginator instance configured for the next page, or `null` when there are no more pages. Similarly, `previousPage()` returns a paginator for the previous page, or `null` when at the first page.
+The `nextPage()` method returns a new paginator instance configured for the next page, or `null` when there are no more pages.
+Similarly, `previousPage()` returns a paginator for the previous page, or `null` when at the first page.
 
 ## Writing data
 
