@@ -57,12 +57,12 @@ final class LikeHandler implements IterableFilterHandlerInterface
         if ($caseSensitive === true) {
             return str_ends_with($itemValue, $searchValue);
         }
-        
+
         $searchLength = mb_strlen($searchValue);
         if ($searchLength > mb_strlen($itemValue)) {
             return false;
         }
-        
+
         return mb_strtolower(mb_substr($itemValue, -$searchLength)) === mb_strtolower($searchValue);
     }
 }

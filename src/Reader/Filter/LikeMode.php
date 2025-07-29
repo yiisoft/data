@@ -13,12 +13,12 @@ enum LikeMode
      * Field value contains the search value.
      */
     case CONTAINS;
-    
+
     /**
      * Field value starts with the search value.
      */
     case STARTS_WITH;
-    
+
     /**
      * Field value ends with the search value.
      */
