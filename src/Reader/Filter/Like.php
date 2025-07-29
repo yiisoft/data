@@ -19,11 +19,17 @@ final class Like implements FilterInterface
      * - `null` - depends on implementation;
      * - `true` - case-sensitive;
      * - `false` - case-insensitive.
+     * @param LikeMode $mode Matching mode:
+     *
+     * - `LikeMode::CONTAINS` - field value contains the search value (default);
+     * - `LikeMode::STARTS_WITH` - field value starts with the search value;
+     * - `LikeMode::ENDS_WITH` - field value ends with the search value.
      */
     public function __construct(
         public readonly string $field,
         public readonly string $value,
         public readonly ?bool $caseSensitive = null,
+        public readonly LikeMode $mode = LikeMode::CONTAINS,
     ) {
     }
 }
