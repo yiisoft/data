@@ -25,9 +25,9 @@ final class BetweenHandler implements IterableFilterHandlerInterface
     {
         /** @var Between $filter */
 
-        $value = $context->readValue($item, $filter->getField());
-        $min = $filter->getMinValue();
-        $max = $filter->getMaxValue();
+        $value = $context->readValue($item, $filter->field);
+        $min = $filter->minValue;
+        $max = $filter->maxValue;
 
         if (!$value instanceof DateTimeInterface) {
             return $value >= $min && $value <= $max;

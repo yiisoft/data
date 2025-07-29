@@ -25,8 +25,8 @@ final class LessThanOrEqualHandler implements IterableFilterHandlerInterface
     {
         /** @var LessThanOrEqual $filter */
 
-        $itemValue = $context->readValue($item, $filter->getField());
-        $argumentValue = $filter->getValue();
+        $itemValue = $context->readValue($item, $filter->field);
+        $argumentValue = $filter->value;
 
         if (!$itemValue instanceof DateTimeInterface) {
             return $itemValue <= $argumentValue;

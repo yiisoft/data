@@ -16,20 +16,20 @@ use function sprintf;
 final class In implements FilterInterface
 {
     /**
-     * @var bool[]|float[]|int[]|string[] Values to check against.
-     */
-    private array $values;
-
-    /**
      * @param string $field Name of the field to compare.
      * @param bool[]|float[]|int[]|string[] $values Values to check against.
      */
     public function __construct(
-        private readonly string $field,
-        array $values
+        public readonly string $field,
+        /** @var bool[]|float[]|int[]|string[] Values to check against. */
+        public readonly array $values
     ) {
+        $this->assertValues($values);
+    }
+
+    private function assertValues(array $values): void
+    {
         foreach ($values as $value) {
-            /** @psalm-suppress DocblockTypeContradiction */
             if (!is_scalar($value)) {
                 throw new InvalidArgumentException(
                     sprintf(
@@ -39,19 +39,5 @@ final class In implements FilterInterface
                 );
             }
         }
-        $this->values = $values;
-    }
-
-    public function getField(): string
-    {
-        return $this->field;
-    }
-
-    /**
-     * @return bool[]|float[]|int[]|string[]
-     */
-    public function getValues(): array
-    {
-        return $this->values;
     }
 }
