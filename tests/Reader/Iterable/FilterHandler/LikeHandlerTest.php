@@ -85,12 +85,20 @@ final class LikeHandlerTest extends TestCase
             // Test case for mb_stripos vs stripos in STARTS_WITH (catches mutant 1)
             // stripos would return false, mb_stripos returns 0 for Turkish Ç/ç
             [true, ['id' => 1, 'value' => 'Çağrı'], 'value', 'çağ', false, LikeMode::STARTS_WITH],
-            // Test case for mb_strlen vs strlen in ENDS_WITH (catches mutant 2)
-            // strlen('café') = 5 bytes, mb_strlen('café') = 4 characters
-            [false, ['id' => 1, 'value' => 'café'], 'value', 'toolong', false, LikeMode::ENDS_WITH],
-            // Test case for mb_strtolower vs strtolower in ENDS_WITH (catches mutant 3)
-            // strtolower doesn't properly convert Turkish Ü to ü
-            [true, ['id' => 1, 'value' => 'MÜDÜR'], 'value', 'üdür', false, LikeMode::ENDS_WITH],
+            
+            // Test case for mb_strlen vs strlen in ENDS_WITH (catches mutant on line 74)
+            // itemValue = 'café' (4 chars, 5 bytes), searchValue = 'abcde' (5 chars, 5 bytes)
+            // With mb_strlen: 5 > 4 = true (returns false - correct behavior)
+            // With strlen: 5 > 5 = false (proceeds to comparison - incorrect, should have returned false)
+            // The mutant will incorrectly proceed to compare when it should return false early
+            [false, ['id' => 1, 'value' => 'café'], 'value', 'abcde', false, LikeMode::ENDS_WITH],
+            
+            // Test case for mb_strtolower vs strtolower in ENDS_WITH (catches mutant on line 78)
+            // Use Turkish İ which strtolower doesn't handle properly
+            // itemValue ends with Turkish İ, searchValue is also Turkish İ
+            // mb_strtolower('İ') = 'i̇', strtolower('İ') = 'İ' (unchanged)
+            // Original: 'i̇' === 'i̇' = true, Mutant: 'i̇' === 'İ' = false
+            [true, ['id' => 1, 'value' => 'aliİ'], 'value', 'İ', false, LikeMode::ENDS_WITH],
 
             // Edge cases
             [true, ['id' => 1, 'value' => 'test'], 'value', '', null, LikeMode::CONTAINS],
