@@ -57,6 +57,7 @@
 - New #224: Add filtering by nested values support in `IterableDataReader` (@vjik)
 - Chg #225: Rename classes: `All` to `AndX`, `Any` to `OrX`. Remove `Group` class (@vjik)
 - Chg #226: Refactor filter classes to use readonly properties instead of getters (@vjik)
+- New #213: Add `nextPage()` and `previousPage()` methods to `PaginatorInterface` (@samdark)
 
 ## 1.0.1 January 25, 2023
 

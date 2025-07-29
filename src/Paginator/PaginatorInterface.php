@@ -76,6 +76,20 @@ interface PaginatorInterface extends ReadableDataInterface
     public function getPreviousToken(): ?PageToken;
 
     /**
+     * Get a data reader for the next page.
+     *
+     * @return static|null Data reader for the next page or `null` if on last page.
+     */
+    public function nextPage(): ?static;
+
+    /**
+     * Get a data reader for the next page.
+     *
+     * @return static|null Data reader for the next page or `null` if on last page.
+     */
+    public function previousPage(): ?static;
+
+    /**
      * Get the maximum number of items per page.
      *
      * Note that there could be less current page items.

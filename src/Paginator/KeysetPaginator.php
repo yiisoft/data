@@ -246,6 +246,22 @@ final class KeysetPaginator implements PaginatorInterface
             : ($this->currentLastValue === null ? null : PageToken::next($this->currentLastValue));
     }
 
+    public function nextPage(): ?static
+    {
+        $nextToken = $this->getNextToken();
+        return $nextToken === null
+            ? null
+            : $this->withToken($nextToken);
+    }
+
+    public function previousPage(): ?static
+    {
+        $previousToken = $this->getPreviousToken();
+        return $previousToken === null
+            ? null
+            : $this->withToken($previousToken);
+    }
+
     public function isSortable(): bool
     {
         return true;
