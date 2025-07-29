@@ -86,12 +86,18 @@ final class LikeHandlerTest extends TestCase
             // stripos would return false, mb_stripos returns 0 for Turkish Ç/ç
             [true, ['id' => 1, 'value' => 'Çağrı'], 'value', 'çağ', false, LikeMode::STARTS_WITH],
 
-            // Test case for mb_strlen vs strlen in ENDS_WITH (catches mutant on line 74)
-            // itemValue = 'café' (4 chars, 5 bytes), searchValue = 'abcde' (5 chars, 5 bytes)
-            // With mb_strlen: 5 > 4 = true (returns false - correct behavior)
-            // With strlen: 5 > 5 = false (proceeds to comparison - incorrect, should have returned false)
-            // The mutant will incorrectly proceed to compare when it should return false early
-            [false, ['id' => 1, 'value' => 'café'], 'value', 'abcde', false, LikeMode::ENDS_WITH],
+            // Test case for mb_strlen vs strlen in ENDS_WITH (attempts to catch mutant on line 74)
+            // This tests the critical edge case where mb_strlen and strlen differ significantly
+            // itemValue = '🌟' (1 char, 4 bytes), searchValue = 'xyz🌟' (4 chars, 7 bytes)
+            // Original: mb_strlen('xyz🌟') > mb_strlen('🌟') → 4 > 1 → returns false (correct)
+            // Mutant: mb_strlen('xyz🌟') > strlen('🌟') → 4 > 4 → false, proceeds to comparison
+            // The mutant incorrectly proceeds when it should return false early
+            [false, ['id' => 1, 'value' => '🌟'], 'value', 'xyz🌟', false, LikeMode::ENDS_WITH],
+            
+            // Additional test case for the same mutant with different multi-byte scenario
+            // itemValue = 'é🎉' (2 chars, 6 bytes), searchValue = 'abcé🎉' (5 chars, 9 bytes)
+            // Original: 5 > 2 → returns false, Mutant: 5 > 6 → false, proceeds to comparison
+            [false, ['id' => 1, 'value' => 'é🎉'], 'value', 'abcé🎉', false, LikeMode::ENDS_WITH],
 
             // Test case for mb_strtolower vs strtolower in ENDS_WITH (catches mutant on line 78)
             // Use Turkish İ which strtolower doesn't handle properly
