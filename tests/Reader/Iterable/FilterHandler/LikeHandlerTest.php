@@ -60,7 +60,7 @@ final class LikeHandlerTest extends TestCase
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'Great', null, LikeMode::CONTAINS],
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'Fighter', null, LikeMode::CONTAINS],
 
-            // STARTS_WITH mode tests
+            // STARTS_WITH mode
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'Great', null, LikeMode::STARTS_WITH],
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'great', false, LikeMode::STARTS_WITH],
             [false, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'great', true, LikeMode::STARTS_WITH],

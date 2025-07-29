@@ -65,7 +65,6 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
     ): void {
         $reader = $this->getReader()->withFilter(new Like($field, $value, $caseSensitive, $mode));
         $actualData = $reader->read();
-
         // Assert that we get the expected fixtures based on the filter criteria
         $this->assertFixtures($expectedFixtureIndexes, $actualData);
     }
