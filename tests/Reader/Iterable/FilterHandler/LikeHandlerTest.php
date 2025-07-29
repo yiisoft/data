@@ -93,7 +93,7 @@ final class LikeHandlerTest extends TestCase
             // Mutant: mb_strlen('xyz🌟') > strlen('🌟') → 4 > 4 → false, proceeds to comparison
             // The mutant incorrectly proceeds when it should return false early
             [false, ['id' => 1, 'value' => '🌟'], 'value', 'xyz🌟', false, LikeMode::ENDS_WITH],
-            
+
             // Additional test case for the same mutant with different multi-byte scenario
             // itemValue = 'é🎉' (2 chars, 6 bytes), searchValue = 'abcé🎉' (5 chars, 9 bytes)
             // Original: 5 > 2 → returns false, Mutant: 5 > 6 → false, proceeds to comparison
