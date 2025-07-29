@@ -24,6 +24,8 @@ composer.phar
 
 # phpunit itself is not needed
 phpunit.phar
+# psalm itself is not needed
+psalm.phar
 # local phpunit config
 /phpunit.xml
 # phpunit cache
