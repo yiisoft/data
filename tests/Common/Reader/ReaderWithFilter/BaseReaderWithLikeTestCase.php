@@ -40,18 +40,18 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
     {
         return [
             // CONTAINS mode
-            'contains: same case, case sensitive: null' => ['email', 'ed@be', null, LikeMode::CONTAINS, [2]],
-            'contains: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::CONTAINS, [2]],
+            'contains: same case, case sensitive: null' => ['email', 'ed@be', null, LikeMode::CONTAINS, [2]], // Expects: seed@beat
+            'contains: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::CONTAINS, [2]], // Expects: seed@beat
 
             // STARTS_WITH mode
-            'starts with: same case, case sensitive: null' => ['email', 'seed@', null, LikeMode::STARTS_WITH, [2]],
-            'starts with: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::STARTS_WITH, [2]],
-            'starts with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::STARTS_WITH, []],
+            'starts with: same case, case sensitive: null' => ['email', 'seed@', null, LikeMode::STARTS_WITH, [2]], // Expects: seed@beat
+            'starts with: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::STARTS_WITH, [2]], // Expects: seed@beat
+            'starts with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::STARTS_WITH, []], // Expects: no matches
 
             // ENDS_WITH mode
-            'ends with: same case, case sensitive: null' => ['email', '@beat', null, LikeMode::ENDS_WITH, [2]],
-            'ends with: different case, case sensitive: false' => ['email', '@BEAT', false, LikeMode::ENDS_WITH, [2]],
-            'ends with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::ENDS_WITH, []],
+            'ends with: same case, case sensitive: null' => ['email', '@beat', null, LikeMode::ENDS_WITH, [2]], // Expects: seed@beat
+            'ends with: different case, case sensitive: false' => ['email', '@BEAT', false, LikeMode::ENDS_WITH, [2]], // Expects: seed@beat
+            'ends with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::ENDS_WITH, []], // Expects: no matches
         ];
     }
 
@@ -64,6 +64,9 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
         array $expectedFixtureIndexes,
     ): void {
         $reader = $this->getReader()->withFilter(new Like($field, $value, $caseSensitive, $mode));
-        $this->assertFixtures($expectedFixtureIndexes, $reader->read());
+        $actualData = $reader->read();
+        
+        // Assert that we get the expected fixtures based on the filter criteria
+        $this->assertFixtures($expectedFixtureIndexes, $actualData);
     }
 }
