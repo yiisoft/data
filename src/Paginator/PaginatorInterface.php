@@ -78,10 +78,16 @@ interface PaginatorInterface extends ReadableDataInterface
     /**
      * Get a data reader for the next page.
      *
-     * @return ReadableDataInterface|null Data reader for the next page or `null` if on last page.
-     * @psalm-return ReadableDataInterface<TKey, TValue>|null
+     * @return static|null Data reader for the next page or `null` if on last page.
      */
-    public function nextPage(): ?ReadableDataInterface;
+    public function nextPage(): ?static;
+
+    /**
+     * Get a data reader for the next page.
+     *
+     * @return static|null Data reader for the next page or `null` if on last page.
+     */
+    public function previousPage(): ?static;
 
     /**
      * Get the maximum number of items per page.

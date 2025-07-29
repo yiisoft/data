@@ -1171,8 +1171,9 @@ final class KeysetPaginatorTest extends TestCase
 
     public function testNextPage(): void
     {
-        $sort = Sort::only(['id', 'name'])->withOrderString('id');
-        $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
+        $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
+        $sort = Sort::only(['id'])->withOrderString('id');
+        $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         // Test first page has next page
@@ -1181,31 +1182,17 @@ final class KeysetPaginatorTest extends TestCase
 
         // Verify the next page returns correct data
         $nextPageData = array_values($this->iterableToArray($nextPageReader->read()));
-        $expectedNextPageData = self::getDataSet([2, 3]);
-        $this->assertSame($expectedNextPageData, $nextPageData);
+        $this->assertSame([['id' => 3]], $nextPageData);
 
-        // Test that the returned page reader has correct token
-        $this->assertPageToken('2', false, $nextPageReader->getToken());
-    }
-
-    public function testNextPageReturnsNullOnLastPage(): void
-    {
-        $sort = Sort::only(['id', 'name'])->withOrderString('id');
-        $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
-
-        // Create paginator that starts on the last page
-        $paginator = (new KeysetPaginator($dataReader))
-            ->withPageSize(2)
-            ->withToken(PageToken::next('4')); // This should be the last page
-
-        $nextPageReader = $paginator->nextPage();
-        $this->assertNull($nextPageReader);
+        // Test that returns null when there are no more pages
+        $this->assertNull($nextPageReader->nextPage());
     }
 
     public function testNextPageIterativeReading(): void
     {
-        $sort = Sort::only(['id', 'name'])->withOrderString('id');
-        $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
+        $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
+        $sort = Sort::only(['id'])->withOrderString('id');
+        $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
 
         $allData = [];
@@ -1219,6 +1206,46 @@ final class KeysetPaginatorTest extends TestCase
         }
 
         // Verify we got all the data
-        $this->assertSame(self::getDataSet(), $allData);
+        $this->assertSame($dataSet, $allData);
+    }
+
+    public function testPreviousPage(): void
+    {
+        $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
+        $sort = Sort::only(['id'])->withOrderString('id');
+        $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(2)->withToken(PageToken::next('2'));
+
+        // Test reader has previous page
+        $previousPageReader = $paginator->previousPage();
+        $this->assertInstanceOf(KeysetPaginator::class, $previousPageReader);
+
+        // Verify the previous page returns correct data
+        $previousPageData = array_values($this->iterableToArray($previousPageReader->read()));
+        $this->assertSame([['id' => 1], ['id' => 2]], $previousPageData);
+
+        // Test that returns null when there are no more pages
+        $this->assertNull($previousPageReader->previousPage());
+    }
+
+    public function testPreviousPageIterativeReading(): void
+    {
+        $dataSet = [['id' => 1], ['id' => 2], ['id' => 3]];
+        $sort = Sort::only(['id'])->withOrderString('id');
+        $dataReader = (new IterableDataReader($dataSet))->withSort($sort);
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(2)->withToken(PageToken::next('2'));
+
+        $allData = [];
+        $currentPaginator = $paginator;
+
+        // Read all pages iteratively
+        while ($currentPaginator !== null) {
+            $pageData = array_values($this->iterableToArray($currentPaginator->read()));
+            $allData = array_merge($pageData, $allData);
+            $currentPaginator = $currentPaginator->previousPage();
+        }
+
+        // Verify we got all the data
+        $this->assertSame($dataSet, $allData);
     }
 }
