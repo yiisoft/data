@@ -698,13 +698,15 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = (new OffsetPaginator($dataReader))->withPageSize(2);
 
         $allData = [];
-        $currentPaginator = $paginator;
 
         // Read all pages iteratively
-        while ($currentPaginator !== null) {
+        for (
+            $currentPaginator = $paginator;
+            $currentPaginator !== null;
+            $currentPaginator = $currentPaginator->nextPage()
+        ) {
             $pageData = array_values($this->iterableToArray($currentPaginator->read()));
             $allData = array_merge($allData, $pageData);
-            $currentPaginator = $currentPaginator->nextPage();
         }
 
         // Verify we got all the data
@@ -738,13 +740,15 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = (new OffsetPaginator($dataReader))->withPageSize(2)->withCurrentPage(2);
 
         $allData = [];
-        $currentPaginator = $paginator;
 
         // Read all pages iteratively
-        while ($currentPaginator !== null) {
+        for (
+            $currentPaginator = $paginator;
+            $currentPaginator !== null;
+            $currentPaginator = $currentPaginator->previousPage()
+        ) {
             $pageData = array_values($this->iterableToArray($currentPaginator->read()));
             $allData = array_merge($pageData, $allData);
-            $currentPaginator = $currentPaginator->previousPage();
         }
 
         // Verify we got all the data
