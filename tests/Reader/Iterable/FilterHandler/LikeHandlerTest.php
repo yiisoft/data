@@ -81,6 +81,17 @@ final class LikeHandlerTest extends TestCase
             [true, ['id' => 1, 'value' => '🙁🙂🙁'], 'value', '🙁', null, LikeMode::ENDS_WITH],
             [true, ['id' => 1, 'value' => 'das Öl'], 'value', 'öl', false, LikeMode::ENDS_WITH],
 
+            // Unicode test cases to catch mutants that replace mb_* functions
+            // Test case for mb_stripos vs stripos in STARTS_WITH (catches mutant 1)
+            // stripos would return false, mb_stripos returns 0 for Turkish Ç/ç
+            [true, ['id' => 1, 'value' => 'Çağrı'], 'value', 'çağ', false, LikeMode::STARTS_WITH],
+            // Test case for mb_strlen vs strlen in ENDS_WITH (catches mutant 2)  
+            // strlen('café') = 5 bytes, mb_strlen('café') = 4 characters
+            [false, ['id' => 1, 'value' => 'café'], 'value', 'toolong', false, LikeMode::ENDS_WITH],
+            // Test case for mb_strtolower vs strtolower in ENDS_WITH (catches mutant 3)
+            // strtolower doesn't properly convert Turkish Ü to ü
+            [true, ['id' => 1, 'value' => 'MÜDÜR'], 'value', 'üdür', false, LikeMode::ENDS_WITH],
+
             // Edge cases
             [true, ['id' => 1, 'value' => 'test'], 'value', '', null, LikeMode::CONTAINS],
             [true, ['id' => 1, 'value' => 'test'], 'value', '', null, LikeMode::STARTS_WITH],
