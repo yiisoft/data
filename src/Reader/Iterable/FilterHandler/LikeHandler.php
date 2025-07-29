@@ -40,6 +40,10 @@ final class LikeHandler implements IterableFilterHandlerInterface
 
     private function matchContains(string $itemValue, string $searchValue, ?bool $caseSensitive): bool
     {
+        if ($searchValue === '') {
+            return true; // Empty string is contained in any string
+        }
+        
         return $caseSensitive === true
             ? str_contains($itemValue, $searchValue)
             : mb_stripos($itemValue, $searchValue) !== false;
@@ -47,6 +51,10 @@ final class LikeHandler implements IterableFilterHandlerInterface
 
     private function matchStartsWith(string $itemValue, string $searchValue, ?bool $caseSensitive): bool
     {
+        if ($searchValue === '') {
+            return true; // Empty string matches the start of any string
+        }
+        
         return $caseSensitive === true
             ? str_starts_with($itemValue, $searchValue)
             : mb_stripos($itemValue, $searchValue) === 0;
@@ -54,6 +62,10 @@ final class LikeHandler implements IterableFilterHandlerInterface
 
     private function matchEndsWith(string $itemValue, string $searchValue, ?bool $caseSensitive): bool
     {
+        if ($searchValue === '') {
+            return true; // Empty string matches the end of any string
+        }
+        
         if ($caseSensitive === true) {
             return str_ends_with($itemValue, $searchValue);
         }
