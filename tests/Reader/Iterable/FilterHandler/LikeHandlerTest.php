@@ -53,7 +53,7 @@ final class LikeHandlerTest extends TestCase
     public static function matchWithModeDataProvider(): array
     {
         return [
-            // CONTAINS mode tests
+            // CONTAINS mode
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'Cat', null, LikeMode::CONTAINS],
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'cat', false, LikeMode::CONTAINS],
             [false, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'cat', true, LikeMode::CONTAINS],
@@ -70,7 +70,7 @@ final class LikeHandlerTest extends TestCase
             [true, ['id' => 1, 'value' => 'Привет мир'], 'value', 'Привет', null, LikeMode::STARTS_WITH],
             [true, ['id' => 1, 'value' => '🙁🙂🙁'], 'value', '🙁', null, LikeMode::STARTS_WITH],
 
-            // ENDS_WITH mode tests
+            // ENDS_WITH mode
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'Fighter', null, LikeMode::ENDS_WITH],
             [true, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'fighter', false, LikeMode::ENDS_WITH],
             [false, ['id' => 1, 'value' => 'Great Cat Fighter'], 'value', 'fighter', true, LikeMode::ENDS_WITH],
@@ -115,7 +115,7 @@ final class LikeHandlerTest extends TestCase
         $context = new Context([], new FlatValueReader());
         $item = ['id' => 1, 'value' => 'Great Cat Fighter'];
 
-        // Test that old constructor still works (defaults to CONTAINS mode)
+        // Test that constructor defaults to CONTAINS mode
         $oldFilter = new Like('value', 'Cat');
         $newFilter = new Like('value', 'Cat', null, LikeMode::CONTAINS);
 

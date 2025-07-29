@@ -39,16 +39,16 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
     public static function dataWithReaderAndMode(): array
     {
         return [
-            // CONTAINS mode tests (should work like before)
+            // CONTAINS mode
             'contains: same case, case sensitive: null' => ['email', 'ed@be', null, LikeMode::CONTAINS, [2]],
             'contains: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::CONTAINS, [2]],
 
-            // STARTS_WITH mode tests
+            // STARTS_WITH mode
             'starts with: same case, case sensitive: null' => ['email', 'seed@', null, LikeMode::STARTS_WITH, [2]],
             'starts with: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::STARTS_WITH, [2]],
             'starts with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::STARTS_WITH, []],
 
-            // ENDS_WITH mode tests
+            // ENDS_WITH mode
             'ends with: same case, case sensitive: null' => ['email', '@beat', null, LikeMode::ENDS_WITH, [2]],
             'ends with: different case, case sensitive: false' => ['email', '@BEAT', false, LikeMode::ENDS_WITH, [2]],
             'ends with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::ENDS_WITH, []],
