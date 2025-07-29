@@ -85,7 +85,7 @@ final class LikeHandlerTest extends TestCase
             // Test case for mb_stripos vs stripos in STARTS_WITH (catches mutant 1)
             // stripos would return false, mb_stripos returns 0 for Turkish Ç/ç
             [true, ['id' => 1, 'value' => 'Çağrı'], 'value', 'çağ', false, LikeMode::STARTS_WITH],
-            // Test case for mb_strlen vs strlen in ENDS_WITH (catches mutant 2)  
+            // Test case for mb_strlen vs strlen in ENDS_WITH (catches mutant 2)
             // strlen('café') = 5 bytes, mb_strlen('café') = 4 characters
             [false, ['id' => 1, 'value' => 'café'], 'value', 'toolong', false, LikeMode::ENDS_WITH],
             // Test case for mb_strtolower vs strtolower in ENDS_WITH (catches mutant 3)
