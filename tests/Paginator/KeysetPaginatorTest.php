@@ -1238,13 +1238,15 @@ final class KeysetPaginatorTest extends TestCase
         $paginator = (new KeysetPaginator($dataReader))->withPageSize(2)->withToken(PageToken::next('2'));
 
         $allData = [];
-        $currentPaginator = $paginator;
 
         // Read all pages iteratively
-        while ($currentPaginator !== null) {
+        for (
+            $currentPaginator = $paginator;
+            $currentPaginator !== null;
+            $currentPaginator = $currentPaginator->previousPage()
+        ) {
             $pageData = array_values($this->iterableToArray($currentPaginator->read()));
             $allData = array_merge($pageData, $allData);
-            $currentPaginator = $currentPaginator->previousPage();
         }
 
         // Verify we got all the data
