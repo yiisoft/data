@@ -40,18 +40,18 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
     {
         return [
             // CONTAINS mode
-            'contains: same case, case sensitive: null' => ['email', 'ed@be', null, LikeMode::CONTAINS, [2]], // Expects: seed@beat
-            'contains: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::CONTAINS, [2]], // Expects: seed@beat
+            'contains: same case, case sensitive: null' => ['email', 'ed@be', null, LikeMode::Contains, [2]], // Expects: seed@beat
+            'contains: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::Contains, [2]], // Expects: seed@beat
 
             // STARTS_WITH mode
-            'starts with: same case, case sensitive: null' => ['email', 'seed@', null, LikeMode::STARTS_WITH, [2]], // Expects: seed@beat
-            'starts with: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::STARTS_WITH, [2]], // Expects: seed@beat
-            'starts with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::STARTS_WITH, []], // Expects: no matches
+            'starts with: same case, case sensitive: null' => ['email', 'seed@', null, LikeMode::StartsWith, [2]], // Expects: seed@beat
+            'starts with: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::StartsWith, [2]], // Expects: seed@beat
+            'starts with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::StartsWith, []], // Expects: no matches
 
             // ENDS_WITH mode
-            'ends with: same case, case sensitive: null' => ['email', '@beat', null, LikeMode::ENDS_WITH, [2]], // Expects: seed@beat
-            'ends with: different case, case sensitive: false' => ['email', '@BEAT', false, LikeMode::ENDS_WITH, [2]], // Expects: seed@beat
-            'ends with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::ENDS_WITH, []], // Expects: no matches
+            'ends with: same case, case sensitive: null' => ['email', '@beat', null, LikeMode::EndsWith, [2]], // Expects: seed@beat
+            'ends with: different case, case sensitive: false' => ['email', '@BEAT', false, LikeMode::EndsWith, [2]], // Expects: seed@beat
+            'ends with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::EndsWith, []], // Expects: no matches
         ];
     }
 

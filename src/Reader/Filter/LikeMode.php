@@ -12,15 +12,15 @@ enum LikeMode
     /**
      * Field value contains the search value.
      */
-    case CONTAINS;
+    case Contains;
 
     /**
      * Field value starts with the search value.
      */
-    case STARTS_WITH;
+    case StartsWith;
 
     /**
      * Field value ends with the search value.
      */
-    case ENDS_WITH;
+    case EndsWith;
 }

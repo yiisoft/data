@@ -31,50 +31,37 @@ final class LikeHandler implements IterableFilterHandlerInterface
             return false;
         }
 
+        if ($filter->value === '') {
+            return true;
+        }
+
         return match ($filter->mode) {
-            LikeMode::CONTAINS => $this->matchContains($itemValue, $filter->value, $filter->caseSensitive),
-            LikeMode::STARTS_WITH => $this->matchStartsWith($itemValue, $filter->value, $filter->caseSensitive),
-            LikeMode::ENDS_WITH => $this->matchEndsWith($itemValue, $filter->value, $filter->caseSensitive),
+            LikeMode::Contains => $this->matchContains($itemValue, $filter->value, $filter->caseSensitive),
+            LikeMode::StartsWith => $this->matchStartsWith($itemValue, $filter->value, $filter->caseSensitive),
+            LikeMode::EndsWith => $this->matchEndsWith($itemValue, $filter->value, $filter->caseSensitive),
         };
     }
 
-    private function matchContains(string $itemValue, string $searchValue, ?bool $caseSensitive): bool
+    private function matchContains(string $value, string $search, ?bool $caseSensitive): bool
     {
-        if ($searchValue === '') {
-            return true; // Empty string is contained in any string
-        }
-
         return $caseSensitive === true
-            ? str_contains($itemValue, $searchValue)
-            : mb_stripos($itemValue, $searchValue) !== false;
+            ? str_contains($value, $search)
+            : mb_stripos($value, $search) !== false;
     }
 
-    private function matchStartsWith(string $itemValue, string $searchValue, ?bool $caseSensitive): bool
+    private function matchStartsWith(string $value, string $search, ?bool $caseSensitive): bool
     {
-        if ($searchValue === '') {
-            return true; // Empty string matches the start of any string
-        }
-
         return $caseSensitive === true
-            ? str_starts_with($itemValue, $searchValue)
-            : mb_stripos($itemValue, $searchValue) === 0;
+            ? str_starts_with($value, $search)
+            : mb_stripos($value, $search) === 0;
     }
 
-    private function matchEndsWith(string $itemValue, string $searchValue, ?bool $caseSensitive): bool
+    private function matchEndsWith(string $value, string $search, ?bool $caseSensitive): bool
     {
-        if ($searchValue === '') {
-            return true; // Empty string matches the end of any string
-        }
-
         if ($caseSensitive === true) {
-            return str_ends_with($itemValue, $searchValue);
+            return str_ends_with($value, $search);
         }
 
-        $searchLength = mb_strlen($searchValue);
-        if ($searchLength > mb_strlen($itemValue)) {
-            return false;
-        }
-
-        return mb_strtolower(mb_substr($itemValue, -$searchLength)) === mb_strtolower($searchValue);
+        return mb_strtolower(mb_substr($value, -mb_strlen($search))) === mb_strtolower($search);
     }
 }
