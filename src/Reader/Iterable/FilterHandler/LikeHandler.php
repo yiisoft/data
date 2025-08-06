@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
 use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\LikeMode;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\Context;
 use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
@@ -30,8 +31,37 @@ final class LikeHandler implements IterableFilterHandlerInterface
             return false;
         }
 
-        return $filter->caseSensitive === true
-            ? str_contains($itemValue, $filter->value)
-            : mb_stripos($itemValue, $filter->value) !== false;
+        if ($filter->value === '') {
+            return true;
+        }
+
+        return match ($filter->mode) {
+            LikeMode::Contains => $this->matchContains($itemValue, $filter->value, $filter->caseSensitive),
+            LikeMode::StartsWith => $this->matchStartsWith($itemValue, $filter->value, $filter->caseSensitive),
+            LikeMode::EndsWith => $this->matchEndsWith($itemValue, $filter->value, $filter->caseSensitive),
+        };
+    }
+
+    private function matchContains(string $value, string $search, ?bool $caseSensitive): bool
+    {
+        return $caseSensitive === true
+            ? str_contains($value, $search)
+            : mb_stripos($value, $search) !== false;
+    }
+
+    private function matchStartsWith(string $value, string $search, ?bool $caseSensitive): bool
+    {
+        return $caseSensitive === true
+            ? str_starts_with($value, $search)
+            : mb_stripos($value, $search) === 0;
+    }
+
+    private function matchEndsWith(string $value, string $search, ?bool $caseSensitive): bool
+    {
+        if ($caseSensitive === true) {
+            return str_ends_with($value, $search);
+        }
+
+        return mb_strtolower(mb_substr($value, -mb_strlen($search))) === mb_strtolower($search);
     }
 }

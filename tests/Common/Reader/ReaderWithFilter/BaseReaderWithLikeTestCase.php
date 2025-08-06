@@ -6,6 +6,7 @@ namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\Filter\LikeMode;
 use Yiisoft\Data\Tests\Common\Reader\BaseReaderTestCase;
 
 abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
@@ -33,5 +34,38 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
     ): void {
         $reader = $this->getReader()->withFilter(new Like($field, $value, $caseSensitive));
         $this->assertFixtures($expectedFixtureIndexes, $reader->read());
+    }
+
+    public static function dataWithReaderAndMode(): array
+    {
+        return [
+            // CONTAINS mode
+            'contains: same case, case sensitive: null' => ['email', 'ed@be', null, LikeMode::Contains, [2]], // Expects: seed@beat
+            'contains: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::Contains, [2]], // Expects: seed@beat
+
+            // STARTS_WITH mode
+            'starts with: same case, case sensitive: null' => ['email', 'seed@', null, LikeMode::StartsWith, [2]], // Expects: seed@beat
+            'starts with: different case, case sensitive: false' => ['email', 'SEED@', false, LikeMode::StartsWith, [2]], // Expects: seed@beat
+            'starts with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::StartsWith, []], // Expects: no matches
+
+            // ENDS_WITH mode
+            'ends with: same case, case sensitive: null' => ['email', '@beat', null, LikeMode::EndsWith, [2]], // Expects: seed@beat
+            'ends with: different case, case sensitive: false' => ['email', '@BEAT', false, LikeMode::EndsWith, [2]], // Expects: seed@beat
+            'ends with: middle part (should fail)' => ['email', 'ed@be', null, LikeMode::EndsWith, []], // Expects: no matches
+        ];
+    }
+
+    #[DataProvider('dataWithReaderAndMode')]
+    public function testWithReaderAndMode(
+        string $field,
+        string $value,
+        bool|null $caseSensitive,
+        LikeMode $mode,
+        array $expectedFixtureIndexes,
+    ): void {
+        $reader = $this->getReader()->withFilter(new Like($field, $value, $caseSensitive, $mode));
+        $actualData = $reader->read();
+        // Assert that we get the expected fixtures based on the filter criteria
+        $this->assertFixtures($expectedFixtureIndexes, $actualData);
     }
 }
