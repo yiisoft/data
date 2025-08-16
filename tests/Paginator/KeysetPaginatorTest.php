@@ -13,6 +13,7 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\KeysetFilterContext;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Filter\GreaterThan;
 use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
@@ -130,9 +131,9 @@ final class KeysetPaginatorTest extends TestCase
                 return clone $this;
             }
 
-            public function getFilter(): ?FilterInterface
+            public function getFilter(): FilterInterface
             {
-                return null;
+                return new All();
             }
         };
 
@@ -670,9 +671,9 @@ final class KeysetPaginatorTest extends TestCase
                 return clone $this;
             }
 
-            public function getFilter(): ?FilterInterface
+            public function getFilter(): FilterInterface
             {
-                return null;
+                return new All();
             }
 
             public function getLimit(): int

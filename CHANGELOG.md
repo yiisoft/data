@@ -60,6 +60,7 @@
 - New #213: Add `nextPage()` and `previousPage()` methods to `PaginatorInterface` (@samdark)
 - New #200: Add matching mode parameter to `Like` filter (@samdark, @vjik)
 - New #232: Add `All` and `None` filters (@vjik)
+- Chg #233: Remove nullable types from `withFilter()` and `getFilter()` methods of `FilterableDataInterface` (@vjik)
 
 ## 1.0.1 January 25, 2023
 

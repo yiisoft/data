@@ -9,6 +9,7 @@ use Generator;
 use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Reader\DataReaderException;
+use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\AndX;
 use Yiisoft\Data\Reader\Filter\OrX;
 use Yiisoft\Data\Reader\Filter\Equals;
@@ -69,7 +70,7 @@ final class IterableDataReaderTest extends TestCase
         $reader = new IterableDataReader([]);
 
         $this->assertNotSame($reader, $reader->withAddedFilterHandlers());
-        $this->assertNotSame($reader, $reader->withFilter(null));
+        $this->assertNotSame($reader, $reader->withFilter(new All()));
         $this->assertNotSame($reader, $reader->withSort(null));
         $this->assertNotSame($reader, $reader->withOffset(1));
         $this->assertNotSame($reader, $reader->withLimit(1));

@@ -25,19 +25,18 @@ interface FilterableDataInterface extends ReadableDataInterface
     /**
      * Returns new instance with data reading criteria set.
      *
-     * @param ?FilterInterface $filter Data reading criteria.
+     * @param FilterInterface $filter Data reading criteria.
      *
      * @return static New instance.
-     * @psalm-return $this
      */
-    public function withFilter(?FilterInterface $filter): static;
+    public function withFilter(FilterInterface $filter): static;
 
     /**
      * Get current data reading criteria.
      *
-     * @return FilterInterface|null Data reading criteria.
+     * @return FilterInterface Data reading criteria.
      */
-    public function getFilter(): ?FilterInterface;
+    public function getFilter(): FilterInterface;
 
     /**
      * Returns new instance with additional handlers set.
@@ -45,7 +44,6 @@ interface FilterableDataInterface extends ReadableDataInterface
      * @param FilterHandlerInterface ...$filterHandlers Additional filter handlers.
      *
      * @return static New instance.
-     * @psalm-return $this
      */
     public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static;
 }
