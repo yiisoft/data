@@ -10,6 +10,7 @@ use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\DataReaderInterface;
+use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
@@ -53,7 +54,7 @@ use function uasort;
 final class IterableDataReader implements DataReaderInterface
 {
     private ?Sort $sort = null;
-    private ?FilterInterface $filter = null;
+    private FilterInterface $filter;
 
     /**
      * @psalm-var non-negative-int|null
@@ -93,6 +94,7 @@ final class IterableDataReader implements DataReaderInterface
             new NotHandler(),
         ]);
         $this->context = new Context($this->coreFilterHandlers, $this->valueReader);
+        $this->filter = new All();
     }
 
     /**
@@ -111,10 +113,7 @@ final class IterableDataReader implements DataReaderInterface
         return $new;
     }
 
-    /**
-     * @psalm-return $this
-     */
-    public function withFilter(?FilterInterface $filter): static
+    public function withFilter(FilterInterface $filter): static
     {
         $new = clone $this;
         $new->filter = $filter;
@@ -216,8 +215,8 @@ final class IterableDataReader implements DataReaderInterface
                 continue;
             }
 
-            // Filter items.
-            if ($this->filter === null || $this->matchFilter($item, $this->filter)) {
+            // Filter items
+            if ($this->matchFilter($item, $this->filter)) {
                 $data[$key] = $item;
             }
         }
@@ -320,7 +319,7 @@ final class IterableDataReader implements DataReaderInterface
         return $iterable instanceof Traversable ? iterator_to_array($iterable) : $iterable;
     }
 
-    public function getFilter(): ?FilterInterface
+    public function getFilter(): FilterInterface
     {
         return $this->filter;
     }

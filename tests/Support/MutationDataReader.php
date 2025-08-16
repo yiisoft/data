@@ -26,7 +26,7 @@ final class MutationDataReader implements
     ) {
     }
 
-    public function withFilter(?FilterInterface $filter): static
+    public function withFilter(FilterInterface $filter): static
     {
         $new = clone $this;
         $new->decorated = $this->decorated->withFilter($filter);
@@ -69,7 +69,7 @@ final class MutationDataReader implements
         return $this->decorated->getSort();
     }
 
-    public function getFilter(): ?FilterInterface
+    public function getFilter(): FilterInterface
     {
         return $this->decorated->getFilter();
     }
