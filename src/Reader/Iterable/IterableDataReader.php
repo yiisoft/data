@@ -12,7 +12,9 @@ use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\AndXHandler;
+use Yiisoft\Data\Reader\Iterable\FilterHandler\NoneHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\OrXHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\BetweenHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\EqualsHandler;
@@ -75,6 +77,8 @@ final class IterableDataReader implements DataReaderInterface
         private readonly ValueReaderInterface $valueReader = new FlatValueReader(),
     ) {
         $this->coreFilterHandlers = $this->prepareFilterHandlers([
+            new AllHandler(),
+            new NoneHandler(),
             new AndXHandler(),
             new OrXHandler(),
             new BetweenHandler(),

@@ -59,6 +59,7 @@
 - Chg #226: Refactor filter classes to use readonly properties instead of getters (@vjik)
 - New #213: Add `nextPage()` and `previousPage()` methods to `PaginatorInterface` (@samdark)
 - New #200: Add matching mode parameter to `Like` filter (@samdark, @vjik)
+- New #232: Add `All` and `None` filters (@vjik)
 
 ## 1.0.1 January 25, 2023
 
