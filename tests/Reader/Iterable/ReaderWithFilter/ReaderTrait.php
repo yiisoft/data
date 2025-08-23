@@ -11,6 +11,6 @@ trait ReaderTrait
 {
     protected function getReader(): DataReaderInterface
     {
-        return new IterableDataReader(self::$fixtures);
+        return new IterableDataReader($this->getFixtures());
     }
 }
