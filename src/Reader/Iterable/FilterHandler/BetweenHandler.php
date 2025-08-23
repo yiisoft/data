@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Reader\Iterable\FilterHandler;
 
-use DateTimeInterface;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\Context;
@@ -29,13 +28,6 @@ final class BetweenHandler implements IterableFilterHandlerInterface
         $min = $filter->minValue;
         $max = $filter->maxValue;
 
-        if (!$value instanceof DateTimeInterface) {
-            return $value >= $min && $value <= $max;
-        }
-
-        return $min instanceof DateTimeInterface
-            && $max instanceof DateTimeInterface
-            && $value->getTimestamp() >= $min->getTimestamp()
-            && $value->getTimestamp() <= $max->getTimestamp();
+        return $value >= $min && $value <= $max;
     }
 }
