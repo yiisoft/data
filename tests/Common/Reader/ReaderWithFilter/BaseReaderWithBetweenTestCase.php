@@ -4,14 +4,30 @@ declare(strict_types=1);
 
 namespace Yiisoft\Data\Tests\Common\Reader\ReaderWithFilter;
 
+use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Between;
 use Yiisoft\Data\Tests\Common\Reader\BaseReaderTestCase;
 
 abstract class BaseReaderWithBetweenTestCase extends BaseReaderTestCase
 {
-    public function testWithReader(): void
+    public static function dataWithReader(): iterable
     {
-        $reader = $this->getReader()->withFilter(new Between('balance', 10.25, 100.0));
-        $this->assertFixtures([0, 2, 4], $reader->read());
+        yield 'float' => [new Between('balance', 10.25, 100.0), [1, 3, 5]];
+        yield 'datetime' => [new Between('born_at', new DateTimeImmutable('1989-01-01'), new DateTimeImmutable('1991-01-01')), [5]];
+        yield 'datetime 2' => [new Between('born_at', new DateTimeImmutable('1990-01-02'), new DateTimeImmutable('1990-01-03')), []];
+    }
+
+    #[DataProvider('dataWithReader')]
+    public function testWithReader(Between $filter, array $expectedFixtureNumbers): void
+    {
+        $expectedFixtureIndexes = array_map(
+            static fn(int $number): int => $number - 1,
+            $expectedFixtureNumbers,
+        );
+        $this->assertFixtures(
+            $expectedFixtureIndexes,
+            $this->getReader()->withFilter($filter)->read(),
+        );
     }
 }
