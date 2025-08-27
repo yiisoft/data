@@ -199,7 +199,7 @@ final class KeysetPaginator implements PaginatorInterface
         }
 
         if ($this->token !== null) {
-            $dataReader = $dataReader->withFilter($this->getFilter($sort));
+            $dataReader = $dataReader->withFilter($this->createFilter($sort));
             $this->hasPreviousPage = $this->previousPageExist($dataReader, $sort);
         }
 
@@ -282,6 +282,11 @@ final class KeysetPaginator implements PaginatorInterface
     public function isFilterable(): bool
     {
         return true;
+    }
+
+    public function getFilter(): FilterInterface
+    {
+        return $this->dataReader->getFilter();
     }
 
     public function withFilter(FilterInterface $filter): static
@@ -376,7 +381,7 @@ final class KeysetPaginator implements PaginatorInterface
         return !empty($dataReader->withFilter($reverseFilter)->readOne());
     }
 
-    private function getFilter(Sort $sort): FilterInterface
+    private function createFilter(Sort $sort): FilterInterface
     {
         /**
          * @psalm-var PageToken $this->token The code calling this method must ensure that page token is not null.

@@ -822,7 +822,7 @@ final class KeysetPaginatorTest extends TestCase
         $this->assertTrue($this->invokeMethod($paginator, 'previousPageExist', [$dataReader, $sort]));
     }
 
-    public function testGetFilterForCoverage(): void
+    public function testCreateFilterForCoverage(): void
     {
         $sort = Sort::only(['id'])->withOrderString('id');
         $dataReader = (new IterableDataReader([]))->withSort($sort);
@@ -830,7 +830,7 @@ final class KeysetPaginatorTest extends TestCase
 
         $this->assertInstanceOf(
             GreaterThan::class,
-            $this->invokeMethod($paginator, 'getFilter', [$sort]),
+            $this->invokeMethod($paginator, 'createFilter', [$sort]),
         );
 
         $sort = Sort::only(['id'])
@@ -841,7 +841,7 @@ final class KeysetPaginatorTest extends TestCase
 
         $this->assertInstanceOf(
             LessThan::class,
-            $this->invokeMethod($paginator, 'getFilter', [$sort]),
+            $this->invokeMethod($paginator, 'createFilter', [$sort]),
         );
     }
 
@@ -1252,5 +1252,14 @@ final class KeysetPaginatorTest extends TestCase
 
         // Verify we got all the data
         $this->assertSame($dataSet, $allData);
+    }
+
+    public function testGetFilter(): void
+    {
+        $filter = new All();
+        $dataReader = (new IterableDataReader([]))->withFilter($filter)->withSort(Sort::only(['id']));
+        $paginator = new KeysetPaginator($dataReader);
+
+        $this->assertSame($filter, $paginator->getFilter());
     }
 }
