@@ -286,10 +286,19 @@ final class OffsetPaginator implements PaginatorInterface
         return $this->dataReader instanceof FilterableDataInterface;
     }
 
+    public function getFilter(): FilterInterface
+    {
+        if (!$this->isFilterable()) {
+            throw new LogicException('Data reader doesn\'t support filtering.');
+        }
+
+        return $this->dataReader->getFilter();
+    }
+
     public function withFilter(FilterInterface $filter): static
     {
         if (!$this->isFilterable()) {
-            throw new LogicException('Changing filtering is not supported.');
+            throw new LogicException('Data reader doesn\'t support filtering.');
         }
 
         $new = clone $this;

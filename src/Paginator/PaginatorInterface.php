@@ -138,16 +138,26 @@ interface PaginatorInterface extends ReadableDataInterface
     public function getSort(): ?Sort;
 
     /**
-     * @return bool Whether changing filter via {@see withFilter()} is supported.
+     * @return bool Whether data reader does support filtering.
      */
     public function isFilterable(): bool;
+
+    /**
+     * Returns data reader filter.
+     *
+     * @throws LogicException When data reader doesn't support filter.
+     *
+     * @return FilterInterface Data reader filter.
+     */
+    public function getFilter(): FilterInterface;
 
     /**
      * Returns new instance with data reading criteria set.
      *
      * @param FilterInterface $filter Data reading criteria.
      *
-     * @throws LogicException When changing filter isn't supported.
+     * @throws LogicException When data reader doesn't support filter.
+     *
      * @return static New instance.
      */
     public function withFilter(FilterInterface $filter): static;

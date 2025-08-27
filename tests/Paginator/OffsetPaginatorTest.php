@@ -13,6 +13,7 @@ use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
+use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\Filter\Equals;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\LimitableDataInterface;
@@ -587,8 +588,8 @@ final class OffsetPaginatorTest extends TestCase
         $paginator = new OffsetPaginator(new StubOffsetData());
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Changing filtering is not supported.');
-        $paginator->withFilter(new Equals('id', 2));
+        $this->expectExceptionMessage('Data reader doesn\'t support filtering.');
+        $paginator->withFilter(new All());
     }
 
     public function testWithNulledPageToken(): void
@@ -753,5 +754,23 @@ final class OffsetPaginatorTest extends TestCase
 
         // Verify we got all the data
         $this->assertSame($dataSet, $allData);
+    }
+
+    public function testGetFilter(): void
+    {
+        $filter = new All();
+        $dataReader = (new IterableDataReader([]))->withFilter($filter);
+        $paginator = new OffsetPaginator($dataReader);
+
+        $this->assertSame($filter, $paginator->getFilter());
+    }
+
+    public function testGetFilterWithNonFilterableDataReader(): void
+    {
+        $paginator = new OffsetPaginator(new StubOffsetData());
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Data reader doesn\'t support filtering.');
+        $paginator->getFilter();
     }
 }
