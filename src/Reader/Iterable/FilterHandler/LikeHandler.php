@@ -31,14 +31,15 @@ final class LikeHandler implements IterableFilterHandlerInterface
             return false;
         }
 
-        if ($filter->value === '') {
+        $searchValue = (string) $filter->value;
+        if ($searchValue === '') {
             return true;
         }
 
         return match ($filter->mode) {
-            LikeMode::Contains => $this->matchContains($itemValue, $filter->value, $filter->caseSensitive),
-            LikeMode::StartsWith => $this->matchStartsWith($itemValue, $filter->value, $filter->caseSensitive),
-            LikeMode::EndsWith => $this->matchEndsWith($itemValue, $filter->value, $filter->caseSensitive),
+            LikeMode::Contains => $this->matchContains($itemValue, $searchValue, $filter->caseSensitive),
+            LikeMode::StartsWith => $this->matchStartsWith($itemValue, $searchValue, $filter->caseSensitive),
+            LikeMode::EndsWith => $this->matchEndsWith($itemValue, $searchValue, $filter->caseSensitive),
         };
     }
 

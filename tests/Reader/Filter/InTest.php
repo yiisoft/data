@@ -14,7 +14,7 @@ final class InTest extends TestCase
     public function testNotScalarValues(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The value should be scalar. "' . stdClass::class . '" is received.');
+        $this->expectExceptionMessage('The value should be scalar or Stringable. "' . stdClass::class . '" is received.');
         new In('test', [new stdClass()]);
     }
 }

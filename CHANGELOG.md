@@ -2,6 +2,7 @@
 
 ## 2.0.0 under development
 
+- New #237: Add `Stringable` type support to filter values (@vjik)
 - New #150: Extract `withLimit()` from `ReadableDataInterface` into `LimitableDataInterface` (@vjik)
 - Enh #150: `PaginatorInterface` now extends `ReadableDataInterface` (@vjik)
 - Chg #151: Rename `isRequired()` method in `PaginatorInterface` to `isPaginationRequired()` (@vjik)
