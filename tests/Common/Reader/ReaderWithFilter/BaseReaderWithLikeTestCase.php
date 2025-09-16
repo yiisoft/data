@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\Filter\LikeMode;
 use Yiisoft\Data\Tests\Common\Reader\BaseReaderTestCase;
+use Yiisoft\Data\Tests\Support\StringableValue;
 
 abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
 {
@@ -24,13 +25,14 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
             'wildcard is not supported, %' => ['email', '%st', null, []],
             'wildcard is not supported, _' => ['email', '____@___t', null, []],
             'search: contains backslash' => ['email', 'foo@bar\\baz', null, [0]],
+            'stringable' => ['email', new StringableValue('seed@'), null, [2]],
         ];
     }
 
     #[DataProvider('dataWithReader')]
     public function testWithReader(
         string $field,
-        string $value,
+        mixed $value,
         bool|null $caseSensitive,
         array $expectedFixtureIndexes,
     ): void {

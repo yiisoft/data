@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 use InvalidArgumentException;
+use Stringable;
 use Yiisoft\Data\Reader\FilterInterface;
 
 use function is_scalar;
@@ -17,11 +18,11 @@ final class In implements FilterInterface
 {
     /**
      * @param string $field Name of the field to compare.
-     * @param bool[]|float[]|int[]|string[] $values Values to check against.
+     * @param bool[]|float[]|int[]|string[]|Stringable[] $values Values to check against.
      */
     public function __construct(
         public readonly string $field,
-        /** @var bool[]|float[]|int[]|string[] Values to check against. */
+        /** @var bool[]|float[]|int[]|string[]|Stringable[] Values to check against. */
         public readonly array $values
     ) {
         $this->assertValues($values);
@@ -30,10 +31,10 @@ final class In implements FilterInterface
     private function assertValues(array $values): void
     {
         foreach ($values as $value) {
-            if (!is_scalar($value)) {
+            if (!is_scalar($value) && !$value instanceof Stringable) {
                 throw new InvalidArgumentException(
                     sprintf(
-                        'The value should be scalar. "%s" is received.',
+                        'The value should be scalar or Stringable. "%s" is received.',
                         get_debug_type($value),
                     )
                 );

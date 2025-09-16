@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Data\Reader\Filter;
 
 use DateTimeInterface;
+use Stringable;
 use Yiisoft\Data\Reader\FilterInterface;
 
 /**
@@ -15,13 +16,13 @@ final class Between implements FilterInterface
 {
     /**
      * @param string $field Name of the field to compare.
-     * @param bool|DateTimeInterface|float|int|string $minValue Minimal field value.
-     * @param bool|DateTimeInterface|float|int|string $maxValue Maximal field value.
+     * @param bool|DateTimeInterface|float|int|string|Stringable $minValue Minimal field value.
+     * @param bool|DateTimeInterface|float|int|string|Stringable $maxValue Maximal field value.
      */
     public function __construct(
         public readonly string $field,
-        public readonly bool|DateTimeInterface|float|int|string $minValue,
-        public readonly bool|DateTimeInterface|float|int|string $maxValue
+        public readonly bool|DateTimeInterface|float|int|string|Stringable $minValue,
+        public readonly bool|DateTimeInterface|float|int|string|Stringable $maxValue
     ) {
     }
 }
