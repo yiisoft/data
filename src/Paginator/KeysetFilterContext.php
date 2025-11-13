@@ -10,7 +10,6 @@ final class KeysetFilterContext
         public readonly string $field,
         public readonly string $value,
         public readonly int $sorting,
-        public readonly bool $isReverse
-    ) {
-    }
+        public readonly bool $isReverse,
+    ) {}
 }

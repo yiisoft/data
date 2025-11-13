@@ -7,6 +7,4 @@ namespace Yiisoft\Data\Reader\Filter;
 /**
  * `LessThanOrEqual` filter defines a criteria for ensuring field value is less than or equal to a given value.
  */
-final class LessThanOrEqual extends Compare
-{
-}
+final class LessThanOrEqual extends Compare {}

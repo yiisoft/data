@@ -57,7 +57,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutOffsetableInterface(): void
     {
-        $nonOffsetableDataReader = new class () implements ReadableDataInterface, CountableDataInterface {
+        $nonOffsetableDataReader = new class implements ReadableDataInterface, CountableDataInterface {
             public function withLimit(int $limit): static
             {
                 // do nothing
@@ -83,7 +83,7 @@ final class OffsetPaginatorTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
             'Data reader should implement "%s" in order to be used with offset paginator.',
-            OffsetableDataInterface::class
+            OffsetableDataInterface::class,
         ));
 
         new OffsetPaginator($nonOffsetableDataReader);
@@ -91,7 +91,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutCountableInterface(): void
     {
-        $nonCountableDataReader = new class () implements ReadableDataInterface, OffsetableDataInterface {
+        $nonCountableDataReader = new class implements ReadableDataInterface, OffsetableDataInterface {
             public function withLimit(int $limit): static
             {
                 // do nothing
@@ -136,7 +136,7 @@ final class OffsetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutLimitableInterface(): void
     {
-        $nonLimitableDataReader = new class () implements
+        $nonLimitableDataReader = new class implements
             ReadableDataInterface,
             CountableDataInterface,
             OffsetableDataInterface {
@@ -172,7 +172,7 @@ final class OffsetPaginatorTest extends TestCase
             sprintf(
                 'Data reader should implement "%s" in order to be used with offset paginator.',
                 LimitableDataInterface::class,
-            )
+            ),
         );
 
         new OffsetPaginator($nonLimitableDataReader);
@@ -327,7 +327,7 @@ final class OffsetPaginatorTest extends TestCase
                 new IterableDataReader([
                     ['id' => 1, 'name' => 'Mike'],
                     ['id' => 2, 'name' => 'John'],
-                ])
+                ]),
             ))->withPageSize(1)->withCurrentPage(2),
         ];
 

@@ -10,8 +10,7 @@ final class PathValueReader implements ValueReaderInterface
 {
     public function __construct(
         private readonly string $delimiter = '.',
-    ) {
-    }
+    ) {}
 
     public function read(object|array $item, string $field): mixed
     {

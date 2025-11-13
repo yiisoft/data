@@ -23,7 +23,7 @@ final class ReaderWithOrXTest extends BaseReaderWithOrXTestCase
                 new OrX(
                     new AndX(new GreaterThan('balance', 500), new LessThan('number', 5)),
                     new Like('email', 'st'),
-                )
+                ),
             );
         $this->assertFixtures([3, 4], $reader->read());
     }

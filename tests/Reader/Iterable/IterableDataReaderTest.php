@@ -78,7 +78,7 @@ final class IterableDataReaderTest extends TestCase
 
     public function testExceptionOnPassingNonIterableFilters(): void
     {
-        $nonIterableFilterHandler = new class () implements FilterHandlerInterface {
+        $nonIterableFilterHandler = new class implements FilterHandlerInterface {
             public function getFilterClass(): string
             {
                 return '?';
@@ -89,7 +89,7 @@ final class IterableDataReaderTest extends TestCase
         $message = sprintf(
             '%s::withFilterHandlers() accepts instances of %s only.',
             IterableDataReader::class,
-            IterableFilterHandlerInterface::class
+            IterableFilterHandlerInterface::class,
         );
         $this->expectExceptionMessage($message);
 
@@ -129,7 +129,7 @@ final class IterableDataReaderTest extends TestCase
                 3 => self::ITEM_4,
                 4 => self::ITEM_5,
             ],
-            $data
+            $data,
         );
         $this->assertSame(2, $reader->getOffset());
     }
@@ -312,7 +312,7 @@ final class IterableDataReaderTest extends TestCase
     {
         $filter = new OrX(
             new Equals('id', 1),
-            new Equals('id', 2)
+            new Equals('id', 2),
         );
         $reader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withFilter($filter);
@@ -327,7 +327,7 @@ final class IterableDataReaderTest extends TestCase
     {
         $filter = new AndX(
             new GreaterThan('id', 3),
-            new Like('name', 'Agent')
+            new Like('name', 'Agent'),
         );
         $reader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withFilter($filter);
@@ -341,7 +341,7 @@ final class IterableDataReaderTest extends TestCase
     {
         $readerMin = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort(
-                Sort::only(['id'])->withOrder(['id' => 'asc'])
+                Sort::only(['id'])->withOrder(['id' => 'asc']),
             )
             ->withLimit(1);
         $min = $readerMin->read()[0]['id'];
@@ -349,7 +349,7 @@ final class IterableDataReaderTest extends TestCase
 
         $readerMax = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort(
-                Sort::only(['id'])->withOrder(['id' => 'desc'])
+                Sort::only(['id'])->withOrder(['id' => 'desc']),
             )
             ->withLimit(1);
         $max = $readerMax->readOne()['id'];
@@ -420,7 +420,7 @@ final class IterableDataReaderTest extends TestCase
         $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
             ->withSort($sort)
             ->withAddedFilterHandlers(
-                new class () implements IterableFilterHandlerInterface {
+                new class implements IterableFilterHandlerInterface {
                     public function getFilterClass(): string
                     {
                         return Equals::class;
@@ -434,7 +434,7 @@ final class IterableDataReaderTest extends TestCase
                         /** @var Equals $filter */
                         return $item[$filter->field] === 2;
                     }
-                }
+                },
             );
 
         $dataReader = $dataReader->withFilter(new Equals('id', 100));
@@ -457,13 +457,13 @@ final class IterableDataReaderTest extends TestCase
     public function testArrayOfObjects(): void
     {
         $data = [
-            'one' => new class () {
+            'one' => new class {
                 public int $a = 1;
             },
-            'two' => new class () {
+            'two' => new class {
                 public int $a = 2;
             },
-            'three' => new class () {
+            'three' => new class {
                 public int $a = 3;
             },
         ];
@@ -488,7 +488,7 @@ final class IterableDataReaderTest extends TestCase
 
         $reader = (new IterableDataReader($data))
             ->withSort(
-                Sort::any()->withOrder(['value' => 'asc'])
+                Sort::any()->withOrder(['value' => 'asc']),
             );
 
         $this->assertSame(
@@ -498,7 +498,7 @@ final class IterableDataReaderTest extends TestCase
                 3 => ['value' => 2],
                 2 => ['value' => 3],
             ],
-            $reader->read()
+            $reader->read(),
         );
     }
 
@@ -522,7 +522,7 @@ final class IterableDataReaderTest extends TestCase
                 2 => ['value' => 3],
                 3 => ['value' => 2],
             ],
-            $reader->read()
+            $reader->read(),
         );
     }
 

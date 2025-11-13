@@ -18,7 +18,7 @@ trait PageTokenAssertTrait
         string $expectedValue,
         bool $expectedIsPrevious,
         mixed $pageToken,
-        string $message = ''
+        string $message = '',
     ): void {
         static::assertThat($pageToken, new IsInstanceOf(PageToken::class), $message);
         static::assertThat($pageToken->value, new IsIdentical($expectedValue), $message);

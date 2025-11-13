@@ -11,7 +11,7 @@ final class PageNotFoundException extends InvalidPageException
     public function __construct(int $page)
     {
         parent::__construct(
-            sprintf('Page %d not found.', $page)
+            sprintf('Page %d not found.', $page),
         );
     }
 }

@@ -8,7 +8,5 @@ use Yiisoft\Data\Reader\FilterInterface;
 
 final class Digital implements FilterInterface
 {
-    public function __construct(public readonly string $field)
-    {
-    }
+    public function __construct(public readonly string $field) {}
 }

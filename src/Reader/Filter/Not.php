@@ -16,6 +16,5 @@ final class Not implements FilterInterface
      */
     public function __construct(
         public readonly FilterInterface $filter,
-    ) {
-    }
+    ) {}
 }

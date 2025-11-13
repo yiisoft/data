@@ -18,8 +18,7 @@ final class Context
          */
         public readonly array $iterableFilterHandlers,
         private readonly ValueReaderInterface $valueReader,
-    ) {
-    }
+    ) {}
 
     /**
      * @psalm-param class-string<FilterInterface> $class

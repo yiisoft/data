@@ -13,6 +13,4 @@ use RuntimeException;
  *
  * @psalm-suppress ClassMustBeFinal We assume that the class may be extended in userland.
  */
-class DataReaderException extends RuntimeException
-{
-}
+class DataReaderException extends RuntimeException {}

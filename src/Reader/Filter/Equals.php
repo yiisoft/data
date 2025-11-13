@@ -7,6 +7,4 @@ namespace Yiisoft\Data\Reader\Filter;
 /**
  * `Equals` filter defines a criteria for ensuring field value equals a given value.
  */
-final class Equals extends Compare
-{
-}
+final class Equals extends Compare {}

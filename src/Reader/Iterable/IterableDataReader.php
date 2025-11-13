@@ -193,6 +193,21 @@ final class IterableDataReader implements DataReaderInterface
             ->current();
     }
 
+    public function getFilter(): FilterInterface
+    {
+        return $this->filter;
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    public function getOffset(): int
+    {
+        return $this->offset;
+    }
+
     /**
      * @psalm-return array<TKey, TValue>
      */
@@ -271,7 +286,7 @@ final class IterableDataReader implements DataReaderInterface
                     }
 
                     return 0;
-                }
+                },
             );
         }
 
@@ -294,8 +309,8 @@ final class IterableDataReader implements DataReaderInterface
                     sprintf(
                         '%s::withFilterHandlers() accepts instances of %s only.',
                         self::class,
-                        IterableFilterHandlerInterface::class
-                    )
+                        IterableFilterHandlerInterface::class,
+                    ),
                 );
             }
             $result[$filterHandler->getFilterClass()] = $filterHandler;
@@ -317,20 +332,5 @@ final class IterableDataReader implements DataReaderInterface
     private function iterableToArray(iterable $iterable): array
     {
         return $iterable instanceof Traversable ? iterator_to_array($iterable) : $iterable;
-    }
-
-    public function getFilter(): FilterInterface
-    {
-        return $this->filter;
-    }
-
-    public function getLimit(): ?int
-    {
-        return $this->limit;
-    }
-
-    public function getOffset(): int
-    {
-        return $this->offset;
     }
 }

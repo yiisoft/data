@@ -223,7 +223,7 @@ final class Sort
     public function withOrderString(string $orderString): self
     {
         return $this->withOrder(
-            OrderHelper::stringToArray($orderString)
+            OrderHelper::stringToArray($orderString),
         );
     }
 
@@ -331,7 +331,7 @@ final class Sort
     {
         return array_map(
             static fn(array $item) => $item['default'],
-            $this->config
+            $this->config,
         );
     }
 }

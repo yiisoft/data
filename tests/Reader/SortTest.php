@@ -249,7 +249,7 @@ final class SortTest extends TestCase
             ->withOrder(
                 [
                     'b' => 'desc',
-                ]
+                ],
             )
             ->withoutDefaultSorting();
 
@@ -257,7 +257,7 @@ final class SortTest extends TestCase
             [
                 'bee' => SORT_DESC,
             ],
-            $sort->getCriteria()
+            $sort->getCriteria(),
         );
     }
 
@@ -272,7 +272,7 @@ final class SortTest extends TestCase
                 'a' => SORT_DESC,
                 'b' => SORT_DESC,
             ],
-            $sort->getCriteria()
+            $sort->getCriteria(),
         );
     }
 

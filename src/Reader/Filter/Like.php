@@ -27,6 +27,5 @@ final class Like implements FilterInterface
         public readonly string|Stringable $value,
         public readonly ?bool $caseSensitive = null,
         public readonly LikeMode $mode = LikeMode::Contains,
-    ) {
-    }
+    ) {}
 }
