@@ -63,6 +63,7 @@
     },
     "scripts": {
         "test": "phpunit --testdox --no-interaction",
-        "test-watch": "phpunit-watcher watch"
+        "test-watch": "phpunit-watcher watch",
+        "cs-fix": "php-cs-fixer fix"
     }
 }
