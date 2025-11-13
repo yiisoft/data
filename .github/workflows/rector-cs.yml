@@ -1,3 +1,5 @@
+name: Rector + PHP CS Fixer
+
 on:
   pull_request:
     paths:
@@ -15,13 +17,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-name: Rector + PHP CS Fixer
-
 jobs:
   rector:
     uses: yiisoft/actions/.github/workflows/rector-cs.yml@master
     secrets:
       token: ${{ secrets.YIISOFT_GITHUB_TOKEN }}
     with:
-      php: >-
-        ['8.4']
+      repository: ${{ github.event.pull_request.head.repo.full_name }}
+      php: '8.4'
