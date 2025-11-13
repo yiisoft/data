@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
-$finder = (new PhpCsFixer\Finder())
-    ->in(__DIR__ . '/src')
-    ->in(__DIR__ . '/tests');
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
-return (new PhpCsFixer\Config())
-    ->setFinder($finder)
-    ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
-    ->setRiskyAllowed(true)
+$finder = (new Finder())->in([
+    __DIR__ . '/src',
+    __DIR__ . '/tests',
+]);
+
+return (new Config())
+    ->setParallelConfig(ParallelConfigFactory::detect())
     ->setRules([
         '@PER-CS3.0' => true,
         'no_unused_imports' => true,
         'ordered_class_elements' => true,
         'class_attributes_separation' => ['elements' => ['method' => 'one']],
-    ]);
+    ])
+    ->setFinder($finder);
