@@ -19,7 +19,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         return [
             'bool-true' => [true],
             'bool-false' => [false],
-            'callback' => [fn () => null],
+            'callback' => [fn() => null],
             'float' => [1.0],
             'int' => [1],
             'null' => [null],
@@ -31,7 +31,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     public static function invalidFilterDataProvider(): array
     {
         return [
-            'callback' => [fn () => null],
+            'callback' => [fn() => null],
             'float' => [1.0],
             'int' => [1],
             'null' => [null],
@@ -44,7 +44,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         return [
             'array' => [[[]]],
-            'callback' => [[fn () => null]],
+            'callback' => [[fn() => null]],
             'empty-string' => [['']],
             'float' => [[1.0]],
             'int' => [[1]],
@@ -57,7 +57,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         return [
             'array' => [[]],
-            'callback' => [fn () => null],
+            'callback' => [fn() => null],
             'null' => [null],
             'object' => [new stdClass()],
         ];

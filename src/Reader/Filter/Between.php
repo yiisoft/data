@@ -22,7 +22,6 @@ final class Between implements FilterInterface
     public function __construct(
         public readonly string $field,
         public readonly bool|DateTimeInterface|float|int|string|Stringable $minValue,
-        public readonly bool|DateTimeInterface|float|int|string|Stringable $maxValue
-    ) {
-    }
+        public readonly bool|DateTimeInterface|float|int|string|Stringable $maxValue,
+    ) {}
 }

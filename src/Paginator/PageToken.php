@@ -9,8 +9,7 @@ final class PageToken
     private function __construct(
         public readonly string $value,
         public readonly bool $isPrevious,
-    ) {
-    }
+    ) {}
 
     public static function previous(string $value): self
     {

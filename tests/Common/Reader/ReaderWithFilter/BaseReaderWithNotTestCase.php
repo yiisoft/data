@@ -45,7 +45,7 @@ abstract class BaseReaderWithNotTestCase extends BaseReaderTestCase
     #[DataProvider('dataWithReader')]
     public function testWithReader(Not $filter, array $expectedFixtureNumbers): void
     {
-        $expectedFixtureIndexes = array_map(static fn (int $number): int => $number - 1, $expectedFixtureNumbers);
+        $expectedFixtureIndexes = array_map(static fn(int $number): int => $number - 1, $expectedFixtureNumbers);
         $this->assertFixtures(
             $expectedFixtureIndexes,
             $this->getReader()->withFilter($filter)->read(),

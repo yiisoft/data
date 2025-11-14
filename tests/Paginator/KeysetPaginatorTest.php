@@ -100,7 +100,7 @@ final class KeysetPaginatorTest extends TestCase
 
     public function testDataReaderWithoutLimitableInterface(): void
     {
-        $dataReader = new class () implements ReadableDataInterface, SortableDataInterface, FilterableDataInterface {
+        $dataReader = new class implements ReadableDataInterface, SortableDataInterface, FilterableDataInterface {
             public function withSort(?Sort $sort): static
             {
                 return clone $this;
@@ -367,7 +367,7 @@ final class KeysetPaginatorTest extends TestCase
         $data['empty'] = [
             null,
             new KeysetPaginator(
-                (new IterableDataReader([]))->withSort(Sort::only(['id'])->withOrderString('id'))
+                (new IterableDataReader([]))->withSort(Sort::only(['id'])->withOrderString('id')),
             ),
         ];
 
@@ -378,7 +378,7 @@ final class KeysetPaginatorTest extends TestCase
                     ['id' => 1, 'name' => 'Mike'],
                     ['id' => 2, 'name' => 'John'],
                 ]))
-                    ->withSort(Sort::only(['id'])->withOrderString('-id'))
+                    ->withSort(Sort::only(['id'])->withOrderString('-id')),
             ),
         ];
 
@@ -628,132 +628,6 @@ final class KeysetPaginatorTest extends TestCase
         $this->assertCount(2, $paginator->read());
     }
 
-    private static function getDataSet(?array $keys = null): array
-    {
-        if ($keys === null) {
-            return self::DEFAULT_DATASET;
-        }
-
-        $result = [];
-
-        foreach ($keys as $key) {
-            $result[] = self::DEFAULT_DATASET[$key];
-        }
-
-        return $result;
-    }
-
-    private function getNonSortableDataReader()
-    {
-        return new class () implements ReadableDataInterface, LimitableDataInterface, FilterableDataInterface {
-            public function withLimit(?int $limit): static
-            {
-                return clone $this;
-            }
-
-            public function read(): iterable
-            {
-                return [];
-            }
-
-            public function readOne(): array|object|null
-            {
-                return null;
-            }
-
-            public function withFilter(?FilterInterface $filter): static
-            {
-                return clone $this;
-            }
-
-            public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
-            {
-                return clone $this;
-            }
-
-            public function getFilter(): FilterInterface
-            {
-                return new All();
-            }
-
-            public function getLimit(): int
-            {
-                return 0;
-            }
-        };
-    }
-
-    private function getNonFilterableDataReader()
-    {
-        return new class () implements ReadableDataInterface, LimitableDataInterface, SortableDataInterface {
-            public function withLimit(?int $limit): static
-            {
-                return clone $this;
-            }
-
-            public function read(): iterable
-            {
-                return [];
-            }
-
-            public function readOne(): array|object|null
-            {
-                return null;
-            }
-
-            public function withSort(?Sort $sort): static
-            {
-                return clone $this;
-            }
-
-            public function getSort(): ?Sort
-            {
-                return Sort::only([]);
-            }
-
-            public function getLimit(): int
-            {
-                return 0;
-            }
-        };
-    }
-
-    private function createObjectWithPublicProperties(int $id, string $name): stdClass
-    {
-        $object = new stdClass();
-        $object->id = $id;
-        $object->name = $name;
-
-        return $object;
-    }
-
-    private function createObjectWithGetters(int $id, string $name): object
-    {
-        return new class ($id, $name) {
-            private int $createdAt;
-
-            public function __construct(private int $id, private string $name, ?int $createdAt = null)
-            {
-                $this->createdAt = $createdAt ?: time();
-            }
-
-            public function getId(): string
-            {
-                return (string) $this->id;
-            }
-
-            public function getName(): string
-            {
-                return $this->name;
-            }
-
-            public function getCreatedAt(): int
-            {
-                return $this->createdAt;
-            }
-        };
-    }
-
     public function testGetSort(): void
     {
         $sort = Sort::only(['id'])->withOrderString('id');
@@ -875,7 +749,7 @@ final class KeysetPaginatorTest extends TestCase
             static function ($item) {
                 $item['id']--;
                 return $item;
-            }
+            },
         ))->withSort(Sort::only(['id'])->withOrderString('id'));
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
@@ -883,13 +757,13 @@ final class KeysetPaginatorTest extends TestCase
             ->withFilterCallback(
                 static function (
                     GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
-                    KeysetFilterContext $context
+                    KeysetFilterContext $context,
                 ): FilterInterface {
                     if ($context->field === 'id') {
-                        $filter = $filter->withValue((string)($context->value + 1));
+                        $filter = $filter->withValue((string) ($context->value + 1));
                     }
                     return $filter;
-                }
+                },
             );
 
         $this->assertSame(
@@ -903,7 +777,7 @@ final class KeysetPaginatorTest extends TestCase
                     'name' => 'Agent J',
                 ],
             ],
-            array_values($paginator->read())
+            array_values($paginator->read()),
         );
     }
 
@@ -914,7 +788,7 @@ final class KeysetPaginatorTest extends TestCase
             static function ($item) {
                 $item['id']--;
                 return $item;
-            }
+            },
         ))->withSort(Sort::only(['id'])->withOrderString('id'));
         $paginator = (new KeysetPaginator($dataReader))
             ->withPageSize(2)
@@ -922,10 +796,10 @@ final class KeysetPaginatorTest extends TestCase
             ->withFilterCallback(
                 static function (
                     GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
-                    KeysetFilterContext $context
+                    KeysetFilterContext $context,
                 ): FilterInterface {
                     $value = $context->field === 'id'
-                        ? (string)($context->value + 1)
+                        ? (string) ($context->value + 1)
                         : $context->value;
 
                     if ($context->isReverse) {
@@ -939,7 +813,7 @@ final class KeysetPaginatorTest extends TestCase
                     }
 
                     return $filter;
-                }
+                },
             );
 
         $this->assertSame(
@@ -953,7 +827,7 @@ final class KeysetPaginatorTest extends TestCase
                     'name' => 'Codename Doris',
                 ],
             ],
-            array_values($paginator->read())
+            array_values($paginator->read()),
         );
     }
 
@@ -966,7 +840,7 @@ final class KeysetPaginatorTest extends TestCase
             ->withFilterCallback(
                 static function (
                     GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual $filter,
-                    KeysetFilterContext $context
+                    KeysetFilterContext $context,
                 ): FilterInterface {
                     if ($context->isReverse) {
                         return $context->sorting === SORT_ASC
@@ -976,7 +850,7 @@ final class KeysetPaginatorTest extends TestCase
                     return $context->sorting === SORT_ASC
                         ? new GreaterThan($context->field, $context->value)
                         : new LessThan($context->field, $context->value);
-                }
+                },
             );
 
         $this->assertTrue($paginator->isOnFirstPage());
@@ -1026,7 +900,7 @@ final class KeysetPaginatorTest extends TestCase
         bool $expectedIsOnLastPage,
         array $expectedIds,
         string $token,
-        bool $isReverseOrder = false
+        bool $isReverseOrder = false,
     ): void {
         $data = [
             ['id' => 10],
@@ -1089,7 +963,7 @@ final class KeysetPaginatorTest extends TestCase
         bool $expectedIsOnLastPage,
         array $expectedIds,
         string $token,
-        bool $isReverseOrder = false
+        bool $isReverseOrder = false,
     ): void {
         $data = [
             ['id' => 10],
@@ -1261,5 +1135,131 @@ final class KeysetPaginatorTest extends TestCase
         $paginator = new KeysetPaginator($dataReader);
 
         $this->assertSame($filter, $paginator->getFilter());
+    }
+
+    private static function getDataSet(?array $keys = null): array
+    {
+        if ($keys === null) {
+            return self::DEFAULT_DATASET;
+        }
+
+        $result = [];
+
+        foreach ($keys as $key) {
+            $result[] = self::DEFAULT_DATASET[$key];
+        }
+
+        return $result;
+    }
+
+    private function getNonSortableDataReader()
+    {
+        return new class implements ReadableDataInterface, LimitableDataInterface, FilterableDataInterface {
+            public function withLimit(?int $limit): static
+            {
+                return clone $this;
+            }
+
+            public function read(): iterable
+            {
+                return [];
+            }
+
+            public function readOne(): array|object|null
+            {
+                return null;
+            }
+
+            public function withFilter(?FilterInterface $filter): static
+            {
+                return clone $this;
+            }
+
+            public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+            {
+                return clone $this;
+            }
+
+            public function getFilter(): FilterInterface
+            {
+                return new All();
+            }
+
+            public function getLimit(): int
+            {
+                return 0;
+            }
+        };
+    }
+
+    private function getNonFilterableDataReader()
+    {
+        return new class implements ReadableDataInterface, LimitableDataInterface, SortableDataInterface {
+            public function withLimit(?int $limit): static
+            {
+                return clone $this;
+            }
+
+            public function read(): iterable
+            {
+                return [];
+            }
+
+            public function readOne(): array|object|null
+            {
+                return null;
+            }
+
+            public function withSort(?Sort $sort): static
+            {
+                return clone $this;
+            }
+
+            public function getSort(): ?Sort
+            {
+                return Sort::only([]);
+            }
+
+            public function getLimit(): int
+            {
+                return 0;
+            }
+        };
+    }
+
+    private function createObjectWithPublicProperties(int $id, string $name): stdClass
+    {
+        $object = new stdClass();
+        $object->id = $id;
+        $object->name = $name;
+
+        return $object;
+    }
+
+    private function createObjectWithGetters(int $id, string $name): object
+    {
+        return new class ($id, $name) {
+            private int $createdAt;
+
+            public function __construct(private int $id, private string $name, ?int $createdAt = null)
+            {
+                $this->createdAt = $createdAt ?: time();
+            }
+
+            public function getId(): string
+            {
+                return (string) $this->id;
+            }
+
+            public function getName(): string
+            {
+                return $this->name;
+            }
+
+            public function getCreatedAt(): int
+            {
+                return $this->createdAt;
+            }
+        };
     }
 }

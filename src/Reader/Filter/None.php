@@ -10,6 +10,4 @@ use Yiisoft\Data\Reader\FilterInterface;
  * Represents a filter that matches no items.
  * Used to indicate that all items should be excluded.
  */
-final class None implements FilterInterface
-{
-}
+final class None implements FilterInterface {}

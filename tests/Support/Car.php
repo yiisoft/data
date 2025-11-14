@@ -8,8 +8,7 @@ final class Car
 {
     public function __construct(
         private ?int $number,
-    ) {
-    }
+    ) {}
 
     public function getNumber(): ?int
     {

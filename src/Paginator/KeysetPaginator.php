@@ -469,7 +469,7 @@ final class KeysetPaginator implements PaginatorInterface
                 throw new InvalidArgumentException('Data should be always sorted to work with keyset pagination.');
             }
             $sort = $sort->withOrder(
-                array_slice($defaultOrder, 0, 1, true)
+                array_slice($defaultOrder, 0, 1, true),
             );
         }
 

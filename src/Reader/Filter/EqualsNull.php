@@ -16,6 +16,5 @@ final class EqualsNull implements FilterInterface
      */
     public function __construct(
         public readonly string $field,
-    ) {
-    }
+    ) {}
 }

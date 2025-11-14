@@ -33,7 +33,7 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
     public function testWithReader(
         string $field,
         mixed $value,
-        bool|null $caseSensitive,
+        ?bool $caseSensitive,
         array $expectedFixtureIndexes,
     ): void {
         $reader = $this->getReader()->withFilter(new Like($field, $value, $caseSensitive));
@@ -63,7 +63,7 @@ abstract class BaseReaderWithLikeTestCase extends BaseReaderTestCase
     public function testWithReaderAndMode(
         string $field,
         string $value,
-        bool|null $caseSensitive,
+        ?bool $caseSensitive,
         LikeMode $mode,
         array $expectedFixtureIndexes,
     ): void {

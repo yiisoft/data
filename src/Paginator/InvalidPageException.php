@@ -9,6 +9,4 @@ use LogicException;
 /**
  * Thrown when the page is invalid.
  */
-class InvalidPageException extends LogicException
-{
-}
+class InvalidPageException extends LogicException {}

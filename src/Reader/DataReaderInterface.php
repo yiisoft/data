@@ -31,6 +31,4 @@ interface DataReaderInterface extends
     CountableDataInterface,
     SortableDataInterface,
     FilterableDataInterface,
-    IteratorAggregate
-{
-}
+    IteratorAggregate {}

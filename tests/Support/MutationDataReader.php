@@ -23,8 +23,7 @@ final class MutationDataReader implements
     public function __construct(
         private IterableDataReader $decorated,
         private Closure $mutation,
-    ) {
-    }
+    ) {}
 
     public function withFilter(FilterInterface $filter): static
     {

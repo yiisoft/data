@@ -23,7 +23,7 @@ final class In implements FilterInterface
     public function __construct(
         public readonly string $field,
         /** @var bool[]|float[]|int[]|string[]|Stringable[] Values to check against. */
-        public readonly array $values
+        public readonly array $values,
     ) {
         $this->assertValues($values);
     }
@@ -36,7 +36,7 @@ final class In implements FilterInterface
                     sprintf(
                         'The value should be scalar or Stringable. "%s" is received.',
                         get_debug_type($value),
-                    )
+                    ),
                 );
             }
         }

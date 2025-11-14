@@ -111,7 +111,7 @@ final class LikeHandlerTest extends TestCase
 
         $this->assertSame(
             $expected,
-            $handler->match($item, $filter, $context)
+            $handler->match($item, $filter, $context),
         );
     }
 
