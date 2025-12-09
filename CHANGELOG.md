@@ -34,7 +34,7 @@
   `OffsetableDataInterface::getOffset()` (@samdark)
 - Chg #187: `LimitableDataInterface::withLimit()` now accepts `null` to indicate "no limit". `0` is now a valid limit
   value meaning `return nothing` (@samdark)
-- Chg #163: Rename `FilterableDataInterface::withFilterHandlers()` to `FilterableDataInterface::withAddedFilterHandlers()` (@samdark)
+- Chg #163, #241: Remove `FilterableDataInterface::withFilterHandlers()` (@samdark, @vjik)
 - Enh #190: Use `str_contains` for case-sensitive match in `LikeHandler` (@samdark)
 - Enh #194: Improve psalm annotations in `LimitableDataInterface` (@vjik)
 - Bug #195: Fix invalid count in `IterableDataReader` when limit or/and offset used (@vjik)
@@ -64,7 +64,6 @@
 - Chg #233: Remove nullable types from `withFilter()` and `getFilter()` methods of `FilterableDataInterface` (@vjik)
 - Bug #234: Fix handling of `null` values in `IterableDataReader` (@vjik)
 - New #236: Add `PaginatorInterface::getFilter()` method (@vjik)
-- Chg #241: Remove `FilterableDataInterface::withAddedFilterHandlers()` method (@vjik)
 - Chg #241: Remove `FilterHandlerInterface` interface (@vjik)
 
 ## 1.0.1 January 25, 2023
