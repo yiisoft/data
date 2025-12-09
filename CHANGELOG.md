@@ -64,6 +64,8 @@
 - Chg #233: Remove nullable types from `withFilter()` and `getFilter()` methods of `FilterableDataInterface` (@vjik)
 - Bug #234: Fix handling of `null` values in `IterableDataReader` (@vjik)
 - New #236: Add `PaginatorInterface::getFilter()` method (@vjik)
+- Chg #241: Remove `FilterableDataInterface::withAddedFilterHandlers()` method (@vjik)
+- Chg #241: Remove `FilterHandlerInterface` interface (@vjik)
 
 ## 1.0.1 January 25, 2023
 

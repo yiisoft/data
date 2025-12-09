@@ -6,7 +6,6 @@ namespace Yiisoft\Data\Tests\Support;
 
 use Closure;
 use Yiisoft\Data\Reader\FilterableDataInterface;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\LimitableDataInterface;
@@ -29,13 +28,6 @@ final class MutationDataReader implements
     {
         $new = clone $this;
         $new->decorated = $this->decorated->withFilter($filter);
-        return $new;
-    }
-
-    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
-    {
-        $new = clone $this;
-        $new->decorated = $this->decorated->withAddedFilterHandlers(...$filterHandlers);
         return $new;
     }
 
