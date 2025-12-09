@@ -517,6 +517,7 @@ final class OffsetPaginatorTest extends TestCase
     {
         return [
             'IterableDataReader' => [true, new IterableDataReader([])],
+            'IterableDataReaderWithLimit' => [false, (new IterableDataReader([]))->withLimit(10)],
             'StubOffsetData' => [false, new StubOffsetData()],
             'StubOffsetDataWithLimit' => [false, (new StubOffsetData())->withLimit(10)],
         ];
