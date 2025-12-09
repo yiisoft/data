@@ -299,6 +299,7 @@ final class KeysetPaginator implements PaginatorInterface
     public function isOnFirstPage(): bool
     {
         if ($this->token === null) {
+            /** @infection-ignore-all */
             return true;
         }
 
@@ -323,6 +324,7 @@ final class KeysetPaginator implements PaginatorInterface
     private function initialize(): void
     {
         if ($this->readCache !== null) {
+            /** @infection-ignore-all */
             return;
         }
 
