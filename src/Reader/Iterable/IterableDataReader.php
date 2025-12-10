@@ -29,7 +29,6 @@ use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Reader\Iterable\ValueReader\ValueReaderInterface;
 use Yiisoft\Data\Reader\Sort;
 
-use function array_merge;
 use function count;
 use function iterator_to_array;
 use function uasort;
