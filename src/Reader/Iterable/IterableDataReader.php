@@ -8,10 +8,8 @@ use Generator;
 use InvalidArgumentException;
 use Traversable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\DataReaderException;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Filter\All;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\AllHandler;
 use Yiisoft\Data\Reader\Iterable\FilterHandler\AndXHandler;
@@ -34,7 +32,6 @@ use Yiisoft\Data\Reader\Sort;
 use function array_merge;
 use function count;
 use function iterator_to_array;
-use function sprintf;
 use function uasort;
 
 /**
@@ -97,10 +94,7 @@ final class IterableDataReader implements DataReaderInterface
         $this->filter = new All();
     }
 
-    /**
-     * @psalm-return $this
-     */
-    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
+    public function withAddedFilterHandlers(IterableFilterHandlerInterface ...$filterHandlers): self
     {
         $new = clone $this;
         $new->context = new Context(
@@ -294,7 +288,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @param FilterHandlerInterface[] $filterHandlers
+     * @param IterableFilterHandlerInterface[] $filterHandlers
      *
      * @return IterableFilterHandlerInterface[]
      * @psalm-return array<string, IterableFilterHandlerInterface>
@@ -302,20 +296,9 @@ final class IterableDataReader implements DataReaderInterface
     private function prepareFilterHandlers(array $filterHandlers): array
     {
         $result = [];
-
         foreach ($filterHandlers as $filterHandler) {
-            if (!$filterHandler instanceof IterableFilterHandlerInterface) {
-                throw new DataReaderException(
-                    sprintf(
-                        '%s::withFilterHandlers() accepts instances of %s only.',
-                        self::class,
-                        IterableFilterHandlerInterface::class,
-                    ),
-                );
-            }
             $result[$filterHandler->getFilterClass()] = $filterHandler;
         }
-
         return $result;
     }
 

@@ -37,13 +37,4 @@ interface FilterableDataInterface extends ReadableDataInterface
      * @return FilterInterface Data reading criteria.
      */
     public function getFilter(): FilterInterface;
-
-    /**
-     * Returns new instance with additional handlers set.
-     *
-     * @param FilterHandlerInterface ...$filterHandlers Additional filter handlers.
-     *
-     * @return static New instance.
-     */
-    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static;
 }

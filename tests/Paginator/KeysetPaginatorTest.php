@@ -20,7 +20,6 @@ use Yiisoft\Data\Reader\Filter\GreaterThanOrEqual;
 use Yiisoft\Data\Reader\Filter\LessThan;
 use Yiisoft\Data\Reader\Filter\LessThanOrEqual;
 use Yiisoft\Data\Reader\FilterableDataInterface;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\LimitableDataInterface;
@@ -122,11 +121,6 @@ final class KeysetPaginatorTest extends TestCase
             }
 
             public function withFilter(?FilterInterface $filter): static
-            {
-                return clone $this;
-            }
-
-            public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
             {
                 return clone $this;
             }
@@ -1171,11 +1165,6 @@ final class KeysetPaginatorTest extends TestCase
             }
 
             public function withFilter(?FilterInterface $filter): static
-            {
-                return clone $this;
-            }
-
-            public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
             {
                 return clone $this;
             }
