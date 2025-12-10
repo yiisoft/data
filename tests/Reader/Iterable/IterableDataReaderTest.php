@@ -67,7 +67,6 @@ final class IterableDataReaderTest extends TestCase
     {
         $reader = new IterableDataReader([]);
 
-        $this->assertNotSame($reader, $reader->withAddedFilterHandlers());
         $this->assertNotSame($reader, $reader->withFilter(new All()));
         $this->assertNotSame($reader, $reader->withSort(null));
         $this->assertNotSame($reader, $reader->withOffset(1));
@@ -381,8 +380,7 @@ final class IterableDataReaderTest extends TestCase
     public function testCustomFilter(): void
     {
         $filter = new AndX(new GreaterThan('id', 0), new Digital('name'));
-        $reader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withAddedFilterHandlers(new DigitalHandler())
+        $reader = (new IterableDataReader(self::DEFAULT_DATASET, addFilterHandlers: [new DigitalHandler()]))
             ->withFilter($filter);
 
         $filtered = $reader->read();
@@ -395,25 +393,24 @@ final class IterableDataReaderTest extends TestCase
     {
         $sort = Sort::only(['id', 'name'])->withOrderString('id');
 
-        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET))
-            ->withSort($sort)
-            ->withAddedFilterHandlers(
-                new class implements IterableFilterHandlerInterface {
-                    public function getFilterClass(): string
-                    {
-                        return Equals::class;
-                    }
+        $customEquals = new class implements IterableFilterHandlerInterface {
+            public function getFilterClass(): string
+            {
+                return Equals::class;
+            }
 
-                    public function match(
-                        array|object $item,
-                        FilterInterface $filter,
-                        Context $context,
-                    ): bool {
-                        /** @var Equals $filter */
-                        return $item[$filter->field] === 2;
-                    }
-                },
-            );
+            public function match(
+                array|object $item,
+                FilterInterface $filter,
+                Context $context,
+            ): bool {
+                /** @var Equals $filter */
+                return $item[$filter->field] === 2;
+            }
+        };
+
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET, addFilterHandlers: [$customEquals]))
+            ->withSort($sort);
 
         $dataReader = $dataReader->withFilter(new Equals('id', 100));
         $expected = [self::ITEM_2];

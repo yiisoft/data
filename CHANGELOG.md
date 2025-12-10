@@ -65,6 +65,7 @@
 - Bug #234: Fix handling of `null` values in `IterableDataReader` (@vjik)
 - New #236: Add `PaginatorInterface::getFilter()` method (@vjik)
 - Chg #241: Remove `FilterHandlerInterface` interface (@vjik)
+- Chg #242: Change `IterableDataReader::withAddedFilterHandlers()` to `$addFilterHandlers` constructor parameter (@vjik)
 
 ## 1.0.1 January 25, 2023
 
