@@ -29,7 +29,6 @@ use Yiisoft\Data\Reader\Iterable\ValueReader\FlatValueReader;
 use Yiisoft\Data\Reader\Iterable\ValueReader\ValueReaderInterface;
 use Yiisoft\Data\Reader\Sort;
 
-use function array_merge;
 use function count;
 use function iterator_to_array;
 use function uasort;
@@ -59,22 +58,19 @@ final class IterableDataReader implements DataReaderInterface
     private ?int $limit = null;
     private int $offset = 0;
 
-    /**
-     * @psalm-var array<string, IterableFilterHandlerInterface>
-     */
-    private array $coreFilterHandlers;
-
     private Context $context;
 
     /**
      * @param iterable $data Data to iterate.
+     * @param IterableFilterHandlerInterface[] $addFilterHandlers
      * @psalm-param iterable<TKey, TValue> $data
      */
     public function __construct(
         private readonly iterable $data,
-        private readonly ValueReaderInterface $valueReader = new FlatValueReader(),
+        ValueReaderInterface $valueReader = new FlatValueReader(),
+        array $addFilterHandlers = [],
     ) {
-        $this->coreFilterHandlers = $this->prepareFilterHandlers([
+        $filterHandlers = $this->prepareFilterHandlers([
             new AllHandler(),
             new NoneHandler(),
             new AndXHandler(),
@@ -89,22 +85,10 @@ final class IterableDataReader implements DataReaderInterface
             new LessThanOrEqualHandler(),
             new LikeHandler(),
             new NotHandler(),
+            ...$addFilterHandlers,
         ]);
-        $this->context = new Context($this->coreFilterHandlers, $this->valueReader);
+        $this->context = new Context($filterHandlers, $valueReader);
         $this->filter = new All();
-    }
-
-    public function withAddedFilterHandlers(IterableFilterHandlerInterface ...$filterHandlers): self
-    {
-        $new = clone $this;
-        $new->context = new Context(
-            array_merge(
-                $this->coreFilterHandlers,
-                $this->prepareFilterHandlers($filterHandlers),
-            ),
-            $this->valueReader,
-        );
-        return $new;
     }
 
     public function withFilter(FilterInterface $filter): static
