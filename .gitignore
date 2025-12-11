@@ -22,12 +22,10 @@ Thumbs.db
 # composer itself is not needed
 composer.phar
 
-# phpunit itself is not needed
-phpunit.phar
-# local phpunit config
+# PhpUnit
+/phpunit.phar
 /phpunit.xml
-# phpunit cache
-/.phpunit.cache/*
+/.phpunit.cache
 
 # PHP CS Fixer
 /.php-cs-fixer.cache
