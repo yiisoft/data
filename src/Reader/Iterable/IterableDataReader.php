@@ -62,13 +62,13 @@ final class IterableDataReader implements DataReaderInterface
 
     /**
      * @param iterable $data Data to iterate.
-     * @param IterableFilterHandlerInterface[] $addFilterHandlers
+     * @param IterableFilterHandlerInterface[] $extraFilterHandlers
      * @psalm-param iterable<TKey, TValue> $data
      */
     public function __construct(
         private readonly iterable $data,
         ValueReaderInterface $valueReader = new FlatValueReader(),
-        array $addFilterHandlers = [],
+        array $extraFilterHandlers = [],
     ) {
         $filterHandlers = $this->prepareFilterHandlers([
             new AllHandler(),
@@ -85,7 +85,7 @@ final class IterableDataReader implements DataReaderInterface
             new LessThanOrEqualHandler(),
             new LikeHandler(),
             new NotHandler(),
-            ...$addFilterHandlers,
+            ...$extraFilterHandlers,
         ]);
         $this->context = new Context($filterHandlers, $valueReader);
         $this->filter = new All();

@@ -380,7 +380,7 @@ final class IterableDataReaderTest extends TestCase
     public function testCustomFilter(): void
     {
         $filter = new AndX(new GreaterThan('id', 0), new Digital('name'));
-        $reader = (new IterableDataReader(self::DEFAULT_DATASET, addFilterHandlers: [new DigitalHandler()]))
+        $reader = (new IterableDataReader(self::DEFAULT_DATASET, extraFilterHandlers: [new DigitalHandler()]))
             ->withFilter($filter);
 
         $filtered = $reader->read();
@@ -409,7 +409,7 @@ final class IterableDataReaderTest extends TestCase
             }
         };
 
-        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET, addFilterHandlers: [$customEquals]))
+        $dataReader = (new IterableDataReader(self::DEFAULT_DATASET, extraFilterHandlers: [$customEquals]))
             ->withSort($sort);
 
         $dataReader = $dataReader->withFilter(new Equals('id', 100));
