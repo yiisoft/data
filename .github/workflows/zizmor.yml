@@ -13,6 +13,10 @@ permissions:
   actions: read # Required by zizmor when reading workflow metadata through the API
   contents: read # Required to read workflow files
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   zizmor:
     uses: yiisoft/actions/.github/workflows/zizmor.yml@master
