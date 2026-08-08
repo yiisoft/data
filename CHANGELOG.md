@@ -2,7 +2,7 @@
 
 ## 2.0.1 under development
 
-Enh #246: Explicitly import functions and constants in "use" section (@mspirkov)
+- Enh #246: Explicitly import functions and constants in "use" section (@mspirkov)
 
 ## 2.0.0 December 13, 2025
 
