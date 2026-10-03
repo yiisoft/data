@@ -2,6 +2,7 @@
 
 ## 2.0.1 under development
 
+- Enh: Document sort input validation and recommend `Sort::only()` for user input (@samdark)
 - Enh #246: Explicitly import functions and constants in "use" section (@mspirkov)
 
 ## 2.0.0 December 13, 2025

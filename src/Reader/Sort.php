@@ -36,6 +36,10 @@ use const SORT_DESC;
  * - {@see Sort::only()} ignores user-specified order for logical fields that have no configuration.
  * - {@see Sort::any()} uses user-specified logical field name and order directly for fields that have no configuration.
  *
+ * Use {@see Sort::only()} by default, especially for user input. With {@see Sort::any()}, validate untrusted field names
+ * against the fields your application allows before setting the order. Unchecked field names can lead to SQL injection
+ * when used with a database-backed reader.
+ *
  * @psalm-type TOrder = array<string, "asc"|"desc">
  * @psalm-type TSortFieldItem = array<string, int>
  * @psalm-type TConfigItem = array{asc: TSortFieldItem, desc: TSortFieldItem, default: "asc"|"desc"}
@@ -131,6 +135,8 @@ final class Sort
     /**
      * Create a sort instance that ignores the current order for extra logical fields that have no configuration.
      *
+     * Recommended by default, especially for user input. Define the allowed logical fields in application code.
+     *
      * @param array $config Logical fields config.
      * @psalm-param TUserConfig $config
      *
@@ -172,6 +178,10 @@ final class Sort
 
     /**
      * Create a sort instance that uses logical field itself and direction provided when there is no configuration.
+     *
+     * The configuration is not an allowlist. Before passing untrusted input to {@see withOrder()} or
+     * {@see withOrderString()}, validate field names against the fields your application allows. Unchecked field names
+     * can lead to SQL injection when used with a database-backed reader. Prefer {@see only()} for user input.
      *
      * @param array $config Logical fields config.
      * @psalm-param TUserConfig $config
