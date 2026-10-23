@@ -688,7 +688,6 @@ final class KeysetPaginatorTest extends TestCase
         $dataReader = (new IterableDataReader(self::getDataSet()))->withSort($sort);
         $paginator = (new KeysetPaginator($dataReader))->withToken(PageToken::next('1'));
 
-
         $this->assertTrue($this->invokeMethod($paginator, 'previousPageExist', [$dataReader, $sort]));
     }
 
