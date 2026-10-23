@@ -243,8 +243,19 @@ To get a `Sort` instance, you can use either `Sort::only()` or `Sort::any()`. `S
 for logical fields that have no configuration. `Sort::any()` uses user-specified logical field name and order directly
 for fields that have no configuration.
 
-Either way, you pass a config array that specifies which logical fields should be order-able and, optionally, details on
-how these should map to real fields order.
+Use `Sort::only()` by default, especially when the order comes from user input. Define the allowed logical fields in
+application code:
+
+```php
+$sort = Sort::only(['id', 'name'])->withOrderString($userInput);
+```
+
+`Sort::any()` does not restrict sorting to the configured fields or validate unknown field names. Before passing
+untrusted input to `withOrder()` or `withOrderString()` on a `Sort::any()` instance, validate the field names against
+the fields your application allows. Passing unchecked field names to a database-backed reader can lead to SQL injection.
+
+In both modes, the config array defines logical fields and, optionally, how they map to real fields and their order.
+Only `Sort::only()` restricts sorting to those configured logical fields.
 
 The current order to apply is specified via `withOrder()` where you supply an array with keys corresponding to logical
 field names and values correspond to order (`asc` or `desc`). Alternatively `withOrderString()` can be used. In this case, 

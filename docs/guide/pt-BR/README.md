@@ -207,8 +207,20 @@ Para obter uma instância `Sort`, você pode usar `Sort::only()` ou `Sort::any()
 para campos lógicos que não possuem configuração. `Sort::any()` usa o nome do campo lógico especificado pelo usuário e ordena diretamente
 para campos que não possuem configuração.
 
-De qualquer forma, você passa um array de configuração que especifica quais campos lógicos devem ser ordenados e, opcionalmente, detalhes sobre
-como eles devem ser mapeados para a ordem real dos campos.
+Use `Sort::only()` por padrão, especialmente quando a ordenação vier de dados fornecidos pelo usuário. Defina os campos
+lógicos permitidos no código da aplicação:
+
+```php
+$sort = Sort::only(['id', 'name'])->withOrderString($userInput);
+```
+
+`Sort::any()` não restringe a ordenação aos campos configurados nem valida nomes de campos desconhecidos. Antes de passar
+dados não confiáveis para `withOrder()` ou `withOrderString()` em uma instância de `Sort::any()`, valide os nomes dos campos
+de acordo com os campos permitidos pela aplicação. Passar nomes de campos sem validação para um leitor que consulta um
+banco de dados pode levar à injeção de SQL.
+
+Nos dois modos, o array de configuração define os campos lógicos e, opcionalmente, como eles são mapeados para os campos
+reais e sua ordenação. Apenas `Sort::only()` restringe a ordenação aos campos lógicos configurados.
 
 A ordem atual a ser aplicada é especificada via `withOrder()` onde você fornece um array com chaves lógicas correspondentes
 aos nomes e valores dos campos correspondem à ordem (`asc` ou `desc`). Alternativamente `withOrderString()` pode ser usado. Nesse caso
