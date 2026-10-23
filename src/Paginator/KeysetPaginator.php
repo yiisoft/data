@@ -350,9 +350,7 @@ final class KeysetPaginator implements PaginatorInterface
         [$field] = $this->getFieldAndSortingFromSort($sort);
 
         foreach ($dataReader->read() as $key => $item) {
-            if ($this->currentFirstValue === null) {
-                $this->currentFirstValue = (string) ArrayHelper::getValue($item, $field);
-            }
+            $this->currentFirstValue ??= (string) ArrayHelper::getValue($item, $field);
 
             if (count($data) === $this->pageSize) {
                 $this->hasNextPage = true;
