@@ -64,18 +64,13 @@ final class IterableDataReader implements DataReaderInterface
 
     /**
      * @param iterable<TKey, TValue> $data Data to iterate.
-     * @param IterableFilterHandlerInterface<FilterInterface>[] $extraFilterHandlers
+     * @param IterableFilterHandlerInterface<covariant FilterInterface>[] $extraFilterHandlers
      */
     public function __construct(
         private readonly iterable $data,
         ValueReaderInterface $valueReader = new FlatValueReader(),
         array $extraFilterHandlers = [],
     ) {
-        /**
-         * @phpstan-ignore argument.type (Each handler is registered only for the filter its `getFilterClass()` returns,
-         * so a handler parameterized with its concrete filter type is safe to use where
-         * `IterableFilterHandlerInterface<FilterInterface>` is expected.)
-         */
         $filterHandlers = $this->prepareFilterHandlers([
             new AllHandler(),
             new NoneHandler(),
@@ -275,9 +270,9 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @param IterableFilterHandlerInterface<FilterInterface>[] $filterHandlers
+     * @param IterableFilterHandlerInterface<covariant FilterInterface>[] $filterHandlers
      *
-     * @return array<string, IterableFilterHandlerInterface<FilterInterface>>
+     * @return array<string, IterableFilterHandlerInterface<covariant FilterInterface>>
      */
     private function prepareFilterHandlers(array $filterHandlers): array
     {

@@ -14,7 +14,7 @@ final class Context
 {
     public function __construct(
         /**
-         * @var array<string, IterableFilterHandlerInterface<FilterInterface>>
+         * @var array<string, IterableFilterHandlerInterface<covariant FilterInterface>>
          */
         public readonly array $iterableFilterHandlers,
         private readonly ValueReaderInterface $valueReader,
@@ -27,6 +27,11 @@ final class Context
      */
     public function getFilterHandler(string $class): IterableFilterHandlerInterface
     {
+        /**
+         * @phpstan-ignore return.type (Each handler is registered only for the filter its `getFilterClass()` returns,
+         * so a handler parameterized with its concrete filter type is safe to use where
+         * `IterableFilterHandlerInterface<FilterInterface>` is expected.)
+         */
         return $this->iterableFilterHandlers[$class]
             ?? throw new LogicException(
                 sprintf('Filter "%s" is not supported.', $class),
