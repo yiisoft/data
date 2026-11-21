@@ -14,6 +14,8 @@ use function is_string;
 
 /**
  * `Like` iterable filter handler ensures that the field value is like-match to a given value (case-sensitive).
+ *
+ * @implements IterableFilterHandlerInterface<Like>
  */
 final class LikeHandler implements IterableFilterHandlerInterface
 {
@@ -24,8 +26,6 @@ final class LikeHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var Like $filter */
-
         $itemValue = $context->readValue($item, $filter->field);
         if (!is_string($itemValue)) {
             return false;

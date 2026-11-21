@@ -10,7 +10,5 @@ use RuntimeException;
  * Exception occurred during data processing.
  *
  * @see DataProcessorInterface
- *
- * @psalm-suppress ClassMustBeFinal We assume that the class may be extended in userland.
  */
 class DataProcessorException extends RuntimeException {}

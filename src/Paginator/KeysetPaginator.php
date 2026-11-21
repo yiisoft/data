@@ -45,25 +45,24 @@ use const SORT_DESC;
  *
  * @link https://use-the-index-luke.com/no-offset
  *
- * @template TKey as array-key
- * @template TValue as array|object
+ * @template TKey of array-key
+ * @template TValue of array|object
  *
  * @implements PaginatorInterface<TKey, TValue>
  *
- * @psalm-type FilterCallback = Closure(GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual,KeysetFilterContext):FilterInterface
+ * @phpstan-type FilterCallback = Closure(GreaterThan|LessThan|GreaterThanOrEqual|LessThanOrEqual,KeysetFilterContext):FilterInterface
  */
 final class KeysetPaginator implements PaginatorInterface
 {
     /**
      * Data reader being paginated.
      *
-     * @psalm-var ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface
+     * @var ReadableDataInterface<TKey, TValue>&LimitableDataInterface<TKey, TValue>&FilterableDataInterface<TKey, TValue>&SortableDataInterface<TKey, TValue>
      */
     private ReadableDataInterface $dataReader;
 
     /**
-     * @var int Maximum number of items per page.
-     * @psalm-var positive-int
+     * @var positive-int Maximum number of items per page.
      */
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
     private ?PageToken $token = null;
@@ -81,7 +80,7 @@ final class KeysetPaginator implements PaginatorInterface
     private bool $hasNextPage = false;
 
     /**
-     * @psalm-var FilterCallback|null
+     * @var FilterCallback|null
      */
     private ?Closure $filterCallback = null;
 
@@ -89,14 +88,12 @@ final class KeysetPaginator implements PaginatorInterface
      * Reader cache against repeated scans.
      * See more {@see __clone()} and {@see initialize()}.
      *
-     * @psalm-var null|array<TKey, TValue>
+     * @var null|array<TKey, TValue>
      */
     private ?array $readCache = null;
 
     /**
-     * @param ReadableDataInterface $dataReader Data reader being paginated.
-     * @psalm-param ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface $dataReader
-     * @psalm-suppress DocblockTypeContradiction Needed to allow validating `$dataReader`
+     * @param ReadableDataInterface<TKey, TValue> $dataReader Data reader being paginated.
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
@@ -151,7 +148,6 @@ final class KeysetPaginator implements PaginatorInterface
 
     public function withPageSize(int $pageSize): static
     {
-        /** @psalm-suppress DocblockTypeContradiction We don't believe in psalm types */
         if ($pageSize < 1) {
             throw new InvalidArgumentException('Page size should be at least 1.');
         }
@@ -164,7 +160,7 @@ final class KeysetPaginator implements PaginatorInterface
     /**
      * Returns a new instance with defined closure for preparing data reader filters.
      *
-     * @psalm-param FilterCallback|null $callback Closure with signature:
+     * @param FilterCallback|null $callback Closure with signature:
      *
      * ```php
      * function(
@@ -172,6 +168,8 @@ final class KeysetPaginator implements PaginatorInterface
      *    KeysetFilterContext $context
      * ): FilterInterface
      * ```
+     *
+     * @return static New instance.
      */
     public function withFilterCallback(?Closure $callback): self
     {
@@ -322,7 +320,7 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-assert array<TKey, TValue> $this->readCache
+     * @phpstan-assert array<TKey, TValue> $this->readCache
      */
     private function initialize(): void
     {
@@ -341,8 +339,9 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-param ReadableDataInterface<TKey, TValue> $dataReader
-     * @psalm-return array<TKey, TValue>
+     * @param ReadableDataInterface<TKey, TValue> $dataReader
+     *
+     * @return array<TKey, TValue>
      */
     private function readData(ReadableDataInterface $dataReader, Sort $sort): array
     {
@@ -350,11 +349,13 @@ final class KeysetPaginator implements PaginatorInterface
         [$field] = $this->getFieldAndSortingFromSort($sort);
 
         foreach ($dataReader->read() as $key => $item) {
+            /** @phpstan-ignore cast.string */
             $this->currentFirstValue ??= (string) ArrayHelper::getValue($item, $field);
 
             if (count($data) === $this->pageSize) {
                 $this->hasNextPage = true;
             } else {
+                /** @phpstan-ignore cast.string */
                 $this->currentLastValue = (string) ArrayHelper::getValue($item, $field);
                 $data[$key] = $item;
             }
@@ -364,8 +365,9 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-param array<TKey, TValue> $data
-     * @psalm-return array<TKey, TValue>
+     * @param array<TKey, TValue> $data
+     *
+     * @return array<TKey, TValue>
      */
     private function reverseData(array $data): array
     {
@@ -375,7 +377,7 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-param ReadableDataInterface<TKey, TValue>&LimitableDataInterface&FilterableDataInterface&SortableDataInterface $dataReader
+     * @param ReadableDataInterface<TKey, TValue>&LimitableDataInterface<TKey, TValue>&FilterableDataInterface<TKey, TValue>&SortableDataInterface<TKey, TValue> $dataReader
      */
     private function previousPageExist(ReadableDataInterface $dataReader, Sort $sort): bool
     {
@@ -386,9 +388,7 @@ final class KeysetPaginator implements PaginatorInterface
 
     private function createFilter(Sort $sort): FilterInterface
     {
-        /**
-         * @psalm-var PageToken $this->token The code calling this method must ensure that page token is not null.
-         */
+        /** @phpstan-ignore property.nonObject (The code calling this method must ensure that page token is not null) */
         $value = $this->token->value;
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
 
@@ -410,9 +410,7 @@ final class KeysetPaginator implements PaginatorInterface
 
     private function getReverseFilter(Sort $sort): FilterInterface
     {
-        /**
-         * @psalm-var PageToken $this->token The code calling this method must ensure that page token is not null.
-         */
+        /** @phpstan-ignore property.nonObject (The code calling this method must ensure that page token is not null) */
         $value = $this->token->value;
         [$field, $sorting] = $this->getFieldAndSortingFromSort($sort);
 
@@ -444,7 +442,7 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-return array{0: string, 1: int}
+     * @return array{0: string, 1: int}
      */
     private function getFieldAndSortingFromSort(Sort $sort): array
     {
@@ -457,8 +455,8 @@ final class KeysetPaginator implements PaginatorInterface
     }
 
     /**
-     * @param FilterableDataInterface&LimitableDataInterface&ReadableDataInterface<TKey, TValue>&SortableDataInterface $dataReader
-     * @return FilterableDataInterface&LimitableDataInterface&ReadableDataInterface<TKey, TValue>&SortableDataInterface
+     * @param FilterableDataInterface<TKey, TValue>&LimitableDataInterface<TKey, TValue>&ReadableDataInterface<TKey, TValue>&SortableDataInterface<TKey, TValue> $dataReader
+     * @return FilterableDataInterface<TKey, TValue>&LimitableDataInterface<TKey, TValue>&ReadableDataInterface<TKey, TValue>&SortableDataInterface<TKey, TValue>
      */
     private function prepareSortInDataReader(ReadableDataInterface $dataReader, ?Sort $sort): ReadableDataInterface
     {

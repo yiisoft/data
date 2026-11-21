@@ -44,8 +44,8 @@ use const SORT_DESC;
  * - Form a filter criteria with {@see FilterInterface}
  * - Post-filter items with {@see IterableFilterHandlerInterface}
  *
- * @template TKey as array-key
- * @template TValue as array|object
+ * @template TKey of array-key
+ * @template TValue of array|object
  *
  * @implements DataReaderInterface<TKey, TValue>
  */
@@ -55,7 +55,7 @@ final class IterableDataReader implements DataReaderInterface
     private FilterInterface $filter;
 
     /**
-     * @psalm-var non-negative-int|null
+     * @var non-negative-int|null
      */
     private ?int $limit = null;
     private int $offset = 0;
@@ -63,15 +63,19 @@ final class IterableDataReader implements DataReaderInterface
     private Context $context;
 
     /**
-     * @param iterable $data Data to iterate.
-     * @param IterableFilterHandlerInterface[] $extraFilterHandlers
-     * @psalm-param iterable<TKey, TValue> $data
+     * @param iterable<TKey, TValue> $data Data to iterate.
+     * @param IterableFilterHandlerInterface<FilterInterface>[] $extraFilterHandlers
      */
     public function __construct(
         private readonly iterable $data,
         ValueReaderInterface $valueReader = new FlatValueReader(),
         array $extraFilterHandlers = [],
     ) {
+        /**
+         * @phpstan-ignore argument.type (Each handler is registered only for the filter its `getFilterClass()` returns,
+         * so a handler parameterized with its concrete filter type is safe to use where
+         * `IterableFilterHandlerInterface<FilterInterface>` is expected.)
+         */
         $filterHandlers = $this->prepareFilterHandlers([
             new AllHandler(),
             new NoneHandler(),
@@ -101,7 +105,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return $this
+     * @return static New instance.
      */
     public function withLimit(?int $limit): static
     {
@@ -115,7 +119,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return $this
+     * @return static New instance.
      */
     public function withOffset(int $offset): static
     {
@@ -125,7 +129,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return $this
+     * @return static New instance.
      */
     public function withSort(?Sort $sort): static
     {
@@ -135,7 +139,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return Generator<array-key, TValue, mixed, void>
+     * @return Generator<array-key, TValue, mixed, void>
      */
     public function getIterator(): Generator
     {
@@ -153,7 +157,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return array<TKey, TValue>
+     * @return array<TKey, TValue>
      */
     public function read(): array
     {
@@ -189,7 +193,7 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @psalm-return array<TKey, TValue>
+     * @return array<TKey, TValue>
      */
     private function internalRead(bool $useLimitAndOffset): array
     {
@@ -222,7 +226,7 @@ final class IterableDataReader implements DataReaderInterface
     /**
      * Return whether an item matches iterable filter.
      *
-     * @param array|object $item Item to check.
+     * @param array<mixed>|object $item Item to check.
      * @param FilterInterface $filter Filter.
      *
      * @return bool Whether an item matches iterable filter.
@@ -236,13 +240,10 @@ final class IterableDataReader implements DataReaderInterface
     /**
      * Sorts data items according to the given sort definition.
      *
-     * @param iterable $items The items to be sorted.
+     * @param iterable<TKey, TValue> $items The items to be sorted.
      * @param Sort $sort The sort definition.
      *
-     * @return array The sorted items.
-     *
-     * @psalm-param iterable<TKey, TValue> $items
-     * @psalm-return iterable<TKey, TValue>
+     * @return iterable<TKey, TValue> The sorted items.
      */
     private function sortItems(iterable $items, Sort $sort): iterable
     {
@@ -274,10 +275,9 @@ final class IterableDataReader implements DataReaderInterface
     }
 
     /**
-     * @param IterableFilterHandlerInterface[] $filterHandlers
+     * @param IterableFilterHandlerInterface<FilterInterface>[] $filterHandlers
      *
-     * @return IterableFilterHandlerInterface[]
-     * @psalm-return array<string, IterableFilterHandlerInterface>
+     * @return array<string, IterableFilterHandlerInterface<FilterInterface>>
      */
     private function prepareFilterHandlers(array $filterHandlers): array
     {
@@ -291,12 +291,9 @@ final class IterableDataReader implements DataReaderInterface
     /**
      * Convert iterable to array.
      *
-     * @param iterable $iterable Iterable to convert.
+     * @param iterable<TKey, TValue> $iterable Iterable to convert.
      *
-     * @psalm-param iterable<TKey, TValue> $iterable
-     *
-     * @return array Resulting array.
-     * @psalm-return array<TKey, TValue>
+     * @return array<TKey, TValue> Resulting array.
      */
     private function iterableToArray(iterable $iterable): array
     {

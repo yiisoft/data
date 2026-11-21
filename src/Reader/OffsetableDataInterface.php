@@ -7,8 +7,8 @@ namespace Yiisoft\Data\Reader;
 /**
  * Data that could be read from Nth item by skipping items from the beginning.
  *
- * @template TKey as array-key
- * @template TValue as array|object
+ * @template TKey of array-key
+ * @template TValue of array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
  */
@@ -20,7 +20,6 @@ interface OffsetableDataInterface extends ReadableDataInterface
      * @param int $offset Offset.
      *
      * @return $this New instance.
-     * @psalm-return $this
      */
     public function withOffset(int $offset): static;
 

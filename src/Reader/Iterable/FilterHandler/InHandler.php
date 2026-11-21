@@ -13,6 +13,8 @@ use function in_array;
 
 /**
  * `In` iterable filter handler ensures that the field value matches one of the value provided.
+ *
+ * @implements IterableFilterHandlerInterface<In>
  */
 final class InHandler implements IterableFilterHandlerInterface
 {
@@ -23,8 +25,6 @@ final class InHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var In $filter */
-
         $itemValue = $context->readValue($item, $filter->field);
         $argumentValue = $filter->values;
 

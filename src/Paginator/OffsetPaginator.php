@@ -35,8 +35,8 @@ use function sprintf;
  * - Performance degrades with page number increase
  * - Insertions or deletions in the middle of the data are making results inconsistent
  *
- * @template TKey as array-key
- * @template TValue as array|object
+ * @template TKey of array-key
+ * @template TValue of array|object
  *
  * @implements PaginatorInterface<TKey, TValue>
  */
@@ -48,22 +48,19 @@ final class OffsetPaginator implements PaginatorInterface
     private PageToken $token;
 
     /**
-     * @var int Maximum number of items per page.
-     * @psalm-var positive-int
+     * @var positive-int Maximum number of items per page.
      */
     private int $pageSize = self::DEFAULT_PAGE_SIZE;
 
     /**
      * Data reader being paginated.
      *
-     * @psalm-var ReadableDataInterface<TKey, TValue>&LimitableDataInterface<TKey, TValue>&OffsetableDataInterface<TKey, TValue>&CountableDataInterface
+     * @var ReadableDataInterface<TKey, TValue>&LimitableDataInterface<TKey, TValue>&OffsetableDataInterface<TKey, TValue>&CountableDataInterface
      */
     private ReadableDataInterface $dataReader;
 
     /**
-     * @param ReadableDataInterface $dataReader Data reader being paginated.
-     * @psalm-param ReadableDataInterface<TKey, TValue>&LimitableDataInterface&OffsetableDataInterface&CountableDataInterface $dataReader
-     * @psalm-suppress DocblockTypeContradiction Needed to allow validating `$dataReader`
+     * @param ReadableDataInterface<TKey, TValue> $dataReader Data reader being paginated.
      */
     public function __construct(ReadableDataInterface $dataReader)
     {
@@ -108,7 +105,6 @@ final class OffsetPaginator implements PaginatorInterface
 
     public function withPageSize(int $pageSize): static
     {
-        /** @psalm-suppress DocblockTypeContradiction We don't believe in psalm types */
         if ($pageSize < 1) {
             throw new InvalidArgumentException('Page size should be at least 1.');
         }
@@ -121,17 +117,14 @@ final class OffsetPaginator implements PaginatorInterface
     /**
      * Get a new instance with the given current page number set.
      *
-     * @param int $page Page number.
+     * @param positive-int $page Page number.
      *
      * @throws InvalidArgumentException If page is not a positive number.
      *
-     * @return self New instance.
-     *
-     * @psalm-param positive-int $page
+     * @return static New instance.
      */
     public function withCurrentPage(int $page): self
     {
-        /** @psalm-suppress DocblockTypeContradiction */
         if ($page < 1) {
             throw new InvalidArgumentException('Current page should be at least 1.');
         }
@@ -180,8 +173,7 @@ final class OffsetPaginator implements PaginatorInterface
     /**
      * Get the current page number.
      *
-     * @return int Current page number.
-     * @psalm-return positive-int
+     * @return positive-int Current page number.
      */
     public function getCurrentPage(): int
     {
@@ -204,7 +196,7 @@ final class OffsetPaginator implements PaginatorInterface
         }
 
         if ($currentPage === $pages) {
-            /** @psalm-var positive-int Because the total items number is more than offset */
+            /** @var positive-int Because the total items number is more than offset */
             return $this->getTotalItems() - $this->getOffset();
         }
 
@@ -224,9 +216,7 @@ final class OffsetPaginator implements PaginatorInterface
     /**
      * Get total number of items in the whole data reader being paginated.
      *
-     * @return int Total items number.
-     *
-     * @psalm-return non-negative-int
+     * @return non-negative-int Total items number.
      */
     public function getTotalItems(): int
     {
@@ -251,11 +241,11 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-assert-if-true SortableDataInterface $this->dataReader
+     * @phpstan-assert-if-true SortableDataInterface<TKey, TValue> $this->dataReader
      */
     public function isSortable(): bool
     {
-        if ($this->dataReader instanceof LimitableDataInterface && $this->dataReader->getLimit() !== null) {
+        if ($this->dataReader->getLimit() !== null) {
             return false;
         }
 
@@ -279,7 +269,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-assert-if-true FilterableDataInterface $this->dataReader
+     * @phpstan-assert-if-true FilterableDataInterface<TKey, TValue> $this->dataReader
      */
     public function isFilterable(): bool
     {
@@ -307,7 +297,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-return Generator<TKey, TValue, mixed, null>
+     * @return Generator<TKey, TValue, mixed, void>
      */
     public function read(): iterable
     {
@@ -320,7 +310,7 @@ final class OffsetPaginator implements PaginatorInterface
         $dataReaderLimit = $this->dataReader->getLimit();
 
         if ($dataReaderLimit !== null && ($this->getOffset() + $this->pageSize) > $dataReaderLimit) {
-            /** @psalm-var non-negative-int $limit */
+            /** @var non-negative-int $limit */
             $limit = $dataReaderLimit - $this->getOffset();
         }
 
@@ -361,7 +351,7 @@ final class OffsetPaginator implements PaginatorInterface
     }
 
     /**
-     * @psalm-return positive-int
+     * @return positive-int
      */
     private function getInternalTotalPages(): int
     {

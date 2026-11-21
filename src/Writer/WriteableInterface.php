@@ -12,7 +12,7 @@ interface WriteableInterface
     /**
      * Write items specified.
      *
-     * @param iterable $items Items to write.
+     * @param iterable<array<mixed>|object> $items Items to write.
      *
      * @throws DataWriterException If there is an error while writing items.
      */

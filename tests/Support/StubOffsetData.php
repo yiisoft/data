@@ -16,8 +16,7 @@ final class StubOffsetData implements
     LimitableDataInterface
 {
     /**
-     * @var int|null
-     * @psalm-var non-negative-int
+     * @var non-negative-int|null
      */
     private ?int $limit = null;
 

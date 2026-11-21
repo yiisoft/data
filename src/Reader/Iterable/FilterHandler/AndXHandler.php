@@ -12,6 +12,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 /**
  * `AndX` iterable filter handler allows combining multiple sub-filters.
  * The filter matches only if all the sub-filters match.
+ *
+ * @implements IterableFilterHandlerInterface<AndX>
  */
 final class AndXHandler implements IterableFilterHandlerInterface
 {
@@ -22,8 +24,6 @@ final class AndXHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var AndX $filter */
-
         foreach ($filter->filters as $subFilter) {
             $filterHandler = $context->getFilterHandler($subFilter::class);
             if (!$filterHandler->match($item, $subFilter, $context)) {

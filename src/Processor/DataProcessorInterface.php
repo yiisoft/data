@@ -7,21 +7,19 @@ namespace Yiisoft\Data\Processor;
 /**
  * Data processor takes an iterator with source items and produces an iterator with processed items.
  *
- * @template TKey as array-key
- * @template TValue as mixed
+ * @template TKey of array-key
+ * @template TValue of mixed
  */
 interface DataProcessorInterface
 {
     /**
      * Apply some processing to source items and return results.
      *
-     * @param iterable $items Source items iterator.
-     * @psalm-param iterable<TKey, TValue> $items
+     * @param iterable<TKey, TValue> $items Source items iterator.
      *
      * @throws DataProcessorException If there is an error while processing items.
      *
-     * @return iterable Processed items iterator.
-     * @psalm-return iterable<TKey, TValue>
+     * @return iterable<TKey, TValue> Processed items iterator.
      */
     public function process(iterable $items): iterable;
 }

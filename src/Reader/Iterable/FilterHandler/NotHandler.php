@@ -11,6 +11,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
  * `Not` iterable filter handler negates another filter.
+ *
+ * @implements IterableFilterHandlerInterface<Not>
  */
 final class NotHandler implements IterableFilterHandlerInterface
 {
@@ -21,8 +23,6 @@ final class NotHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var Not $filter */
-
         $subFilter = $filter->filter;
 
         $filterHandler = $context->getFilterHandler($subFilter::class);

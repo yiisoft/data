@@ -12,9 +12,7 @@ use Countable;
 interface CountableDataInterface extends Countable
 {
     /**
-     * @return int Number of items in the data.
-     *
-     * @psalm-return non-negative-int
+     * @return non-negative-int Number of items in the data.
      */
     public function count(): int;
 }

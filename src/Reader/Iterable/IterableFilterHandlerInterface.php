@@ -9,6 +9,8 @@ use Yiisoft\Data\Reader\FilterInterface;
 /**
  * Iterable filter handler checks whether an item matches criteria defined
  * in the filter with the same operator.
+ *
+ * @template TFilter of FilterInterface
  */
 interface IterableFilterHandlerInterface
 {
@@ -16,8 +18,8 @@ interface IterableFilterHandlerInterface
      * Check whether an item matches iterable filter handlers
      * for the filters with matching operator active.
      *
-     * @param array|object $item Item to check.
-     * @param FilterInterface $filter Matched filter.
+     * @param array<mixed>|object $item Item to check.
+     * @param TFilter $filter Matched filter.
      *
      * @return bool Whether item matches the filter.
      */
@@ -28,9 +30,7 @@ interface IterableFilterHandlerInterface
      *
      * If the filter is active, a corresponding handler will be used during matching.
      *
-     * @return string The filter class name.
-     *
-     * @psalm-return class-string<FilterInterface>
+     * @return class-string<TFilter> The filter class name.
      */
     public function getFilterClass(): string;
 }

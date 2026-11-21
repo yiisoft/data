@@ -11,6 +11,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
  * `EqualsNull` iterable filter handler checks that the item's field value is null.
+ *
+ * @implements IterableFilterHandlerInterface<EqualsNull>
  */
 final class EqualsNullHandler implements IterableFilterHandlerInterface
 {
@@ -21,8 +23,6 @@ final class EqualsNullHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var EqualsNull $filter */
-
         return $context->readValue($item, $filter->field) === null;
     }
 }

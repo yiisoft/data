@@ -16,8 +16,8 @@ use Yiisoft\Data\Reader\Sort;
  * - Each page has string "tokens" for getting to the previous and next page.
  * - Maximum number of items per page could be set.
  *
- * @template TKey as array-key
- * @template TValue as array|object
+ * @template TKey of array-key
+ * @template TValue of array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
  */
@@ -25,8 +25,6 @@ interface PaginatorInterface extends ReadableDataInterface
 {
     /**
      * Page size that is used in case it is not set explicitly.
-     *
-     * @psalm-suppress MissingClassConstType
      */
     public const DEFAULT_PAGE_SIZE = 10;
 
@@ -46,13 +44,11 @@ interface PaginatorInterface extends ReadableDataInterface
     /**
      * Get a new instance with a page size set.
      *
-     * @param int $pageSize Maximum number of items per page.
+     * @param positive-int $pageSize Maximum number of items per page.
      *
      * @throws InvalidArgumentException If page size is not a positive number.
      *
      * @return static New instance.
-     *
-     * @psalm-param positive-int $pageSize
      */
     public function withPageSize(int $pageSize): static;
 
@@ -96,9 +92,7 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @see getCurrentPageSize()
      *
-     * @return int Page size.
-     *
-     * @psalm-return positive-int
+     * @return positive-int Page size.
      */
     public function getPageSize(): int;
 
@@ -109,9 +103,7 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @see getPageSize()
      *
-     * @return int Current page size.
-     *
-     * @psalm-return non-negative-int
+     * @return non-negative-int Current page size.
      */
     public function getCurrentPageSize(): int;
 
@@ -167,8 +159,7 @@ interface PaginatorInterface extends ReadableDataInterface
      *
      * @throws PageNotFoundException If the page specified isn't found.
      *
-     * @return iterable Iterator with items for the current page.
-     * @psalm-return iterable<TKey, TValue>
+     * @return iterable<TKey, TValue> Iterator with items for the current page.
      */
     public function read(): iterable;
 

@@ -12,7 +12,7 @@ interface DeletableInterface
     /**
      * Delete items specified.
      *
-     * @param iterable $items Items to delete.
+     * @param iterable<array<mixed>|object> $items Items to delete.
      *
      * @throws DataWriterException If there is an error deleting items.
      */

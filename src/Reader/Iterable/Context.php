@@ -14,14 +14,16 @@ final class Context
 {
     public function __construct(
         /**
-         * @psalm-var array<string, IterableFilterHandlerInterface>
+         * @var array<string, IterableFilterHandlerInterface<FilterInterface>>
          */
         public readonly array $iterableFilterHandlers,
         private readonly ValueReaderInterface $valueReader,
     ) {}
 
     /**
-     * @psalm-param class-string<FilterInterface> $class
+     * @param class-string<FilterInterface> $class
+     *
+     * @return IterableFilterHandlerInterface<FilterInterface>
      */
     public function getFilterHandler(string $class): IterableFilterHandlerInterface
     {
@@ -31,6 +33,11 @@ final class Context
             );
     }
 
+    /**
+     * Read a value from an item by the field name.
+     *
+     * @param array<mixed>|object $item Item to read value from.
+     */
     public function readValue(array|object $item, string $field): mixed
     {
         return $this->valueReader->read($item, $field);
