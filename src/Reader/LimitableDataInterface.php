@@ -9,8 +9,8 @@ use InvalidArgumentException;
 /**
  * Data that could be limited.
  *
- * @template TKey of array-key
- * @template TValue of array|object
+ * @template TKey of array-key = array-key
+ * @template TValue of array|object = array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
  */

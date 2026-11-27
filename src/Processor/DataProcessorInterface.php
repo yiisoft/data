@@ -7,8 +7,8 @@ namespace Yiisoft\Data\Processor;
 /**
  * Data processor takes an iterator with source items and produces an iterator with processed items.
  *
- * @template TKey of array-key
- * @template TValue of mixed
+ * @template TKey of array-key = array-key
+ * @template TValue of mixed = mixed
  */
 interface DataProcessorInterface
 {

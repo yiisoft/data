@@ -15,8 +15,8 @@ namespace Yiisoft\Data\Reader;
  *
  * For performance reasons, prefer filtering as many items as possible in the first step.
  *
- * @template TKey of array-key
- * @template TValue of array|object
+ * @template TKey of array-key = array-key
+ * @template TValue of array|object = array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
  */

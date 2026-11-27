@@ -16,8 +16,8 @@ use Yiisoft\Data\Reader\Sort;
  * - Each page has string "tokens" for getting to the previous and next page.
  * - Maximum number of items per page could be set.
  *
- * @template TKey of array-key
- * @template TValue of array|object
+ * @template TKey of array-key = array-key
+ * @template TValue of array|object = array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
  */

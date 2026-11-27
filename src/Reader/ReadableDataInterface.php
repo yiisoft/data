@@ -7,8 +7,8 @@ namespace Yiisoft\Data\Reader;
 /**
  * Readable data is a data set that could be read up by getting an iterator or reading one item from a set.
  *
- * @template TKey of array-key
- * @template TValue of array|object
+ * @template TKey of array-key = array-key
+ * @template TValue of array|object = array|object
  */
 interface ReadableDataInterface
 {

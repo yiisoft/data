@@ -8,8 +8,8 @@ namespace Yiisoft\Data\Reader;
  * A data set that could be sorted.
  * The sorting set may be used by a data reader that supports sorting.
  *
- * @template TKey of array-key
- * @template TValue of array|object
+ * @template TKey of array-key = array-key
+ * @template TValue of array|object = array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
  */

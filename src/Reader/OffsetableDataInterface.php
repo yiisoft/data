@@ -7,8 +7,8 @@ namespace Yiisoft\Data\Reader;
 /**
  * Data that could be read from Nth item by skipping items from the beginning.
  *
- * @template TKey of array-key
- * @template TValue of array|object
+ * @template TKey of array-key = array-key
+ * @template TValue of array|object = array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
  */

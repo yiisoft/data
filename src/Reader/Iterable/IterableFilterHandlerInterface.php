@@ -10,7 +10,7 @@ use Yiisoft\Data\Reader\FilterInterface;
  * Iterable filter handler checks whether an item matches criteria defined
  * in the filter with the same operator.
  *
- * @template TFilter of FilterInterface
+ * @template TFilter of FilterInterface = FilterInterface
  */
 interface IterableFilterHandlerInterface
 {

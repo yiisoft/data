@@ -16,8 +16,8 @@ use IteratorAggregate;
  * - Filter
  * - Iterate with foreach
  *
- * @template TKey of array-key
- * @template TValue of array|object
+ * @template TKey of array-key = array-key
+ * @template TValue of array|object = array|object
  *
  * @extends LimitableDataInterface<TKey, TValue>
  * @extends OffsetableDataInterface<TKey, TValue>
