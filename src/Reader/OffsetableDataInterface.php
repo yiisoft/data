@@ -19,7 +19,7 @@ interface OffsetableDataInterface extends ReadableDataInterface
      *
      * @param int $offset Offset.
      *
-     * @return $this New instance.
+     * @return static New instance.
      */
     public function withOffset(int $offset): static;
 
