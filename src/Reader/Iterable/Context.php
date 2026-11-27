@@ -21,16 +21,18 @@ final class Context
     ) {}
 
     /**
-     * @param class-string<FilterInterface> $class
+     * @template TFilter of FilterInterface
      *
-     * @return IterableFilterHandlerInterface<FilterInterface>
+     * @param class-string<TFilter> $class
+     *
+     * @return IterableFilterHandlerInterface<TFilter>
      */
     public function getFilterHandler(string $class): IterableFilterHandlerInterface
     {
         /**
          * @phpstan-ignore return.type (Each handler is registered only for the filter its `getFilterClass()` returns,
          * so a handler parameterized with its concrete filter type is safe to use where
-         * `IterableFilterHandlerInterface<FilterInterface>` is expected.)
+         * `IterableFilterHandlerInterface<TFilter>` is expected.)
          */
         return $this->iterableFilterHandlers[$class]
             ?? throw new LogicException(
