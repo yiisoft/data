@@ -1,6 +1,6 @@
 # Yii Data Change Log
 
-## 2.0.1 under development
+## 2.0.1 November 28, 2026
 
 - Chg #259: Replace Psalm with PHPStan (@vjik)
 - Enh #246: Explicitly import functions and constants in "use" section (@mspirkov)
