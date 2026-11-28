@@ -12,7 +12,7 @@ use function trim;
 use const PREG_SPLIT_NO_EMPTY;
 
 /**
- * @psalm-import-type TOrder from Sort
+ * @phpstan-import-type TOrder from Sort
  */
 final class OrderHelper
 {
@@ -25,16 +25,14 @@ final class OrderHelper
      *
      * @param string $orderString Logical fields order as comma-separated string.
      *
-     * @return array Logical fields order as an array.
-     *
-     * @psalm-return TOrder
+     * @return TOrder Logical fields order as an array.
      */
     public static function stringToArray(string $orderString): array
     {
         $order = [];
 
         /**
-         * @var string[] $parts We use correct regexp here, so `preg_split` never returns false.
+         * @var list<string> $parts We use correct regexp here, so `preg_split` never returns false.
          */
         $parts = preg_split('/\s*,\s*/', trim($orderString), -1, PREG_SPLIT_NO_EMPTY);
 
@@ -56,7 +54,7 @@ final class OrderHelper
      * If the name is prefixed with `-`, field order is descending.
      * Otherwise, the order is ascending.
      *
-     * @param array $order Logical fields order as an array.
+     * @param TOrder $order Logical fields order as an array.
      *
      * @return string An order string.
      */

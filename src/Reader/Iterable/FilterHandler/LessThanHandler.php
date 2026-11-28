@@ -11,6 +11,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
  * `LessThan` iterable filter handler checks that the item's field value is less than the given value.
+ *
+ * @implements IterableFilterHandlerInterface<LessThan>
  */
 final class LessThanHandler implements IterableFilterHandlerInterface
 {
@@ -21,8 +23,6 @@ final class LessThanHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var LessThan $filter */
-
         $itemValue = $context->readValue($item, $filter->field);
         $argumentValue = $filter->value;
 

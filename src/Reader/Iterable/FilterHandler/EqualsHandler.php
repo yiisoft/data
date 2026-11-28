@@ -11,6 +11,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 
 /**
  * `Equals` iterable filter handler checks that the item's field value matches the given value.
+ *
+ * @implements IterableFilterHandlerInterface<Equals>
  */
 final class EqualsHandler implements IterableFilterHandlerInterface
 {
@@ -21,8 +23,6 @@ final class EqualsHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var Equals $filter */
-
         $itemValue = $context->readValue($item, $filter->field);
         $argumentValue = $filter->value;
 

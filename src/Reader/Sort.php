@@ -40,23 +40,23 @@ use const SORT_DESC;
  * against the fields your application allows before setting the order. Unchecked field names can lead to SQL injection
  * when used with a database-backed reader.
  *
- * @psalm-type TOrder = array<string, "asc"|"desc">
- * @psalm-type TSortFieldItem = array<string, int>
- * @psalm-type TConfigItem = array{asc: TSortFieldItem, desc: TSortFieldItem, default: "asc"|"desc"}
- * @psalm-type TConfig = array<string, TConfigItem>
- * @psalm-type TUserConfigItem = array{
+ * @phpstan-type TOrder = array<string, "asc"|"desc">
+ * @phpstan-type TSortFieldItem = array<string, int>
+ * @phpstan-type TConfigItem = array{asc: TSortFieldItem, desc: TSortFieldItem, default: "asc"|"desc"}
+ * @phpstan-type TConfig = array<string, TConfigItem>
+ * @phpstan-type TUserConfigItem = array{
  *     asc?: int|"asc"|"desc"|array<string, int|"asc"|"desc">,
  *     desc?: int|"asc"|"desc"|array<string, int|"asc"|"desc">,
  *     default?: "asc"|"desc"
  * }
- * @psalm-type TUserConfig = array<int, string>|array<string, TUserConfigItem>
+ * @phpstan-type TUserConfig = array<int, string>|array<string, TUserConfigItem>
  */
 final class Sort
 {
     /**
      * Logical fields config.
      *
-     * @psalm-var TConfig
+     * @var TConfig
      */
     private array $config;
 
@@ -66,14 +66,12 @@ final class Sort
     private bool $withDefaultSorting = true;
 
     /**
-     * @var array Logical fields to order by in form of `[name => direction]`.
-     * @psalm-var TOrder
+     * @var TOrder Logical fields to order by in form of `[name => direction]`.
      */
     private array $currentOrder = [];
 
     /**
-     * @param array $config Logical fields config.
-     * @psalm-param TUserConfig $config
+     * @param TUserConfig $config Logical fields config.
      *
      * @param bool $ignoreExtraFields Whether to ignore logical fields not present in the config when forming criteria.
      */
@@ -94,7 +92,7 @@ final class Sort
                 $fieldName = $fieldConfig;
                 $fieldConfig = [];
             } else {
-                /** @psalm-var TUserConfigItem $fieldConfig */
+                /** @var TUserConfigItem $fieldConfig */
                 foreach ($fieldConfig as $key => &$criteria) {
                     // 'default' => 'asc' or 'desc'
                     if ($key === 'default') {
@@ -128,7 +126,7 @@ final class Sort
             );
         }
 
-        /** @psalm-var TConfig $normalizedConfig */
+        /** @var TConfig $normalizedConfig */
         $this->config = $normalizedConfig;
     }
 
@@ -137,8 +135,7 @@ final class Sort
      *
      * Recommended by default, especially for user input. Define the allowed logical fields in application code.
      *
-     * @param array $config Logical fields config.
-     * @psalm-param TUserConfig $config
+     * @param TUserConfig $config Logical fields config.
      *
      * ```php
      * [
@@ -183,8 +180,7 @@ final class Sort
      * {@see withOrderString()}, validate field names against the fields your application allows. Unchecked field names
      * can lead to SQL injection when used with a database-backed reader. Prefer {@see only()} for user input.
      *
-     * @param array $config Logical fields config.
-     * @psalm-param TUserConfig $config
+     * @param TUserConfig $config Logical fields config.
      *
      * ```php
      * [
@@ -243,8 +239,7 @@ final class Sort
     /**
      * Return a new instance with a logical field order set.
      *
-     * @param array $order A map with logical field names to order by as keys, direction as values.
-     * @psalm-param TOrder $order
+     * @param TOrder $order A map with logical field names to order by as keys, direction as values.
      *
      * @return self New instance.
      */
@@ -270,8 +265,7 @@ final class Sort
     /**
      * Get current logical fields order.
      *
-     * @return array Logical fields order.
-     * @psalm-return TOrder
+     * @return TOrder Logical fields order.
      */
     public function getOrder(): array
     {
@@ -296,8 +290,7 @@ final class Sort
      * Get a sorting criteria to be applied to {@see SortableDataInterface}
      * when getting the data that is a list of real fields along with their order directions.
      *
-     * @return array Sorting criteria.
-     * @psalm-return array<string, int>
+     * @return array<string, int> Sorting criteria.
      */
     public function getCriteria(): array
     {

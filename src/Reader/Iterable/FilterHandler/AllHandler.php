@@ -12,6 +12,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 /**
  * Handles the {@see All} filter for iterable data readers.
  * Always matches all items, effectively disabling filtering.
+ *
+ * @implements IterableFilterHandlerInterface<All>
  */
 final class AllHandler implements IterableFilterHandlerInterface
 {

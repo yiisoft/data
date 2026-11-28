@@ -28,6 +28,9 @@ final class In implements FilterInterface
         $this->assertValues($values);
     }
 
+    /**
+     * @param bool[]|float[]|int[]|string[]|Stringable[] $values
+     */
     private function assertValues(array $values): void
     {
         foreach ($values as $value) {

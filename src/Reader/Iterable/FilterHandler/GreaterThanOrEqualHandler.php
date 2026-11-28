@@ -12,6 +12,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 /**
  * `GreaterThanOrEqual` iterable filter handler checks that the item's field value
  * is greater than or equal to the given value.
+ *
+ * @implements IterableFilterHandlerInterface<GreaterThanOrEqual>
  */
 final class GreaterThanOrEqualHandler implements IterableFilterHandlerInterface
 {
@@ -22,8 +24,6 @@ final class GreaterThanOrEqualHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var GreaterThanOrEqual $filter */
-
         $itemValue = $context->readValue($item, $filter->field);
         $argumentValue = $filter->value;
 

@@ -8,8 +8,8 @@ namespace Yiisoft\Data\Reader;
  * A data set that could be sorted.
  * The sorting set may be used by a data reader that supports sorting.
  *
- * @template TKey as array-key
- * @template TValue as array|object
+ * @template TKey of array-key = array-key
+ * @template TValue of array|object = array|object
  *
  * @extends ReadableDataInterface<TKey, TValue>
  */
@@ -21,7 +21,6 @@ interface SortableDataInterface extends ReadableDataInterface
      * @param Sort|null $sort Sorting criteria or null for no sorting.
      *
      * @return static New instance.
-     * @psalm-return $this
      */
     public function withSort(?Sort $sort): static;
 

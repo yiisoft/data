@@ -12,6 +12,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 /**
  * `Between` iterable filter handler checks that the item's field value
  * is between minimal and maximal values.
+ *
+ * @implements IterableFilterHandlerInterface<Between>
  */
 final class BetweenHandler implements IterableFilterHandlerInterface
 {
@@ -22,8 +24,6 @@ final class BetweenHandler implements IterableFilterHandlerInterface
 
     public function match(object|array $item, FilterInterface $filter, Context $context): bool
     {
-        /** @var Between $filter */
-
         $value = $context->readValue($item, $filter->field);
         $min = $filter->minValue;
         $max = $filter->maxValue;

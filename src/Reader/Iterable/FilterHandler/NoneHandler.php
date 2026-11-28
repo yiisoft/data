@@ -12,6 +12,8 @@ use Yiisoft\Data\Reader\Iterable\IterableFilterHandlerInterface;
 /**
  * Handles the {@see None} filter for iterable data readers.
  * Never matches any items, effectively excluding all data.
+ *
+ * @implements IterableFilterHandlerInterface<None>
  */
 final class NoneHandler implements IterableFilterHandlerInterface
 {

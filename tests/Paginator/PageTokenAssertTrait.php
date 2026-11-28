@@ -6,12 +6,8 @@ namespace Yiisoft\Data\Tests\Paginator;
 
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsInstanceOf;
-use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Paginator\PageToken;
 
-/**
- * @psalm-require-extends TestCase
- */
 trait PageTokenAssertTrait
 {
     public function assertPageToken(
