@@ -5,6 +5,7 @@
 - Chg #259: Replace Psalm with PHPStan (@vjik)
 - Enh #246: Explicitly import functions and constants in "use" section (@mspirkov)
 - Enh #259: Remove redundant `instanceof LimitableDataInterface` check in `OffsetPaginator::isSortable()` (@vjik)
+- Enh #260: Add PHP 8.6 support (@vjik)
 
 ## 2.0.0 December 13, 2025
 
